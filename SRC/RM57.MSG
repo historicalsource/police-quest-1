@@ -1,0 +1,296 @@
+[ POLICE QUEST
+[ rm57.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 9/18/86
+[ Last Update October 6, 1987GR
+
+[
+
+
+%message	1
+"That drug-peddling punk just blew you%m46"
+
+%message	2
+"You just blew that drug-peddling punk%m46"
+
+%message 3
+"The old, redwood picnic table covered with bird droppings,
+ ants, peanut butter smudges and assorted initials."
+
+%message 4
+"The hedge is nicely trimmed."
+
+%message 5
+"This wall is composed of 3500 bricks and 2000 pounds of mortar,
+ and was built by the Mark Crowe Graphics Construction Company."
+
+%message 6
+"This beautiful old, oak tree will give you shade but little else."
+
+%message 7
+"You conceal yourself in the bushes, but with a clear view of the table."
+
+%message 8
+"Your extender crackles,
+ \"This is 83-Nora-10.
+ Notify when you are in position.\""
+
+%message 9
+"If you had a radio extender, that would be easy."
+
+%message 10
+"You key your extender and notify Detective Watts that you're in a concealed
+ position."
+
+%message 11
+"She responds to your transmission,
+ \"10-4! Will maintain radio silence until I hear from you.\""
+
+%message 12
+"You're supposed to be hiding!
+ No one will play \"Let's Make A Dope Deal\" with you milling about."
+
+%message 13
+"Working a stakeout without a radio extender isn't exactly the
+ way they taught it at the Academy."
+
+%message 14
+"\"Keep it down. This is a stakeout, remember?\""
+
+%message 15
+"You quietly watch a man enter the picnic area."
+
+%message 16
+"He cautiously nears the picnic table."
+
+%message 17
+"Another figure carefully approaches the picnic table.
+ Could it be his drug contact?"
+
+%message 18
+"\"Psst, Vic! Were you followed?\""
+
+%message 19
+"\"No way, man. It's cool!\""
+
+%message 20
+"\"I got the stuff. Did you bring the cash?\""
+
+%message 21
+"\"Ya, right here.\""
+
+%message 22
+"One suspect hands what appears to be an envelope to the other suspect."
+
+%message 23
+"The second suspect returns a small plastic bag containing a white substance."
+
+%message 24
+"\"Hey, Butt Breath! This ain't enough!! Where's the rest?\""
+
+%message 25
+"As they argue, you realize the pusher is dissatisfied with the
+ contents of the envelope."
+
+%message 26
+"You quietly radio Laura,
+ \"I'm moving in.
+ You hook up anybody trying to take foot bail!\""
+
+%message	27
+"You trade your career for a few seconds of heavenly bliss."
+
+%message	28
+"\"Halt!\" you shout. \"Police officer!!\""
+
+%message	29
+"\"Yeah? So what! Ain't nothin' wrong been done here!!\""
+
+%message	30
+"You follow Simms to the patrol car."
+
+%message	31
+"You 'cuff one trembling suspect."
+
+%message	32
+"You'd better 'cuff him first."
+
+%message	33
+"Pushing a little, you rush out, and frighten away the suspects!"
+
+%message	34
+"You find nothing more."
+
+%message	35
+"He is 'cuffed!"
+
+%message	36
+"The search reveals nothing except his school identification card,
+ and the small bag containing a white powdery substance that you
+ watched him get from the pusher."
+
+%message	37
+"The Jefferson High School Student Identification Card (in the name of
+ Victor Simms) matches the general description of your suspect."
+
+%message	38
+"The contents of the bag appear to be cocaine!"
+
+%message	39
+"As you move, a dry branch snaps beneath your weight.
+ Unfortunately, its loud \"CRACK!\" reveals you to the suspects!"
+
+%message	40
+"Those two are sure paranoid. They're history now."
+
+%message	41
+"Well, you blew that one! There won't be any drug deal here today!"
+
+%message	42
+"Whoops! You're not going to get 'em this time!
+ Failure to follow proper procedure leaves you in an awkward position.
+ You'd better refer to your \"PIG\" manual!"
+
+%message	43
+"This kid is so scared, that won't be necessary."
+
+%message	44
+"Holster your weapon first."
+
+%message	45
+"You can't just go off and leave your suspect."
+
+%message	46
+" into \"Police Quest II,\" coming soon to a computer near you!"
+
+%message	47
+"\"Ah, ha! Colby!\""
+
+%message	48
+"You radio Laura,
+ \"I've got mine in custody, and we're heading for the car.
+ I'll meet you there.\""
+
+%message	49
+"The bushes seem unimpressed with your bravado!"
+
+%message	50
+"It's a little early for that!"
+
+%message	51
+"Simms is reluctant but cooperative.
+ You learn he has been selling to kids at Jefferson High School,
+ including Officer Cobb's daughter, Kathy."
+
+%message	52
+"\"I used to buy from a guy named Jose Martinez,
+ but then Martinez introduced me to that guy, Colby,\" Simms says,
+ \"I haven't seen Martinez since.\""
+
+%message	53
+"\"It's a pleasure doin' business with 'cha.\""
+
+%message	54
+"\"See ya next time, Dude!\""
+
+%message	55
+"And then, they quickly hit the road."
+
+%message	56
+"\"Laura! Grab him!!\""
+
+%message	57
+"\"Hey, who's 'dat?\""
+
+%message	58
+"\"(crackle... static... crackle...)\""
+
+%message	59
+"Where are you going?
+ Nobody's going to do anything illegal with you hanging around!"
+
+%message	60
+"A little slow today, are we?
+ Now you've missed your chance.
+ Those two are history."
+
+%message	61
+"You key your extender, \"83-Nora-10, this is 32-12.
+ Are you in place?\""
+
+%message	62
+"It seems they have resolved their differences,
+ since the older man says..."
+
+%message	63
+"\"I dunno. Let's get outta here!\""
+
+%message	64
+"\"Jiggers! The fuzz!!\""
+
+%message	65
+"\"Beat it!!\""
+
+%message	66
+"\"Hey, Man! It's some guy wit' a gun!!\""
+
+%message	67
+"\"I'm outta here!\""
+
+%message	68
+"%m64 shouts the pusher, %m67"
+
+%message	69
+"\"Don't shoot, Officer!\" shouts the young man, \"I give up!!\""
+
+%message	70
+"Well, you caught yourself a nice, little fish,
+ but you let the shark get away.
+ Next time, try following proper police procedures."
+
+%message	71
+"The beautiful park is caressed by a gentle breeze."
+
+%message	72
+"The cool, green grass feels good under your feet."
+
+%message	73
+"You see a beautiful blue sky, a couple of clouds,
+ and an airplane way up there."
+
+%message	74
+"You've resolved this stakeout in an interesting and creative manner,
+ but surely you can come up with a more professional approach!"
+
+%message	75
+"A little trigger-happy, aren't we?
+ Trying to shoot an unarmed, high-school boy who's obviously scared to death
+ is hardly the proper solution here."
+
+%message	76
+"\"Hands up!\" you shout. \"Police officer!!\""
+
+%message	77
+"He can't. He's handcuffed."
+
+%message	78
+"You've got him under control. Just 'cuff him."
+
+%message	79
+"\"You are under arrest!\""
+
+%message 80
+"Carved into the table is \"DW + JW\" and \"GR loves CW.\""
+
+%message 81
+"Where!?"
+
+%message 82
+"The young man is wearing dark clothes."
+
+%message 83
+"There is slightly older man talking with him."
+
+[%message 80
+["Pb  %v63, SS %v223, CS %v220, Sc %v139, SC %v141 SSc %v226 "
+

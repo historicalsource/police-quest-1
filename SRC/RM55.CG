@@ -1,0 +1,716 @@
+[ POLICE QUEST
+[ rm55.cg
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. 11/7/86
+[ Last Update October 3, 1987GR
+
+[ rm.court
+
+
+%include "gamedefs"
+%include "rm55.msg"
+
+
+
+%define	moved0			lf0
+%define	gateSwinging		lf1
+%define	gateDone			lf2
+%define	gaveJudgeFile		lf3
+%define	gaveJudgePoster	lf4
+
+
+%define	moving0			lcl0
+%define	judge			lcl1
+%define	bailiff			lcl2
+%define	reporter			lcl3
+%define	warning			lcl4
+
+
+%object	aJudge			1	
+%object	aBailiff			2	
+%object	aReporter			3
+%object	aGate			4
+
+
+
+if (init.log)	{
+	set( NOcase);
+
+	load.view( v.judge);
+	load.view( v.bailiff);
+	load.view( v.Creporter);
+	load.view( v.Cgate);
+	load.view( v.jury);
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	animate.obj( aJudge);
+	animate.obj( aBailiff);
+	animate.obj( aReporter);
+	animate.obj( aGate);
+
+	set.view( aJudge, v.judge);
+	set.view( aBailiff, v.bailiff);
+	set.view( aReporter, v.Creporter);
+	set.view( aGate, v.Cgate);
+	
+	set.loop( aJudge, 0);
+	set.loop( aBailiff, 1);
+	set.loop( aGate, 0);
+
+	set.cel( aGate, 0);
+
+     position( ego, 76, 165);
+	position( aJudge, 74, 80);
+	position( aBailiff, 120, 108);
+	position( aReporter, 99, 113);	
+	position( aGate, 73, 155);
+
+	set.priority( aJudge, 10);
+	set.priority( aReporter, 10);
+	set.priority( aGate, 13);
+
+	ignore.objs( aGate);
+
+	ignore.blocks( aBailiff);
+	ignore.blocks( aGate);
+	
+ 	add.to.pic( v.jury, 0, 0, 05, 125, 11, 0);		[ jury
+ 	add.to.pic( v.jury, 0, 1, 46, 140, 13, 13);		[ left attorney
+ 	add.to.pic( v.jury, 0, 2, 98, 140, 13, 13);		[ right attorney
+ 	add.to.pic( v.jury, 0, 3, 54, 85, 9, 0);		[ wittness
+
+	cycle.time( aReporter, three);
+	cycle.time( aJudge, three);
+
+	draw( ego);
+	draw( aJudge);
+	draw( aBailiff);
+	draw( aGate);
+	draw( aReporter);
+
+	stop.update( aJudge);
+	stop.update( aBailiff);
+	stop.update( aGate);
+
+	show.pic( );
+	return( );
+	}
+
+
+
+if (posn( ego, 65, 166, 88, 167)) {
+	if (court.scene == 50) {
+		court.scene = 200;
+		}
+	accept.input( );
+	new.room( 54);					[rm.court.hall
+	}
+
+
+[	Handle the swinging courtroom gate.
+
+if (posn( ego, 70, 157, 85, 160)) {	[ from below
+	if (!gateSwinging) {
+		set( gateSwinging);
+		start.update( aGate);
+		set.loop( aGate, 0);
+		reposition.to( aGate, 73, 155);
+		end.of.loop( aGate, gateDone);
+		}
+	}
+
+if (posn( ego, 70, 154, 85, 155)) {	[ from above
+	if (!gateSwinging) {
+		set( gateSwinging);
+		start.update( aGate);
+		set.loop( aGate, 1);
+		reposition.to( aGate, 73, 162);
+		end.of.loop( aGate, gateDone);
+		}
+	}
+
+if (gateSwinging &&
+	!posn( ego, 70, 150, 85, 160)) {
+	start.update( aGate);
+	reverse.loop( aGate, gateDone);
+	reset( gateSwinging);
+	}
+
+if (ego.y < 156)
+	{
+	set.priority( aGate, 14);
+	}
+else {
+	set.priority( aGate, 13);
+	}
+
+if (gateDone)
+	{
+	stop.update( aGate);
+	reset( gateDone);
+	}
+
+
+distance( ego, aJudge, judge);		[ NOTE: can't get near jury
+distance( ego, aBailiff, bailiff);
+distance( ego, aReporter, reporter);
+if ((   judge < dist ||
+	 bailiff < dist ||
+	reporter < dist)) {
+	set( nearPerson);
+	}
+
+
+if (moved0) {
+	reset( moved0);
+	++moving0;
+	}
+
+
+
+[ Court Scenes
+
+if ((!court.scene || court.scene > 50)) {
+	if (!moving0) {
+		set( game.control);
+		start.motion( ego);
+		prevent.input( );
+		moving0 = 1;
+		}
+	
+	if (moving0 == 1) {
+		move.obj( ego, 76, 161, 1, moved0);
+		}
+	
+	if (moving0 == 2) {
+		start.update( aJudge);
+		print( 1);				[ hear Judge speaks to bailiff
+		scriptTimer = 5;
+		++moving0;
+		}
+	
+	if (moving0 == 3 && scriptDone) {
+		print( 2);				[ I will not put up with interruptions
+		stop.update( aReporter);
+		start.update( aBailiff);
+		set.cel( aJudge, 2);
+		reset( scriptDone);
+		set( moved0);				[ allow scan
+		}
+	
+	if (moving0 == 4) {
+		stop.update( aJudge);
+		move.obj( aBailiff, 121, 151, 1, moved0);
+		++moving0;
+		}
+	
+	if (moving0 == 6) {
+		move.obj( aBailiff, 91, 153, 1, moved0);
+		}
+	
+	if (moving0 == 7) {
+		print( 03);				[ Judge wants to talk to you
+		++moving0;
+		}
+	
+	if (moving0 == 8) {
+		move.obj( ego, 76, 115, 1, moved0);
+		follow.ego( aBailiff, 5, work.f);
+		}
+	
+	if (moving0 == 9) {
+		stop.update( aBailiff);
+		print( 10);				[ middle of a very important case
+		scriptTimer = 10;
+		++moving0;
+		}
+	
+	if (moving0 == 10) {
+		if (scriptTimer == 8) {
+			print( 11);			[ hold you in contempt
+			--scriptTimer;
+			}
+		
+		if (scriptTimer == 5) {
+			print( 12);			[ Show this man out
+			ignore.objs( ego);
+			start.update( aBailiff);
+			scriptTimer = 0;
+			++moving0;
+			}
+		}
+	
+	if (moving0 == 11) {
+		move.obj( ego, 73, 153, 1, moved0);
+		follow.ego( aBailiff, 7, work.f);
+		}
+	
+	if (moving0 == 12) {
+		stop.update( aBailiff);
+		print( 13);				[	Boy is your face red.
+		move.obj( ego, 76, 167, 1, moved0);
+		++moving0;
+		}
+	}
+
+
+
+[ Get warrant
+
+if (court.scene == 20) {
+	if (!moving0) {
+		set( game.control);
+		start.motion( ego);
+		prevent.input( );
+		moving0 = 1;
+		}
+	
+	if (moving0 == 1) {
+		start.update( aJudge);
+		stop.cycling( aJudge);
+		move.obj( ego, 76, 161, 1, moved0);
+		++moving0;
+		}
+	
+	if (moving0 == 3) {
+		set.cel( aJudge, 0);
+		end.of.loop( aJudge, moved0);
+		++moving0;
+		}
+	
+	if (moving0 == 5) {
+		set.cel( aJudge, 0);
+		end.of.loop( aJudge, moved0);
+		++moving0;
+		}
+	
+	if (moving0 == 7) {
+		set.cel( aJudge, 0);
+		stop.cycling( aJudge);
+		print( 15);				[ hold arguments for a moment
+		stop.update( aReporter);
+		scriptTimer = 4;
+		++moving0;
+		}
+	
+	if (moving0 == 8 && scriptDone) {
+		print( 16);				[ Bonds you may approach the bench
+		stop.update( aJudge);
+		start.cycling( aJudge);
+		start.update( aBailiff);
+		follow.ego( aBailiff, 7, work.f);
+		move.obj( ego, 76, 115, 1, moved0);
+		reset( scriptDone);
+		++moving0;
+		}
+
+	if (moving0 == 10) {
+		move.obj( aBailiff, 85, 115, 1, moved0);
+		}
+	
+	if (moving0 == 11) {
+		print( 04);				[ what is this warrant for
+		stop.update( aBailiff);
+		scriptTimer = 10;
+		accept.input( );
+		++moving0;
+		}
+	
+	if ((moving0 == 12 ||
+		moving0 == 13))
+		{
+		if (scriptTimer == 1) {
+			if (warning < 3) {
+				print( 23);		[ entire court waits
+				++warning;
+				scriptTimer = 15;
+				}
+			else {
+				court.scene = 0;	[ back to scene one
+				moving0 = 10		[ for ejection
+				scriptTimer = 10;
+				}
+			}
+		}
+	}
+
+
+
+[ Bailiff gets evidence
+
+if (court.scene == 30) {
+	if (!moving0) {
+		prevent.input( );
+		print( 24);				[ bailiff to retieve
+		start.update( aBailiff);
+		move.obj( aBailiff, 84, 115, 1, moved0);
+		++moving0;
+		}
+	
+	if (moving0 == 2) {
+		set.loop( ego, 0);
+		set( moved0);
+		}
+	
+	if (moving0 == 3) {
+		print( 06);				[ hand your evidence to the bailiff
+		move.obj( aBailiff, 118, 115, 1, moved0);
+		++moving0;
+		}
+	
+	if (moving0 == 5) {
+		set.loop( ego, 3);
+		move.obj( aBailiff, 113, 103, 1, moved0);
+		}
+	
+	if (moving0 == 6) {
+		move.obj( aBailiff, 109, 100, 1, moved0);
+		}
+	
+	if (moving0 == 7) {
+		move.obj( aBailiff, 99, 100, 1, moved0);
+		start.update( aJudge);
+		stop.cycling( aJudge);
+		set.cel( aJudge, 0);
+		set.loop( aJudge, 2);
+		++moving0;
+		}
+	
+	if (moving0 == 9) {
+		move.obj( aBailiff, 97, 99, 1, moved0);
+		end.of.loop( aJudge, work.f)
+		}
+	
+	if (moving0 == 10) {		
+		print( 25);				[ bailiff hands the evidence
+		set.cel( aJudge, 0);
+		move.obj( aBailiff, 109, 100, 1, moved0);
+		++moving0;
+		}
+	
+	if (moving0 == 12) {
+		set.loop( aJudge, 1);
+		start.cycling( aJudge);
+		move.obj( aBailiff, 114, 115, 1, moved0);
+		}
+	
+	if (moving0 == 13) {
+		move.obj( aBailiff, 85, 115, 1, moved0);
+		}
+	
+	if (moving0 == 14) {
+		set.loop( aBailiff, 3);
+		set( moved0);
+		}
+	
+	if (moving0 == 15) {
+		stop.update( aBailiff);
+		court.scene = 40;
+		moving0 = 0;
+		}
+	}
+
+
+
+[ Judge has evidence 
+
+if (court.scene == 40) {
+	if (!moving0) {
+		warning = 0;
+		scriptTimer = 8;
+		++moving0;
+		}
+	
+	if (moving0 == 1 && scriptDone) {
+		stop.update( aJudge);
+		print( 26);	  			[ what exactly do base request
+		accept.input( );
+		scriptTimer = 10;
+		reset( scriptDone);
+		++moving0;
+		}
+
+	if (moving0 == 2) {
+		if (scriptTimer == 1) {
+			if (warning < 3) {
+				print( 23);		[ entire court waits
+				++warning;
+				scriptTimer = 15;
+				}
+			else {
+				court.scene = 0;	[ back to scene one
+				moving0 = 10		[ for ejection
+				scriptTimer = 10;
+				}
+			}
+		}
+	
+	if (moving0 == 3) {
+		prevent.input( );
+	
+		if (scriptTimer == 38) {
+			print( 28);			[ Judge giggles reluctantly
+			--scriptTimer;
+			}
+		
+		if (scriptTimer == 35) {
+			print( 29);			[ tit in the ringer
+			--scriptTimer;
+			}
+		
+		if (scriptTimer == 32) {
+			print( 30);			[ new physical evidence
+			--scriptTimer;
+			}
+		
+		if (scriptTimer == 29) {
+			print( 31);			[ no bail warrant, issued
+			--scriptTimer;
+			}
+		
+		if (scriptTimer == 26) {
+			print( 32);			[ deliver this to Mr. Bonds
+			court.scene = 50;
+			moving0 = 0;
+			scriptTimer = 0;
+			}
+		}
+	}
+
+
+if (court.scene == 50) {
+	if (moving0 == 0) {
+		start.update( aBailiff);
+		move.obj( aBailiff, 118, 115, 1, moved0);
+		++moving0;
+		}
+	
+	if (moving0 == 2) {
+		move.obj( aBailiff, 113, 103, 1, moved0);
+		}
+	
+	if (moving0 == 3) {
+		move.obj( aBailiff, 109, 100, 1, moved0);
+		start.update( aJudge);
+		stop.cycling( aJudge);
+		set.cel( aJudge, 0);
+		}
+	
+	if (moving0 == 4) {
+		move.obj( aBailiff, 99, 100, 1, moved0);
+		set.loop( aJudge, 2);
+		}
+	
+	if (moving0 == 5) {
+		move.obj( aBailiff, 97, 99, 1, moved0);
+		end.of.loop( aJudge, work.f)
+		}
+	
+	if (moving0 == 6) {		
+		move.obj( aBailiff, 109, 100, 1, moved0);
+		++moving0;
+		}
+	
+	if (moving0 == 8) {
+		set.loop( aJudge, 0);
+		set.cel( aJudge, 0);
+		move.obj( aBailiff, 114, 115, 1, moved0);
+		}
+	
+	if (moving0 == 9) {
+		stop.update( aJudge);
+		move.obj( aBailiff, 85, 115, 1, moved0);
+		}
+	
+	if (moving0 == 10) {
+		print( 8);				[ I hope your not to late
+		
+		if (obj.in.room( i.warrant, current.room)) {
+			get( i.warrant);
+			score += 7;
+			}
+		move.obj( ego, 72, 150, 1, moved0);
+		++moving0;
+		}
+	
+	if (moving0 > 10) {
+		follow.ego( aBailiff, 15, work.f);
+		}
+
+	if (moving0 == 12) {
+		move.obj( ego, 76, 167, 1, moved0);
+		}
+	}
+
+
+
+get.posn( aBailiff, x, y);
+if ((tempX != x || tempY != y))
+	{
+	tempX = x;
+	tempY = y;
+	start.cycling( aBailiff);
+	}
+else
+	{
+	if (keepCyclingSuspect)
+		{
+		start.cycling( aBailiff);
+		}
+	else
+		{
+		stop.cycling( aBailiff);
+		}
+	}
+
+
+
+[ Text 
+
+if (!have.input) {
+	goto exit;
+	}
+
+if ((said( hoffman) ||
+	said( anyword, hoffman)))
+	{
+	print( 5);					[ any substantial evidence
+	
+	if (moving0 == 11)
+		{
+		moving0 = 13;
+		scriptTimer = 10;
+		}
+	}
+
+if ((said( pierson) ||
+	said( taselli)))
+	{
+	print( 17);					[ who's that
+	}
+
+if ((said( flyer,  rol) ||
+	said( anyword, flyer, rol) ||
+	said( anyword, anyword, flyer, rol)))
+	{
+	if (gaveJudgePoster) {
+		print( 18);				[ what else do you have
+		}
+	else {
+		if (!has( i.Wposter)) {
+			print( 19);			[ for lying
+			set( certainDeath);
+			}
+		else {
+			drop( i.Wposter);
+			set( gaveJudgePoster);
+			if (!gaveJudgeFile) {
+				print( 18);		[ what else do you have
+				}
+			else {
+				court.scene = 30;
+				moving0 = 0;
+				}
+			}
+		}
+	}
+
+if ((said( file, rol) ||
+	said( show, file) ||
+	said( show, file, judge) ||
+	said( give, file) ||
+	said( give, file, judge) ||
+	said( anyword, hoffman, file, rol) ||
+	said( hoffman, file, rol) ||
+	said( anyword, file, hoffman, rol) ||
+	said( file, hoffman, rol) ||
+	said( anyword, anyword, file, rol)))
+	{
+	if (gaveJudgeFile) {
+		print( 18);				[ what else do you have
+		}
+	else {
+		if (!has( i.Hfile)) {
+			print( 19);			[ for lying
+			set( certainDeath);
+			}
+		else {
+			drop( i.Hfile);
+			set( gaveJudgeFile);
+			if (!gaveJudgePoster) {
+				print( 18);		[ what else do you have
+				}
+			else {
+				court.scene = 30;
+				moving0 = 0;
+				}
+			}
+		}
+	}
+
+if ((said( yes, rol) ||
+	said( anyword, yes, rol))) {
+	print( 34);					[ well
+	}
+
+if ((said( no, rol) ||
+	said( anyword, no, rol)))
+	{
+	if (!gaveJudgePoster &&
+	    !gaveJudgeFile)
+		{
+		print( 20);				[ insufficent evidence
+		court.scene = 0;			[ back to scene one
+		moving0 = 10				[ for ejection
+		scriptTimer = 10;
+		}
+	else {
+		if (gaveJudgePoster)
+			{
+			print( 21);			[ This wanted poster
+			}
+		else
+			{
+			if (gaveJudgeFile)
+				{
+				print( 22);		[ I've reviewed this file
+				}
+			}
+		court.scene = 0;			[ back to scene one
+		moving0 = 10				[ for ejection
+		scriptTimer = 10;
+		}
+	}
+
+if (court.scene == 40) {
+	if ((said( tattoo, rol) ||
+		said( hoffman, taselli) ||
+		said( taselli, hoffman) ||
+		said( anyword, tattoo, rol) ||
+		said( anyword, anyword, tattoo, rol) ||
+		said( tattoo, over, left, nipple, rol)))
+		{
+		print( 27);				[ your discusion of tattoos
+		if (moving0 == 2) {
+			++moving0;
+			scriptTimer = 40;
+			}
+		}
+	}
+	
+if ((said( look) ||
+	said( look, room) ||
+	said( look, judge) ||
+	said( look, courtroom)))
+	{
+	print( 9);					[ Palmer's court is in session
+	}
+
+
+[
+:exit
+[
+

@@ -1,0 +1,60 @@
+[ POLICE QUEST
+[ rm19.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/11/86
+[ Last Update September 24, 1987GR
+
+[ lgc.freeway w/ freeway
+
+%include "gamedefs"
+%include "rm117.h"
+
+
+
+if (init.log) {
+	load.logics( 28);					[lgc.freeway2
+	position( a.intersection, 75, 40);
+
+	draw( ego);
+	draw( a.intersection);
+
+	add.to.pic( vBuildings1, 2, 0, 029, 024, 0, 4);
+	add.to.pic( vBuildings1, 2, 0, 054, 024, 0, 4);
+	add.to.pic( vBuildings1, 2, 3, 087, 024, 0, 4);
+	add.to.pic( vBuildings1, 2, 1, 088, 161, 0, 4);
+	add.to.pic( vBuildings1, 2, 1, 113, 161, 0, 4);
+	add.to.pic( vBuildings1, 2, 1, 029, 069, 0, 4);
+	add.to.pic( vBuildings1, 2, 2, 049, 069, 0, 4);
+	add.to.pic( vBuildings1, 1, 2, 117, 115, 0, 4);
+	add.to.pic( vBuildings1, 0, 4, 001, 077, 0, 4);
+	add.to.pic( vBuildings1, 1, 5, 001, 115, 0, 4);
+	add.to.pic( vBuildings1, 0, 5, 144, 079, 0, 4);
+	add.to.pic( vBuildings1, 0, 3, 144, 116, 0, 4);
+	add.to.pic( vBuildings1, 1, 4, 144, 167, 0, 4);
+
+	show.pic( );
+	return( );
+	}
+
+if ((posn( ego, 47, 25, 75, 32) ||
+	posn( ego, 85, 124, 113, 131))) {
+	streetScene = 80;
+	}
+else {
+	streetScene = 92;
+	}
+
+
+
+call( 28);					[lgc.freeway2
+
+%message 1
+"Freeway traffic passes over this sparsely industrialized area of Lytton."
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look, town)))	{
+	print( 1);
+	}
+
+

@@ -1,0 +1,572 @@
+[ POLICE QUEST
+[ rm112.cg
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. 9/2/86
+[ Last Update September 26, 1987al
+
+[ lgc.computer
+
+
+%include "gamedefs"
+%include "rm112.msg"
+
+
+
+%define	computer.on		tf2		[	NOTE: shared with local room 51
+
+
+%define	display3			tmp0
+%define	display4			tmp1
+%define	display5			tmp2
+%define	display6			tmp3
+%define	display7			tmp4
+%define	display8			tmp5
+%define	display9			tmp6
+%define	display10			tmp7
+%define	display11			tmp8
+%define	display12			tmp9
+%define	six				tmp10
+%define	seven			tmp11
+%define	eight			tmp12
+%define	nine				tmp13
+%define	ten				tmp14
+%define	eleven			lcl18
+%define	twelve			lcl19
+
+
+if (init.dyn)
+	{
+	reset( init.dyn);
+	prevent.input();
+
+	six = 6;
+	seven = 7;
+	eight = 8;
+	nine = 9;
+	ten = 10;
+	eleven = 11;
+	twelve = 12;
+
+	draw.pic( dynamic1);
+	show.pic( );
+	status.line.off( );
+	reset( enable.menu);
+
+	set.text.attribute( 2, 0);
+	clear.text.rect( 3, 10, 14, 30, 0);
+
+	display( 3, 11, 123);			[	Log on messages.
+	display( 4, 12, 124);
+	display( 6, 14, 125);
+
+	if (!hercules)
+		{
+		clear.text.rect( 22, 0, 23, 39, 0);
+		}
+	}
+
+
+
+display( 13, 10, 122);
+
+open.dialogue();
+get.string( 1, 2, 14, 10, 19);
+close.dialogue();
+
+clear.text.rect( 3, 10, 14, 30, 0);
+if (!hercules)
+	{
+	clear.lines( 22, 23, 0);
+	}
+
+parse( 1);
+
+
+
+[	set.string( 3, );
+[	set.string( 4, );
+[	if ((compare.strings( 3, 1) ||
+[		compare.strings( 4, 1)))
+[		{
+[		display3 = ;
+[		display4 = ;
+[		display5 = ;
+[		display6 = ;
+[		display7 = ;
+[		display8 = ;
+[		display9 = ;
+[		display10 = ;
+[		display11 = ;
+[		display12 = ;
+[		}		  
+
+
+if ((said( quit) ||
+	said( bye) ||
+	said( off) ||
+	said( exit) ||
+	said( sign, off, rol) ||
+	said( turn, off, rol) ||
+	said( turn, power, off) ||
+	said( turn, computer, off) ||
+	said( shut, off, rol) ||
+	said( shut, computer, off)))
+	{
+	set.text.attribute( TEXT_COLOR, BG_COLOR);
+	accept.input( );
+	reset( computer.on)
+	set( init.dyn);
+	return();
+	}
+
+
+set.string( 3, 146);				[	Dir
+if (compare.strings( 3, 1))
+	{
+	set( have.match);
+	display3 = 147;
+	}
+
+
+[	This is the license number and VIN number of the '79 caddie reported
+[junked in 1983.  Taselli stole this license plate and put it on Malcolm
+[Washington's car.
+
+set.string( 3, 167);				[	UL6942
+set.string( 4, 172);				[	C0864213579
+if ((compare.strings( 3, 1) ||
+	compare.strings( 4, 1)))
+	{
+	set( have.match);
+	display3 = 168;
+	display4 = 169;
+	display5 = 170;
+	display6 = 171;
+	display7 = 172;
+	display8 = 173;
+	}
+
+
+[	This is Taselli's license # and vin # when he stole the car
+[(at that time, the car was black).  
+
+set.string( 3, 165);				[	LOP1238
+set.string( 4, 166);				[	c03456218
+if ((compare.strings( 3, 1) ||
+	compare.strings( 4, 1) ||
+	said( washington)))
+	{
+	set( have.match);
+	display3 = 69;
+	display4 = 70;
+	display5 = 71;
+	display6 = 73;
+	display7 = 74;
+	display8 = 75;
+	display10 = 76;
+	display11 = 77;
+	display12 = 18;
+	}
+
+
+if ((said( skivvies) ||				[	From file cabinet funnies.
+	said( panties)))
+	{
+	display3 = 31;
+	display5 = 39;
+	display6 = 40;
+	display7 = 41;
+	display8 = 42;
+	display9 = 43;
+	display11 = 44;
+	display12 = 45;
+	}
+
+if (said( feed))					[	From file cabinet funnies.
+	{
+	display3 = 31;
+	display5 = 36;
+	display6 = 46;
+	display8 = 39;
+	display9 = 47;
+	}
+
+if (said( bait))					[	From file cabinet funnies.
+	{
+	display3 = 31;
+	display5 = 36;
+	display6 = 48;
+	display7 = 49;
+	display9 = 39;
+	display10 = 50;
+	display11 = 51;
+	}
+
+if ((said( consumer) ||				[	From file cabinet funnies.
+	said( dog)))
+	{
+	display3 = 52;
+	display5 = 53;
+	display6 = 54;
+	display7 = 55;
+	display9 = 56;
+	display10 = 57;
+	display11 = 58;
+	display12 = 59;
+	}
+
+if (said( rings))					[	From file cabinet funnies.
+	{
+	display3 = 31;
+	display5 = 36;
+	display6 = 60;
+	display7 = 61;
+	display9 = 39;
+	display10 = 62;
+	}
+
+if (said( nasty))					[	Give snappy, funny comebacks.
+	{
+	display3 = 79;
+	}
+
+if (said( fart))					[	Give snappy, funny comebacks.
+	{
+	display3 = 80;
+	display4 = 81;
+	}
+
+if (said( shit))
+	{
+	display3 = 82;
+	display4 = 83;
+	}
+
+if (said( piss))
+	{
+	display3 = 84;
+	display4 = 85;
+	display5 = 86;
+	display6 = 87;
+	display7 = 88;
+	display8 = 89;
+	display9 = 90;
+	}
+
+if (said( cunt))
+	{
+	display3 = 91;
+	}
+
+if (said( prick))
+	{
+	display3 = 92;
+	}
+
+if (said( me))						[	Jung-ian dances.
+	{
+	display3 = 139;
+	}
+
+if (said( help))					[	Yeah, sure.
+	{
+	display3 = 143;
+	display4 = 144;
+	}
+
+if (said( bains))					[	Bad guy of the game.
+	{
+	display3 = 153;
+	display4 = 154;
+	display5 = 155;
+	display6 = 156;
+	display7 = 157;
+	}
+
+
+[	Handle obvious interest on the part of the gaming public for further
+[information about their heroes.
+
+set.string( 3, 149);				[	Al
+if (compare.strings( 3, 1))
+	{
+	set( have.match);
+	display3 = 127;
+	display4 = 128;
+	display5 = 129;
+	}
+
+set.string( 3, 150);				[	Greg
+if (compare.strings( 3, 1))
+	{
+	set( have.match);
+	display3 = 130;
+	display4 = 131;
+	display5 = 132;
+	}
+
+set.string( 3, 151);				[	Jim
+if (compare.strings( 3, 1))
+	{
+	set( have.match);
+	display3 = 133;
+	display4 = 134;
+	display5 = 135;
+	}
+
+set.string( 3, 152);				[	Kenny
+if (compare.strings( 3, 1))
+	{
+	set( have.match);
+	display3 = 136;
+	display4 = 137;
+	display5 = 138;
+	}
+
+
+set.string( 3, 118);				[	555-4369 (fake Hots phone#)
+if (compare.strings( 3, 1))
+	{
+	set( have.match);
+	display3 = 117;
+	display5 = 119;
+	display6 = 120;
+	display7 = 121;
+	}
+
+set.string( 3, 174);				[	hots
+set.string( 4, 145);				[	ohmymg
+if ((compare.strings( 3, 1) ||
+	compare.strings( 4, 1)))
+	{
+	set( have.match);
+	display3 = 75;
+	display4 = 140;
+	display5 = 141;
+	display6 = 18;
+	display8 = 142;
+	}
+
+set.string( 3, 158);			[ Art's license plate
+if (compare.strings( 3, 1))
+	{
+	set( have.match);
+	display3 = 75;
+	display4 = 159;
+	display5 = 18;
+	display6 = 160;
+	}
+
+set.string( 3, 164);				[	sw9764912
+if (compare.strings( 3, 1))			[	Taselli/hoffman stolen handgun
+	{
+	set( have.match);
+	display3 = 5;
+	display4 = 6;
+	display5 = 7;
+	display6 = 8;
+	display7 = 9;
+	display8 = 10;
+	display9 = 11;
+	if (!ranTGunSerial)
+		{
+		set( ranTGunSerial);
+		score += 2;
+		}
+	}
+
+set.string( 3, 117);				[ 555-6537
+if ((compare.strings( 3, 1) ||
+	said( pierson)))
+	{
+	set( have.match);
+	display3 = 12;
+	display4 = 13;
+	display6 = 14;
+	display7 = 15;
+	display8 = 16;
+	display9 = 18;
+	display10 = 19;
+	}
+
+if (said( taselli))
+	{
+	display3 = 20;
+	display4 = 21;
+	display5 = 22;
+	display7 = 23;
+	display8 = 24;
+	display9 = 25;
+	}
+
+if (said( hoffman))
+	{
+	display3 = 64;
+	display5 = 63;
+	display6 = 65;
+	display7 = 66;
+	display9 = 67;
+	display11 = 68;
+	}
+
+set.string( 3, 163);
+if (compare.strings( 3, 1))			[	r12345678
+	{
+	set( have.match);
+	display3 = 31;
+	display4 = 36;
+	display5 = 32;
+	display6 = 33;
+	display7 = 34;
+	display8 = 35;
+	display9 = 37;
+	}
+
+set.string( 3, 161);				[	m65789
+set.string( 4, 162);				[	m09876543
+if ((compare.strings( 3, 1) ||
+	compare.strings( 4, 1)))			[	m09876543
+	{
+	set( have.match);
+	display3 = 26;
+	display4 = 27;
+	display5 = 28;
+	display6 = 29;
+	display7 = 30;
+	}
+
+if (said( justinfletch))
+	{
+	display3 = 93;
+	display4 = 94;
+	display5 = 95;
+	display6 = 96;
+	display7 = 97;
+	display9 = 98;
+	display10 = 99;
+	display11 = 100;
+	display12 = 101;
+	}
+
+if (said( jenkins))
+	{
+	display3 = 102;
+	display4 = 94;
+	display5 = 103;
+	display7 = 96;
+	display8 = 105;
+	display10 = 98;
+	display11 = 101;
+	}
+
+if (said( malone))
+	{
+	display3 = 106;
+	display4 = 94;
+	display5 = 107;
+	display7 = 96;
+	display8 = 108;
+	display10 = 98;
+	display11 = 109;
+	display12 = 101;
+	}
+
+if (said( watson))
+	{
+	display3 = 110;
+	display4 = 94;
+	display5 = 111;
+	display6 = 96;
+	display7 = 112;
+	display8 = 113;
+	display9 = 98;
+	display10 = 114;
+	display11 = 115;
+	display12 = 116;
+	}
+
+if (said( colby))
+	{
+	display3 = 148;
+	}
+
+if (!have.match)
+	{
+	set( have.match);
+	display3 = 4;
+	if (logging)
+		{
+		log( 126);
+		}
+	}
+
+
+
+
+if (display3)
+	{
+	display.f( three, ten, display3);
+	display3 = 0;
+	}
+
+if (display4)
+	{
+	display.f( four, ten, display4);
+	display4 = 0;
+	}
+
+if (display5)
+	{
+	display.f( five, ten, display5);
+	display5 = 0;
+	}
+
+if (display6)
+	{
+	display.f( six, ten, display6);
+	display6 = 0;
+	}
+
+if (display7)
+	{
+	display.f( seven, ten, display7);
+	display7 = 0;
+	}
+
+if (display8)
+	{
+	display.f( eight, ten, display8);
+	display8 = 0;
+	}
+
+if (display9)
+	{
+	display.f( nine, ten, display9);
+	display9 = 0;
+	}
+
+if (display10)
+	{
+	display.f( ten, ten, display10);
+	display10 = 0;
+	}
+
+if (display11)
+	{
+	display.f( eleven, ten, display11);
+	display11 = 0;
+	}
+
+if (display12)
+	{
+	display.f( twelve, ten, display12);
+	display12 = 0;
+	}
+
+
+
+[
+:exit
+[
+
+

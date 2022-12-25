@@ -1,0 +1,229 @@
+[ POLICE QUEST
+[ rm26.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 9/18/86
+[ Last Update October 6, 1987GR
+
+[wreck.scene
+
+
+%message	1
+"Being a highly trained observer,
+ you immediately notice a smashed coupe on the sidewalk,
+ and a crowd of rubberneckers milling around nearby.
+ The crowd includes one particularly anxious young man."
+
+%message	2
+"The broken glass of the driver's window
+ has a strange pattern for a car wreck.
+ It appears to be a bullet hole!"
+
+%message	3
+"You take a deep breath, look in the car,
+ and see a male slumped motionless over the steering wheel."
+
+%message	4
+"A closer look reveals a bloody injury to the left side of his head,
+ and a gaping hole in his lower-right jaw!"
+
+%message	5
+"No pulse. No breathing. No vital signs."
+
+%message	6
+"There is a bullet hole in the driver's window.
+ This is not your normal, everyday traffic accident.
+ In your opinion, this man was murdered!"
+
+%message	7
+"You use your radio to advise Dispatch of the apparent homicide."
+
+%message	8
+"The car radio crackles a response..."
+
+%message	9
+"Without a radio extender, you can't use your car radio from here."
+
+%message	10
+"\"10-4, 83-32. We copy 187pc homicide.\""
+
+%message	11
+"\"Be advised, one homicide unit is en route,
+ and the Coroner's Office has been notified.
+ Continue investigation.\""
+
+%message	12
+"You have nothing to report.
+ Investigate the accident scene to see if you can discover something."
+
+%message	13
+"If you were closer, they might notice you."
+
+%message	14
+"An excited young man approaches you."
+
+%message	15
+"\"Officer,\" he says, \"I saw what happened! I saw everything!!\""
+
+%message	16
+"\"I was buying a paper at the newsstand across the street when I heard the
+ scream of tires,\" he tells you.
+ \"I looked down the street, and here comes this car and a light blue,
+ late-model Cadillac
+ racing down the street side-by-side!\""
+
+%message	17
+"\"When they got closer, I heard a 'bang.'
+ I thought one of 'em had a blowout!\""
+
+%message	18
+"\"But, right after that, this car here lost control and crashed.
+ The light blue Caddie just kept on jammin'!\" he finishes breathlessly."
+
+%message	19						[	also used in message 32
+"\"I think I saw part of his license plate number, 'L964.'\""
+
+%message	20
+"You notify dispatch of the vehicle information."
+
+%message	21
+"Homicide Detective Oscar Hamilton arrives with Sergeant Dooley."
+
+%message	22
+"Dooley tells you,
+ \"Bonds, Detective Hamilton will handle the investigation from here.\""
+
+%message	23
+"\"Hit the streets and try to find the rat responsible,\" says Sgt. Dooley.
+ \"I'll introduce the witness to Hamilton.\""
+
+%message	24
+"This guy won't be doing anything soon!"
+
+%message	25
+"To whom are you speaking?"
+
+%message	26
+"The little old lady in the crowd cries out,
+ \"Officer, do something. That man is hurt bad! Help him!!\""
+
+%message	27
+"They can't hear you from here."
+
+%message	28
+"This man is beyond help."
+
+%message	29
+"The sign reads, \"Colonial Van and Storage.\""
+
+%message	30
+"The bricks won't do you any good."
+
+%message	31
+"Hold on, Sonny. It seems Sergeant Dooley has something to tell you."
+
+%message	32
+"\"All I know is,\" says the witness, %m19"
+
+%message	33
+"You can't see the driver very well from here."
+
+%message	34
+"The green coupe will require a major front-end job!"
+
+%message	35
+"Dooley reminds you, \"Ok, Sonny, move it out! That's an order.\""
+
+%message	36
+"Dooley tells you, \"Resume patrol now, Officer Bonds.\""
+
+%message	37
+"Dooley says, \"Anytime now, Bonds. Hit the street!\""
+
+%message	38
+"There's a man slumped over the steering wheel."
+
+%message	39
+"Dispatch will not hear you unless you use the radio."
+
+%message	40
+"You assess the damage to the building."
+
+%message	41
+"That's a job for the coroner."
+
+%message	42
+"It's obvious the radiator was damaged from impact."
+
+%message	43
+"\"Why doncha get some help?\""
+
+%message	44
+"\"10-4, 83-32.
+ We copy light blue Cadillac, partial license 'L964.'\""
+
+%message	45
+"You have nothing further to report."
+
+%message	46
+"\"10-4, 83-32.
+ Hamilton and Dooley are in route.
+ Estimated time of arrival is momentarily!\""
+
+%message	47
+"This door is jammed."
+
+%message 48
+"It would be more professional to wait until the
+ homicide detectives arrive before leaving the scene."
+
+%message	49
+"Forget it! Just walk around to the other side."
+
+%message	50
+"You see a man slumped over the wheel."
+
+%message	51
+"The crowd appears to be fixated on the wreck."
+
+%message	52
+"Sgt. Dooley honks his horn and yells out the window,
+ \"Hey, Sonny! Move out of the way, I need to park there!\""
+
+%message	53
+"\"10-4, 83-32. We copy 187pc homicide. Continue investigation.\""
+
+%message	54
+"%m20 \"Dispatch, this is 83-32.
+ Be advised description of suspect vehicle is late-model, light blue
+ Cadillac.\""
+
+%message 55
+"It's difficult to see though the smoke and debris,
+ but you feel certain you can see programmers working on
+ adventure games inside."
+
+%message 56
+"The wreck victim's license plate appears to have
+ been lost during the accident."
+
+%message 57
+"This car smells of death."
+
+%message 58
+"Someone in this crowd smells of musk and cheap perfume."
+
+%message 59
+"The inside of this building smells of flatulence."
+
+%message 60
+"Yes, the tailpipe smells of exhaust."
+
+%message 61
+"Ah! The air of Lytton."
+
+%message 62
+"%g79"
+
+%message	63
+"You can't. It's sprung."
+

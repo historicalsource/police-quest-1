@@ -1,0 +1,292 @@
+[ POLICE QUEST
+[ rm109.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/4/87
+[ Last Update October 10, 1987al
+
+[ lgc.phone
+
+[ NOTE: numbers 1-21 and 101-121 are reserved for phone numbers.
+%message	1	"(209) 683-6858"
+%message	2 	"911"
+%message	3	"411"
+%message	4	"555-4369"    			[	Helen Hots / Commissioners wife. 
+%message	5	"555-6537"    			[	Leroy Pierson 
+%message	6	"555-4522"    			[	Frank Williams homicide lab
+%message	7	"555-2622"    			[	Jack Cobb 
+%message	8	"555-7764"    			[	Let. Morgan's home
+%message	9	"0"					[	operator
+%message	10	""					[	MUST remain a NULL string!
+%message	11	"(312) 555-3382"
+%message	12	"555-9222"			[	lytton cab co
+%message	13	"555-6674"			[	Lt. Morgan's office.
+%message	14	"683-6858"
+%message	15	"555-1212"
+%message	16	"1555-1212"
+%message	17	" "					[	MUST remain a 1-space string.
+%message	18	"2096836858"
+%message	19	"12096836858"
+%message	20	"1-209 683-6858"
+%message	21	"1 209 683-6858"
+
+[	There are more telephone numbers at the bottom of this file.
+
+
+%message	22
+"Number to dial: "
+
+%message	23
+"\"The number you have reached is disconnected or no longer in service.
+ Please check the number and dial again.\""
+
+%message	24
+"\"This is a recording.\""
+
+%message	25
+"Hum! Busy%m41"
+
+%message	26
+"Enter party's last name: "
+
+%message	27
+"\"I'm sorry. There is no one listed by that name%m41"
+
+%message	28
+"\"You have reached Directory Assistance. Thank you for using LT&T.\""
+
+%message	29
+"Sierra, Inc"
+
+%message	30
+"Sierra OnLine"
+
+%message	31
+"Sierra"
+
+%message	32
+"Hots"
+
+%message	33
+"Pierson"
+
+%message	34
+"Williams"
+
+%message	35
+"Cobb"
+
+%message	36
+"Morgan"
+
+%message	37
+"\"The number is:\n\n
+%s8.\""
+
+%message	38
+"You haven't finished your last call, yet!"
+
+%message	39
+"The phone cord is not that long."
+
+%message	40
+"Not now!"
+
+%message	41
+"...\n\n
+Click!"
+
+%message	42
+"\"Hello, Sierra On-Line Customer Support, Larry Weissenborne speaking.
+ How may I help you? But hurry up, 'cause I'm leaving soon!\""
+
+%message	43
+"\"You know those crazy programmers;
+ they can't do anything right the first time!!\""
+
+%message	44
+"\"Hint books are available for $7.95.
+ Try calling this number to place your order,
+ but next time use a REAL phone, not this game!\""
+
+%message	45
+"\"King's Quest I, II and III, The Black Cauldron,
+ Leisure Suit Larry in the Land of the Lounge Lizards,
+ and Space Quest I and II.\""
+
+%message	46
+"\"Police Quest II and others are now in development!\""
+
+%message	47
+"\"Thank you for calling. Goodbye%m41"
+
+%message	48
+"\"Changed your mind, eh?\""
+
+%message	49
+"For emergencies, dial 911.
+ For information, dial 411."
+
+%message	50
+"Hmmm. No answer%m41"
+
+%message	51
+"\"Hello.\""
+
+%message	52
+"\"Yes, Helen speaking.\""
+
+%message	53
+"\"I don't know who you're trying to call, Sonny Bonds,
+ but I recognize your voice!
+ This is Helen Hacker, you pervert!\""
+
+%message	54
+"\"...you're in big trouble!!!\""
+
+%message	55
+"\"Crime Lab, Detective Williams%m81"
+
+%message	56
+"\"Hello, Sonny! What can I do for you?\""
+
+%message	57
+"\"Yes, the prints on the gun matched that Hoffman/Taselli fellow.\""
+
+%message	58
+"\"I heard he %s7! Bye now%m41"
+
+%message	59
+"\"Cobb residence.
+ If you are looking for Jack, he is probably drinking at the Blue Room%m41"
+
+%message	60
+"\"Lieutenant Morgan%m81"
+
+%message	61
+"\"Cops don't call 911!\""
+
+%message	62
+"The phone is not ringing."
+
+%message	63
+"escaped!"
+
+%message	64
+"got released."
+
+%message	65
+"Taber"
+
+%message	66
+"\"Chicago PD, Detective Taber speaking. How may I help you?\""
+
+%message	67
+"Detective Taber says,
+ \"Oh, yes, we know your man, Jason Taselli, alias Hoffman, alias Pierson.\""
+
+%message	68
+"\"He is linked to a big time card shark and drug runner
+ named Jessie Bains.\""
+
+%message	69
+"\"Both have dropped from sight in our area.\""
+
+%message	70
+"\"Good Luck!%m41"
+
+%message	71
+"\"Boy, it's amazing how these guns get around.\""
+
+%message	72
+"\"That weapon was reported stolen by a local nightclub owner.\""
+
+%message	73
+"\"I guess it's your problem now!\""
+
+%message	74
+"\"I'll send you a mug shot of this guy Bains.\""
+
+%message	75
+"The telephone in this room is a kinky gold."
+
+%message	76
+"Lytton Cab"
+
+%message	78
+"\"Lytton Cab Co. Where's the pickup?\""
+
+%message	79
+"\"Ok. We have a car on the way. Thank you%m41"
+
+%message	80
+"\"Call back when you find out where you are%m41"
+
+%message	81
+". Who's speaking, please?\""
+
+%message	82
+"\"Hello, Mr. Banksten.\""
+
+%message	83
+"\"Why don't you send Sweet Cheeks Marie back to the station by cab?\""
+
+%message	84
+"\"Try to get behind the scenes in the Hotel.\""
+
+%message	85
+"\"Your backup personnel will be arriving later this evening.\""
+
+%message	86
+"\"Good luck%m41"
+
+%message	87
+"Oh, my gawd! It's Police Commissioner Hacker's wife!"
+
+%message	88
+"...and you are knee-deep in whale do-do!!"
+
+
+
+%message	89	"1-(209) 683-6858"
+%message	90	"1 (209) 683-6858"
+%message	91	""
+%message	92	""
+%message	93	"cab"
+%message	94	"cab company"
+%message	95	"taxi"
+%message	96	"taxicab"
+%message	97	""
+%message	98	""
+%message	99	""
+%message	100	""
+%message	101	"3125553382"
+%message	102	"312 5553382"
+%message	103	"312 555-3382"
+%message	104	"13125553382"
+%message	105	"1 3125553382"
+%message	106	"1 312 5553382"
+%message	107	"1 312 555-3382"
+%message	108	"1(312)555-3382"
+%message	109	"1 (312) 555-3382"
+%message	110	"1-312 555-3382"
+%message	111	"1-312-555-3382"
+
+%message	112	
+"There is no number on this telephone."
+
+%message	113	
+"\"Cobb residence.\""
+
+%message	114	
+"You offer your condolences to the Cobb family."
+
+%message	115	
+"\"Thank you so much, Sonny.\""
+
+[	%message	116	""
+[	%message	117	""
+[	%message	118	""
+[	%message	119	""
+[	%message	120	""
+[	%message	121	""
+

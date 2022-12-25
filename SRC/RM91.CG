@@ -1,0 +1,232 @@
+[ POKER QUEST
+[ rm91.cg
+[ By:  Ken Williams, Greg Rowland, and Al Lowe
+[ For: Sierra On-Line Inc. 11/17/86
+[ Last Update August 14, 1987al
+
+%include "rm75.h"
+
+
+[ computer.draw -- decide which cards to draw for players 1-3
+[	On output, throwaway.1, 2 and 3 contain the cards to be discarded.
+
+
+
+[	First split out the hand.
+[Convert active.player to an index into the unsorted cards.
+
+work = first.card;
+if (active.player == 1)
+	{
+	work += 5;
+	}
+else
+	{
+	if (active.player == 2)
+		{
+		work += 10;
+		}
+	else
+		{
+		if (active.player == 3)
+			{
+			work += 15;
+			}
+		}
+	}
+
+current.card =@ work;
+function = split.card;
+call( poker.subs);
+card1 = card.value;
+suit1 = current.suit;
+++work;
+
+current.card =@ work;
+function = split.card;
+call( poker.subs);
+card2 = card.value;
+suit2 = current.suit;
+++work;
+
+current.card =@ work;
+function = split.card;
+call( poker.subs);
+card3 = card.value;
+suit3 = current.suit;
+++work;
+
+current.card =@ work;
+function = split.card;
+call( poker.subs);
+card4 = card.value;
+suit4 = current.suit;
+++work;
+
+current.card =@ work;
+function = split.card;
+call( poker.subs);
+card5 = card.value;
+suit5 = current.suit;
+
+set( dont.show.hands);
+call( score.hand);
+reset( dont.show.hands);
+
+
+
+[ok now we have the hand in card1-5 and suit 1-5 plus current hand & kicker
+
+if ((his.hand == h.rflush ||
+	his.hand == h.sflush ||
+	his.hand == h.straight ||
+	his.hand == h.flush ||
+	his.hand == h.2pair ||
+	his.hand == h.4kind))
+	{
+	goto exit;					[*** dont mess with a pat hand
+	}
+
+if ((his.hand == h.3kind ||
+	his.hand == h.2kind))
+	{
+	call( find.not.kicker);
+	goto exit;
+	}
+
+
+[*** ok so we have no pairs, it may be garbage, it may be a straight or flush
+[*** test for a four card flush
+
+work = suit1.var.number;
+
+work6 = 0;						[for counting suits
+work7 = 0;
+work8 = 0;
+work9 = 0;
+
+:loopy2
+work2 =@ work;
+if (work2 == hearts)			{++work6;}
+if (work2 == clubs)				{++work7;}
+if (work2 == spades)			{++work8;}
+if (work2 == diamonds)			{++work9;}
+if (work < suit5.var.number)
+	{
+	++work;
+	goto loopy2;
+	}
+
+work2 = 0;
+if (work6 == 4)				{work2 = hearts;}
+if (work7 == 4)				{work2 = clubs;}
+if (work8 == 4)				{work2 = spades;}
+if (work9 == 4)				{work2 = diamonds;}
+
+if (work2 != 0)  					[if we have a four flush, throw away
+	{							[the misfit - not in work2
+	work = suit1.var.number;
+	
+	:loopy3
+	work6 =@ work;
+	if (work6 != work2)
+		{
+		work -= 5;
+		function = throw.away;
+		call( poker.subs);
+		goto exit;
+		}
+	++work;
+	goto loopy3;
+	}
+
+
+[*** test for 4 card outside straight
+[*** since cards are sorted, just test 4 in a row at top or bottom
+
+work = card1.var.number;
+work2 = 0;
+
+:loopy
+work6 =@ work;
+if (work6 != work2)
+	{
+	if (work2 != 0)
+		{
+		goto not.first.four;
+		}
+	}
+++work6;
+work2 = work6;
+++work;
+if (work != card5.var.number)
+	{
+	goto loopy;
+	}
+
+
+[*** aha, a four card straight
+
+work = card5.var.number;				[point at throw away
+function = throw.away;
+call( poker.subs);
+throwaway.1 = work;					[one card
+goto exit;
+
+:not.first.four
+
+work = card1.var.number;
+++work;							[start with card 2
+work2 = 0;
+
+:loopy4
+work6 =@ work;
+if (work6 != work2)
+	{
+	if (work2 != 0)
+		{
+		goto not.last.four;
+		}
+	}
+++work6;
+work2 = work6;
+++work;
+if (!work > card5.var.number)
+	{
+	goto loopy4;
+	}
+
+
+[*** aha, a four card straight - the last four cards
+
+work = card1.var.number;				[point at throw away
+function = throw.away;
+call( poker.subs);
+throwaway.1 = work;					[one card
+goto exit;
+
+:not.last.four
+
+
+[*** really is garbage - just throw away lowest 3
+
+work = card1.var.number;
+function = throw.away;
+call( poker.subs);
+throwaway.1 = work;
+
+work = card1.var.number;
+++work;
+function = throw.away;
+call( poker.subs);
+throwaway.2 = work;
+
+work = card1.var.number;
+++work;
+++work;
+function = throw.away;
+call( poker.subs);
+throwaway.3 = work;
+
+:exit
+

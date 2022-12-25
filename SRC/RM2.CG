@@ -1,0 +1,217 @@
+[ POLICE QUEST 
+[ rm2.cg 
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. 8/26/86
+[ Last Update October 3, 1987GR
+
+[ lgc.ego
+
+%include "gamedefs"
+%include "rm2.msg"
+
+
+
+if (init.log)
+	{
+	if (functionKeys == CAR)
+		{
+		functionKeys = CARandGUN;
+		}
+	else
+		{
+		functionKeys = GUN;
+		}
+
+	reset( preventEgoFire);
+
+	load.sound( s.gun.fire);
+
+	load.view( v.gunFire);
+	load.view.f( current.dead);
+	load.view.f( current.draw);
+
+	animate.obj( a.fire);
+
+	ignore.horizon( a.fire);
+
+	cycle.time( a.fire, three);
+
+	set.view.f( ego, current.sonny);
+	set.view( a.fire, v.gunFire);
+	return( );
+	}
+
+
+if ((func6 ||						[	F6 to load gun
+	said( load, gun) ||
+	said( put, ammo, gun) ||
+	said( load, gun, with, ammo)))
+	{
+	reset( func6);
+	set.string( 3, 2);				[	"load gun"
+	parse( 3);
+	}
+
+
+if ((func8 ||						[	F8 to Draw OR Holster weapon
+	said( draw, gun) ||
+	said( return, gun, holster) ||
+	said( put, gun, away) ||
+	said( put, away, gun, rol) ||
+	said( stop, using, gun) ||
+	said( aim, gun, rol) ||
+	said( remove, gun, from, holster)))
+	{
+	reset( func8);
+	set.string( 3, 3);				[	"draw gun"
+	parse( 3);
+	}
+
+
+if ((func10 ||						[	F10 to Fire weapon
+	said( use, gun, rol) ||
+	said( fire, gun, rol) ||
+	said( shoot, gun, rol) ||
+	said( fire) ||
+	said( shoot) ||
+	said( fire, man) ||
+	said( fire, suspect) ||
+	said( shoot, man) ||
+	said( shoot, suspect) ||
+	said( fire, on, man) ||
+	said( fire, on, suspect)))
+	{
+	reset( func10);
+	set.string( 3, 4);				[	"fire gun"
+	parse( 3);
+	}
+
+
+[ Draw gun logic 
+
+get.posn( a.suspect, suspect.x, suspect.y);
+current.view( ego, current.ego);
+current.loop( ego, loop);
+
+if (!in.car &&
+    (has( i.gun) || has( i.loaded.gun)) &&
+	said( draw, gun))
+	{
+	reset( func8);
+
+	if (current.ego == current.sonny)
+		{
+		if (loop == facing.left && ego.x > 4)
+			{
+			ego.x -= 4;
+			}
+		reposition.to.f( ego, ego.x, ego.y);
+		set.view.f( ego, current.draw);
+		}
+	else
+		{
+		if (loop == facing.left)
+			{
+			ego.x += 4;
+			}
+		reposition.to.f( ego, ego.x, ego.y);
+		set.view.f( ego, current.sonny);
+		}
+	}
+
+
+[ Fire gun logics 
+
+if (!in.car &&
+	has( i.loaded.gun) &&
+	current.ego == current.draw &&
+	said( fire, gun))
+	{
+	reset( func10);
+
+	if (!firing.gun && !preventEgoFire)
+		{
+		set( firing.gun);
+
+		--shots.left;
+		if (!shots.left)
+			{
+			drop( i.loaded.gun);
+			get( i.gun);
+			}
+
+		if (!shot.first)
+			{
+			shot.first = ego.shot.first;
+			}
+
+		range.high = suspect.y;		[	Was ego lined up?
+		range.high += 5;
+		range.low = suspect.y;
+		range.low -= 5;
+
+		if  (ego.y < range.high &&	[	Can ego's shot kill the suspect?
+			ego.y > range.low &&
+		    !suspect.dying &&
+			progress < ego.dying)
+			{
+			if (suspect.x < ego.x &&	 [	Is he facing the wrong wall?
+				loop == facing.left)
+				{
+				set( murder);
+				}
+
+			if (suspect.x > ego.x &&
+				loop == facing.right)
+				{
+				set( murder);
+				}
+
+			if (suspect.x == ego.x)
+				{
+				set( murder);
+				}
+			}
+
+		get.posn( ego, x, y);
+		get.priority( ego, priority);
+
+		if (loop == facing.left)
+			{
+			set.loop.f( a.fire, loop);				
+			x -= GUN_LEFT_X;
+			}
+		else {		 
+			set.loop( a.fire, facing.right);
+			x += GUN_RIGHT_X;
+			}
+		y -= GUN_Y;
+		position.f( a.fire, x, y);
+
+		set.cel( a.fire, 0);
+		set.priority.f( a.fire, priority);
+		draw( a.fire);
+		end.of.loop( a.fire, ego.shot.done);
+		sound( s.gun.fire, snd.done);
+
+		set( in.motion);			[	He's here, and he's pissed now!
+		stop.motion( ego);
+		}
+	}
+
+if (ego.shot.done)
+	{
+	reset( ego.shot.done);
+	reset( firing.gun);
+	start.motion( ego);
+	if (shot.first == ego.shot.first)
+		{
+		shot.first = 0;
+		}
+	erase( a.fire);
+	}
+	
+[
+:exit
+[
+

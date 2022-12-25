@@ -1,0 +1,233 @@
+[ POLICE QUEST
+[ rm67.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 25, 1987al
+
+[	Messages for room 67
+
+
+%message	1
+"You observe a spacious, nicely-furnished, one-room apartment."
+
+%message	2
+"Through the window you see the pulsating metropolis of Lytton."
+
+%message	3
+"\"Hey, Sonny! Sorry if we interrupted you in the bathroom, there.
+ Everything come out ok?\""
+
+%message	4
+"\"Did you get anywhere with the bartender, Precious?\""
+
+%message	5
+"\"In all my endeavors,
+ I have found that only money makes the world go 'round.\""
+
+%message	6
+"\"Maybe you should go back and try again.\""
+
+%message	7
+"\"Do you have enough money to carry you through a
+ gambling session, Big Boy?\""
+
+%message	8
+"The men aren't interested in conversation.
+ There is much tension here due to the seriousness of the operation."
+
+%message	9
+"They're as ugly as a computer programmer!"
+
+%message	10
+"Forget about that nail and start concentrating on nailing Bains."
+
+%message	11
+"It's the kind of dresser you'd expect to find in a room like this."
+
+%message	12
+"The nightstand is bolted to the floor."
+
+%message	13
+"The lamp is bolted to the nightstand."
+
+%message	14
+"It's hardly state-of-the-art.
+ The first program it showed was a live broadcast of Uncle Miltie.
+ It's got more tubes than an emergency room patient."
+
+%message	15
+"The nightstand is very plain looking, with no drawers.
+ If they didn't need something to bolt the lamp to,
+ it probably wouldn't be here."
+
+%message	16
+"The bathroom is very basic.
+ It contains a shower, a small sink and a toilet."
+
+%message	17
+"It's not something you'd want to look at for an extended period of time!"
+
+%message	18
+"The curtains are of no interest."
+
+%message	19
+"You feel a sense of pride when you see the city you protect."
+
+%message	20
+"\"Hey, Sonny! How's it going?\" says the lead detective.
+ \"I'm sure glad we found your room!
+ I'd hate to have someone call the cops on us for breaking and entering!\""
+
+%message	21
+"\"We're ready whenever you are, 'Whitey'!\" he concludes."
+
+%message	22
+"\"Ok, Sonny, here's your voice transmitter.
+ I've tested it thoroughly to make sure works properly.\""
+
+%message	23
+"You detach the handle of your cane to expose the .22-magnum derringer.
+ You double-check it, just to make certain it is loaded."
+
+%message	24						[just before leaving hotel room 
+"\"We'll monitor your voice transmitter at all times.
+ We're anxiously waiting to assist you in any arrests.\""
+
+%message	25
+"The lamp is bolted to the nightstand, which is bolted to the floor."
+
+%message	26
+"This may be a nice hotel, but they don't furnish bathroom telephones."
+
+%message	27
+"There's nothing you should do here that can't be done in the light."
+
+%message	28
+"It is already on."
+
+%message	29
+"It is already off."
+
+%message	30
+"You see a well-worn carpet."
+
+%message	31
+"You've already done it."
+
+%message	32
+"As much as you'd love to catch some old \"Dragnet\" reruns,
+ you realize you must keep your mind on the case."
+
+%message	33
+"If you insist.
+ The toilet is quite a sight indeed.
+ There isn't much doubt as to its function all these years."
+
+%message	34
+"The bed looks like it's been heavily used.
+ There is a large sag in the middle that's about the size of your boss."
+
+%message	35
+"You open the drawers to the dresser and (as expected) find nothing."
+
+%message	36
+"You nervously flush the toilet.
+ Much to your relief, all goes well."
+
+%message	37
+"You consider spreading out on the comfortable looking bed,
+ but the case keeps running through your mind.
+ You'd never be able to rest at a time like this!"
+
+%message	38
+"The window is sealed shut for your protection."
+
+%message	39
+"You hear a knock on the door, followed by the turn of the doorknob.
+ Three men enter, two of them familiar."
+
+%message	40
+"You utter a sigh of relief as you expel the eighteen cups of coffee
+ that have been wreaking havoc on your bladder.
+ You think more clearly now."
+
+%message	41
+"Everything seems to be in order."
+
+%message	42
+"You start to unzip your trousers,
+ but decide this isn't a good location to initiate such an action."
+
+%message	43
+"You ease down on the cool seat and meditate for a short time.
+ Soon, everything works itself out.
+ As you pull up your trousers, you feel noticeably lighter on your feet."
+
+%message	44
+"A shower would be relaxing, but you have work to do."
+
+%message	45
+"The shower is lined with brightly colored, imported tile."
+
+%message	46
+"The small sink is made of porcelain."
+
+%message	47
+"Detective Angland hands you the transmitter and a new supply of marked
+ hundred-dollar bills.
+ You carefully clip the transmitter to your pocket."
+
+%message	48
+"Your backups will arrive with your voice transmitter soon."
+
+%message 49
+"An abstract painting decorates the west wall."
+
+%message 50
+"Why, that looks like a phone over there!"
+
+%message	51
+"It's a genuine, LT&T touchtone model."
+
+%message	52
+"You see lots of lint, but nothing you'd consider touching."
+
+%message	53
+"\"I don't have the transmitter; Detective Angland does.\""
+
+%message	54
+"\"Good luck, Sonny!\""
+
+%message	55
+"\"Oh, gawd, Sonny! What will you do!?\""
+
+%message	56
+"You instruct Sweet Cheeks to catch a cab and go to the police station."
+
+%message	57
+"As instructed, she heads for the elevator."
+
+%message	58
+"\"Take a look at this,\" says Angland.
+ \"We just received a fax from Chicago that includes
+ the mug shots of one Jessie Bains.\""
+
+%message	59
+"Although the fax is rather fuzzy,
+ you have the feeling that you've seen this face before."
+
+%message	60
+"\"Oh, you!\" giggles Sweet Cheeks, \"that's all you ever think about!\""
+
+%message	61
+"This hotel has no room service!"
+
+%message	62
+"Your hands are now clean."
+
+%message	63
+"You're clean enough for this job!"
+
+%message	64
+"\"Oh, honey,\" says Sweet Cheeks, \"I'd be afraid to stay here all alone!\""
+

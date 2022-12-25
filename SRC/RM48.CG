@@ -1,0 +1,399 @@
+[ POLICE QUEST
+[ rm48.cg
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. 3/15/87
+[ Last Update October 8, 1987al
+
+[ bar.tender blue.room and biker bar
+
+
+%include "gamedefs"
+%include "rm48.msg"
+
+
+
+%define	moved.b			tf0
+%define	atBar			tf1
+%define	orderWater		tf2
+%define	hasDrink			tf3
+%define	moved5			tf4
+
+%define	tender.time		tmp0
+%define	bartender			tmp1
+%define	moving5			tmp2
+
+%object	a.bartender		1		[bartender bobby lopez
+
+
+
+if (init.log) {
+	load.view( v.bartender);
+	animate.obj( a.bartender);
+	set.view( a.bartender, v.bartender);
+
+	if (current.room == 34) {		[blue room
+		position( a.bartender, 95, 100);
+		}
+	else {
+		position( a.bartender, 85, 122);[biker.bar
+		set.priority( a.bartender, 10);
+		}
+
+	set.loop( a.bartender, 2);
+	draw( a.bartender);
+	stop.update( a.bartender);
+	return( );
+	}
+
+
+
+distance( ego, a.bartender, bartender);
+if ((bartender < dist || moving5)) {
+	set( nearPerson);
+	}
+
+
+[ Animation timers 
+if (moved5) {
+	reset( moved5);
+	++moving5;
+	}
+
+
+[ Bartender 
+
+if (moving5 < 50) {					[ shut down bartender
+	if (current.room == 34) {
+		if (posn( ego, 40, 99, 112, 118)) {
+			set( atBar);
+			}
+		else {
+			reset( atBar);
+			}
+		}
+
+	if (current.room == 37) {
+		if (posn( ego, 37, 133, 121, 138)) {
+			set( atBar);
+			}
+		else {
+			reset( atBar);
+			}
+		}
+	
+	if (!atBar) {
+		if (moving5 == 15) {		[ reset bartender
+			moving5 = 0;
+			}
+		
+		if (moving5 == 1) {
+			moving5 = 3;
+			}
+		}
+	
+	if (atBar) {
+		if (moving5 == 0) {
+			start.update( a.bartender);
+			follow.ego( a.bartender, 15, moved5);
+			++moving5;
+			}
+		
+		if (moving5 == 2) {
+			stop.update( a.bartender);
+			random( 1, 4, work);
+			print.f( work);		[ what will it be
+			tender.time = 1;
+			++moving5;
+			}
+		
+		if (moving5 == 4) {			[ get drink
+			prevent.input( );
+			set( game.control);
+			start.update( a.bartender);
+			
+			if (current.room == 34) {
+				move.obj( a.bartender, 73, 100, 1, moved5);	[ blue.room
+				}
+			else {
+				move.obj( a.bartender, 66, 122, 1, moved5);	[ biker.bar
+				}
+		
+			++moving5;
+			tender.time = 151;
+			}
+		
+		if (moving5 == 6) {
+			set.loop( a.bartender, 3);
+			stop.cycling( a.bartender);
+			}
+		
+		if (moving5 == 7) {			[ got drink
+			start.cycling( a.bartender);
+			follow.ego( a.bartender, 12, moved5);
+			++moving5;
+			}
+		
+		if (moving5 == 9) {			[ deliver drink
+			accept.input( );
+			reset( game.control);
+
+			if (orderWater) {
+				print( 37);		[ free drink
+				set( hasDrink);
+				moving5 = 11;
+				reset( orderWater);
+				}
+			else {
+				if (!current.sonny) {
+					print( 39);	[ drinking in uniform
+					stop.update( a.bartender);
+					set( certainDeath);
+					}
+				else {
+					stop.update( a.bartender);
+					print( 9);	[ that will be a buck
+					++moving5;
+					}
+				}
+			}
+		}
+	
+	if (!atBar && moving5 == 3) {
+		print( 38);				[ if you change mind come back
+		tender.time = 0;
+		moving5 = 11;
+		}
+	
+	if (moving5 == 11) {			[ finished order
+		start.update( a.bartender);
+		
+		if (current.room == 34) {
+			move.obj( a.bartender, 95, 100, 1, moved5);
+			}
+		else {
+			move.obj( a.bartender, 85, 122, 1, moved5);
+			}
+		++moving5;
+		}
+	
+	if (moving5 == 13) {			[ face front
+		set.loop( a.bartender, 2);
+		set( moved5);
+		tender.time = 0;
+		}
+	
+	if (moving5 == 14) {			[ park for next drink
+		stop.update( a.bartender);
+		++moving5;
+		}
+	
+	if (!atBar && moving5 == 10 && tender.time == 0) {	[ not payed
+		++moving5;				[ trying to sleeze
+		random( 25, 27, work);
+		print.f( work);			[ trying to sleeze
+		}
+	
+	
+	[ Timed Response
+
+	if (tender.time != 0) {			[ for printing recurring messages 
+		++tender.time;
+		
+		if (tender.time == 255) {
+			tender.time = 1;
+			}
+		}
+	
+	if (tender.time == 150) {
+		random( 1, 4, work);
+		print.f( work);			[ what will it be
+		tender.time = 1;
+		}
+	
+	if (tender.time == 200) {
+		++moving5;				[return from mixing
+		tender.time = 0;
+		}
+	}
+	
+	
+[ Text Responce 
+
+if (!have.input) {
+	goto exit;
+	}
+
+if ( hasDrink &&
+	(said( drink) ||
+	said( drink, rol))) {
+	print( 41);				[	"You swig the rancid fluid.."
+	reset( hasDrink);
+	}
+
+
+if (said( look, bar)) {
+	print( 32);
+	}
+
+if (said( look, glass)) {
+	print( 33);
+	}
+
+if ((said( look, bottle)
+|| said( look, cabinet))) {
+	print( 34);
+	}
+
+if (said( look, chair)) {
+	print( 35);
+	}
+
+if (said( look, table)) {
+	print( 36);
+	}
+
+
+if (moving5 < 50) {					[ bartender in action
+	
+	[ order drink
+	
+	if (atBar) {
+		reset( work.f);
+
+		if (said( no, rol)) {
+			print( 38);			[ change mind holler
+			moving5 = 11;
+			}
+
+		if ((said( buy, drink, rol)
+		|| said( buy, rol)
+		|| said( get, drink, rol)
+		|| said1( drink, rol))) {
+			print( 1);			[ what will it be
+			}
+		
+		if (said( buy, rum, rol)) {
+			print( 15);			[ coming right up
+			moving5 = 3;
+			set( work.f);
+			}
+		
+		if (said( rum, rol, rol)) {
+			print( 5);			[ coming right up
+			moving5 = 3;
+			set( work.f);
+			}
+		
+		if ((said( buy, coke, rol) ||
+			said( buy, water, rol))) {
+			print( 15);			[ coming right up
+			moving5 = 3;
+			set( orderWater);
+			set( work.f);
+			}
+		
+		if ((said( coke, rol)
+		|| said( water, rol))) {
+			print( 5);			[ coming right up
+			moving5 = 3;
+			set( orderWater);
+			set( work.f);
+			}
+
+		if ((said( anyword, rum, rol) ||
+			said( rum, anyword, rol)))
+			{
+			random( 6, 7, work);
+			print.f( work);		[ coming right up
+			moving5 = 3;
+			set( work.f);
+			}
+		
+		if (work.f) {
+			if (moving5 == 3) {
+				++moving5;
+				tender.time = 0;
+				}
+			else {
+				random( 19, 21, work);
+				print.f( work);	[ whats the hurry
+				}
+			reset( work.f);
+			}
+		}
+	else {
+		if ((said1(order)
+		|| said( order, rum)
+		|| said( rum)
+		|| said( anyword, rum)
+		|| said( rum, anyword)
+		|| said( pay)
+		|| said( anyword, pay)
+		|| said( pay, anyword)
+		|| said( give, money)
+		|| said( pay, money)
+		|| said( tip, rol)))
+			{
+			random( 16, 18, work);
+			print.f( work);		[ go to the bar
+			}
+		}
+	
+
+	[ pay drink 
+	if (moving5 == 10) {			[ return with drink
+		if ((said( pay)
+		|| said( anyword, pay)
+		|| said( pay, anyword)
+		|| said( give, money)
+		|| said( pay, money))) {
+			if (cash > 0) {
+				cash -= 1;
+				random( 22, 24, work);
+				print.f( work);	[ thanx my man
+				set( hasDrink);
+				++moving5;
+				}
+			else {
+				random( 25, 27, work);
+				print.f( work);	[ no money
+				++moving5;
+				}
+			}
+		}
+	else {
+		if (atBar) {
+			if ((said( pay)
+			|| said( anyword, pay)
+			|| said( pay, anyword)
+			|| said( give, money)
+			|| said( pay, money)
+			|| said1(tip)
+			|| said( anyword, tip)
+			|| said( tip, anyword))) {
+				if (cash > 0) {
+					cash -= 1;
+					random( 28, 29, work);
+					set( hasDrink);
+					print.f( work);		[ thnx for tip
+					}
+				else {
+					random( 30, 31, work);
+					print.f( work);		[ thnx for tip no money
+					}
+				}
+			}
+		}
+	}
+	
+
+[
+:exit
+[
+
+[	%message	100
+[	"Moving5 %v225|3"
+[	if (QA) {
+[		display( 2, 0, 100);
+[		}
+

@@ -1,0 +1,282 @@
+[ POLICE QUEST
+[ rm43.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 25, 1987al
+
+[ moroff.room
+
+
+%message	1
+"This is %m85's office."
+
+%message	2
+"Lt. Morgan is a handsome, middle-aged man,
+ with a winsome touch of gray to his hair."
+
+%message	3
+""
+
+%message	4
+""
+
+%message	5
+""
+
+%message	6
+""
+
+%message	7
+"You're in %m85's office."
+
+%message	8
+"%m85 keeps his desk neat and clean,
+ with a place for everything, and everything in its place.
+ There is a telephone on his desk."
+
+%message	9
+"You are talented, but there is no need to climb the desk!"
+
+%message	10
+"You don't have time to sit on the desk!"
+
+%message	11
+"\"I have a lot of paperwork and no time to talk!\""
+
+%message	12
+"\"555-6674\""
+
+%message	13
+""
+
+%message	14
+""
+
+%message	15
+""
+
+%message	16
+""
+
+%message	17
+""
+
+%message	18
+""
+
+%message	19
+""
+
+%message	20
+""
+
+%message	21
+""
+
+%message	22
+""
+
+%message	23
+"\"Sonny, you were selected because of your experience and years
+ of good service to the force,\" says %m85."
+
+%message	24
+"You look under the desk and surmise that %m85 picks his nose."
+
+%message	25
+"%m85 keeps his window nailed shut!"
+
+%message	26
+""
+
+%message	27
+""
+
+%message	28
+""
+
+%message	29
+""
+
+%message	30
+""
+
+%message	31
+""
+
+%message	32
+""
+
+%message	33
+""
+
+%message	34
+""
+
+%message	35
+""
+
+%message	36
+""
+
+%message	37
+""
+
+%message	38
+""
+
+%message	39
+""
+
+%message	40
+"This file is locked!"
+
+%message	41
+"Only %m85 has access to this file."
+
+%message	42
+""
+
+%message	43
+"Warming the chair would be all you accomplished."
+
+%message	44
+""
+
+%message	45
+""
+
+%message	46
+""
+
+%message	47
+""
+
+%message	48
+""
+
+%message	49
+""
+
+%message	50
+""
+
+%message	51
+""
+
+%message	52
+""
+
+%message	53
+"You're not close enough."
+
+%message	54
+"It's a tile floor."
+
+%message	55
+"%m84's phone is not for your use."
+
+%message	56
+"There is nothing on %m84's desk that concerns you."
+
+%message	57
+"%m84 barks, \"Sonny, get out from behind my desk!\""
+
+%message	58
+""
+
+%message	59
+""
+
+%message	60
+""
+
+%message	61
+"%v35"
+
+%message	62
+""
+
+%message	63
+"This door opens out, so you must leave in order to close it."
+
+%message	64
+"%m83 jabs, \"Sonny! Can't you see I'm busy!\""
+
+%message	65
+"\"Please, Sonny!
+ I've got a ton of paperwork to do, and no time for conversation.\""
+
+%message	66
+"\"Sonny, I don't have time for anything now!\""
+
+%message	67
+"It's a window with mini-blinds."
+
+%message	68
+"That would anger %m83, as he likes his office dark."
+
+%message	69
+"\"Lytton City Map\""
+
+%message	70
+"You do not need it."
+
+%message	71
+"Make your own map!"
+
+%message	72
+"The books on the shelves belong to the Lieutenant."
+
+%message	73
+"You don't need them."
+
+%message	74
+"It's a ceiling."
+
+%message	75
+""
+
+%message	76
+""
+
+%message	77
+""
+
+%message	78
+""
+
+%message	79
+""
+
+%message	80
+""
+
+%message	81
+""
+
+%message	82
+""
+
+%message	83
+"Morgan"
+
+%message	84
+"Lt. %m83"
+
+%message	85
+"Lieutenant %m83"
+
+%message	86
+"\"I'm waiting for a return telephone call, Sonny,\" says %m84.
+ \"Keep working and see what you can discover.\""
+
+%message	87
+""
+
+%message	88
+""
+
+%message	89
+""
+

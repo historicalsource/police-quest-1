@@ -1,0 +1,1657 @@
+[ POLICE QUEST
+[ rm32.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 1/27/87
+[ Last Update October 17, 1987GR
+
+[rm.felony
+
+
+%include "gamedefs"
+%include "rm32.msg"
+%include "rm94.h"
+
+
+
+[ Pertinent locations:
+[  67, 152,  72, 160				[ Felony Trunk
+[ 146, 155, 151, 160 				[ PC trunk
+[  29, 159,  41, 162				[ front door, in front of suspect car
+[  42, 159,  52, 162				[ back door, in front of suspect car
+[  29, 150,  41, 155				[ front door, in back of suspect car
+[  42, 150,  52, 155				[ back door, in back of suspect car
+
+
+
+%define	egoInCar				in.car
+%define	WAITING_FOR_SUS_IN_CAR	30
+
+[%var	felScene			119
+%define	calledBU		1
+%define	BUarrived		2			[	  \	All at once.
+%define	BUconfirmed	3			[	  /
+%define	BUpositioned	4
+%define	getOut		5
+%define	Out			6
+%define	get'mUp		7
+%define	put'nUp		8
+%define	handsUp		9
+%define	getDown		10
+%define	goingDown		11
+%define	faceDown		12
+[%define	you'reCovered	13
+[%define	he'sDesp		14
+%define	susCuffed		15
+%define	getUp		16
+%define	walking		17
+%define	atBackDoor	18
+%define	inBackSeat	19
+
+
+%define	lclReadRights		lf0
+%define	susScriptDone		lf1
+%define	susHalted			lf2
+%define	JackOnScreen		lf4
+%define	withHandsUp		lf5
+%define	susInCar			lf6
+%define	trunkDone			lf7
+%define	doTrunk			lf8
+%define	nearPatrolDoor		lf9
+%define	nearSuspectDoor	lf10
+%define	nearLockedDoor		lf11
+%define	lay.down			lf12
+%define	sawLicenseNumber	lf13
+%define	musicDone			lf14
+
+
+%define	susScript			lcl0
+%define	susScriptTimer		lcl1
+%define	susScriptCycles	lcl2
+%define	jackDistance		lcl4
+%define	suspectDistance	lcl5
+%define	jackX			lcl6
+%define	jackY			lcl7
+
+
+%object	aJack			1
+%object	a.trunk			2
+%object	a.jack.fire		3
+
+
+
+if (init.log)
+	{
+	if (!SxFelon)
+		{
+		set( SxFelon);
+		score += 5;
+		}
+
+	if (hercules)
+		{
+		set( outOfMemory);
+		}
+	set( NOcase);
+	dynamic1 = 0;
+
+	load.pic( streetScene);
+	draw.pic( streetScene);
+	discard.pic( streetScene);
+
+	load.view( v.felonyCar);
+	add.to.pic( v.felonyCar, 0, 0, 11, 158, 14, 0);
+	discard.view( v.felonyCar);
+
+
+	load.view( v.taselli.handsup);
+	load.view( v.taselli.cuffed);
+	load.view( v.tasellinCar);
+	load.view( v.patCar);
+
+	load.sound( s.case);
+	load.sound( mTension);
+	load.sound( mBadGuy);
+
+	load.logics( 2);
+	load.logics( 94);
+	load.logics( 118);
+	load.logics( 108);
+	load.logics.f( streetScene);
+
+	if (priorX)
+		{
+		load.view( v.ego);
+		set.view( ego, v.ego);
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		draw( ego);
+		}
+	else	{
+		position( ego, 20, 130);
+		}
+
+	animate.obj( aJack);
+	animate.obj( a.jack.fire);
+	animate.obj( a.SuspDoor);
+	animate.obj( a.trunk);
+
+	load.view( v.gunFire);
+	load.view( v.tasellinCar);
+	load.view( v.tasellinCar);
+
+	set.view.f( aJack, current.sonny);
+	set.view( a.jack.fire, v.gunFire);
+	set.view( a.SuspDoor, v.tasellinCar);
+	set.view( a.trunk, v.tasellinCar);
+ 
+	set.loop( a.trunk, 1);
+
+	position( a.suspect, 32, 161);
+	position( aJack, 151, 155);
+	position( a.trunk, 55, 145);
+	position( a.SuspDoor, 29, 157);
+
+	set.priority( a.trunk, 14);
+	ignore.objs( a.trunk);
+
+	stop.cycling( a.SuspDoor);
+	stop.cycling( a.trunk);
+
+	if (!hercules)
+		{
+		animate.obj( a.back.up);
+		set.view( a.back.up, v.patCar);
+		set.loop( a.back.up, 1);
+		fix.loop( a.back.up);
+		position( a.back.up, 139, 154);
+	  	stop.cycling( a.back.up);
+		}
+
+	if (previous.room == 9) {		[	inside the trunk
+		draw( a.trunk);
+		set( doTrunk);
+		}
+
+	if ((previous.room == 114 ||
+		previous.room == 8 ||
+		previous.room == 9)) {
+		set( enable.menu);
+		status.line.on( );
+		}
+
+	if (has.suspect)
+		{
+		if (hercules)
+			{
+			add.to.pic( v.patCar, 1, 2, 139, 154, 0, 0);
+			}
+		else
+			{
+			last.cel( a.back.up, work);
+			set.cel.f( a.back.up, work);
+			draw( a.back.up);
+			stop.update( a.back.up);
+			}
+
+		if (Sdoor)
+			{
+			set.cel( a.SuspDoor, 2);
+		 	draw( a.SuspDoor);
+			}
+		}
+	else
+		{
+		set( susInCar);
+		set.cel( a.SuspDoor, 0);
+	 	draw( a.SuspDoor);
+		reset( Sdoor);
+		}
+
+
+	call( 2);						[	Gun
+	call( 94);					[	lgc.stopped.cars
+	call( 118);					[	lgc.suspect
+	call( 108);
+
+	show.pic();
+
+	set( preventEgoFire);
+	}
+
+
+distance( ego, aJack, jackDistance);
+distance( ego, a.suspect, suspectDistance);
+if ((jackDistance < dist ||
+	suspectDistance < dist)) {
+	set( nearPerson);
+	}
+
+reset( nearPatrolDoor);
+if (posn( ego, 100, 160, 120, 164)) {	[ out from door
+	set( nearPatrolDoor);
+	}
+
+reset( nearLockedDoor);
+if ((posn( ego, 42, 159, 52, 162) ||	[ back door, in front of suspect car
+	posn( ego, 29, 150, 41, 155) ||	[ front door, in back of suspect car
+	posn( ego, 42, 150, 52, 155)))	[ back door, in back of suspect car
+	{
+	set( nearLockedDoor);
+	}
+
+reset( nearSuspectDoor);
+if (posn( ego, 29, 159, 41, 162)) 		[ front door, in front of suspect car
+	{
+	set( nearSuspectDoor);
+	}
+
+
+if (posn( ego, 85, 143, 106, 154))		[	Behind Jack, behind car.
+	{
+	set.priority( ego, 12);
+	}
+else
+	{
+	release.priority( ego);
+	}
+
+
+
+[ Handle text input.
+
+if (!have.input) {
+	goto noInput;
+	}
+
+if ((said( get, id) ||
+	said( talk, man) ||
+	said( ask, for, id) ||
+	said( drop, gun) ||
+	said( drop, your, gun) ||
+	said( show, license))) {
+	print( 78);
+	}
+
+if (said( call))
+	{
+	if (felScene < BUarrived)
+		{
+		print( 77);
+		print( 1);				[ Be advised ADAM 83-31 Responding
+		felScene = calledBU;
+		random( 10, 20, scriptTimer);
+		script = 0;				[	Documentation purposes.
+		}
+	else
+		{
+		if (felScene < BUpositioned)
+			{
+			print( 66);
+			}
+		else
+			{
+			print( 5);
+			}
+		}
+	}
+
+
+if  (susInCar && !in.car &&
+    (said( keep, hands, up, leave, car) ||
+	said( raise, hands, get$out, car) ||
+	said( get$out, car, raise, hands) ||
+	said( get$out, car, keep, hands, up) ||
+	said( get$out, car, hands, up) ||
+	said( leave, car, hands, up) ||
+	said( place, hands, up, leave, car) ||
+	said( get$out, car, with, hands, up)))
+	{
+	if (egoInCar)
+		{
+		print( 67);
+		}
+	else
+		{
+		if (felScene == BUpositioned)
+			{
+			set( withHandsUp);
+			felScene = getOut;
+			susScriptCycles = 9;
+			susScript = 0;
+			}
+		else
+			{
+			print( 68);
+			}
+		}
+	}
+
+
+if  (susInCar && !in.car &&
+    (said( go, out, car) ||
+	said( go, out)	||
+	said( leave, car) ||
+	said( go, rol)))
+	{
+	if (egoInCar)
+		{
+		print( 67);
+		}
+	else
+		{
+		if (felScene == BUpositioned)
+			{
+			felScene = getOut;
+			susScriptCycles = 9;
+			susScript = 0;
+			}
+		else
+			{
+			print( 68);
+			}
+		}
+	}
+
+
+if ((said( halt, rol) ||
+	said( anyword, halt, rol)))
+	{
+	if (egoInCar)
+		{
+		print( 67);
+		}
+	else
+		{
+		if (susInCar)
+			{
+			print( 69);
+			}
+		else
+			{
+			if (felScene == Out)
+				{
+				reset( withHandsUp);	[	Just in case.
+				set( susScriptDone);
+				susScript = 6;
+				}
+			else
+				{
+				if (susHalted)
+					{
+					print( 68);
+					}
+				else
+					{
+					reset( have.match);
+					}
+				}
+			}
+		}
+	}
+
+if ((said( put, hands, up) ||
+	said( get, hands, over, head) ||
+	said( hands, up) ||
+	said( hoist, hands) ||
+	said( hold, hands, up) ||
+	said( raise, hands) ||
+	said( raise, hands, rol) ||
+	said( put, up, your, hands) ||
+	said( get, hands, up)))
+	{
+	if (egoInCar)
+		{
+		print( 67);
+		}
+	else
+		{
+		if (susInCar)
+			{
+			print( 69);
+			}
+		else
+			{
+			if (felScene == Out)
+				{
+				set( susScriptDone);
+				susScript = 10;
+				}
+			else
+				{
+				print( 68);
+				}
+			}
+		}
+ 	}
+
+if ((said( lay, down, rol) ||
+	said( hit, floor, rol) ||
+	said( down, on, floor) ||
+	said( get, on, floor) ||
+	said( lay, face, down, on, floor) ||
+	said( lay, face, down) ||
+	said( get, down, rol) ||
+	said( face, floor, rol)))
+	{
+	if (egoInCar)
+		{
+		print( 67);
+		}
+	else
+		{
+		if (susInCar)
+			{
+			print( 69);
+			}
+		else
+			{
+			if (felScene < handsUp)
+				{
+				print( 70);
+				}
+			else
+				{
+				if (felScene == handsUp)
+					{
+					susScript = 12;	[	It should be already.
+					set( susScriptDone);
+					}
+				else
+					{
+					reset( have.match);
+					}
+				}
+			}
+		}
+	}
+
+
+if ((said( cuff) ||
+	said( cuff, man, rol) ||
+	said( cuff, suspect,rol)))
+	{
+	get.posn( a.suspect, x, y);
+	if ((suspectDistance > 15 ||
+		ego.x < x ||				[	Past his feet.
+		ego.y < 161))				[	Behind car.
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (current.ego == current.draw)
+			{
+			print( 19);			[ cuffing suspect with gun hazardous
+			}
+		else
+			{
+			if (felScene < faceDown)
+				{
+				print( 71);
+				}
+			else
+				{
+				if (!felScene < susCuffed) [	Greater than, or equal to
+					{
+					print( 68);
+					}
+				else
+					{
+					if (!has( i.cuffs))
+						{
+						set( dontHaveThem);
+						}
+					else
+						{
+						drop( i.cuffs);
+						start.motion( ego);
+						set.loop( a.suspect, 1);
+						set.cel( a.suspect, 0);
+						force.update( a.suspect);
+			  			print( 20);	[ nice and tight
+						felScene = susCuffed;
+						stop.sound();
+						reset( musicDone);
+						}
+					}
+				}
+			}
+		}
+	}
+
+if (!susInCar &&
+    (said( rise) ||
+	said( suspect, get$up) ||
+	said( man, get$up) ||
+	said( get$up) ||
+	said( get, off, floor) ||
+	said( off, floor)))
+	{
+	if (felScene < susCuffed)
+		{
+		print( 25);
+		}
+	else
+		{
+		if (felScene > susCuffed)
+			{
+			print( 68);
+			}
+		else
+			{
+			susScript = 15;
+			set( susScriptDone);
+			}
+		}
+	}
+
+
+if (!susInCar &&
+    (said( go, rol) ||
+	said( take, man, rol) ||
+	said( take, suspect, rol) ||
+	said( walk, car, rol) ||
+	said( walk, patrol, car, rol) ||
+	said( follow, me, rol) ||
+	said( move, rol) ||
+	said( get$in, car, rol) ||
+	said( get$in, patrol, car, rol) ||
+	said( come, with, me, rol)))
+	{
+	if (felScene < susCuffed)
+		{
+		print( 25);
+		}
+	else
+		{
+		if (felScene < getUp)
+			{
+			print( 21);
+			}
+		else
+			{
+			if (felScene > getUp)
+				{
+				if ( nearBdoor) {
+					print( 68);
+					}
+				else {
+					reset( have.match);
+					}
+				}
+			else
+				{
+				susScript = 17;
+				set( susScriptDone);
+				}
+			}
+		}
+	}
+
+
+[ Read Rights
+
+if ((said( read, rights, rol) ||
+	said( read, anyword, rights, rol) ||
+	said( give, rights, rol) ||
+	said( give, anyword, rights, rol) ||
+	said( rights, rol) ||
+	said( anyword, rights, rol)))
+	{
+	if (suspectDistance > dist)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (felScene < susCuffed)
+			{
+			print( 25);				[	cuff first
+			}
+		else {
+			if (felScene > atBackDoor) {
+				print( 50);			[	already in car
+				}
+			else
+				{
+				if (!lclReadRights)
+					{
+					set( lclReadRights);
+					score += 1;
+
+					print( 51);			[ 	I know my writes
+					print( 57);
+					call( 72);
+					}
+				else
+					{
+					print( 76);
+					}
+				}
+			}
+		}
+	}
+
+
+if ((said( arrest, man) ||
+	said( arrest, suspect)))
+	{
+	if (!nearPerson)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 75);
+		}
+	}
+
+if ((said( search) ||				[ Search man
+	said( search, man) ||
+	said( search, suspect) ||
+	said( look, man) ||
+	said( look, suspect)))
+	{
+	if (felScene < susCuffed)
+		{
+		print( 25);
+		}
+	else {
+		if (suspectDistance > 15)
+			{
+			set( notCloseEnough);
+			}
+		else	{
+			print( 49);
+			if (!SxTgun) {
+				score += 2;
+				set( SxTgun);
+				print( 59);
+				print( 60);
+				print( 61);
+				print( 62);
+				}
+			}
+		}
+	}
+
+
+if  (SxTgun &&
+    (said( get, gun, rol) ||
+	said( look, gun, rol)))
+	{
+	if (felScene < inBackSeat)
+		{
+		print( 64);
+		}
+	else {
+		if (!JackOnScreen)
+			{
+			print( 74);
+			}
+		else
+			{
+			if (jackDistance > 20)
+				{
+				print( 29);
+				}
+			else
+				{
+				if (!SxSawTGun)
+					{
+					set( SxSawTGun);
+					score += 4;
+					}
+
+				print( 65);
+				priorX = ego.x;
+				priorY = ego.y;
+				new.room( 114);
+				}
+			}
+		}
+	}
+
+
+if ((said( question, man, rol) ||
+	said( ask, man, rol) ||
+	said( ask, suspect, rol) ||
+	said( question, suspect, rol)))
+	{
+	if (felScene < susCuffed)
+		{
+		print( 25);
+		}
+	else
+		{
+		if (felScene < inBackSeat)
+			{
+			if (!lclReadRights)
+				{
+				set( certainDeath);
+				call( 72);
+				}
+			else
+				{
+				print( 52);			[ harassment. talk attorney
+				}
+			else {
+				print( 50);			[already in car
+				}
+			}
+		}
+	}
+
+if ((said( open, trunk) ||
+	said( look$in, trunk) ||
+	said( open, trunk, car) ||
+	said( open, car, trunk) ||
+	said( look$in, suspects, trunk) ||
+	said( open, trunk, suspects, car) ||
+	said( search, trunk, car) ||
+	said( search, car, trunk) ||
+	said( search, suspects, trunk) ||
+	said( open, suspects, car, trunk)))
+	{
+	if (posn( ego, 67, 152, 72, 160)) {
+		if (felScene < inBackSeat) {
+			print( 27);			[ Arrest first
+			}
+		else {
+			set.cel( a.trunk, 0);
+			draw( a.trunk);
+			set( doTrunk);
+			dynamic1 = 9;			[ trunk
+			}
+		}
+	else {
+		if (posn( ego, 146, 155, 151, 162)) {[ PC trunk
+			print( 28);			[ no need
+			}
+		else {
+			set( notCloseEnough);
+			}
+		}
+	}
+
+
+
+[ Glove box
+
+if ((said( open, box) ||				[	"Glove" is an ignored word!
+	said( look$in, cars, box) ||
+	said( open, cars, box) ||
+	said( search, box) ||
+	said( search, cars, box) ||
+	said( look$in, box)))
+	{
+	if (felScene < inBackSeat)
+		{
+		print( 27);
+		}
+	else {
+		if (nearSuspectDoor) {
+			if (!Sdoor) {
+				print( 39);		[ door closed
+				}
+			else {
+				sound( s.case, snd.done);
+				dynamic1 = 8;
+				}
+			}
+		else {
+			print( 54); 			[ what are you talking about
+			}
+		}
+	}
+
+
+if (said( anyword, case))
+	{
+	print( 26);					[ this guy may be armed
+	}
+
+
+if ((said( look, car) ||
+	said( look$in, suspects, car) ||
+	said( look$in, car) ||
+	said( search, car) ||
+	said( search, suspects, car) ||
+	said( look, suspects, car)))
+	{
+	if (nearLockedDoor)
+		{
+		print( 37);				[ interior doesn't match
+		}
+	else {
+		if (nearSuspectDoor) {
+			if (!has.suspect) {
+				print( 26);		[ this guy may be armed;
+				}
+			else {
+				if (Sdoor) {
+					print( 38);
+					print( 58);
+					}
+				else {
+					print( 37);	[ just doesn't match
+					}
+				}
+			}
+		else {
+			print( 30);			[ fits description
+			}
+		}
+	}
+
+
+if ((said( look, license, rol) ||
+	said( suspect, give, license, rol) ||
+	said( give, license, rol)))
+	{
+	if (felScene < susCuffed)
+		{
+		print( 25);
+		}
+	else
+		{
+		if (felScene < inBackSeat)
+			{
+			print( 73);
+			}
+		else
+			{
+			print( 50);			[already in car
+			}
+		}
+	}
+
+if ((said( look, plate) ||
+	said( look, suspects, car, plate) ||
+	said( look, suspects, plate)))
+	{
+	if ((posn( ego, 67, 150, 159, 167) ||	[behind car
+		posn( ego,  0, 150,   4, 167)))	[in front
+		{
+		set( sawLicenseNumber);
+		print( 3); 				[ lic. #
+		}
+	else {
+		print( 31); 				[ Can't see from here
+		}
+	}
+
+if ((said( run, plate) ||
+	said( call, dispatch, plate) ||
+	said( radio, plate) ||
+	said( run, make)))
+	{
+	if (!egoInCar && !has( i.extnd) &&
+	    !posn( ego, 111, 161, 118, 162)) {[ near door
+		print( 24);				[ without extender can't from here
+		}
+	else {
+		if (!sawLicenseNumber)
+			{
+			print( 56);
+			}
+		else
+			{
+			print( 55);
+			print( 32);			[ Plate From Junked Car
+			}
+		}
+	}
+
+if (said( anyword, registration))
+	{
+	print( 33);					[ unlikely to find good one
+	}
+
+
+if ((said( look, door) ||
+	said( look, suspects, car, door) ||
+	said( look, car, door)))
+	{
+	if (nearLockedDoor)
+		{
+		print( 40);				[ Nothing special
+		}
+	else {
+		if (nearSuspectDoor) {
+			if (!has.suspect) {
+				print( 26);		[ this guy may be armed
+				}
+			else {
+				if (!Sdoor) {
+					print( 36);	[ it's closed
+					}
+				else {
+					print( 41);	[ black not blue
+					print( 42);	[ Vin #
+					if (!hasVIN) {
+						set( hasVIN);
+						score += 2;
+						}
+					}
+				}
+			}
+		else {
+			reset( have.match);
+			}
+		}
+	}
+
+
+if ((said( open, door) ||
+	said( open, car, door) ||
+	said( open, suspects, car, door)))
+	{
+	if (nearLockedDoor)
+		{
+		print( 34);				[ This door is locked.
+		}
+	else {
+		if (nearSuspectDoor) {
+			if (!has.suspect) {
+				print( 26);		[ this guy may be armed
+				}
+			else {
+				if (Sdoor) {
+					print( 35);	[ it's open
+					}
+				else {
+					sound( s.car.open, snd.done);
+					set.cel( a.SuspDoor, 2);
+					draw( a.SuspDoor);
+					set( Sdoor);
+					}
+				}
+			}
+		else {
+			reset( have.match);
+			}
+		}
+	}
+
+if ((said( close, door) ||
+	said( close, car, door) ||
+	said( close, suspects, car, door)))
+	{
+	if (nearLockedDoor)
+		{
+		print( 34);				[ This door is locked.
+		}
+	else {
+		if (nearSuspectDoor) {
+			if (!has.suspect) {
+				print( 26);		[ this guy may be armed
+				}
+			else {
+				if (!Sdoor) {
+					print( 36);	[ it's open
+					}
+				else {
+					sound( s.car.close, snd.done);
+					erase( a.SuspDoor);
+					reset( Sdoor);
+					}
+				}
+			}
+		else {
+			reset( have.match);
+			}
+		}
+	}
+
+
+if ((said( run, vin) ||
+	said( radio, vin) ||
+	said( dispatch, vin) ||
+	said( call, dispatch, give, vin) ||
+	said( call, dispatch, with, vin) ||
+	said( make, vin) ||
+	said( call, vin)))
+	{
+	if (!egoInCar &&
+	    !has( i.extnd) &&
+	    !nearPatrolDoor)
+		{
+		print( 24);				[ without extender can't from here
+		}
+	else
+		{
+		if (hasVIN)
+			{
+			print( 44);
+			print( 45);
+			print( 46);
+			print( 47);
+			print( 48);
+			}
+		else {
+			print( 43);			[ You haven't found the V.I.N yet
+			}
+		}
+	}
+
+
+:noInput;
+
+
+if (dynamic1 && trunkDone)
+	{
+	priorX = ego.x;
+	priorY = ego.y;
+	new.room.f( dynamic1);
+	}
+else
+	{
+	if (dynamic1 && snd.done)
+		{
+		priorX = ego.x;
+		priorY = ego.y;
+		new.room.f( dynamic1);
+		}
+	}
+
+get.posn( aJack, x, y);				[	stop peddling 
+if ((jackX != x || jackY != y))
+	{
+	jackX = x;
+	jackY = y;
+	start.cycling( aJack);
+	}
+else
+	{
+	stop.cycling( aJack);
+	}
+
+
+if (posn( ego, 132, 142, 159, 154))
+	{
+	set.priority( ego, 12);
+	}
+else
+	{
+	release.priority( ego);
+	}
+
+
+
+[	If ego gets out of his car before Jack is in position, force him out of
+[his protective box.
+
+if (!egoInCar &&
+    !have.input &&
+	felScene < BUpositioned)
+	{
+	reset( nearPatrolDoor);			[	Ha, ha, you're dead!!
+	}
+
+if (!egoInCar &&
+    !f.car.door)
+	{
+	reset( nearPatrolDoor);			[	Ha, ha, you're dead!!
+	}
+
+
+
+[	If ego moves out of his protective box, make Taselli kill him.
+
+if (!egoInCar &&
+    !have.input &&
+    !nearPatrolDoor &&
+	susScript < 100)
+	{
+   	if ((susInCar || felScene < Out))
+		{
+
+		[	If we want Taselli to kill him, but Taselli is still in his car, 
+		[make Taselli get out of his car first.
+
+		susScript = 100;
+		set( susScriptDone);
+
+		}
+	else
+		{
+		if (felScene < faceDown)
+			{
+			susScript = 103;
+			set( susScriptDone);
+			}
+		}
+	}
+
+
+
+[	Prevent Ego blowing away suspect, by giving phony error messages.
+
+if  (preventEgoFire &&
+	has( i.loaded.gun) &&
+	current.ego == current.draw &&
+    (func10 ||						[	F10 to Fire weapon
+	said( use, gun, rol) ||
+	said( fire, gun, rol) ||
+	said( shoot, gun, rol) ||
+	said( fire) ||
+	said( shoot) ||
+	said( fire, man) ||
+	said( fire, suspect) ||
+	said( shoot, man) ||
+	said( shoot, suspect) ||
+	said( fire, on, man) ||
+	said( fire, on, suspect)))
+	{
+	reset( func10);
+	print( 16);					[ fire o/ suspects head
+	}
+
+
+if (ego.shot.dead && suspect.dead)		[	Both dead.
+	{
+	prevent.input( );
+	if (!JackOnScreen)
+		{
+		print( 72);
+		}
+	else
+		{
+		erase( a.jack.fire);
+		print( 14);				[ partner got him
+		print( 15);				[ to late for you
+		}
+
+	set( certainDeath);
+	}
+
+if (ego.shot.dead && !suspect.dying)
+	{
+	prevent.input( );
+	print( 63);
+	set( certainDeath);
+	}
+
+if (suspect.dead && progress < ego.dying)
+	{
+	prevent.input( );
+	print( 9);					[ saved grands
+	print( 10);					[ applause but ! to cool
+	print( 2);					[ see guide
+	erase( a.jack.fire);
+	set( certainDeath);
+	}
+
+if (ego.x < 84 && felScene == 12)
+	{
+	felScene = 13;					[ your coverd
+	print( 17);					[ Your covered cuff him
+	}
+
+if (suspectDistance < 30 && felScene == 13)
+	{
+	felScene = 14;					[ he's Desperate
+	print( 18);					[ do any thing to get ahold of you
+	}
+
+if (!suspect.dying &&				[ Jack blows suspect away
+	progress == ego.dying &&
+	JackOnScreen)
+	{
+	set( scriptDone);
+	script = 100;
+	scriptTimer = 0;
+	scriptCycles = 0;
+	}
+
+	
+[	Trigger Jack's move around front of car.
+
+if (felScene == walking)
+	{
+	get.posn( a.suspect, x, y);
+	if (x == 73)
+		{
+		set( scriptDone);
+		}
+	}
+
+if (script == WAITING_FOR_SUS_IN_CAR &&
+	suspect.cop.car == incop.door.closed)
+	{
+	set( scriptDone);
+	script = 50;
+	}
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+
+	if (script == 1)				[	Back up radio talk arrival
+		{
+		if (susScript)				[	Skip it, Jack. Ego fucked up!
+			{
+			script = 0;
+			}
+		else
+			{
+			felScene = BUarrived;
+			prevent.input();
+			if (hercules)
+				{
+				add.to.pic( v.patCar, 1, 2, 139, 154, 0, 0);
+				script = 2;
+				}
+			else
+				{
+				sound( s.siren, snd.done);
+				set.cel( a.back.up, 0);
+				draw( a.back.up);
+				end.of.loop( a.back.up, scriptDone);
+				}
+			}
+		}
+
+	if (script == 2)
+		{
+		if (!hercules)
+			{
+			stop.update( a.back.up);
+			}
+		print( 4);				[ jack arrives
+		sound( mTension, musicDone);
+		scriptTimer = 3;
+		}
+
+	if (script == 3)
+		{
+		print( 6);				[ affirmative
+		scriptTimer = 3;
+		}
+
+	if (script == 4)
+		{
+		print( 7);				[ I'll cover from passager side
+		print( 8);				[ ADAM 83-31 out.
+		felScene = BUconfirmed;
+		accept.input();
+		scriptTimer = 3;
+		}
+
+	if (script == 5)				[	Here's Jack!
+		{
+		draw( aJack);				[ Back up moves in
+		set( JackOnScreen);
+		move.obj( aJack, 135, 155, 1, scriptDone);
+		}
+
+	if (script == 6)
+		{
+		set.view.f( aJack, current.draw);
+		x = -4;
+		reposition( aJack, x, zero);
+		move.obj( aJack, 95, 155, 1, scriptDone);
+		}
+
+	if (script == 7)
+		{
+		stop.update( aJack);
+		felScene = BUpositioned;
+		stop.sound();
+		reset( musicDone);
+		}
+
+
+	[	Now Jack stands there and picks his nose while we do all the work.
+
+
+	if (script == 8)
+		{
+		start.update( aJack);
+		move.obj( aJack, 72, 155, 1, scriptDone);
+		}
+
+	if (script == 9)
+		{
+		set.loop( aJack, facing.right);
+		move.obj( aJack, 72, 167, 1, scriptDone);
+		}
+
+	if (script == 10)
+		{
+		move.obj( aJack, 90, 167, 1, scriptDone);
+		}
+
+	if (script == 11)
+		{
+		script = WAITING_FOR_SUS_IN_CAR;
+		}
+
+
+	[	Here we wait for ego to open door, and put his sus inside.
+
+
+	if (script == 51)
+		{
+		felScene = inBackSeat;
+
+		set.view.f( aJack, current.sonny);
+		follow.ego( aJack, 10, scriptDone);
+		}
+
+	if (script == 52)
+		{
+		print( 23);				[ Good bust Sonny!
+		move.obj( aJack, 152, 167, 1, scriptDone);
+		}
+
+	if (script == 53)
+		{
+		erase( aJack);
+		reset( JackOnScreen);
+		}
+
+
+
+	if (script == 101)				[	Make Jack shoot sus!
+		{
+		stop.motion( aJack);
+
+		current.view( aJack, view);
+		if (view != current.draw)
+			{
+			set.view.f( aJack, current.draw);
+			x = -4;
+			reposition( aJack, x, zero);
+			}
+
+		set.priority( a.jack.fire, 10);
+		set.loop( a.jack.fire, facing.left);
+		set.cel( a.jack.fire, 0);
+		get.posn( aJack, x, y);
+		x -= GUN_LEFT_X;
+		y -= GUN_Y;
+		position.f( a.jack.fire, x, y);
+		draw( a.jack.fire);
+		end.of.loop( a.jack.fire, scriptDone);
+		sound( s.gun.fire, snd.done);
+		set( murder);
+		}
+
+	if (script == 102)
+		{
+		erase( a.jack.fire);
+		}
+	}
+
+
+
+if (aSecondPassed)
+	{
+	--susScriptTimer;
+	if (susScriptTimer == 1)
+		{
+		set( susScriptDone);
+		}
+	}
+
+--susScriptCycles;
+if (susScriptCycles == 1)
+	{
+	set( susScriptDone);
+	}
+
+
+if (susScriptDone)
+	{
+	reset( susScriptDone);
+	++susScript;
+
+	if (susScript == 1)				[ Get taselli out of car
+		{
+		set.cel( a.SuspDoor, 1);
+		sound( mBadGuy, done);
+		set( Sdoor);
+		susScriptCycles = 11;
+		}
+
+	if (susScript == 2)
+		{
+		set.cel( a.SuspDoor, 2);
+
+		set.view.f( a.suspect, current.suspect);
+		set.loop( a.suspect, facing.right);
+		draw( a.suspect);
+		move.obj( a.suspect, 34, 163, 1, susScriptDone);
+		reset( susInCar);
+		reset( preventEgoFire);
+		}
+
+	if (susScript == 3)
+		{
+		if (withHandsUp)
+			{
+			susScript = 7;
+			felScene = get'mUp;
+			}
+		else
+			{
+			print( 11);			[	This dude's dangerous.
+			felScene = Out;
+			follow.ego( a.suspect, 40, susScriptDone);
+			}
+		}
+
+	if (susScript == 4)
+		{
+		susScript = 104;
+		}
+
+
+
+	if (susScript == 7)				[	Or, if said "Halt"
+		{
+		set( susHalted);
+		stop.motion( a.suspect);
+		normal.motion( a.suspect);	[	Now he's not comin' at us.
+		score += 2;
+
+		if (withHandsUp)
+			{
+			reset( withHandsUp);
+			susScript = 11;
+			felScene = put'nUp;
+			}
+		}
+
+
+
+	if (susScript == 11)			[	Raising sus hands.
+		{
+		set( susHalted);
+		stop.motion( a.suspect);
+		normal.motion( a.suspect);	[	Now he's not comin' at us.
+		
+		reset( keepCyclingSuspect);
+		set.view( a.suspect, v.taselli.handsup);
+		set.cel( a.suspect, 0);
+		force.update( a.suspect);
+
+		print( 12);				[ reluctantly raises hands
+		susScriptCycles = 11;
+		felScene = put'nUp;
+		}
+
+	if (susScript == 12)
+		{
+		score += 2;
+		set.cel( a.suspect, 1);
+		felScene = handsUp;
+		}
+
+
+	[	His hands are up; wait for "lay down".
+
+
+	if (susScript == 13)
+		{
+		print( 13);				[ put that slime ball down
+
+		normal.motion( a.suspect);
+		start.motion( a.suspect);
+		reset( keepCyclingSuspect);
+
+		felScene = getDown;
+		set( preventEgoFire);
+		susScriptCycles = 11;		[	Hesitate a little.
+		}
+
+	if (susScript == 14)
+		{
+		felScene = goingDown;
+		set( keepCyclingSuspect);
+		cycle.time( a.suspect, two);
+		end.of.loop( a.suspect, susScriptDone);
+		}
+
+	if (susScript == 15)
+		{
+		felScene = faceDown;
+		reset( keepCyclingSuspect);
+		cycle.time( a.suspect, one);
+		sound( mTension, musicDone);
+		score += 2;
+		}
+
+
+	[	He's face down; wait for command to "get Up" before continuing.
+
+
+	if (susScript == 16)
+		{
+		set( keepCyclingSuspect);
+		end.of.loop( a.suspect, susScriptDone);
+		felScene = getUp;
+		}
+
+	if (susScript == 17)
+		{
+		reset( keepCyclingSuspect);
+		set.view( a.suspect, v.taselli.cuffed);
+		set.loop( a.suspect, facing.right);
+		}
+
+	if (susScript == 18)			[ Take suspect to car
+		{
+		felScene = walking;
+		print( 22);				[ alright asshole
+		set( has.suspect);
+		reset( susHalted);
+
+		move.obj( a.suspect, 135, 162, 1, susScriptDone);
+		}
+
+	if (susScript == 19)
+		{
+		set.loop( a.suspect, facing.left);
+		}
+
+
+
+
+	if (susScript == 101)			[Make sus get out of car to kill ego.
+		{
+		prevent.input();
+		set( game.control);
+		sound( mBadGuy, done);
+		susScriptCycles = 11;
+		}
+
+	if (susScript == 102)
+		{
+		set.cel( a.SuspDoor, 0);
+		susScriptCycles = 11;
+		}
+
+	if (susScript == 103)
+		{
+		set.cel( a.SuspDoor, 2);
+
+		set.view.f( a.suspect, current.suspect.draw);
+		x = 32;
+		y = ego.y;
+		position.f( a.suspect, x, y);
+		set.loop( a.suspect, facing.right);
+		draw( a.suspect);
+		reset( susInCar);
+		susScript = 104;
+		}
+
+	if (susScript == 104)
+		{
+		set.view.f( a.suspect, current.suspect.draw);
+		susScriptCycles = 6;
+		felScene = Out;
+		reset( preventEgoFire);
+		}
+
+	if (susScript == 105)
+		{
+		set( makeSuspectShoot);
+		shot.first = blowEgoAway;
+
+		felScene = 200;
+		set( game.control);	
+		prevent.input();
+		}
+	}
+
+
+[
+:exit
+[
+
+
+call( 2);							[ lgc.ego
+call( 94);						[ lgc.stopped.cars
+call( 118);						[ lgc.suspect.gun
+call( 108);
+call.f( streetScene);
+
+if (doTrunk)
+	{
+	reset( doTrunk);
+	if (dynamic1 == 9)
+		{
+		end.of.loop( a.trunk, trunkDone);
+		sound( s.car.open, snd.done);
+		}
+	else
+		{
+		set.cel( a.trunk, 2);
+		reverse.loop( a.trunk, trunkDone);
+		sound( s.car.close, snd.done);
+		}
+	}
+
+if (trunkDone) {	 				[ trunk
+	reset( trunkDone);
+	erase( a.trunk);
+	}
+
+if (musicDone)
+	{
+	sound( mTension, musicDone);
+	}
+
+[	if (QA) {
+[		display( 24, 0, );
+[		}
+
+
+

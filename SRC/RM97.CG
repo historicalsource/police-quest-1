@@ -1,0 +1,24 @@
+[ POLICE QUEST
+[ rm97.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. September 20, 1987
+[ Last Update September 20, 1987al
+
+[	moroff.room.script.messages
+
+
+%include "gamedefs"
+%include "rm97.msg"
+
+
+
+[	This dynamic is only called during Morgan last two briefings, or when
+[Moroff.scene == 6 or 8.
+
+[	This is just here because Jeff's room compiler couldn't handle all the
+[messages in this room in one compile.
+
+
+
+print.f( message);
+

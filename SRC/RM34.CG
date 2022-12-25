@@ -1,0 +1,997 @@
+[ POLICE QUEST
+[ rm34.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 2/5/87
+[ Last Update October 10, 1987al
+
+[blue room
+
+%include "gamedefs"
+%include "rm34.msg"
+
+
+
+%define	egoSitting		lf0
+%define	conver0			lf1
+%define	dontLetSonnyStand	lf2
+%define	jackOnScreen		lf3
+%define	musicDone			lf4
+%define	juteboxDone		lf5
+
+
+%define	msg0				lcl0
+%define	msg1				lcl1
+%define	sitCell			lcl2
+%define	jack				lcl3
+%define	keith			lcl4
+%define	cake.man			lcl5
+%define	hannah			lcl6
+%define	cabDriver			lcl7
+
+
+[%object	a.bartender		1		[lgc.48
+%object	a.jack			2
+%object	a.keith			3
+%object	a.cake.man		4
+%object	a.cake			5
+%object	a.hannah			6
+%object	aKiss			7
+%object	a.balloons		8
+%object	aCabDriver		9
+%object  	aTurntable		10
+%object	aJukebox			11
+
+
+
+if (init.log)
+	{
+	set( NOcase);
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	load.view( v.barPatrons68);
+	add.to.pic( v.barPatrons68, 0, 0, 25, 163, 14, 0);
+	add.to.pic( v.barPatrons68, 0, 1, 39, 166, 14, 0);
+	add.to.pic( v.barPatrons68, 0, 2, 104, 129, 11, 0);
+	add.to.pic( v.barPatrons68, 0, 3, 118, 129, 11, 0);
+	add.to.pic( v.barPatrons68, 1, 0, 98, 166, 14, 0);
+	add.to.pic( v.barPatrons68, 0, 1, 113, 166, 14, 0);
+	discard.view( v.barPatrons68);
+
+	load.view( v.bottles);
+	add.to.pic( v.bottles, 0, 0, 64, 82, 5, 5);
+	add.to.pic( v.bottles, 0, 1, 22, 151, 12, 12);[ jukebox
+	discard.view( v.bottles);
+
+	load.logics( 48);				[ bartender
+	call( 48);
+
+	load.view( v.jukeb);
+	load.view( v.folks.sit);
+
+	load.sound( mBlueRoom);
+	load.sound( mBirthDay);
+
+	if (bluerm.scene == 1)
+		{
+		load.view( v.cake.man);
+		load.view( v.hannah);
+		load.view( v.kiss);
+	
+		animate.obj( a.cake.man);
+		animate.obj( a.cake);
+		animate.obj( a.hannah);
+		animate.obj( a.balloons);
+		animate.obj( aKiss);
+	
+		set.view( a.cake.man, v.cake.man);
+		set.view( a.cake, v.cake.man);
+		set.view( a.hannah, v.hannah);
+		set.view( a.balloons, v.hannah);
+		set.view( aKiss, v.kiss);
+	
+		set.loop( a.hannah, 0);
+		set.loop( a.balloons, 2);
+		set.loop( a.cake.man, 0);
+		set.loop( a.cake, 3);
+	
+		fix.loop( a.cake.man);
+		fix.loop( a.hannah);
+		fix.loop( a.balloons);
+	
+		set.cel( a.balloons, 0);
+	
+		position( a.cake.man, 63, 167);
+		position( a.cake, 81, 128);
+		position( a.hannah, 56, 167);
+		position( a.balloons, 83, 105);
+		position( aKiss, 76, 97);
+	
+		set.priority( aKiss, 14);
+		set.priority( a.balloons, 15);
+		set.priority( a.cake, 12);
+
+		cycle.time( aKiss, three);
+		}
+	
+	if (bluerm.scene == 10)
+		{
+		load.view( v.jackCiv);
+		load.view( vCabDriver);
+
+		animate.obj( aCabDriver);	[ taxi man
+		set.view( aCabDriver, vCabDriver);
+		position( aCabDriver, 68, 167);
+		}
+
+	if ((bluerm.scene == 1 ||
+		bluerm.scene == 10))
+		{
+		load.view( v.jack.sit);
+		load.view( vKeithCiv);
+
+		animate.obj( a.jack);
+		animate.obj( a.keith);
+
+		set.view( a.jack, v.jack.sit);
+		set.view( a.keith, vKeithCiv);
+
+		set.loop( a.jack, 0);
+		set.loop( a.keith, 3);
+
+		set.cel( a.jack, 0);
+
+		stop.cycling( a.jack);
+
+		position( a.jack, 81, 123);
+		position( a.keith, 63, 167);
+
+		set.priority( a.jack, 12);
+
+		ignore.objs( a.jack);
+		draw( a.jack);
+		set( jackOnScreen);
+		}
+	else
+		{
+		add.to.pic( v.folks.sit, 0, 1, 79, 133, 11, 1);	[ jacks chair empty
+		}
+
+	animate.obj( aTurntable);
+	animate.obj( aJukebox);
+
+	set.view( aTurntable, v.jukeb);
+	set.view( aJukebox, v.jukeb);
+											
+	set.loop( aTurntable, 0);
+	set.loop( aJukebox, 1);
+
+	ignore.blocks( aJukebox);
+	ignore.blocks( a.hannah);
+	ignore.blocks( a.keith);
+
+	ignore.objs( aJukebox);
+	ignore.objs( a.balloons);
+
+	position( aTurntable, 27, 123);
+	position( aJukebox, 30, 141);
+
+	set.priority( aTurntable, 12);
+	set.priority( aJukebox, 12);
+
+	work = 3;
+	cycle.time( aTurntable, work);
+	cycle.time( aJukebox, work);
+
+	draw( aTurntable);
+	draw( aJukebox);
+
+	stop.update( aTurntable);
+	stop.update( aJukebox);
+
+	position( ego, 63, 167);
+
+	if (!current.sonny)
+		{
+		sitCell = 5;
+		}
+	else {
+		if (current.sonny == 8)		[ narc
+			{
+			sitCell = 6;
+			}
+		else {
+			if (current.sonny == 13)	[ disguised
+				{
+				sitCell = 7;
+				}
+			else {
+				sitCell = 8;
+				}
+			}
+		}
+
+	add.to.pic( v.folks.sit, 0, 2, 90, 139, 12, 1);	[ right chair
+	add.to.pic( v.folks.sit, 0, 0, 72, 139, 12, 1);	[ left chair
+
+	if (posn( ego, 76, 133, 91, 142))
+		{
+		reposition.to( ego, 93, 129);
+		}
+
+	if (bluerm.scene == 1)
+		{
+		scriptTimer = 3;
+		}
+
+ 	draw( ego);
+	show.pic( );
+	return( );
+	}
+
+
+
+if (edge.ego.hit == bottom) {
+	if (bluerm.scene && bluerm.scene < 4) {
+		locker.scene = 20;
+		bluerm.scene = 4;
+		}
+	else {
+		if (bluerm.scene > 10 && bluerm.scene < 255) {
+			bluerm.scene = 255;
+			score += 1;
+			}
+		}
+
+	new.room( 33);					[rm.blue.enter
+	}
+
+
+
+if (posn( ego, 75, 120, 87, 132)) {	[ avoid pop thru Jack
+	set.priority( ego, 10);
+	}
+else {
+	release.priority( ego);
+	}
+
+
+
+distance( ego, a.jack, jack);
+distance( ego, a.keith, keith);
+distance( ego, a.cake.man, cake.man);
+distance( ego, a.hannah, hannah);
+distance( ego, aCabDriver, cabDriver);
+if ((     jack < dist ||
+	    keith < dist ||
+	 cake.man < dist ||
+	   hannah < dist ||
+	cabDriver < dist))
+	{
+	set( nearPerson);
+	}
+
+	
+
+if (!egoSitting &&
+	script == 1 &&
+	bluerm.scene == 1 &&
+    (said( hello, jack) ||
+	said( hello) ||
+	said( talk) ||
+	said( hello, man) ||
+	said( talk, man) ||
+	said( talk, jack)))
+	{
+	if (posn( ego, 69, 122, 92, 146))	[ can say hello
+		{
+		print( 37);				[ have a seat
+		}
+	else {
+		print( 19);				[ can't hear you
+		}
+	}
+
+
+if (bluerm.scene == 10)
+	{
+	if (posn( ego, 0, 150, 159, 152) && !conver0)
+		{
+		print( 45);				[ see Jack, appears intoxicated
+		set( conver0);
+		}
+
+	if (!egoSitting)
+		{
+		if ((said( hello, jack) ||
+			said( hello) ||
+			said( talk, jack)))
+			{
+			if (posn( ego, 69, 122, 92, 146)) {
+				print( 11);		[ In depressed slurred voice
+				print( 46);		[ Have a \"hic\" seat Sonny
+				}
+			else {
+				print( 19);		[ can't hear you
+				}
+			}
+		}
+
+	if (egoSitting && !script)
+		{
+		if ((said( talk, jack) ||
+			said( arrest) ||
+			said( talk, arrest))) {
+			script = 100;
+			set( scriptDone);
+			}
+		}
+	}
+
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+
+
+	[	This script handles the "my kid's on drugs/Hannah" scene.
+
+
+	if (script == 1)				[	Start the Hootchy Cootch scene.
+		{
+		print( 1);				[ you see jack
+		}
+	
+	if (script == 2)
+		{
+		set( game.control);
+		set( dontLetSonnyStand);
+		prevent.input( );
+		print( 39);				[Boy what a bad day I had
+		scriptTimer = 4;
+		}
+	
+	if (script == 3)
+		{
+		print( 2);				[ daughter on drugs
+		scriptTimer = 4;
+		}
+	
+	if (script == 4)
+		{
+		print( 3);				[ from school
+		scriptTimer = 4;
+		}
+	
+	if (script == 5)
+		{
+		print( 4);				[ all is crap
+		bluerm.scene = 2;
+		scriptTimer = 4;
+		}
+	
+	if (script == 6)
+		{
+		stop.update( aTurntable);
+		stop.update( aJukebox);
+		stop.sound();
+
+		draw( a.keith);
+		move.obj( a.keith, 71, 143, 1, scriptDone);
+		}
+	
+	if (script == 7)
+		{
+		stop.cycling( a.keith);
+		print( 40);
+		print( 67);
+		scriptTimer = 3;
+		}
+	
+	if (script == 8)
+		{
+		set.view( a.keith, v.folks.sit);
+		set.loop( a.keith, 0);
+		set.cel( a.keith, 3);
+		reposition.to( a.keith, 72, 139);
+		scriptTimer = 3;
+		}
+	
+	if (script == 9)
+		{
+		stop.update( a.keith);
+
+		draw( a.cake.man);
+		scriptCycles = 11;							[Trip next script.
+		move.obj( a.cake.man, 83, 143, 1, done);		[Trip 2nd script.
+		}
+	
+	if (script == 10)
+		{
+		cycle.time( a.jack, three);
+		set.cel( a.jack, 0);
+		end.of.loop( a.jack, scriptDone);
+		}
+	
+	if (script == 11)
+		{
+		draw( a.cake);
+		print( 41);				[oh my god
+		move.obj( a.cake.man, 86, 143, 1, scriptDone);
+		}
+	
+	if (script == 12)
+		{
+		set.loop( a.cake.man, 1);
+		move.obj( a.cake.man, 94, 143, 1, scriptDone);
+		}
+	
+	if (script == 13)
+		{
+		set.cel( a.jack, 0);
+		stop.cycling( a.cake.man);
+		set.loop( a.cake.man, 2);
+		print( 5);				[ singing HBD
+		sound( mBirthDay, scriptDone);
+		}
+	
+	if (script == 14)
+		{
+		scriptTimer = 4;
+		}
+	
+	if (script == 15)
+		{
+		draw( a.hannah);
+		sound( mBlueRoom, musicDone);
+		move.obj( a.hannah, 56, 155, 1, scriptDone);
+		}
+	
+	if (script == 16)
+		{
+		print( 7);				[ rent a gag gal HCH
+		scriptCycles = 11;
+		}
+	
+	if (script == 17)
+		{
+		set.cel( a.jack, 0);
+		end.of.loop( a.jack, scriptDone);
+		}
+	
+	if (script == 18)
+		{
+		move.obj( a.hannah, 56, 147, 1, scriptDone);
+		print( 43);		  		[ what now
+		}
+	 
+	if (script == 19)
+		{
+		set.cel( a.jack, 0);
+		move.obj( a.hannah, 56, 130, 1, scriptDone);
+		print( 44);				[stand face music
+		}
+	 
+	if (script == 20)
+		{
+		cycle.time( a.jack, one);
+		set.loop( a.jack, 1);		[standing
+		set.priority( a.jack, 11);
+		move.obj( a.hannah, 79, 130, 1, scriptDone);
+		}
+	 
+	if (script == 21)
+		{
+		stop.cycling( a.hannah);
+		draw( aKiss);
+		scriptCycles = 22;			[	Cycle that "kiss" awhile.
+		}
+	
+	if (script == 22)
+		{
+		set.loop( aKiss, 1);
+		scriptTimer = 4;			[	Cycle that heart awhile.
+		}
+	
+	if (script == 23)
+		{
+		erase( aKiss);
+		set.loop( a.hannah, 1);
+		fix.loop( a.hannah);
+
+		draw( a.balloons);
+		print( 34);				[ WOW
+
+		move.obj( a.balloons, 65, 87, 1, scriptDone);
+		}
+	
+	if (script == 24)
+		{
+		move.obj( a.balloons, 91, 61, 1, scriptDone);
+		}
+	
+	if (script == 25)
+		{
+		move.obj( a.balloons, 71, 41, 1, scriptDone);
+		}
+	
+	if (script == 26)
+		{
+		stop.update( a.balloons);
+		start.cycling( a.hannah);
+		move.obj( a.hannah, 90, 130, 1, scriptDone);
+		}
+	
+	if (script == 27)
+		{
+		move.obj( a.hannah, 90, 122, 1, scriptDone);
+		}
+	
+	if (script == 28)
+		{
+		move.obj( a.hannah, 85, 117, 1, scriptDone);
+		}
+	
+	if (script == 29)
+		{
+ 		move.obj( a.hannah, 70, 117, 1, scriptDone);
+		}
+	
+	if (script == 30)
+		{
+		move.obj( a.hannah, 70, 130, 1, scriptDone);
+		}
+	
+	if (script == 31)
+		{
+		move.obj( a.hannah, 78, 130, 1, scriptDone);
+		}
+	
+	if (script == 32)
+		{
+		stop.cycling( a.hannah);
+		draw( aKiss);
+		set.cel( aKiss, 0);
+		scriptCycles = 33;			[	Cycle that kiss awhile.
+		}
+	
+	if (script == 33)
+		{
+		erase( aKiss);
+		print( 33);				[ HBD jack baby
+		start.cycling( a.hannah);
+		move.obj( a.hannah, 60, 130, 1, scriptDone);
+		}
+	
+	if (script == 34)
+		{
+		set.loop( a.jack, 0);		[ sit
+		set.priority( a.jack, 12);
+		move.obj( a.hannah, 60, 167, 1, scriptDone);
+		}
+	
+	if (script == 35)
+		{
+		erase( a.hannah);
+		stop.sound();
+		reset( musicDone);
+		scriptTimer = 4;
+		}
+
+	if (script == 36)
+		{
+		print( 35);				[ what you think
+		scriptTimer = 4;
+		}
+
+	if (script == 37)
+		{
+		print( 36);				[ Santa
+		bluerm.scene = 3;
+
+		reset( dontLetSonnyStand);
+		accept.input( );
+		scriptTimer = 4;
+		if (!hasBDP)
+			{
+			set( hasBDP);
+			score += 2;
+			}
+		}
+
+	if (script == 38)
+		{
+		print( 20);				[ did you forget swing shift
+		scriptTimer = 15;
+		}
+	
+	if (script == 39)
+		{
+		print( 21);				[ move out boy
+		scriptTimer = 20;
+		script = 37;
+		}
+
+
+
+	[	The following script is used when you return to the Blue Room
+	[after Laura prompts you to, and you tell Jack about the Colby/Simms
+	[arrest.
+
+
+	if (script == 101)				[	Second Blue Room scene.
+		{
+		set( dontLetSonnyStand);
+		print( 47);				[ tell him about the Simms arrest
+		scriptTimer = 4;
+		}
+
+	if (script == 102)
+		{
+		print( 12);				[ might be to late
+		scriptTimer = 4;
+		}
+
+	if (script == 103)
+		{
+		print( 13);				[ back from the hospital
+		scriptTimer = 4;
+		}
+		
+	if (script == 104)
+		{
+		print( 14);				[ anything anybody can do
+		scriptTimer = 8;
+		}
+
+	if (script == 105)
+		{
+		print( 22);				[ taxi cab on the way
+		scriptTimer = 4;
+		}
+
+	if (script == 106)
+		{
+		print( 51);				[ stretch neck of dope pusher
+		scriptTimer = 10;
+		}
+
+	if (script == 107)
+		{
+		set.loop( aCabDriver, 1);
+		fix.loop( aCabDriver);
+		draw( aCabDriver);
+		move.obj( aCabDriver, 68, 161, 1, scriptDone);
+		}
+
+	if (script == 108)
+		{
+		script = 109;				[	So sue me.
+		}
+
+	if (script == 109)
+		{
+		stop.cycling( aCabDriver);
+		print( 52);				[ Who called for the taxi?
+		scriptTimer = 4;
+		}
+
+	if (script == 110)
+		{
+		set.view( a.jack, v.jackCiv);
+		reposition.to( a.jack, 74, 129);
+		set.priority( a.jack, 11);
+		add.to.pic( v.folks.sit, 0, 1, 79, 133, 11, 1);
+		scriptTimer = 3;
+		}
+		
+	if (script == 111)
+		{
+		print( 15);				[ That's for me Sonny
+		scriptTimer = 3;
+		}
+
+	if (script == 112)
+		{
+		start.cycling( a.jack);
+		move.obj( a.jack, 57, 129, 1, scriptDone);
+		}
+
+	if (script == 113)
+		{
+		print( 53);				[ Right this way Buddy Boy
+		move.obj( a.jack, 57, 150, 1, scriptDone);
+		}
+
+	if (script == 114)
+		{
+		print( 54);				[ This boy is in bad shape
+		move.obj( a.jack, 57, 167, 1, scriptDone);
+		set.loop( aCabDriver, 0);
+		}
+
+	if (script == 115)
+		{
+		erase( a.jack);
+		reset( jackOnScreen);
+		start.cycling( aCabDriver);
+		move.obj( aCabDriver, 68, 167, 1, scriptDone);
+		}
+
+	if (script == 116)
+		{
+		erase( aCabDriver);
+		scriptTimer = 7;
+		}
+
+	if (script == 117)
+		{
+		draw( a.keith);
+		move.obj( a.keith, 56, 156, 1, scriptDone);
+		}
+
+	if (script == 118)
+		{
+		move.obj( a.keith, 69, 143, 1, scriptDone);
+		}
+
+	if (script == 119)
+		{
+		stop.cycling( a.keith);
+		if (hasRebooked) {
+			set.string( 2, 65);		[ 
+			set.string( 3, 25);		[ escaped
+			msg0 = 57;
+			msg1 = 58;
+			}
+		else {
+			set.string( 2, 66);		[ 
+			set.string( 3, 26);		[ released
+			msg0 = 49;
+			msg1 = 29;
+			}
+		print( 55); 				[ I have bad news for you
+		scriptTimer = 4;
+		}
+
+	if (script == 120)
+		{
+		print( 56); 				[ Jason Taselli ??? s3
+		scriptTimer = 4;
+		}
+
+	if (script == 121)
+		{
+		print.f( msg0); 			[ Taselli cold cocked a guar
+		scriptTimer = 4;
+		}
+
+	if (script == 122)
+		{
+		print.f( msg1);			[ Morgan wants you back at the office
+		scriptTimer = 4;
+		}
+
+	if (script == 123)
+		{
+		start.cycling( a.keith);
+		move.obj( a.keith, 65, 153, 1, scriptDone);
+		scriptTimer = 4;
+		}
+
+	if (script == 124)
+		{
+		print( 38);				[ See you later Sonny
+		move.obj( a.keith, 61, 167, 1, scriptDone);
+		}
+
+	if (script == 125)
+		{
+		erase( a.keith);
+[		reset( game.control);
+		reset( dontLetSonnyStand);
+		accept.input( );
+		moroff.scene = 2;
+		++bluerm.scene;
+		script = 255;
+		}
+	}
+
+
+	
+[ Sitting stuff 
+if ((said( sit) ||
+	said( park) ||
+	said( sit, down) ||
+	said( sit, chair) ||
+	said( use, chair) ||
+	said( get, chair) ||
+	said( rise) ||
+	said( rise, up) ||
+	said( use, chair) ||
+	said( get, out, chair) ||
+	said( get, up))) {
+   	set( func4);
+	}
+
+if (dontLetSonnyStand && func4)		[	prevents error message in rm0.
+	{
+	reset( func4);
+	}
+
+if (func4) {
+	reset( func4);
+
+	if (egoSitting)
+		{
+		reset( egoSitting);
+		set.view.f( ego, current.sonny);
+		set.loop( ego, 1);
+		reposition.to( ego, 89, 130);
+		observe.blocks( ego);
+		release.priority( ego);
+		reset( game.control);
+		start.motion( ego);
+		}
+	else {
+		if (posn( ego, 86, 129, 100, 143))
+			{
+			set( egoSitting);
+			set( game.control);
+			stop.motion( ego);
+			stop.cycling( ego);
+			ignore.blocks( ego);
+			set.view( ego, v.folks.sit);
+			set.loop( ego, 0);
+			set.cel.f( ego, sitCell);
+			reposition.to( ego, 88, 139);
+			if (script == 1)		[	Waiting to sit with Jack.
+				{
+				set( scriptDone);
+				}
+			}
+		else {
+			if (posn( ego, 65, 127, 100, 146))
+				{
+				if (jackOnScreen)
+					{
+					print( 16); 	[jack motions left
+					}
+				else {
+					print( 24); 	[slimy chair
+					}
+				}
+			else {
+				if ((posn( ego,  27, 152,  49, 167) ||
+					posn( ego, 103, 116, 127, 136) ||
+					posn( ego,  98, 152, 123, 167)))
+					{
+					print( 17);	[ table occupied
+					}
+				else {
+					print( 18);	[on floor
+					}
+				}
+			}
+		}
+	}
+
+
+
+[ Text 
+
+if (!have.input) {
+	goto exit;
+	}
+
+if (!egoSitting &&
+    (said( jack, arrest) ||
+	said( talk, jack)))
+	{
+	print( 68);
+	}
+
+if (script == 2)
+	{
+	if ((said( why) ||
+		said( talk, jack)))
+		{
+		set( scriptDone);
+		}
+	}
+
+if ((said( play, song) ||
+	said( use, jutebox) ||
+	said( put, money, jutebox)))
+	{
+	if (!posn( ego, 24, 129, 39, 150)) {
+		set( notCloseEnough);
+		}
+	else {
+		start.update( aTurntable);
+		start.update( aJukebox);
+		random( 8, 10, work);
+		print.f( work);			[ Song title
+		sound( mBlueRoom, juteboxDone);
+		}
+	}
+
+if (said( look, jukebox)) {
+	print( 30);					[ fully automated selection system
+	print( 31);					[ with light amplification by stimulated
+	print( 32);					[ video reproductions
+	}
+
+if ((said( look) ||
+	said( look, room)))
+	{
+	print( 23);
+	}
+
+if ((said( look, crowd) ||
+	said( look, girl) ||
+	said( look, man)))
+	{
+	print( 48);
+	}
+
+if ((said( talk, man) ||
+	said( talk, people) ||
+	said( talk, girl)))
+	{
+	if (posn( ego, 21, 155, 53, 167))
+		{
+		print( 50);
+		}
+	else
+		{
+		if (posn( ego, 91, 152, 126, 167))
+			{
+			random( 60, 62, message);
+			print.f( message);
+			}
+		else
+			{
+			if (posn( ego, 98, 119, 130, 137))
+				{
+				print( 59);
+				}
+			}
+		}
+	}
+
+if ((said( look, wall) ||
+	said( look, picture)))
+	{
+	print( 63);
+	}
+
+
+if (said( talk, bartender))
+	{
+	print( 69);
+	print( 70);
+	}
+
+
+[
+:exit
+[
+
+call( 48);						[ bartender
+
+if (juteboxDone) {
+	reset( juteboxDone);
+	stop.update( aTurntable);
+	stop.update( aJukebox);
+	}
+
+if (musicDone)
+	{
+	sound( mBlueRoom, musicDone);
+	}
+

@@ -1,0 +1,242 @@
+[ POLICE QUEST
+[ rm113.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 9/5/86
+[ Last Update September 26, 1987GR
+
+[ lgc.blackbook
+
+
+%include "gamedefs"
+%include "rm113.msg"
+
+
+
+[	This room is used as a dynamic by rm6 when looking at the book impounded
+[in the evidence lockup.
+
+[	It is also used as a new.room by the glove compartment (rm8) when looking
+[at the book while still in the car.
+
+[	Unusual vertical spacing is so file duplicates the screen spacing.
+[The .msg file also aligns vertically with the .cg file's display statements.
+
+
+
+%define	LAST_PAGE			4
+
+
+
+if (init.log) {
+	set( NOcase);
+	dynamic1 = 0;
+
+	load.pic( current.room);
+	draw.pic( current.room);
+
+	page = 1;
+	ego.dir = 0;
+	start.motion( ego);
+	set( refresh);
+
+	show.pic( );
+
+	reset( enable.menu);
+	}
+
+
+[
+:noInput;
+[
+
+if ((ego.dir || refresh))
+	{
+	reset( refresh);
+
+	if ((ego.dir == ego.right ||
+		ego.dir == ego.down.right ||
+		ego.dir == ego.down))
+		{
+		++page;
+		if (page > LAST_PAGE)
+			{
+			page = 1;
+			}
+		}
+
+	if ((ego.dir == ego.up ||
+		ego.dir == ego.up.right ||
+		ego.dir == ego.left))
+		{
+		--page;
+		if (!page)
+			{
+			page = LAST_PAGE;
+			}
+		}
+
+	if (ego.dir == ego.up.left)
+		{
+		page = 1;
+		}
+
+	if (ego.dir == ego.down.left)
+		{
+		page = LAST_PAGE;
+		}
+
+	start.motion( ego);
+	set.text.attribute( BG_COLOR, TEXT_COLOR);
+
+
+	if (page == 1) {
+		clear.text.rect( 3, 16, 19, 35, 15);
+		display(  4, 16,  2);
+
+		display(  6, 16,  3);
+
+		display(  8, 16,  4);
+		
+		display( 10, 16,  5);
+		display( 11, 16,  6);
+		
+		display( 13, 16,  7);
+		
+		display( 15, 16,  8);
+		}
+
+
+	if (page == 2) {
+		clear.text.rect( 3, 16, 19, 35, 15);
+		display(  4, 16,  9);
+		
+		
+		
+		display(  8, 16, 10);
+		
+		
+		
+		display( 12, 16, 1);
+		}
+
+
+	if (page == 3) {
+		clear.text.rect( 3, 16, 19, 35, 15);
+		display(  5, 16, 11);
+
+		display(  7, 16, 12);
+
+
+
+		display( 11, 16, 13);
+
+		display( 13, 16, 14);
+		}
+	
+
+	if (page == LAST_PAGE) {
+		clear.text.rect( 3, 16, 19, 35, 15);
+		display(  4, 16, 15);
+
+		display(  6, 16, 16);
+
+		display(  8, 16, 17);
+		display(  9, 16, 18);
+		
+		display( 11, 16, 19);
+		
+		display( 13, 16, 20);
+		
+		display( 15, 16, 21);
+
+		display( 17, 16, 22);
+		}
+	
+	set.text.attribute( TEXT_COLOR, BG_COLOR);
+	}
+	
+
+
+
+
+[ Text
+
+if (!have.input)
+	{
+	goto exit;
+	}
+
+set( refresh);
+
+if ((said( turn, page, rol) ||
+	said( next, page, rol) ||
+	said( read, next, page, rol) ||
+	said( look, next, page, rol)))
+	{
+	print( 24);
+	++page;
+	if (page > LAST_PAGE)
+		{
+		page = 1;
+		}
+	}
+
+if ((said( turn, back, page, rol) ||
+	said( previous, page, rol) ||
+	said( read, previous, page, rol) ||
+	said( look, back, page, rol)))
+	{
+	print( 24);
+	--page;
+	if (!page)
+		{
+		page = LAST_PAGE;
+		}
+	}
+
+if ((said( give, book, rol) ||
+	said( give, notebook, russ, rol) ||
+	said( give, russ, book, rol) ||
+	said( give, russ, notebook, rol) ||
+
+	said( close, book, rol) ||
+	said( close, notebook, rol) ||
+	said( close, black, book, rol) ||
+	said( close, black, notebook, rol) ||
+
+	said( look, room, rol) ||
+	said( look, away, rol) ||
+	said( look, box, rol) ||
+
+	said( return, book, rol) ||
+	said( return, notebook, rol) ||
+	said( return, russ, book, rol) ||
+	said( return, russ, notebook, rol) ||
+
+	said( put, black, book, rol) ||
+	said( put, black, notebook, rol) ||
+	said( put, notebook, rol) ||
+	said( put, book, rol)))
+	{
+	if (previous.room == 8) {
+		print( 23);
+		scriptCycles = 4;
+		}
+
+	if (previous.room == 6) {
+		print( 25);
+		scriptCycles = 4;
+		}
+	}
+
+
+[
+:exit
+[
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	new.room.f( previous.room);
+	}
+

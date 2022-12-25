@@ -1,0 +1,102 @@
+[ POLICE QUEST
+[ rm94.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 9/18/86
+[ Last Update October 4, 1987GR
+
+[ lgc.stopped.cars
+
+
+%message	1
+"The%s2door is open."
+
+%message	2
+"The%s2door is closed."
+
+%message	3
+"You arms are not that long."
+
+%message	4
+"The back seat is reserved for prisoners and you have none!"
+
+%message	5
+"Do you plan to crawl through the window?"
+
+%message	6
+"\"Oh, no! I left my door open!\""
+
+%message	7
+"You don't have the keys for this vehicle."
+
+%message	8
+"The Department frowns on dumping suspects from cars at high speed.
+ Try closing the rear door!"
+
+%message	9
+"Nothing of interest is happening in that direction."
+
+%message	10
+"You've already spent ten years on a foot beat.
+ That should be enough walking for anyone!"
+
+%message	11
+"Are you planning to release this criminal?
+ This is neither the time nor place to remove your prisoner from the car."
+
+%message	12
+"Taking a suspect into the station is strictly prohibited."
+
+%message	13
+"Close your back door."
+
+%message	14
+"You will never be a passenger in this car."
+
+%message	15
+"There's nowhere to run, and nowhere to hide.
+ You've got to face this guy."
+
+%message	16
+" front "
+
+%message	17
+" back "
+
+%message	18
+"Just because this guy is a crook, there's no need to slam the
+ door on his head."
+
+%message	19
+"Closing the door on your suspect's head could blow the bust."
+
+%message	20						[ close door
+"c d"
+
+%message	21
+"You notice a nightstick in a holder on the driver's door panel."
+
+%message	22
+"Good move! Your wallet is on the seat."
+
+%message	23
+"Why do you always get the car that needs cleaning!?"
+
+%message	24
+"It's not here."
+
+%message	25
+"You wouldn't want to leave your wallet here!"
+
+%message 26
+"Since your suspect can't go through you,
+ you might consider moving out of the way!"
+
+%message 27
+"You won't be going anywhere without keys!"
+
+%message 28
+"It's seems there's a job you've left unfinished here."
+
+%message 29
+"You don't need to do that."
+

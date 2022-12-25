@@ -1,0 +1,140 @@
+[ POLICE QUEST
+[ rm117.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 10/14/86
+[ Last Update September 26, 1987GR
+
+[ lgc.car
+
+
+%message	1			[messages 1 trough 4 misc. random nowhere responses
+"This is not a good place to exit your vehicle."
+
+%message	2
+"%m1 There is nothing of interest here."
+
+%message	3
+"There is no reason to stop at this location."
+
+%message	4
+"Ok. Now, find a good place to stop."
+
+%message	5
+"Laura says,
+ \"Sonny, if you blow this stakeout you'll be '86ed from Narcotics,
+ real quick-like.
+ Now, move it to the park!\""
+
+%message	6
+"Laura reminds you,
+ \"Sonny! Are we going on a tour? Get these pushers to jail!"
+
+%message	7
+"Hello. Welcome to Lytton."
+
+%message	8
+"Disobeying Sgt. Dooley is not a good idea. Better get back on patrol."
+
+%message	9
+"Take your prisoner to jail!"
+
+%message	10
+"Are you planning to buy this crook lunch? %m9"
+
+%message	11
+"The Department Picnic is next month. %m9"
+
+%message	12
+"%m24Blue Room! %m9"
+
+%message	13
+"%m24station! %m9"
+
+%message	14
+"Taking lawbreakers directly to court is highly efficient,
+ but our justice system doesn't funtion that way!"
+
+%message	15
+"Now, that's an idea.
+ Give the culprit the ol' anchor test in the river.
+ Nah, you'd better not."
+
+%message	16
+"Laura says, \"Sonny, I have reports to finish. Head for the office.\""
+
+%message	17
+"You have driven out of your jurisdiction.
+ Time to whip a \"U\" and head back to town!"
+
+%message	18
+"It is a lovely day for a drive, but this is no vacation!"
+
+%message	19
+"You must stay in Lytton to defend its inhabitants from crime."
+
+%message	20
+"Nice job, crash! That's one way to get a vacation!"
+
+%message	21
+"You're driving a car, not \"Helicopter Simulator!\""
+
+%message	22
+"It's back to driving school for you, Sonny!"
+
+%message	23
+"You may only ignore intersection controls when operating a patrol car
+ in Code-3 status, and even then only using due caution."
+
+%message	24
+"Criminals are not welcome in the "
+
+
+
+%message	29	"Map "
+%message	30	"%m29A1"
+%message	31	"%m29A2"
+%message	32	"%m29A3"
+%message	33	"%m29A4"
+%message	34	"%m29B1"
+%message	35	"%m29B2"
+%message	36	"%m29B3"
+%message	37	"%m29B4"
+%message	38	"%m29C1"
+%message	39	"%m29C2"
+%message	40	"%m29C3"
+%message	41	"%m29C4"
+%message	42	"%m29D1"
+%message	43	"%m29D2"
+%message	44	"%m29D3"
+%message	45	"%m29D4"
+
+%message 46
+"You are in front of "
+
+%message 47
+", but you need to find the parking area."
+
+%message 48
+"%m46the Hotel Delphoria%m47"
+
+%message 49
+"%m46Carol's Caffiene Castle%m47"
+
+%message 50
+"%m46Lytton City Park%m47"
+
+%message 51
+"%m46the Blue Room%m47"
+
+%message 52
+"%m46the Lytton Police Department%m47"
+
+%message 53
+"%m46the Lytton Court house%m47"
+
+%message 54
+"%m46the Lytton City Jail%m47"
+
+%message 55
+"%m46Cotton Cove%m47"
+

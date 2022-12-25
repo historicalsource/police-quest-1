@@ -1,0 +1,880 @@
+[ POLICE QUEST
+[ gamedefs
+[ By:	Greg Rowland, Jim Walls, Scott Murphy, Ken Williams and Al Lowe
+[ With:	Mark Crowe and Jerry Moore
+[ For:	Sierra On-Line Inc. 6/27/86
+[ Last Update October 15, 1987GR
+
+
+[ Other intriguing, important and/or pertinent files are:
+[ roomnums.h	gives a name and number to every .cg file
+[ rm4.h		squad room defines
+[ rm5.h		locker room defines
+[ rm40.h		jail defines
+[ rm75.h		poker defines
+[ rm94.h		stopped cars defines
+[ rm117.h		streetmap defines
+
+
+
+%tokens	"..\\words.tok" 
+%include	"sysdefs" 
+%include	"flag_var.h"
+
+
+
+
+[ Constants ..............................
+%define	TEXT_COLOR				15
+%define	BG_COLOR					 0
+%define	FASTEST					 0	[	animation.interval
+%define	FAST						 1
+%define	NORMAL					 2
+%define	SLOW						 3
+%define	DOOR_CYCLE_TIME			 4
+%define	DEATH_CYCLE_TIME			 2
+%define	GUN_LEFT_X				 2
+%define	GUN_RIGHT_X				 7
+%define	GUN_Y					15
+%define	MIN_BEFORE_BRIEF1			 5
+%define	POKER_MIN					50
+%define	POKER_MAX					30
+
+
+
+
+[ Flags ..................................
+[ Only the interpreter can use	0-29		(globals)
+[ general use flags			    30-219
+[ Any room can use			   220-239	(lf's)
+[ Only dynamic logics can use	   240-255	(tf's)
+
+%flag	func4					30
+%flag	func6					31
+%flag	func8					32
+%flag	func10					33
+%flag	refresh					34
+%flag	init.dyn					35
+%flag	game.control				36
+%flag	change.signal				37
+%flag	siren					38
+%flag	in.car					39
+%flag	murder					40
+%flag	Gloaded					41
+%flag	check.gun					42
+%flag	firing.gun				43
+%flag	gotcha					44
+%flag	in.motion					45
+%flag	has.suspect				46
+%flag	suspect.present			47
+%flag	suspect.moving				48
+%flag	suspect.following 			49
+%flag	suspect.shooting			50
+%flag	suspect.shot.done			51
+%flag	suspect.dying				52
+%flag	suspect.dead				53
+%flag	ego.shot.done				54
+%flag	ego.shot.dead				55
+%flag	hercules					56
+%flag	nearPhone					57
+%flag	SxMorganCall				58	[ NOTE:  Sx means "scored" this.
+%flag	SxWallet					59
+%flag	lockerDoorOpen				60
+%flag	SxExtender				61
+%flag	SxBainsFax				62
+%flag	f.car.door				63
+%flag	b.car.door				64
+%flag	cadillac.door				65
+%flag	corvette.door				66
+%flag	SxPCKeys					67
+%flag	inBcase					68
+%flag	close.it					69
+%flag	shower.on					70
+%flag	shower.talk0				71
+%flag	shower.talk1				72
+%flag	shower.talk2				73
+%flag	SxCSdope					74
+%flag	took.notes				75
+%flag	bikes.down				76
+%flag	SxTgun					77
+%flag	SxTbook					78
+%flag	SxTdope					79
+%flag	SxTlicense				80
+%flag	logging					81
+%flag	gotoCab					82
+%flag	followingEgo				83
+%flag	together					84
+%flag	caughtEgo					85
+%flag	testDist					86
+%flag	togetherInElev				87
+%flag	doSc						88
+%flag	inElevator				89
+%flag	calledMorgan				90
+%flag	btJimmyTogether			91
+%flag	SxSteveNote				92
+%flag	SxColbySearch				93
+%flag	bainsEgoTogether			94
+%flag	readingBlackBook			95
+%flag	lookingAtGun				96
+%flag	SxUsedTrans				97
+[%flag	98
+%flag	ETnote					99
+%flag	Sdoor					100	[ suspect cars
+%flag	LauraCar					101	[ laura in car
+%flag	NOcase					102	[ can use brief case
+%flag	SxTaber					103
+%flag	twoButtonJoystick			104
+%flag	mouseMachine				105
+%flag	myHaveMatch				106
+%flag	requestedASaveGame			107
+%flag	preventSaveGame			108
+%flag	nearPerson				109
+%flag	typing					110
+%flag	forceAtest				111
+%flag	aSecondPassed				112
+%flag	notCloseEnough				113
+%flag	alreadyGotIt				114
+%flag	dontHaveIt				115
+%flag	OK						116
+%flag	hasfPhone					117
+%flag	SxGaveFoxTicket			118
+%flag	hasBrief1					119
+%flag	hasBrief2					120
+%flag	hasSafeCar				121
+%flag	keepCyclingSuspect			122
+%flag	hasVIN					123
+%flag	hasBDP					124
+%flag	hasRebooked				125
+%flag	stoppedFox				126
+%flag	SxComplaint				127
+%flag	SxSCTip					128
+%flag	SxDUI					129
+%flag	hasTbooked				130
+%flag	SxMemo					131
+%flag	makeSuspectShoot			132
+%flag	SxPierson					133
+%flag	SxDeadTattoo				134
+%flag	SxDopers					135
+%flag	readRights				136
+%flag	hasPrints					137
+%flag	scriptDone				138
+%flag	LauraInRoom				139
+%flag	certainDeath				140
+%flag	kill.ego					141
+%flag	SxLoadingGun				142
+%flag	SxHoffmanFile				143
+%flag	SxSafetyCheck				144
+%flag	SxGun					145
+%flag	SxAmmo					146
+%flag	SxCase					147
+%flag	SxVetKey					148
+%flag	SxPR24					149
+%flag	QA						150
+%flag	demo						151
+%flag	done						152
+%flag	work.f					153
+%flag	snd.done					154
+%flag	debugging					155
+%flag	no.cycling				156
+%flag	keep.cycling				157
+%flag	ignore.special				158
+%flag	outOfMemory				159
+%flag	SxCadKeys					160
+%flag	SxHDNote					161
+%flag	preventEgoFire				162
+%flag	SxMaceMemo				163
+%flag	checkMemory				164
+%flag	knowsColbyName				165
+%flag	SxSusCheck				166
+%flag	SxMorganNote				167
+%flag	SxClearedBikers			168
+%flag	knowsMorganNumber			169
+%flag	dontHaveThem				170
+%flag	beenInLocker				171
+%flag	openedBriefcase			172
+%flag	SxTicketBook				173
+%flag	SxNoteBook				174
+%flag	SxPen					175
+%flag	lookedInHisBox				176
+%flag	SxFoundWreck				177
+%flag	SxFoundCarol's				178
+%flag	SxFoxPlate				179
+%flag	wroteAnote				180
+%flag	SxToldFoxNo				181
+%flag	SxFST					182
+%flag	SxStoppedDrunk				183
+%flag	SxDrunkPlate				184
+%flag	SxGunLocker				185
+%flag	SxFoundBlueRoom			186
+%flag	SxFelon					187
+%flag	SxSawTGun					188
+%flag	SxFoundCourt				189
+%flag	SxClerk					190
+%flag	ranTGunSerial				191
+%flag	SxCobbCall				192
+%flag	foundHotel				193
+%flag	Sx200Bucks				194
+%flag	SxRoom					195
+%flag	SxClothes					196
+[nextflag
+[%flag	197
+[%flag	198
+[%flag	199
+
+
+
+[ Global flags are from 220 - 255.
+
+[	Flags through 239 are still available.  Poker logics only uses dynamic
+[flags 240-255.
+
+
+
+
+[ Vars ...................................
+[Only the interpreter can use		0-29		(globals)
+[any room can use 			    30-219
+[Any room can use			   220-239	(lcl's)
+[Only dynamic logics can use	   240-255	(tcl's)
+
+%var		previous.ego				30
+	%define	in.uniform		0
+	%define	SDeadCop			1
+	%define	ego.draw.gun		2
+	%define	ego.fire.gun		3
+	%define	in.towel.dark		4
+	%define	ego.shot.leg		5
+	%define	dead.sonny.uniform	6
+	%define	in.towel.light		7
+	%define	sonny.narc		8
+	%define	dead.sonny.narc	9
+	%define	SDeadNarc			10
+	%define	sonny.narc.draw	11
+	%define	sonny.narc.fire	12
+
+	%define	disguised.sonny	13
+	%define	disguised.dead		14
+	%define	disguised.draw		15
+	%define	disguised.fire		16
+
+	%define	sonny.civies		17
+	%define	sonny.civies.dead	18
+	%define	sonny.on.foot		19
+
+
+%var		progress					31
+	%define	beginning			0
+	%define	has.brief1		1  
+	%define	field1			2
+	%define	has.brief2		3
+	%define	narc				4
+
+	%define	disguiseTime		75
+
+	%define	undercover		100
+	%define	scInBar			100
+	%define	metSC			101
+	%define	metBartender		102
+	%define	tippedBt			103
+	%define	game1Time			104
+	%define	payedAdmission		150	
+
+	%define	playingPoker1		160	[ set after intros;
+	%define	lostPoker1		165	[ set in rm75
+	%define	wonPoker1			170	[ set in rm70
+	%define	game2Time			175	[ set in rm67
+	%define	playingPoker2		180	[ set in rm71 after intros
+	%define	lostPoker2		185	[ set in rm75
+	%define	wonPoker2			190
+
+	%define	ego.dying			254
+	%define	dead				255
+
+
+%var		chicken.scene				32
+%var		page						33
+%var		shots.left				34	[	PROTECTED VAR!! Used in %v##
+%var		moroff.scene				35
+%var		narcoff.scene				36
+%var		hqhall2.scene		 		37
+%var		foxScene					38
+%var		current.sonny				39
+%var		current.dead				40
+%var		current.Sdead				41
+%var		current.draw				42
+%var		current.fire				43
+%var		current.car				44
+[	%define	patrol.car		0
+	%define	corvette.car		1		[lb
+	%define	cadillac.car		2		[white
+	%define	tit.mobile.car		3		[red
+	%define	wreck.car			4		[green
+	%define	drunk.car			5		[lv
+	%define	felony.car		6		[lc
+
+%var		current.diag.car			45
+	%define	patrol.prof		0
+	%define	corvette.prof		1
+	%define	cadillac.prof		2
+	%define	tit.mobile.prof	3
+	%define	wreck.prof		4
+	%define	drunk.prof		5
+	%define	felony.susp.prof	6
+	%define	patrol.car		99
+	%define	diag.patrol.car	100
+
+%var		streetScene				46
+%var		street.address				47
+	%define	nowhere		0
+
+%var		locker.scene				48
+%var		shot.first				49
+	%define	none.shooting		0
+	%define	ego.shot.first		1
+	%define	suspect.shot.first	2
+	%define	blowEgoAway		111
+
+
+%var		stopLight				50
+%var		functionKeys			51
+	%define	MAP			1
+	%define	GUN			2
+	%define	CARandGUN		3
+	%define	CAR			4
+	%define	PR_24		5
+	%define	SHOWER		6
+
+%var		carStolen					52
+[nextvar
+[%var		53
+%var		gun.status				54
+%var		code						55
+	%define	cruising			1
+	%define	lights			2
+	%define	lights.siren		3
+
+%var		dynamic1					56
+%var		dynamic2					57
+%var		dynamic3					58
+%var		dynamic4					59
+%var		calledBackups				60
+%var		dist						61
+%var		ego.firing				62
+%var		park.bust					63
+%var		function					64
+%var		street.timer				65
+%var		suspect.shots				66
+%var		current.suspect			67
+%var		current.suspect.draw		68
+%var		current.dead.suspect		69
+%var		current.suspect.cuffed		70
+	%define	wreck			0
+	%define	steveCoffee		1
+	%define	tit.fox			3
+	%define	bikers			4
+	%define	colby.simms		5
+	%define	sweet.cheeks		30
+	%define	taselli			38
+	%define	taselli.shooting	39
+	%define	taselli.dead		31
+	%define	taselli.handsup	32
+	%define	taselli.cuffed		33
+	%define	drunk			137
+	%define	drunk.cuffed.b		138
+	%define	drunk.cuffed.f		139
+	%define	colby			175
+	%define	colby.draw		177
+	%define	colby.dead		178
+
+%var		range.high				71
+%var		range.low					72
+%var		good.dir					73
+%var		car.location				74	[These are used to 
+%var		car.x					75	[	locate the car
+%var		car.y					76	[		when ego walks away.
+%var		car.loop					77
+%var		car.cell					78
+%var		current.suspect.car			79
+%var		next.suspect.room			80
+%var		suspect.x					81
+%var		suspect.y					82
+%var		suspect.dir				83
+%var		suspect.speed				84
+%var		suspect.location			85
+%var		suspect.in.car				86
+%var		suspect.cop.car			87
+	%define	incop.door.closed	0
+	%define	incop.door.open	1
+	%define	cop.door.open		2
+	%define	cop.door.closed	3
+	%define	none.in.car		4
+
+[%var		88
+%var		cash						89	[	PROTECTED VAR!! Used in %v##
+%var		test.room					90
+%var		cotton.scene				91
+%var		wreck.scene				92
+%var		coffee.scene				93
+%var		biker.scene				94
+%var		court.scene				95
+%var		jail.scene				96
+%var		oldCash					97
+%var		bluerm.scene				98
+[nextvar
+[%var		99
+%var		toFloor					100
+%var		previousFloor				101
+%var		old.last.char				102
+%var		secondsSinceKeystroke		103
+%var		old.ego.x					104
+%var		old.ego.y					105
+%var		old.ego.dir				106
+%var		tempX					107
+%var		tempY					108
+%var		parkedSuspectX				109
+%var		parkedSuspectY				110
+%var		pokerGameMin				111
+%var		pokerGameMax				112
+[nextvar
+[%var		113
+[%var		114
+[%var		115
+[%var		116
+%var		squad.scene				117
+[%var		118
+%var		felScene					119	[felony stop scene
+%var		secondsInRoom				120
+%var		passInRoom				121
+%var		one						122
+%var		two						123
+%var		three					124
+%var		four						125
+%var		five						126
+%var		zero						127
+[nextvar
+[%var		128
+%var		step						129
+%var		room						130
+%var		message					131
+%var		clearStatusSeconds			132
+%var		oldSeconds				133
+%var		priorX					134
+%var		priorY					135
+%var		rmsFirstRadioCall			136
+%var		rmsNextRadioCall			137
+%var		PreventBackAndForth			138
+%var		script					139
+%var		scriptTimer				140
+%var		scriptCycles				141
+%var		ego.x					142	[	General purpose vars...
+%var		ego.y					143
+%var		x						144
+%var		y						145
+%var		view						146
+%var		loop						147 
+%var		cell						148
+%var		base						149
+%var		box						150
+%var		priority					151
+%var		work						152	[	PROTECTED VAR!! Used in %v##
+%var		work1					153
+%var		work2					154
+%var		work3					155
+%var		work4					156
+%var		work5					157
+%var		work6					158	[	PROTECTED VAR!! Used in %v##
+%var		work7					159
+%var		work8					160
+%var		work9					161
+%var		work10					162
+%var		work.count				163
+%var		debug.0					164
+%var		debug.1					165
+%var		wait.1			 		166	[	Always reset by new room.
+%var		wait.2			 		167	[		"
+%var		timer.1			 		168	[		"
+%var		timer.2			 		169	[		"
+%var		marked.cash				170	[	PROTECTED VAR!! Used in %v##
+%var		Mdollar					171	[	PROTECTED VAR!! Used in %v##
+%var		hands.played				172
+[nextvar
+[%var		173
+[%var		174
+[%var		175
+
+[	Vars 176 through 255 are used by the poker game. They can also be used
+[by any other rooms (except rm0), but the poker game will trash 'em.
+
+%var		deathTimer				180	[	Poker won't need it now!
+
+
+
+[	Views ..............................
+%view	v.ego					0
+%view	v.SDeadCop				1
+%view	v.ego.draw.gun				2
+%view	v.gunFire					3	
+%view	v.in.towel.dark	  		4		
+%view	v.egoNude					5
+%view	v.dead.sonny.uniform  		6
+%view	v.in.towel.light	  		7
+%view	v.sonny.narc				8
+%view	v.dead.sonny.narc			9
+%view	v.SDeadNarc				10
+%view	v.sonny.narc.draw			11
+%view	v.title1					12
+%view	v.disguised.sonny			13
+%view	v.PunkRock				14
+%view	v.CopDoor					15
+%view	v.title2					16
+%view	v.sonny.civies				17
+%view	v.Scividead				18
+%view	vBainsAndSonnyRm104			19
+%view	v.ego.cop.ns				20
+%view	v.laura					21	[	CHARACTERS = 21 - 60
+%view	v.jackson					22 	[	Black Cop
+%view	v.steve					23	[	Blonde Cop
+%view	v.morgan					24	[	In Suit
+%view	v.bigsam					25	[	Cop2
+%view	v.dooley					26	[	Gray Cop
+%view	v.buford					27	[	Brown Cop
+%view	v.jack					28	[	Red Cop
+%view	v.janitor					29
+%view	v.sweet.cheeks				30	 	
+%view	v.taselli.dead				31	 	
+%view	v.taselli.handsup			32
+%view	v.taselli.cuffed			33
+%view	v.karen					34	[	Brown cop Female
+%view	v.jackCiv					35
+%view	v.VettDoor				36
+[%view	37
+%view	v.taselli					38
+%view	v.taselli.shooting			39
+%view	v.CaDoor					40	[	Cadilac door
+
+%view	iv.PCkey					41	[	Inventory views 
+%view	iv.corvkey				42
+%view	iv.cadkey					43
+%view	iv.extnd					44
+%view	iv.gun					45
+%view	iv.ammo					46
+%view	iv.case					47
+%view	iv.NB					48
+%view	iv.pen					49
+%view	iv.TB					50
+%view	iv.paper					51
+%view	iv.wallet					52
+%view	iv.pr24					53
+%view	iv.loaded.gun				54
+%view	iv.Hfile					55
+%view	iv.Wposter				56
+%view	iv.suit					57
+%view	iv.cane					58
+%view	iv.bleach					59
+%view	iv.Mmoney					60
+%view	iv.transmitter				61
+%view	iv.roomKey				62
+%view	iv.warrant				63
+%view	iv.cuffs					64
+
+%view	v.shower					65
+%view	v.MdoorRt					66	[ Morgan door / report table
+%view	v.blue.room.door			67
+%view	v.motorcycles				68
+%view	v.DisgDoor				69	[	disguised car door
+%view	v.DrunkInCop				70
+%view	v.paper					71
+%view	vJustice					72
+%view	v.Ddoor					73
+%view	v.DrunkDoor				74
+%view	v.fox.face				75
+%view	v.crash.scene 				76
+%view	v.chalk					77
+%view	v.gun.case.ammo			78
+%view	v.vett.keys.towel			79
+%view	v.clothes					80
+%view	v.deck.of.cards			81
+%view	v.TNpen					82
+%view	v.crash					83
+%view	v.van.sign				84
+%view	v.dope					85
+%view	v.keys.extender			86
+%view	v.gunLabel				87
+%view	v.chicken					88
+%view	v.foxCar					89
+%view	v.drawer.clipbrd			90
+%view	v.caffine.signs			91
+%view	v.tasMug					92
+%view	v.drunkCar				93
+%view	v.patCar					94
+%view	v.hotel.door				95
+%view	v.photo					96
+%view	v.filenames				97
+%view	v.intersection				98
+%view	v.patrol.car				99
+%view	v.diag.patrol.car			100
+%view	v.misc.cars				101
+%view	v.diag.misc.cars			102
+%view	v.cars					103
+%view	v.diag.cars				104
+%view	v.mug.shots				105
+%view	v.bar.signs				106
+%view	v.feathers				107
+%view	v.hotel.sign				108
+%view	v.felonyCar				109
+%view	v.trees					110
+%view	v.rack					111
+%view	v.TGLB					112	[	Taselli gun, lic, book
+%view	v.tasellinCop				113
+%view	v.tasellinCar				114
+%view	v.ColbySimmsInCop			115
+%view	v.toilet					116
+[%view	117 - 123 unused
+
+%view	v.Lobbydoor				124	
+%view	v.judge					125
+%view	v.Cdoor					126
+%view	v.court.sign				127
+%view	v.court.clerk				128
+%view	vMayor					129
+%view	v.Cgate					130
+%view	v.jury					131
+%view	v.Creporter				132
+%view	v.bone.crusher				133	[	Prisoner1
+%view	v.cell.door				134
+%view	v.jailer					135
+%view	v.bailiff					136
+%view	v.drunk					137
+%view	v.drunk.cuffed.b			138
+%view	v.drunk.cuffed.f			139
+%view	v.drunk.ko				140
+%view	v.booking.door				141	[	inside jail rm40
+%view	vChief					142
+%view	v.jail.door				143	[	rm41 jail.yard
+%view	v.sign.gun.locker			144	[	 "		"
+%view	v.slam.dunk.donnie  		145	[	 "		"
+%view	v.camera					146			
+%view	v.egok					147	[	sweet.cheeks kissing ego
+%view	v.vettCar					148 	[	Corvette
+%view	vCrowd104					149
+%view	v.cadCar					150	[	Cadillac
+%view	v.cake.man				151	[	Cake courier
+%view	v.folks.sit				152	[	Keith & ego seated (chairs)
+%view	v.hannah					153	[	Hootchie Cootchie Hannah
+%view	vHonorGuard				154
+%view	v.jack.sit				155
+%view	v.kiss					156	[	kiss from hannah to jack
+%view	v.jukeb					157
+%view	vTnA						158
+%view	v.bottles					159	[	for bar in blue room	
+%view	vBuildings0				160
+%view	vBuildings1				161
+%view	vBuildings2				162
+
+[%view	163 - 174 unused
+
+%view	v.colby					175
+%view	v.colby.cuffed				176
+%view	v.colby.draw				177
+%view	v.colby.dead				178
+%view	v.simms					179
+%view	v.simms.cuffed				180
+%view	v.simms.head				181
+%view	v.dope.cash				182
+%view	v.colby.head				183
+%view	v.dead.guys				184
+%view	v.hamilton				185
+%view	vKeithCiv					186
+%view	v.crashed.car				187
+%view	v.smoke					188
+%view	v.crowd					189
+%view	vCarol					190
+%view	v.phone.door				191
+%view	v.ego.sit					192
+%view	v.biker1					193
+%view	v.biker2					194
+%view	v.biker3					195
+%view	v.biker4					196
+%view	v.biker.misc				197
+%view	v.darts					198
+%view	v.BslugSc					199	[	biker slug Cheeks sit
+[%view	200
+%view	v.bainsBlasted				201
+%view	v.titleBullets				202
+[%view	203
+%view	v.bainsShooting			204
+%view	v.jimmyShooting			205
+%view	v.bulletDamage79			206
+%view	v.cavalry					207
+%view	vCabDriver				208
+%view	v.bainsShootingDiag			209
+[%view	210
+%view	v.floorNums				211
+%view	v.roomNums				212
+%view	v.door78					213
+%view	v.door77					214
+%view	v.door76					215
+%view	v.stairNums				216
+%view	v.tables68				217
+%view	v.door78l					218
+%view	v.deskBell				219
+%view	v.subtitle				220	
+[%view	221	
+%view	v.deskClerk				222	
+%view	v.door69					223	
+%view	v.door70					224	
+%view	v.door71					225	
+%view	v.barPatrons68				226
+%view	v.cardPlayers				227
+%view	v.jimmyScInElev			228
+%view	v.jimmyInElev				229
+%view	v.bartender				230
+%view	v.jimmyScSitting			231
+[%view	232
+%view	v.darkGambler				233
+%view	v.blondGambler				234
+
+[%view	235 - 244 unused
+
+%view	v.jimmyBlasted79			245
+%view	v.btSearchingEgo			246
+%view	v.bains					247
+%view	v.conners					248
+%view	v.maxwell					249
+%view	v.angland					250
+%view	v.phone67					251
+%view	v.door68					252
+%view	v.door66					253
+%view	v.door65					254
+%view	v.chairs68				255
+
+
+
+[ Animated objects .......................
+%object	ego						 0
+%object	a.Fdoor					10
+%object	a.Bdoor					11
+%object	a.SuspDoor				12
+%object	a.rack					13
+%object	a.back.up					14
+%object	aSweetCheeks				15
+%object	a.fire					17
+%object	a.suspect.fire				18
+%object	a.suspect					19
+
+
+[	Inventory objects ...................
+%object	i.PCkey					 1
+%object	i.corvkey					 2
+%object	i.cadkey					 3
+%object	i.extnd					 4
+%object	i.gun					 5
+%object	i.ammo					 6
+%object	i.case					 7
+%object	i.NB						 8
+%object	i.pen					 9
+%object	i.TB						10
+%object	i.paper					11
+%object	i.wallet					12
+%object	i.pr24					13
+%object	i.loaded.gun				14
+%object	i.Hfile					15
+%object	i.Wposter					16
+%object	i.suit					17
+%object	i.cane					18
+%object	i.bleach					19
+%object	i.Mmoney					20
+%object	i.transmitter				21
+%object	i.roomKey					22
+%object	i.warrant					23
+%object	i.cuffs					24
+%define	SIZE_OF_INVENTORY			24
+%define	inventory					255	[Object's room# if in inventory
+
+
+
+[	Controllers .........................
+%define	c.quit					 1							 
+%define	c.help					 2
+%define	c.save					 3
+%define	c.func4					 4
+%define	c.restore					 5
+%define	c.func6					 6
+%define	c.restart					 7
+%define	c.func8					 8
+%define	c.echo.line				 9
+%define	c.status					10
+%define	c.QA						11
+%define	c.rgb.toggle				12
+%define	c.show.mem				13
+%define	c.debug					14
+%define	c.init.joy				15
+%define	c.sound.toggle				16
+%define	c.cancel.line				17
+%define	c.pause					18
+%define	c.show.priority			19
+%define	c.version					20
+%define	c.show.ego				21
+%define	c.test					22
+%define	cGimme					23
+%define	cInvNumbers				24
+%define	c.func10					25
+%define	c.about					26
+%define	c.dummy					27
+%define	c.show.obj				28
+%define	c.fast					29
+%define	c.normal					30
+%define	c.slow					31
+%define	c.menu					32
+[%define	33
+%define	c.radio					34
+%define	c.fastest					35
+%define	c.speed					36
+%define	cObjInfo					37
+%define	cCrescendo				38
+%define	cDecrescendo				39
+%define	cLevel					40
+
+
+
+[ Sounds .................................
+%define	s.door.open				 1
+%define	s.door.close				 2
+%define	s.car.open				 3
+%define	s.car.close				 4
+%define	s.gun.fire				 5
+%define	s.filedrawer.open			 6
+%define	s.filedrawer.closed			 7
+%define	s.crash					 8
+%define	s.siren					 9
+%define	s.beep					10
+%define	s.case					11
+%define	sDialTone					12
+%define	s.dropClothes				13
+[%define	14
+%define	s.rungCar					15
+%define	sPhoneRing				16
+%define	sPhoneBusy				17
+%define	s.deskBell				18
+%define	s.bullets					19
+%define	s.buzzer					20
+%define	s.jail.door				21
+%define	s.darts					22
+%define	sWrong					23
+
+
+[ Music ..................................
+%define	mCourtroom				29	[	same as 37, mFanfare2
+%define	mCredits					30
+%define	mDeath					31
+%define	mWinner					32
+%define	mBlueRoom					33
+%define	mBadGuy					34
+%define	mBirthDay					35
+%define	mFanfare1					36
+%define	mFanfare2					37
+%define	mSweetCheeks				38
+%define	mChicken					39
+%define	mTension					40
+%define	mKeystone					41
+

@@ -1,0 +1,36 @@
+[ POLICE QUEST
+[ rm114.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 9/5/86
+[ Last Update September 26, 1987al
+
+[ lgc.file
+
+
+%message	1
+"It's a Smith and Weston .45-caliber, automatic handgun."
+
+%message	2
+"The serial number on the gun is SW9764912."
+
+%message	3
+"You place the gun back in the car to be impounded by Officer
+ Jack Cobb along with the car."
+
+%message	4
+"Your partner will take care of the details back at HQ."
+
+%message	5
+"When you're finished looking at the gun,
+ return it to the glove compartment. %m4"
+
+%message 6
+"After careful examination of the weapon, you return it to evidence."
+
+%message	7
+"\"Hey, Jack,\" you shout, \"book this gun!!\""
+
+%message 8
+"The evidence label bears a box marked \"Fingerprints,\"
+ with the initials of Det. Frank Williams, of the Lytton PD Crime Lab."
+

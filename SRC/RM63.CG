@@ -1,0 +1,289 @@
+[ POLICE QUEST
+[ rm63.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 12, 1987GR
+
+[ rm.hotel exterior
+
+
+#include "gamedefs"
+#include "rm63.msg"
+%include "rm94.h"
+
+
+
+#define	doorDone			lf0
+#define	newRoom			lf1
+#define	nextRoom			lf2
+#define	nearDoor			lf3
+
+
+#define	hotelDoorStatus	lcl0
+	#define	closed	0
+	#define	opening	1
+	#define	open		2
+	#define	closing	3
+
+
+#object	aHotelDoor		1
+#object	sc				3
+
+
+
+if (init.log) {
+	if (!foundHotel)
+		{
+		set( foundHotel);
+		score += 1;
+		}
+
+	set( NOcase);
+	set.horizon( 10);
+	if ( !in.car &&
+		(f.car.door ||
+		b.car.door)) {
+		carStolen = 4;
+		}
+
+
+	load.view( v.hotel.door);
+	load.view( v.hotel.sign);
+	
+	load.logics( 94);				[lgc.stopped.cars
+	load.logics( 73)				[scDyn
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	animate.obj( aHotelDoor);
+	ignore.blocks( aHotelDoor);
+	set.view( aHotelDoor, v.hotel.door);
+	set.loop( aHotelDoor, 0);
+	position( aHotelDoor, 60, 125);
+	draw( aHotelDoor);
+	work = DOOR_CYCLE_TIME;
+	cycle.time( aHotelDoor, work);
+
+
+	observe.blocks( ego);
+	if (priorX) {
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		}
+	else {
+		if (previous.room == 64) {
+			last.cel( aHotelDoor, work);
+			set.cel.f( aHotelDoor, work);
+			stop.cycling( aHotelDoor);
+
+			position( ego, 72, 122);
+			}
+		else {
+			set.cel( aHotelDoor, 0);
+			stop.update( aHotelDoor);
+
+			position( ego, 111, 160);
+			}
+		}
+
+ 	add.to.pic( v.hotel.sign, 0, 0, 65,  23, 14, 0);
+ 	add.to.pic( v.hotel.sign, 0, 1, 53,  37, 14, 0);
+	add.to.pic( v.hotel.door, 1, 0, 80, 120, 11, 4);
+
+	call( 94);					[lgc.stopped.cars
+
+	show.pic();
+	return();						[*	E N D  I N I T S **
+	}
+
+
+
+[*****
+[ NO.INPUT
+[*****
+
+[ near doorman 
+reset( nearPerson);
+if (posn( ego, 48, 127, 74, 136)) {
+	set( nearPerson);
+	}
+
+reset( nearDoor);
+if (obj.in.box( ego, 58, 116, 97, 140))
+	{
+	set( nearDoor);
+	}
+
+if (!nextRoom)
+	{
+	if (nearDoor)
+		{
+		if  (hotelDoorStatus != open &&
+			hotelDoorStatus != opening)
+			{
+			hotelDoorStatus = opening;
+			start.update( aHotelDoor);
+			normal.motion( aHotelDoor);
+			end.of.loop( aHotelDoor, doorDone);
+			stop.update( ego);
+			}
+		}
+	else
+		{
+		if  (hotelDoorStatus != closed &&
+			hotelDoorStatus != closing)
+			{
+			hotelDoorStatus = closing;
+			normal.motion( aHotelDoor);
+			reverse.loop( aHotelDoor, doorDone);
+			}
+		}
+	}
+
+if (doorDone)
+	{
+	if (hotelDoorStatus == opening)
+		{
+		hotelDoorStatus = open;
+		stop.cycling( aHotelDoor);
+		ignore.objs( aHotelDoor);
+		start.update( ego);
+		}
+
+	if (hotelDoorStatus == closing)
+		{
+		hotelDoorStatus = closed;
+		stop.update( aHotelDoor);
+		observe.objs( aHotelDoor);
+		}
+	}
+
+if (hotelDoorStatus == open)
+	{
+	block( 52, 124, 72, 127);		[	So can't walk through open door
+	}
+else
+	{
+	unblock();
+	}
+
+
+
+[*****
+[ SAID
+[*****
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look, hotel)))
+	{
+	print( 1);					[	"This is the entrance.."
+	}
+
+if ((said( look, up) ||
+	said( look, sky)))
+	{
+	print( 2);					[	"You observe a clear sky."
+	}
+
+if (said( look, doorman))
+	{
+	print( 5);					[	"The man is wearing 
+	}
+
+if (said( talk, doorman))
+	{
+	if (!nearPerson)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 6);				[	"The man is not talkative.."
+		}
+	}
+
+if (said( look, awning))
+	{
+	print( 12);					[	"The awning is 
+	}
+
+if ((said( look, rug) ||
+	said( look, carpet)))
+	{
+	print( 7);					[	"It is a red carpet.."
+	}
+
+if ((said( look, planter) ||
+	said( look$in, planter, box) ||
+	said( look$in, planter) ||
+	said( look, planter, box)))
+	{
+	print( 8);					[	"The planter holds a shrub.."
+	}
+
+if ((said( look, shrub) ||
+	said( look$in, tree) ||
+	said( look$in, shrub) ||
+	said( look, tree)))
+	{
+	print( 9);					[	"You see a small green shrub.."
+	}
+
+if ((said( look, window) ||
+	said( look, up, window)))
+	{
+	print( 10);					[	"The windows of the hotel.."
+	}
+
+if ((said( look, street) ||
+	said( look, down)))
+	{
+	print( 4);					[	"It's a sidewalk.
+	}
+
+if ((said( get, carpet) ||
+	said( get, shrub) ||
+	said( get, planter) ||
+	said( get, dirt) ||
+	said( dig, planter) ||
+	said( dig, dirt) ||
+	said( move, carpet) ||
+	said( move, shrub) ||
+	said( move, planter)))
+	{
+	print( 11);					[	"That's not beneficial.."
+	}
+
+if (nearDoor &&
+	said( open, door))
+	{
+	print( 3);
+	}
+
+
+
+[*****
+[ EXIT
+[*****
+
+if (!nextRoom && ego.y < 120)
+	{
+	set( nextRoom);
+	set( game.control);
+	stop.update( ego);
+	start.update( aHotelDoor);
+	reverse.loop( aHotelDoor, newRoom);
+	}
+
+if (newRoom)
+	{
+	reset( game.control);
+	new.room( 64);					[rm.lobby
+	}
+
+call( 94);						[lgc.stopped.cars
+

@@ -1,0 +1,435 @@
+[ POLICE QUEST
+[ rm4.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 10, 1987al
+
+[ rm.squad
+
+
+%include "gamedefs"
+%include "rm4.msg"
+%include "rm4.h"
+
+
+
+if (init.log)
+	{
+	set.horizon( 0);
+
+	if (!hasBrief1 &&
+		bluerm.scene == 0)
+		{
+		dynamic1 = 44;				[ lgc.brief1
+		}
+	else {
+		if  (bluerm.scene == 4 &&	[ hoochie coochie
+			current.sonny == 0 &&
+			progress < has.brief2)	[ in.uniform
+			{
+			dynamic1 = 45;			[ lgc.brief2
+			}
+		else
+			{
+			dynamic1 = 46;			[ lgc.squadrm;
+			}
+		}
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	load.view( v.chalk);
+
+ 	load.logics.f( dynamic1);
+	call.f( dynamic1);
+
+	if (priorX)
+		{
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		}
+	else {
+		position( ego, 20, 115);
+		}
+
+	draw( ego);
+	
+	show.pic( );
+
+	if (previous.room == 116)
+		{
+		status.line.on( );
+		set( enable.menu);
+		}
+
+	return();
+	}
+
+
+
+if (!posn( ego, 0, 108, 18, 120))		[	Inside doorway
+	{
+	reset( conver8);
+	}
+else
+	{
+	if (squad.scene == 1)			[	here comes the guys.
+		{
+		if (!conver8)
+			{
+			set( conver8);
+			print( 12);
+			}
+		}
+	else
+		{
+		if (squad.scene &&
+			squad.scene < 5)		[	brief not yet done
+			{
+			if (!conver8)
+				{
+				set( conver8);
+				print( 13);
+				}
+			}
+		else
+			{
+			new.room( 6);			[	rm.hqhall1
+			}
+		}
+	}
+
+
+
+
+if (moved0) {						[	Animation counters 
+	reset( moved0);
+	++moving0;
+	}
+if (moved1) {
+	reset( moved1);
+	++moving1;
+	}
+if (moved2) {
+	reset( moved2);
+	++moving2;
+	}
+if (moved3) {
+	reset( moved3);
+	++moving3;
+	}
+if (moved4) {
+	reset( moved4);
+	++moving4;
+	}
+if (moved5) {
+	reset( moved5);
+	++moving5;
+	}
+if (moved6) {
+	reset( moved6);
+	++moving6;
+	}
+
+
+distance( ego, a.cop1, cop1);
+distance( ego, a.cop2, cop2);
+distance( ego, a.cop3, cop3);
+distance( ego, a.cop4, cop4);
+distance( ego, a.cop5, cop5);
+distance( ego, a.cop6, cop6);
+distance( ego, a.cop7, cop7);
+if ((cop1 < dist ||
+	cop2 < dist ||
+	cop3 < dist ||
+	cop4 < dist ||
+	cop5 < dist ||
+	cop6 < dist ||
+	cop7 < dist)) {
+	set( nearPerson);
+	}
+
+reset( nearHole1);					[	Near pigeon Holes
+if (posn( ego, 116, 105, 155, 111)) {
+	set( nearHole1);
+	}
+reset( nearHole2);
+if (posn( ego, 120, 112, 155, 118)) {
+	set( nearHole2);
+	}
+reset( nearHole3);
+if (posn( ego, 123, 119, 155, 126)) {
+	set( nearHole3);
+	}
+reset( nearHole4);
+if (posn( ego, 128, 127, 155, 134)) {
+	set( nearHole4);
+	}
+
+reset( nearTables);
+if (posn( ego, 32, 110, 126, 160)) {
+	set( nearTables);
+	}
+
+reset( nearDrawers);
+if ((posn( ego, 39, 122,  68, 133) ||		[ NEAR DRAWERS
+	posn( ego, 83, 126, 111, 131) ||
+	posn( ego, 85, 153, 119, 161) ||
+	posn( ego, 29, 148,  63, 162))) {
+	set( nearDrawers);
+	}
+
+reset( nearSeat);
+if (posn( ego, 89, 127, 105, 135))	{
+	set( nearSeat);
+	}
+
+[ General use timer 
+if (!typing && aSecondPassed) {
+	--wait.1;
+	--wait.2;
+	}
+
+
+
+[ stop.pedaling 
+
+if (dynamic1 != 46) {
+	get.posn( a.cop1, x, y);
+	if ((work1 != x || work2 != y)) {
+		work1 = x;
+		work2 = y;
+		start.cycling( a.cop1);
+		}
+	else {
+		stop.cycling( a.cop1);
+		}
+	
+	get.posn( a.cop2, x, y);
+	if ((work3 != x || work4 != y)) {
+		work3 = x;
+		work4 = y;
+		start.cycling( a.cop2);
+		}
+	else {
+		stop.cycling( a.cop2);
+		}
+
+	get.posn( a.cop3, x, y);
+	if ((work5 != x || work6 != y)) {
+		work5 = x;
+		work6 = y;
+		start.cycling( a.cop3);
+		}
+	else {
+		stop.cycling( a.cop3);
+		}
+	
+	get.posn( a.cop4, x, y);
+	if ((work7 != x || work8 != y)) {
+		work7 = x;
+		work8 = y;
+		start.cycling( a.cop4);
+		}
+	else {
+		stop.cycling( a.cop4);
+		}
+	
+	get.posn( a.cop5, x, y);
+	if ((work9 != x || work10 != y)) {
+		work9 = x;
+		work10 = y;
+		start.cycling( a.cop5);
+		}
+	else {
+		stop.cycling( a.cop5);
+		}
+	
+	get.posn( a.cop6, x, y);
+	if ((work11 != x || work12 != y)) {
+		work11 = x;
+		work12 = y;
+		start.cycling( a.cop6);
+		}
+	else {
+		stop.cycling( a.cop6);
+		}
+					
+	get.posn( a.cop7, x, y);
+	if ((work13 != x || work14 != y)) {
+		work13 = x;
+		work14 = y;
+		start.cycling( a.cop7);
+		}
+	else {
+		stop.cycling( a.cop7);
+		}
+	}
+	
+
+
+if ((said( look, box) ||
+	said( get, messages) ||
+	said( read, messages) ||
+	said( look$in, box) ||
+	said( get, mail) ||
+	said( get, memos) ||
+	said( read, mail) ||
+	said( reach, box) ||
+	said( get, stuff, box)))
+	{
+	set( lookInMyBox);
+	}
+
+call.f( dynamic1);
+
+if (lookInMyBox)
+	{
+	reset( lookInMyBox);
+	if (ego.x < 99) {
+		print( 3);
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+
+
+if (!have.input) {
+	goto exit;
+	}
+
+if (said( look, blackboard)) {
+	print( 5);
+	}
+
+if ((said( write, chalk, rol) ||
+	said( use, chalk) ||
+	said( write, on, chalk, rol))) {
+	print( 10);
+	}
+
+if ((said( erase, rol) ||
+	said( anyword, anyword, blackboard) ||
+	said( anyword, blackboard))) {
+	print( 22);
+	}
+
+if (said( look, clock)) {
+ 	print( 1);
+	}
+		
+if (said( look, podium)) {
+	print( 2);
+	}
+
+if (said( look, table)) {
+	if (nearTables) {
+		print( 4);
+		print( 9);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( look, drawer) ||
+	said( look$in, drawer))) {
+	if (nearTables) {
+		print( 6);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( open, podium) ||
+	said( search, podium) ||
+	said( look$in, podium))) {
+	if (posn( ego, 64, 95, 89, 106)) {
+		print( 7);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if (said( open, drawer)) {
+	if (nearDrawers) {
+		print( 8);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( look) ||
+	said( look, briefing, room) ||
+	said( look, room))) {
+	print( 15);
+	}
+
+if ((said( look, floor) ||
+	said( look, down))) {
+	print( 17);
+	}
+
+if ((said( look, ceiling) ||
+	said( look, up))) {
+	print( 18);
+	}
+
+if (said( look, walls)) {
+	print( 16);
+	}
+
+if ((said( climb, table) ||
+	said( get, on, table) ||
+	said( climb, on, table))) {
+	if (nearTables) {
+		print( 19);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if (said( get, tools)) {
+	if (nearDrawers) {
+		print( 20);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if (said( look, under, table)) {
+	if (nearTables) {
+		print( 21);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if (said( get, gum))
+	{
+	if (nearTables)
+		{
+		print( 11);
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+
+[
+:exit
+[
+

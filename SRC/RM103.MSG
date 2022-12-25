@@ -1,0 +1,127 @@
+[ POLICE QUEST
+[ rm103.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. July 27, 1987
+[ Last Update September 24, 1987al
+
+[	messages for room 103 -- rmWinner1
+
+
+%message	1	"Jessie Hiram Bains,    "	[	All scroll up
+%message	2	"\"The Death Angel,\"     "
+%message	3	"was brought to justice "
+%message	4	"and tried in the       "
+%message	5	"Superior Court of the  "
+%message	6	"City of Lytton on the  "
+%message	7	"following charges:     "
+%message	8	"                       "
+
+
+
+%message	9	"ILLEGAL GAMBLING"		[	Scroll up screen
+%message	10	"Hotel Delphoria bartender Woody Roberts
+ turned State's evidence and, as a witness for the prosecution
+ (in return for a suspended sentence and three years probation),
+ provided convincing testimony concerning the
+ gambling activities of Jessie Bains, Otto Lipshitz, and Gene
+ \"the Bambino\" Bamboni."
+
+
+%message	11	"DRUG TRAFFICKING"
+%message	12	"Drug pusher Donald D. Colby
+ turned State's evidence and, as a witness for the prosecution
+ (in return for a suspended sentence and five years probation),
+ provided convincing testimony concerning the
+ Bains' narcotics distribution network."
+
+
+%message	13	"ATTEMPTED MURDER"
+%message	14	"Lytton PD Detectives Bonds, Anglin, and Smith,
+ presented eyewitness testimony
+ concerning the shoot-out at the Hotel Delphoria."
+
+
+%message	15	"FIRST DEGREE MURDER"
+%message	16	"Ballistic tests provided a positive match between
+ Bains' .32-caliber automatic handgun and the
+ weapon used to murder Jason Taselli."
+
+
+%message	17	"And now, the results of that trial..."
+
+
+[
+[	Cut to courtroom where we see all the existing courtroom stuff,
+[	bailiff near jury, plus Bonds and Taselli.
+[
+
+%message	18
+"The Honorable Judge Kim Palmer asks the foreman of the jury,
+ \"Ladies and gentlemen of the jury, have you reached your verdict?\""
+
+%message	19
+"The foreman answers, \"Yes, we have, Your Honor.\""
+
+[
+[	Bailiff takes paper, walks to judge.  She reads it, gives it
+[	back to bailiff, who says,
+[
+[%message	11	"Charge
+[			blah, blah, blah...
+[
+
+%message	20	"Guilty as charged."
+
+
+%message	21
+"\"Mr. Bains, please rise for sentencing.
+ Do you have any last statement before I pronounce sentencing?\""
+
+%message	22
+"Bains looks straight into your eyes.
+ \"No, your Honor.\"\n\n
+Then, under his breath, he hisses across the aisle,
+ \"Bonds, you're a dead man!\""
+
+%message	23
+"Staring intently at Bains, Judge Palmer says firmly,
+ \"Jessie Hiram Bains,
+ you are hereby sentenced to a total of 97 years in the State Penitentiary,
+ without possibility of parole.\""
+
+%message	24
+"The courtroom erupts in spontaneous applause.
+ You smile broadly,
+ until you catch Bains glaring holes through your skull!
+ You know your life is not yet free of \"the Death Angel!\""
+
+
+[
+[	Go to black picture, with a print window:
+[
+
+
+%message	25
+"Three days pass.\n\n
+With Bains safely ensconced in the State Penitentiary at Vacaville,
+ the City of Lytton is once again a quiet, peaceful community freed
+ from the grasp of \"the Death Angel.\""
+
+[
+[	Cut to courthouse picture, honor guard, and mayor on top step.
+[
+
+
+%message	28	"Charge:"
+
+%message	29
+"\"Bailiff, please read the jury's verdict to the court.\""
+
+%message	30
+"\"Bailiff, please bring the jury's verdict to me.\""
+
+%message	31	"\n\"%m28\n\n%m9.\n\n\n%m20\"\n"
+%message	32	"\n\"%m28\n\n%m11.\n\n\n%m20\"\n"
+%message	33	"\n\"%m28\n\n%m13.\n\n\n%m20\"\n"
+%message	34	"\n\"%m28\n\n%m15.\n\n\n%m20\"\n"
+

@@ -1,0 +1,66 @@
+[ POLICE QUEST
+[ rm92.cg
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. September 17, 1987
+[ Last Update September 24, 1987GR
+
+
+[ lgcCommercial
+
+
+%include "gamedefs"
+%include "rm92.msg"
+%include "rm94.h"
+
+
+
+[ atempt to go site seeing
+if (hit.special && !private) {
+	print( 7);					[private property
+	set( refresh);
+	set( private);
+	}
+if (!hit.special && private) {
+	reset( private);
+	}
+
+
+[ text
+
+if ((said( go, up, stairs) ||
+	said( go, upstairs))) {
+	print( 1);
+	}
+
+if (ego.y < 144) {
+	if (posn( ego, 145, 112, 153, 120)) {
+		if (said( knock, door)) {
+			print( 2);
+			}
+		if (said( open, door)) {
+			print( 3);
+			}
+		}
+	}
+if ((said( look, sign) ||
+	said( read, sign))) {
+	print( 8);
+	}
+
+
+
+if (said( look, hydrant)) {
+	print( 4);
+	}
+
+if ((said( look, pole) ||
+     said( look, light, pole))) {
+	print( 5);
+	}
+
+if ((said( look) ||
+	said(look, room))) {
+	print( 6);
+	}
+
+

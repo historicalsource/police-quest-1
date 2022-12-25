@@ -1,0 +1,45 @@
+[ POLICE QUEST
+[ rm119.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/6/86
+[ Last Update September 7, 1987al
+
+[ lgc.freeway w/ freeway
+
+
+%message	1
+"You observe an erratically-driven vehicle and feel the driver may
+ have had one too many."
+
+%message	2
+"Dispatch relays, \"83-32, be advised.
+ Possible stolen vehicle reported in your vicinity.\""
+
+%message	3
+"\"Vehicle is light blue, late-model Cadillac,
+ last seen near Jefferson High.
+ Possible drug involvement.\""
+
+%message	4
+"\"Approach with caution. 10-4.\""
+
+%message	5
+"Did you see that red sports car run that red light?!"
+
+%message	6
+"%m10Respond to 11-83, SW corner of Fig and 4th.\""
+
+%message	7
+"Steve radios,
+ \"83-32, this is 83-31.
+ Time for 11-98 at Caffeine Castle!\""
+
+%message	8
+"You cruise your beat, just aching to write a ticket."
+
+%message	9
+"%m10Respond to a complaint at Carol's Caffeine Castle.\""
+
+%message	10						[	PROTECTED. Used in m9/6
+"Dispatch squawks, \"83-32. 83-32. "
+

@@ -1,0 +1,87 @@
+[ POLICE QUEST
+[ rm40.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 9/18/86
+[ Last Update September 6, 1987al
+
+[ jail.room
+
+
+%message	1
+"\"Book him for what?\" asks the jailer."
+
+%message	2
+"The jailer does that electronically."
+
+%message	3
+"\"Hey, man, lemme outta here!
+ I didn't know it was illegal to copy disks!\""
+
+%message	4
+"The man in the cell is upset by your presence here. He jeers,
+ \"Say, fool, if you're not my lawyer, then get out of my face!\""
+
+%message	5
+"From behind the bars, you are verbally assaulted,
+ \"That's all you sidewalk lizards do: pick on us poor little folks!
+ If you wanna pick on somethin',
+ try runnin' your finger up your nose to about the second knuckle,
+ Captain Crime Buster!\""
+
+%message	6
+"\"Hey, Pig!\" shouts the prisoner.
+ \"If you were on my side of these bars,
+ I'd kick your mojo up between your shoulders!\""
+
+%message	7
+"\"Well, well, well!\" shouts the prisoner.
+ \"If it ain't a wimp in cop's clothing!\""
+
+%message	8
+"%m15Well, well! Ol' Bonds is loose again.\""
+
+%message	9
+"%m15Oh, no! Here comes more paperwork!\""
+
+%message	10
+"%m15if you're selling tickets, I don't need any.\""
+
+%message	11
+"The jailer hollers,
+ \"Get over there! I'll open the door!\""
+
+%message	12
+"The jailer has control of this door."
+
+%message	13
+"You need to get closer."
+
+%message	14
+"It seems you have some unfinished business here first."
+
+%message	15
+"The jailer greets you with a friendly, \""
+
+%message 16
+"The jail is drab and depressing.
+ The only reason the jailer works here is the vast variety of lifestyles
+ that pass through."
+
+%message	17
+"\"I'll have to process her paperwork before you can take her anywhere,\"
+ says the jailer.
+ \"I'll send her over to HQ as soon as possible.\""
+
+%message 18
+"You don't have a suspect."
+
+%message 19
+"The Jailer says \"Bonds, you oughta know better than to bring your gun in here.\""
+
+%message 20
+"You're docked two points."
+
+%message	21
+"Bonecrusher Gajarian stares back at you through the bars.
+ You never realized software pirates were SO ugly!"
+

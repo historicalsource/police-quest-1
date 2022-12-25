@@ -1,0 +1,120 @@
+[ POLICE QUEST
+[ rm114.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 9/5/86
+[ Last Update September 26, 1987GR
+
+[ lgc.gun
+
+
+%include "gamedefs"
+%include "rm114.msg"
+
+
+
+[	This room is used as a dynamic by rm6 when looking at the gun impounded
+[in the evidence lockup.
+
+[	It is also used as a new.room by the glove compartment (rm8) when looking
+[at the gun while still in the car.
+
+
+
+if (init.log)
+	{
+	set( NOcase);
+	dynamic1 = 0;
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	if (previous.room == 6)			[ station hall
+		{
+		load.view( v.gunLabel);
+		add.to.pic( v.gunLabel, 0, 0, 34, 115, 4, 4);
+		discard.view( v.gunLabel);
+		}
+
+	show.pic( );
+	reset( enable.menu);
+	status.line.off();
+
+	return( );
+	}
+
+
+
+:text
+
+if (!have.input) {
+	goto exit;
+	}
+
+
+if  (previous.room == 8 &&
+    (said( call) ||
+	said( radio, numbers)))
+	{
+	print( 4);
+	}
+
+if ((said( look, number) ||			[	"Serial" is ignored word.
+	said( anyword, number))) {
+	print( 2);
+	}
+
+if ((said( look) ||
+	said( look, gun))) {
+	print( 1);
+	}
+
+if ( previous.room == 6) {
+	if (said( look, tag)) {
+		print( 8);
+		}
+	}
+
+
+if ((said( give, gun, rol) ||
+	said( stop, looking, gun) ||
+	said( look, room, rol) ||
+	said( look, away, rol) ||
+	said( look, box, rol) ||
+	said( give, gun, russ, rol) ||
+	said( give, russ, gun, rol) ||
+	said( return, gun, rol) ||
+	said( return, russ, gun, rol) ||
+	said( drop, gun, rol) ||
+	said( close, gun, rol) ||
+	said( put, gun, rol)))
+	{
+	if (previous.room == 8) {
+		print( 3);
+		}
+	if (previous.room == 32) {
+		print( 7);
+		}
+	if (previous.room == 6) {
+		print( 6);
+		}
+	scriptCycles = 4;
+	}
+
+if  (previous.room == 8 &&
+	said( anyword, gun))
+	{
+	print( 4);
+	}
+
+
+[
+:exit
+[
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	new.room.f( previous.room);
+	}
+

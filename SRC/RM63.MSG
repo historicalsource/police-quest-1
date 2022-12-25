@@ -1,0 +1,48 @@
+[ POLICE QUEST
+[ rm63.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update August 25, 1987al
+
+[ Messages for room 63 - outside hotel
+
+
+%message	1
+"This is the front entrance to the Hotel Delphoria."
+
+%message	2
+"This sky is certainly clear today!"
+
+%message	3
+"That's what servants are for!"
+
+%message 4
+"The hot sidewalk makes the awning's shade inviting."
+
+%message	5
+"The man is wearing the uniform of a doorman,
+ which seems appropriate since that is his job.
+ You notice nothing out of the ordinary."
+
+%message	6
+"A quiet sort, the doorman offers, \"May I open the door for you?\""
+
+#message 7
+"The red carpet leads through the front door of the hotel."
+
+#message 8
+"The planters hold small, manicured shrubs and trees."
+
+#message 9
+"The small, green, decorative shrubs are certainly well-maintained."
+
+#message 10
+"The windows are not especially interesting."
+
+#message 11
+"That will not be beneficial."
+
+#message 12
+"The green and white awning protects the doorman from the elements,
+ and helps him maintain that washed-out complexion."
+

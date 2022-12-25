@@ -1,0 +1,1001 @@
+[ POLICE QUEST
+[ rm49.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 10, 1987al
+
+[ narcoff.room
+
+%include "gamedefs"
+%include "rm49.msg"
+
+
+
+[	dynamic1 = 110;				[lgc.filedrawer
+[	dynamic3 = 50;					[lgc.clipboard;
+
+
+[%var	narcoff.scene		36
+[	%define	nolaura.intro		0
+[	%define	havelaura.intro	1
+[	%define	morgan.msg		2
+[	%define	hoffman.tip		3
+[	%define	nosims.arrest		4
+[	%define	havesims.arrest	5
+
+
+%define	LauraMoving		lf0
+%define	at.ego			lf1
+%define	following			lf2
+%define	conver0			lf3
+%define	drawer.open		lf4
+%define	nearInBasket		lf5
+%define	nearLaura'sInBasket	lf6
+%define	nearFileCabinet	lf7
+%define	nearBulletinBoard	lf8
+%define	nearBookcase		lf9
+%define	nearClipboard		lf10
+%define	nearWindow		lf11
+%define	nearKeys			lf12
+
+
+%define	lauraTimer		lcl0
+%define	laura			lcl1
+%define	clipboardDelay		lcl2
+%define	filedrawerDelay	lcl3
+
+						
+%object	aLaura			1
+%object	aFiledrawer		2
+%object	aCadillacKeys		3
+%object	aClipboard		4
+
+
+
+if (init.log)
+	{
+	dynamic1 = 0;
+
+	load.sound( s.filedrawer.open);
+	load.sound( s.filedrawer.closed);
+
+	load.view( v.laura);
+	load.view( v.drawer.clipbrd);
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	load.logics( 109);				[ lgc.phone
+	call( 109);
+
+	animate.obj( ego);
+	animate.obj( aLaura);
+	animate.obj( aFiledrawer);
+	animate.obj( aCadillacKeys);
+	animate.obj( aClipboard);
+
+	set.view( aLaura, v.laura);
+	set.view( aFiledrawer, v.drawer.clipbrd);
+	set.view( aCadillacKeys, v.drawer.clipbrd);
+	set.view( aClipboard, v.drawer.clipbrd);
+
+	set.loop( aFiledrawer, 0);
+	set.loop( aCadillacKeys, 1);
+	set.loop( aClipboard, 1);
+
+	set.cel( aCadillacKeys, 0);
+	set.cel( aClipboard, 1);
+	set.cel( aFiledrawer, 0);
+
+	position( aFiledrawer, 73, 104);
+	position( aCadillacKeys, 23, 98);
+	position( aClipboard, 18, 131);
+
+	stop.cycling( aCadillacKeys);
+	set.priority( aCadillacKeys, 13);
+
+	set.priority( aClipboard, 4);
+
+	if (priorX)
+		{
+		status.line.on( );
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		position.f( aLaura, x, y);
+		priorX = 0;
+		}
+	else
+		{
+		position( ego, 62, 167);
+		}
+
+	if (obj.in.room( i.cadkey, current.room))
+		{
+		draw( aCadillacKeys);
+		}
+
+	add.to.pic( v.drawer.clipbrd, 1, 0, 20, 100,  4,  4);	[ keys
+	add.to.pic( v.drawer.clipbrd, 1, 0, 26,  96,  4,  4);	[ keys
+	add.to.pic( v.drawer.clipbrd, 1, 2, 98, 112, 12, 12);	[ Phone
+
+	draw( ego);
+	draw( aFiledrawer);
+	draw( aClipboard);
+	
+	position( aLaura, 45, 116);
+	set.loop( aLaura, facing.front);
+	
+	if (!narcoff.scene)
+		{
+		set( LauraInRoom);
+		draw( aLaura);
+		scriptTimer = 5;
+
+		if (moroff.scene == 1)
+			{
+			script = 0;
+			}
+		else
+			{
+			if (progress == narc)
+				{
+				script = 50;
+				}
+			else
+				{
+				script = 150;	[	General purpose heckling
+				}
+			}
+		}
+
+	if (narcoff.scene == 1)
+		{
+		script = 100;
+		if (previous.room == 52)
+			{
+			scriptTimer = 120;
+			}
+		else
+			{
+			scriptTimer = 10;
+			}
+		}
+
+	if (narcoff.scene == 3 &&
+		park.bust == 255)
+		{
+		set( LauraInRoom);
+		draw( aLaura);
+		scriptTimer = 5;
+		script = 200;
+		}
+
+	if (narcoff.scene == 4 &&
+		progress > narc)
+		{
+		set( LauraInRoom);
+		draw( aLaura);
+		scriptTimer = 10;
+		script = 60;
+		}
+
+	if (narcoff.scene == 5)
+		{
+		set( LauraInRoom);
+		draw( aLaura);
+		scriptTimer = 10;
+		script = 70;
+		}
+
+ 	stop.update( aFiledrawer);
+	stop.update( aClipboard);
+
+	show.pic( );
+	return( );
+	}
+
+
+
+if (edge.ego.hit == bottom)
+	{
+	reset( LauraInRoom);
+	new.room( 52);					[rm.hqhall2
+	}
+
+--filedrawerDelay;
+if (filedrawerDelay == 1)
+	{
+	dynamic1 = 110;
+	}
+
+--clipboardDelay;
+if (clipboardDelay == 1)
+	{
+	dynamic1 = 50;
+	}
+
+if (dynamic1)
+	{
+	get.posn( ego, priorX, priorY);
+	current.loop( ego, loop);
+	get.posn( aLaura, x, y);
+	new.room.f( dynamic1);
+	}
+
+distance( ego, aLaura, laura);
+if (laura < dist)
+	{
+	set( nearPerson);
+	}
+
+reset( nearInBasket);
+if (posn( ego, 81, 121, 91, 140))
+	{
+	set( nearInBasket);
+	}
+
+reset( nearLaura'sInBasket);
+if (posn( ego, 43, 116, 59, 127))
+	{
+	set( nearLaura'sInBasket);
+	}
+
+reset( nearFileCabinet);
+if (posn( ego, 68, 110, 80, 115))
+	{
+	set( nearFileCabinet);
+	}
+
+reset( nearBulletinBoard);
+if (posn( ego, 81, 109, 107, 119))
+	{
+	set( nearBulletinBoard);
+	}
+
+reset( nearBookcase);
+if (posn( ego, 101, 109, 117, 124))
+	{
+	set( nearBookcase);
+	}
+
+reset( nearClipboard);
+if (posn( ego, 18, 136, 26, 148))
+	{
+	set( nearClipboard);
+	}
+
+reset( nearKeys);
+if (posn( ego, 26, 127, 32, 135))
+	{
+	set( nearKeys);
+	}
+
+reset( nearWindow);
+if (posn( ego, 41, 109, 66, 114))
+	{
+	set( nearWindow);
+	}
+
+reset( nearPhone);
+if (posn( ego, 92, 121, 105, 141))
+	{
+	set( nearPhone);
+	}
+
+if (!hasBrief1 &&
+	secondsInRoom == 9 &&
+	aSecondPassed &&
+	LauraInRoom)
+	{
+	print( 52);
+	}
+
+if (close.it)
+	{
+	start.update( aFiledrawer);
+	reverse.loop( aFiledrawer, drawer.open);
+	sound( s.filedrawer.closed, snd.done);
+	reset( close.it);
+	}
+
+if (snd.done && drawer.open)
+	{
+	stop.update( aFiledrawer);
+	reset( snd.done);
+	reset( drawer.open);
+	}
+
+
+if (LauraInRoom && LauraMoving)		[	stop Laura's pedaling 
+	{
+	get.posn( aLaura, x, y);
+	if ((work1 != x || work2 != y))
+		{
+		work1 = x;
+		work2 = y;
+		start.cycling( aLaura);
+		}
+	else
+		{
+		stop.cycling( aLaura);
+		}
+
+	work5 = x;					[ Set Laura loop
+	x -= 7;
+	work5 += 13;
+	if (ego.x < x)
+		{
+		set.loop( aLaura, 1);
+		}
+	else
+		{
+		if (ego.x > work5)
+			{
+			set.loop( aLaura, 0);
+			}
+		else
+			{
+			if (ego.y < y)
+				{
+				set.loop( aLaura, 3);
+				}
+			else
+				{
+				set.loop( aLaura, 2);
+				}
+			}
+		}
+	}
+
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+
+
+	[	Sonny takes a ride on Laura's Welcome Wagon...
+
+	if (script == 1)
+		{
+		prevent.input();
+		print( 6);				[ welcome to narcotics division
+		scriptTimer = 4;
+		}
+
+	if (script == 2)
+		{
+		print( 7);				[	"\"Walk this way.\""
+		set( LauraMoving);
+		move.obj( aLaura, 67, 112, 1, scriptDone);
+		}
+
+	if (script == 3)
+		{
+		scriptTimer = 4;
+		}
+
+	if (script == 4)
+		{
+		print( 8);				[	"This is a file cabinet 
+		scriptTimer = 4;
+		}
+
+	if (script == 5)
+		{
+		print( 9);				[	"\"Walk this way.\""
+		move.obj( aLaura, 44, 135, 1, scriptDone);
+		}
+
+	if (script == 6)
+		{
+		move.obj( aLaura, 27, 135, 1, scriptDone);
+		}
+
+	if (script == 7)
+		{
+		scriptTimer = 4;
+		}
+
+	if (script == 8)
+		{
+  		print( 10);				[ This keyboard
+		scriptTimer = 4;
+		}
+
+	if (script == 9)
+		{
+		move.obj( aLaura, 70, 135, 1, scriptDone);
+		}
+
+	if (script == 10)
+		{
+		print( 11);				[ call number is 83 nora 10
+		move.obj( aLaura, 81, 124, 1, scriptDone);
+		}
+
+	if (script == 11)
+		{
+		scriptTimer = 4;
+		}
+
+	if (script == 12)
+		{
+		print( 12);				[ your desk. w/ message basket
+		scriptTimer = 4;
+		}
+
+	if (script == 13)
+		{
+		move.obj( aLaura, 73, 116, 1, scriptDone);
+		}
+
+	if (script == 14)
+		{
+		move.obj( aLaura, 45, 116, 1, scriptDone);
+		}
+
+	if (script == 15)
+		{
+		scriptCycles = 7;
+		}
+
+	if (script == 16)
+		{
+		print( 13);				[ attended Hoffmans arraignment
+		scriptTimer = 4;
+		}
+
+	if (script == 17)
+		{
+		print( 14);				[ just might be who he says he is
+		scriptTimer = 4;
+		}
+
+	if (script == 18)
+		{
+		print( 15);				[ set bail at $500, 00.00
+		scriptTimer = 4;
+		}
+
+	if (script == 19)
+		{
+		print( 16);				[ only have until 1700 hours
+		move.obj( aLaura, 62, 116, 1, scriptDone);
+		}
+
+	if (script == 20)
+		{
+		move.obj( aLaura, 62, 167, 1, scriptDone);
+		}
+
+	if (script == 21)
+		{
+		accept.input();
+		reset( LauraInRoom);
+		erase( aLaura);
+		narcoff.scene = 1;			[ havelaura.intro
+		jail.scene = 3;			[ time to rebook taselli
+
+		script = 100;
+		scriptTimer = 120;
+		}
+
+
+
+	[	Laura says, "Go see Morgan!" in your narc clothes.
+
+	if (script == 51)
+		{
+		scriptTimer = 30;			[	Let's do this again, later.
+		script = 50;
+
+		if (current.sonny == sonny.narc)
+			{
+			set.string( 9, 39);		[	better move it
+			}
+		else
+			{
+			set.string( 9, 27);		[	get changed
+			}
+
+		print( 50);				[	morgan's waiting
+		}
+		
+
+	
+	[	Laura says, "Go see Morgan!" In your pimp suit!
+
+	if (script == 61)
+		{
+		scriptTimer = 30;			[	Let's do this again, later.
+		script = 60;
+
+		if (current.sonny == sonny.narc)
+			{
+			set.string( 9, 27);		[	get changed
+			}
+		else
+			{
+			set.string( 9, 39);		[	better move it
+			}
+
+		print( 50);				[	morgan's waiting
+		}
+		
+
+
+	[	Laura says, "Get your ass to that Hotel, Sonny!"
+
+	if (script == 71)
+		{
+		scriptTimer = 30;			[	Let's do this again, later.
+		script = 70;
+
+		print( 61);				[	morgan's waiting
+		}
+		
+
+
+	[	Laura pops in to say, "Get over to the courthouse, quick!...
+
+	if (script == 101)
+		{
+		set( LauraInRoom);
+		position( aLaura, 62, 167);
+		set.loop( aLaura, facing.back);
+		draw( aLaura);
+		set( LauraMoving);
+		move.obj( aLaura, 38, 143, 1, scriptDone);
+		}
+
+	if (script == 102)
+		{
+		set.loop( aLaura, facing.right);
+		scriptCycles = 3;
+		}
+
+	if (script == 103)
+		{
+		print( 28);				[ Hoffmans attorney his way to jail
+		scriptTimer = 4;
+		}
+
+	if (script == 104)
+		{
+		print( 29);				[ If you have found anything
+		scriptTimer = 4;
+		}
+
+	if (script == 105)
+		{
+		print( 30);				[ if you can get that no bail warrant
+		scriptTimer = 4;
+		}
+
+	if (script == 106)
+		{
+		move.obj( aLaura, 62, 167, 1, scriptDone);
+		}
+	
+	if (script == 107)
+		{
+		reset( LauraInRoom);
+		erase( aLaura);
+		narcoff.scene = 2;			[	morgan.msg go for no bail
+		}
+
+
+
+	[	Laura says, "Who are you, asshole?" "Get out of here!"
+
+	if (script == 151)
+		{
+		scriptTimer = 30;			[	Let's do this again, later.
+		script = 150;
+
+		if (hasTbooked && progress < narc)
+			{
+			print( 51);			[	"Dooley's waiting for you
+			}
+		else
+			{
+		    	random( 2, 4, work);
+			print.f( work);		[	"Don't fool around in here
+			}
+		}
+
+
+
+	[	Laura tells you SC has been doing a little pedaling of her own...
+
+	if (script == 201)
+		{
+		print( 25);				[ Hooker called
+		scriptTimer = 4;
+		}
+
+	if (script == 202)
+		{
+		print( 26);				[ Morgan wants to see you first
+		narcoff.scene = 4;
+		moroff.scene = 4;
+		jail.scene = 6;
+		}
+	}
+
+
+
+[ Text 
+
+if (!have.input)
+	{
+	goto exit;
+	}
+
+if (said( look, desk))
+	{
+	if (ego.x < 77)
+		{
+		print( 41);				[ Laura's Desk
+		}
+	else
+		{
+		print( 24);				[ Sonny's Desk
+		}
+	}
+
+if ((said( look, left, desk) ||
+	said( look, desk, on, left) ||
+	said( look, desk, left)))
+	{
+	print( 41);					[ Laura's Desk
+	}
+
+if ((said( look, right, desk) ||
+	said( look, desk, on, right) ||
+	said( look, desk, right)))
+	{
+	print( 24);					[ Sonny's Desk
+	}
+
+if ((said( look, basket) ||
+	said( look$in, basket) ||
+	said( check, basket)))
+	{
+	if (nearLaura'sInBasket)
+		{
+		print( 38);
+		}
+	else
+		{
+		if (!nearInBasket)
+			{
+			set( notCloseEnough);
+			}
+		else
+			{
+			if (bluerm.scene > 10 &&	[ seen jack
+				narcoff.scene < 3)
+				{				[ cheeks in jail
+				print( 18);		[ find a note from Lt. Morgan
+				}
+			else
+				{
+				print( 47);		[ it's emmty
+				}
+			}
+		}
+	}
+
+if ((said( look, note) ||
+	said( read, note)))
+	{
+	if (!nearInBasket)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if  (bluerm.scene > 10 &&	[ seen jack
+			narcoff.scene < 3)		[ cheeks in jail
+			{
+			narcoff.scene = 3;		[ hoffman.tip
+
+			if (!SxBainsFax)
+				{
+				set( SxBainsFax);
+				score += 2;
+				}
+
+			print( 19);			[ call from Chicago P.D.
+			print( 22);			[ gun prints match
+			print( 20);			[ Look at that ugly puss!
+
+			if (SxHDNote)
+				{
+				print( 21);		[ After reading the note
+				}
+			}
+		else
+			{
+			print( 47);			[ it's empty
+			}
+		}
+	}
+
+if (said( look, map))
+	{
+	print( 46);
+	}
+
+if (said( look, bookcase))
+	{
+	print( 44);
+	}
+
+if (!has( i.cadkey) &&
+	said( look, keys))
+	{
+	print( 40);
+	}
+
+if (said( look, book)) 
+	{
+	print( 5);
+	}
+
+if ((said( look, drawer) ||
+	said( look, cabinet) ||
+	said( look, file)))
+	{
+	print( 17);
+	}
+
+if (LauraInRoom &&
+    (said( look, partner) ||
+	said( look, girl)))
+	{
+	print( 33);
+	}
+
+if ((said( look, office) ||
+	said( look, narcotics, office) ||
+	said( look, room) ||
+	said( look)))
+	{
+	print( 54);
+	print( 58);
+	}
+
+if (said( look, wall))
+	{
+	print( 59);
+	}
+
+if (said( get, list))
+	{
+	print( 62);
+	}
+
+if ((said( look, board) ||
+	said( look, bulletin, board) ||
+	said( look, key, board)))
+	{
+	if (nearKeys)
+		{
+		print( 40);
+		}
+	else
+		{
+		if (nearBulletinBoard)
+			{
+			print( 1);
+			}
+		else
+			{
+			set( notCloseEnough);
+			}
+		}
+	}
+
+if ((said( look, window) ||
+	said( look, out, window)))
+	{
+	if (!nearWindow)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 43);
+		}
+	}
+
+if (said( open, window))
+	{
+	if (!nearWindow)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 55);
+		}
+	}
+
+if ((said( open, drawer) ||
+	said( open, cabinet) ||
+	said( open, file, rol) ||
+	said( look$in, drawer) ||
+	said( look$in, cabinet) ||
+	said( look$in, file, rol)))
+	{
+	if (!nearFileCabinet)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (!narcoff.scene)
+			{
+			print( 23);			[ no business
+			}
+		else
+			{
+			end.of.loop( aFiledrawer, drawer.open);
+			sound( s.filedrawer.open, done);
+			filedrawerDelay = 11;
+			}
+		}
+	}
+
+if ((said( get, clipboard) ||
+	said( read, clipboard)))
+	{
+	if (nearClipboard)
+		{
+		start.update( aClipboard);
+		erase( aClipboard);
+		clipboardDelay = 11;
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( get, keys, rol))
+	{
+	if (!nearKeys)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (!obj.in.room( i.cadkey, current.room))
+			{
+			set( alreadyGotIt);
+			}
+		else
+			{
+			if (progress < narc)
+				{
+				print( 48);		[ don't need now
+				}
+			else
+				{
+				print( 32);		[ get keys
+				erase( aCadillacKeys);
+				get( i.cadkey);
+				if (!SxCadKeys)
+					{
+					set( SxCadKeys);
+					score += 3;
+					}
+				}
+			}
+		}
+	}
+	
+if (said( put, keys, rol))
+	{
+	if (!nearKeys)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (!has( i.cadkey))
+			{
+			print( 34);			[ don't have
+			}
+		else
+			{
+			print( 35);			[ put back
+			draw( aCadillacKeys);
+			put( i.cadkey, current.room);
+			}
+		}
+	}
+
+if (said( get, note, rol))
+	{
+	if (!nearInBasket)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (bluerm.scene > 10 &&		[ seen jack
+			narcoff.scene < 3)
+			{					[ cheeks in jail
+			print( 37);			[ message important
+			}
+		else
+			{
+			print( 47);			[ it's emmty
+			}
+		}
+	}
+
+if (said( get, manual, rol))
+	{
+	print( 45);
+	}
+
+if (said( open, desk, rol))
+	{
+	print( 42);
+	}
+
+if (LauraInRoom &&
+    (said( nasty, girl, rol) ||
+	said( kiss, girl, rol) ||
+	said( anyword, nasty, girl, rol) ||
+	said( anyword, kiss, girl, rol) ||
+	said( anyword, kiss, partner, rol) ||
+	said( anyword, nasty, partner, rol) ||
+	said( kiss, partner, rol) ||
+	said( nasty, partner, rol)))
+	{
+	print( 53);
+	}
+
+if (LauraInRoom &&
+    (said( talk, partner) ||
+	said( talk, girl)))
+	{
+	if (progress < narc)
+		{
+		random( 2, 4, work);		[ ego cop
+		print.f( work);
+		}
+	else
+		{
+		print( 60);				[ ego narc
+		}
+	}
+
+if (said( look, phone))
+	{
+	if (!nearPhone)
+		{
+		print( 57);				[ Yes there is a phone
+		}
+	else
+		{
+		print( 56);
+		}
+	}
+
+
+[
+:exit
+[
+
+call( 109);
+

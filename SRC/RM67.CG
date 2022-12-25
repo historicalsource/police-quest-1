@@ -1,0 +1,943 @@
+[ POLICE QUEST
+[ rm67.cg
+[ By:  Greg Rowland, Scott Murphy, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 21, 1987GR
+
+[ Logics rm67.cg - Banksten's hotel room
+
+
+%include "gamedefs"
+%include "rm67.msg"
+
+
+
+%define	waitingForResponse	lf0
+%define	cop2done			lf2
+%define	cop3done			lf3
+%define	copsHere			lf4
+%define	faceEgo			lf5
+%define	inBath			lf6
+%define	nearWindow		lf7
+%define	nearLight			lf8
+%define	nearTV			lf9
+%define	nearStand			lf10
+%define	nearDresser		lf11
+%define	nearBed			lf12
+
+						
+%define	dialogueStatus		lcl0
+%define	cop1Distance		lcl7
+%define	cop2Distance		lcl8
+%define	cop3Distance		lcl9
+
+
+%object	aCop1			4
+%object	aCop2			5
+%object	aCop3			6
+
+
+
+if (init.log) {
+	set( NOcase);
+
+	load.logics( 109);				[ lgc.phone
+	call( 109);
+
+	load.view( v.phone67);
+	load.sound( mTension);
+	
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	add.to.pic( v.phone67, 0, 0, 33, 109, 10, 4);
+
+	
+	if (!together)
+		{
+		position( ego, 77, 167);
+		}
+	else
+		{
+		load.logics( 73);			[scDyn;
+		call( 73);				[scDyn
+
+		position( ego, 82, 167);
+		}
+
+	draw( ego);
+
+	if ((progress == wonPoker1 ||
+		progress == game2Time)) {
+		load.view( v.conners);
+		load.view( v.angland);		[	v.250
+		load.view( v.maxwell);
+
+		animate.obj( aCop1);
+		animate.obj( aCop2);
+		animate.obj( aCop3);
+
+		set.view( aCop1, v.angland);
+		set.view( aCop2, v.conners);
+		set.view( aCop3, v.maxwell);
+		
+		if (progress == game2Time) {
+			position( aCop1,  60, 150);
+			position( aCop2, 109, 134);
+			position( aCop3, 104, 138);
+
+			set.loop( aCop1, facing.right);
+			set.loop( aCop2, facing.left);
+			set.loop( aCop3, facing.left);
+
+			stop.cycling( aCop1);
+			stop.cycling( aCop2);
+			stop.cycling( aCop3);
+
+			draw( aCop1);
+			draw( aCop2);
+			draw( aCop3);
+			}
+		else
+			{
+[			random( 3, 5, scriptTimer);
+			random( 33, 55, scriptTimer);[	real delay
+
+			set.loop( aCop1, facing.left);
+			set.loop( aCop2, facing.right);
+			set.loop( aCop3, facing.right);
+
+			position( aCop1, 77, 167);
+			position( aCop2, 77, 166);
+			position( aCop3, 77, 165);
+			}
+		}
+
+	show.pic( );
+	return( );
+	}							[***		End Inits		***
+
+
+
+reset( inBath);
+if (posn( ego, 140, 127, 159, 155))
+	{
+	set( inBath);
+	}
+
+reset( nearWindow);
+if (posn( ego, 59, 108, 85, 120))
+	{
+	set( nearWindow);
+	}
+
+reset( nearLight);
+if (posn( ego, 13, 133, 30, 157))
+	{
+	set( nearLight);
+	}
+
+reset( nearPhone);
+if (posn( ego, 41, 109, 46, 119)) {		[ Hotel Room
+	set( nearPhone);
+	}
+
+reset( nearTV);
+if (posn( ego, 100, 158, 119, 166))
+	{
+	set( nearTV);
+	}
+
+reset( nearBed);
+if (posn( ego, 27, 42, 65, 145))
+	{
+	set( nearBed);
+	}
+
+reset( nearStand);
+if ((nearPhone || nearLight))
+	{
+	set( nearStand);
+	}
+
+reset( nearDresser);
+if (posn( ego, 97, 109, 122, 133))
+	{
+	set( nearDresser);
+	}
+
+distance( ego, aCop1, cop1Distance);
+distance( ego, aCop2, cop2Distance);
+distance( ego, aCop3, cop3Distance);
+if ((cop1Distance < dist ||
+	cop2Distance < dist ||
+	cop3Distance < dist))
+	{
+	set( nearPerson);
+	}
+
+
+if (faceEgo) {
+	get.posn( aCop1, work1, work2);
+	work5 = work1;
+	work1 -= 7;
+	work5 += 13;
+	if (ego.x < work1) {
+		loop = 1;
+		}
+	else {
+		if (ego.x > work5) {
+			loop = 0;
+			}
+		else {
+			if (ego.y < work2) {
+				loop = 3;
+				}
+			else {
+				loop = 2;
+				}
+			}
+		}
+	set.loop.f( aCop1, loop);
+	}
+
+
+
+if (gotoCab && together)
+	{
+	reset( gotoCab);
+	script = 200;
+	set( scriptDone);
+	}
+
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+	if (script == 1)
+		{
+		print( 39);				[	"You hear a knock on the door.."
+		scriptTimer = 3;
+		}
+
+	if (script == 2)
+		{
+		draw( aCop2);
+		move.obj( aCop2, 109, 134, 0, cop2done);
+		scriptCycles = 11;			[	Give cop2 a head start.
+		}
+
+	if (script == 3)
+		{
+		draw( aCop3);
+		move.obj( aCop3, 104, 138, 0, cop3done);
+		scriptCycles = 11;			[	Give cop3 a head start.
+		}
+
+	if (script == 4)
+		{
+		draw( aCop1);
+		move.obj( aCop1, 60, 150, 0, scriptDone);
+		}
+
+	if (script == 5)
+		{
+		stop.cycling( aCop1);
+		
+		if (inBath)
+			{
+			print( 3);			[	"Oh! Sonny. Sorry ifa we interru
+			}
+
+		print( 20);				[	"How is it going Sonny?.."
+		print( 21);				[	"We ready when you are
+		progress = game2Time;	
+		set( faceEgo);
+		set( copsHere);
+		}
+
+
+
+	if (script == 101)				[	Sweet Cheeks is at the bed.
+		{
+		stop.cycling( aSweetCheeks);
+		set.loop( aSweetCheeks, facing.right);
+		scriptTimer = 4;
+		}
+
+	if (script == 102)
+		{
+		stop.update( aSweetCheeks);
+		set( waitingForResponse);
+		dialogueStatus = 1;
+		print( 4);
+		}
+
+
+
+	if (script == 201)
+		{
+		scriptTimer = 3;
+		}
+
+	if (script == 202)
+		{
+		print( 56);				[	"As instructed, Sweet Cheeks 
+		scriptTimer = 3;
+		}
+
+	if (script == 203)
+		{
+		start.update( aSweetCheeks);
+		start.cycling( aSweetCheeks);
+		move.obj( aSweetCheeks, 77, 167, 0, scriptDone);
+		}
+
+	if (script == 204)
+		{
+		reset( together);
+		score += 3;
+		erase( aSweetCheeks);
+		progress = game1Time;
+		}
+	}
+
+
+
+
+if (cop2done)
+	{
+	reset( cop2done);
+
+	set.loop( aCop2, facing.left);
+	set.cel( aCop2, 7);
+	stop.cycling( aCop2);
+	}
+
+if (cop3done)
+	{
+	reset( cop3done);
+	
+	set.loop( aCop3, facing.left);
+	set.cel( aCop3, 7);
+	stop.cycling( aCop3);
+	}
+
+
+
+[*****
+[ SAID
+[*****
+
+if (!have.input)
+	{
+	goto exit;
+	}
+
+
+[	First, handle the important stuff:
+
+if (waitingForResponse)
+	{
+	if (said( yes))
+		{
+		if (dialogueStatus == 1)
+			{
+			print( 7);			[	"Do you think that you have enou
+			}
+
+		if (dialogueStatus == 2)
+			{
+			print( 54);			[	"Do you think that you have enou
+			reset( waitingForResponse);
+			}
+
+		++dialogueStatus;
+		}
+	
+	if (said( no))
+		{
+		if (dialogueStatus == 1)
+			{
+			print( 5);			[	"In all my endeavors.."
+			print( 6);			[	"Maybe you should go back and tr
+			}
+
+		if (dialogueStatus == 2)
+			{
+			print( 55);
+			}
+
+		reset( waitingForResponse);
+		++dialogueStatus;
+		}
+	}
+
+
+if ((said( check, cane) ||
+	said( check, gun)))
+	{
+	if (progress == undercover)
+		{
+		print( 23);				[	"You detach the handle of your c
+		}
+	else
+		{
+		print( 41);				[	"Everything seems to be in order
+		}
+	}
+
+if ((said( get, transmitter, rol) ||
+	said( ask, man, transmitter, rol) ||
+	said( ask, transmitter, rol) ||
+	said( do, me, transmitter, rol) ||
+	said( do, me, radio, rol) ||
+	said( give, me, transmitter, rol) ||
+	said( give, me, radio, rol) ||
+	said( ask, man, radio, rol) ||
+	said( ask, radio, rol) ||
+	said( get, radio, rol)))
+	{
+	if (!obj.in.room( i.transmitter, current.room)) {
+		set( alreadyGotIt);
+		}
+	else {
+		if (progress < game2Time) {
+			print( 48);			[ will come with backups
+			}
+		else {
+			if (cop1Distance < 15)
+				{
+				print( 47);		[	"Detective Angland hands you the
+				print( 24);		[	"Detective Angland assures you t
+
+				get( i.transmitter));
+				score += 5;
+
+				if (!SxBainsFax)
+					{
+					print( 58);
+					print( 59);
+					}
+				}
+			else {
+				if ((cop2Distance < 15 ||
+					cop3Distance < 15))
+					{
+					print( 53);
+					}
+				else
+					{
+					set( notCloseEnough);
+					}
+				}
+			}
+		}
+	}
+
+if (copsHere)
+	{
+	if ((said( ask, man) ||
+		said( talk, cop)))
+		{
+		print( 8);				[	"The men aren't interested.."
+		}
+
+	if ((said( look, man) ||
+		said( look, cop)))
+		{
+		print( 9);				[	"Damn! They're as ugly as.."
+		}
+	}
+
+
+
+[	Now, handle the stupid stuff:
+
+if ((said( look, room) ||
+	said( look) ||
+	said( look, hotel, room)))
+	{
+	if (!inBath)
+		{
+		print( 1);				[	"You look around and observe.."
+		}
+	else
+		{
+		print( 16);				[	"The bathroom is very basic.."
+		}
+	}
+
+if ((said( lie, down) ||
+	said( lie, bed) ||
+	said( get, bed) ||
+	said( take, nap) ||
+	said( get, on, bed) ||
+	said( lie, on, bed) ||
+	said( lie, down, bed) ||
+	said( sleep)))
+	{
+	if (!inBath)
+		{
+		print( 37);
+		}
+	else
+		{
+		if (together)
+			{
+			print( 60);
+			}
+		else
+			{
+			set( notCloseEnough);
+			}
+		}
+	}
+
+if (said( look, under, bed))
+	{
+	if (!nearBed)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 52);
+		}
+	}
+
+if (said( look, bed))
+	{
+	if (!inBath)
+		{
+		print( 34);				[	"The bed looks like it's been.."
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( open, window) ||
+	said( raise, window) ||
+	said( move, window) ||
+	said( close, window)))
+	{
+	if (nearWindow)
+		{
+		print( 38);				[	"The window is sealed shut.."
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( turn, on, light) ||
+	said( turn, light, on)))
+	{
+	if (nearLight)
+		{
+		print( 28);				[	"It is already on."
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( turn, off, light) ||
+	said( turn, light, off)))
+	{
+	if (nearLight)
+		{
+		print( 27);				[	"You shouldn't be doing anything
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( get, light))
+	{
+	if (nearLight)
+		{
+		print( 25);				[	"The lamp is bolted to the.."
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( get, nightstand))
+	{
+	if (nearStand)
+		{
+		print( 12);				[	"The nightstand (to which.."
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( anyword, nail) ||
+	said( anyword, anyword, nail)))
+	{
+	print( 10);					[	"Forget about that nail and.."
+	}
+
+if ((said( look, window) ||
+	said( look, out, window)))
+	{
+	if (!inBath)
+		{
+		print( 2);				[	"Through the window you see.."
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( open, drawer) ||
+	said( look, drawer) ||
+	said( look$in, drawer) ||
+	said( open, dresser, drawer) ||
+	said( open, dresser)))
+	{
+	if (nearDresser)
+		{
+		print( 35);				[	"You open the drawers.."
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( look, dresser) ||
+	said( look, on, dresser) ||
+	said( look$in, dresser)))
+	{
+	if (!nearDresser)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 11);				[	"It looks like the average cheap
+		}
+	}
+
+if (said( look, lamp))
+	{
+	if (!inBath)
+		{
+		print( 13);				[	"It is an attractive bolted-to-.
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( look, tv, rol) ||
+	said( watch, tv, rol)))
+	{
+	if (!inBath)
+		{
+		print( 14);				[	"I don't want to say that this t
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( look, nightstand) ||
+	said( examine, table) ||
+	said( look, stand)))
+	{
+	if (!inBath)
+		{
+		print( 15);				[	"The nightstand is very plain lo
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( look, picture))
+	{
+	if (!inBath)
+		{
+		print( 17);				[	"You can look at the painting if
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( look, curtain))
+	{
+	if (!inBath)
+		{
+		print( 18);				[	"The curtains are not of nterest
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( look, lytton))
+	{
+	if (!inBath)
+		{
+		print( 19);				[	"You stare out at the city.."
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( look, down) ||
+	said( look, floor)))
+	{
+	print( 30);
+	}
+
+if (said( look, wall))
+	{
+	print( 49);
+	}
+
+if ((said( call, room, service) ||
+	said( order, food) ||
+	said( order, room, service)))
+	{
+	print( 61);
+	}
+
+
+if (said( look, phone))
+	{
+	if (inBath)
+		{
+		print( 26);
+		}
+	else
+		{
+		if (!nearPhone)
+			{
+			print( 50);				[ Yes there is a phone
+			}
+		else
+			{
+			print( 51);
+			}
+		}
+	}
+
+
+
+[	TV stuff:
+
+if ((said( turn, on, tv) ||
+	said( turn, tv, on)))
+	{
+	if (nearTV)
+		{
+		print( 32);				[	"As much as you'd like to tune i
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( turn, off, tv) ||
+	said( turn, tv, off)))
+	{
+	if (nearTV)
+		{
+		print( 29);				[	"It is already off."
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+
+
+[	"Ladies and gentlemen, welcome to the Toilet Code!!
+
+if ((said( take, piss) ||
+	said( use, bathroom) ||
+	said( use, toilet) ||
+	said( go, bathroom) ||
+	said( piss)))
+	{
+	if (inBath)
+		{
+		sound( mTension, done);
+		print( 40);				[	"You hang old Jake.."
+		stop.sound();
+		}
+	else
+		{
+		print( 42);				[	"You start to unzip your trouser
+		}
+	}
+
+if ((said( take, shit) ||
+	said( shit)))
+	{
+	if (inBath)
+		{
+		sound( mTension, done);
+		print( 43);				[	"You ease into that familiar cro
+		stop.sound();
+		}
+	else
+		{
+		print( 42);				[	"You start to unzip your trouser
+		}
+	}
+
+if ((said( take, shower) ||
+	said( climb, shower) ||
+	said( get$in, shower) ||
+	said( shower)))
+	{
+	if (inBath)
+		{
+		print( 44);				[	"The shower appears to support..
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( look, bathroom))
+	{
+	if (inBath)
+		{
+		print( 16);				[	"The bathroom is very basic.."
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( wash, hands) ||
+	said( wash, up)))
+	{
+	if (inBath)
+		{
+		print( 62);
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( look, sink))
+	{
+	if (inBath)
+		{
+		print( 46);				[	"The small sink is 
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( look, shower))
+	{
+	if (inBath)
+		{
+		print( 45);				[	"The shower is brightly colored.
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( look, toilet))
+	{
+	if (inBath)
+		{
+		print( 33);				[	"If you say so. The toilet is qu
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( flush, toilet))
+	{
+	if (inBath)
+		{
+		print( 36);				[	"You nervously flush the toilet.
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( take, bath))
+	{
+	if (inBath)
+		{
+		print( 63);
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if  (together &&
+    (said( wait, me, here) ||
+	said( stay, here)))
+	{
+	print( 64);
+	}
+
+
+
+[*****
+:exit
+[*****
+
+call( 109);
+
+if (edge.ego.hit == bottom)
+	{
+	new.room( 65);
+	}
+
+if (together)
+	{
+	call( 73);					[scDyn
+	}
+

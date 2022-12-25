@@ -1,0 +1,230 @@
+[ POLICE QUEST 
+[ rm76.cg 
+[ By:  Greg Rowland,  Scott Murphy and Jim Walls
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 25, 1987al
+
+[logics for room 76 --top stair room in hotel
+
+
+%include "gamedefs"
+%include "rm76.msg"
+
+
+
+%define	doorDone			lf0
+%define	doorOpenBains		lf1
+%define	waiting			lf2
+%define	bDone			lf3
+
+
+%define	bainsDistance		lcl0
+%define	doorDelay			lcl1
+%define	bMove			lcl2
+%define	doorStatus		lcl3
+	%define	opening	1
+	%define	closing	2
+
+
+%object	door				1
+%object	bains			2
+
+
+
+if (init.log)
+	{
+	set( NOcase);
+	set.horizon( 10);
+
+	load.logics( 74);
+
+	load.view( v.door76);
+	load.view( v.stairNums);
+	
+	if (bainsEgoTogether)
+		{
+		load.view( v.bains);
+		load.sound( mTension);
+		}
+
+	load.pic( current.room);
+	draw.pic( current.room);
+
+	animate.obj( door);
+	set.view( door, v.door76);
+	set.priority( door, 4);
+	ignore.blocks( door);
+	work = DOOR_CYCLE_TIME;
+	cycle.time( door, work);
+	position( door, 129, 136);
+	draw( door);
+	
+	if (previous.room == 66)
+		{
+		set.cel( door, 2);
+		stop.cycling( door);
+		doorDelay = 18;
+		position( ego, 122, 134);
+		doorStatus = closing;
+		}
+	else
+		{
+		set.cel( door, 0);
+		stop.update( door);
+		}
+
+	if (bainsEgoTogether)
+		{
+		animate.obj( bains);
+		set.view( bains, v.bains);
+		set.loop( bains, 0);
+		ignore.blocks( bains);
+		ignore.objs( bains);
+		position( bains, 95, 137);
+		set.priority( bains, 12);
+		draw( bains);
+		move.obj( bains, 100, 132, 0, bDone);
+		bMove = 0;
+		sound( mTension, snd.done);
+		}
+
+	if (previous.room == 77)
+		{
+		position( ego, 68, 166);
+		}
+	draw( ego);
+
+	add.to.pic( v.stairNums, 0, 2, 105, 109, 4, 4);
+
+	show.pic( );
+	return( );					[***		End Inits		***
+	}
+
+
+
+distance( ego, bains, bainsDistance);
+if (bainsDistance < dist)
+	{
+	set( nearPerson);
+	}
+
+
+if (bDone)
+	{
+	reset( bDone);
+	++bMove;
+	
+	if (bMove == 1)
+		{
+		move.obj( bains, 123, 132, 0, bDone);
+		}
+
+	if (bMove == 2)
+		{
+		end.of.loop( door, bDone);
+		stop.cycling( bains);
+		}
+
+	if (bMove == 3)
+		{
+		erase( bains);
+		set( waiting);
+		}
+	}
+
+
+
+--doorDelay;
+if (doorDelay == 1)
+	{
+	start.update( door);
+	reverse.loop( door, doorDone);
+	}
+
+if (doorDone)
+	{
+	reset( doorDone);
+	
+	if (doorStatus == closing)
+		{
+		stop.update( door);
+		doorStatus = 0;
+		}
+	else
+		{
+		toFloor = 4;
+		new.room( 66);
+		}
+	}
+
+
+
+[*****
+[ SAID
+[*****
+
+if (!have.input)
+	{
+	goto exit;
+	}
+
+if (said( open, door))
+	{
+	if (!obj.in.box( ego, 117, 129, 138, 135))
+		{
+		set( notCloseEnough);			
+		}
+	else
+		{
+		if (waiting)
+			{
+			print( 2);			[	"The door is already open."
+			}
+		else
+			{
+			set( game.control);
+			end.of.loop( door, doorDone);
+			doorStatus = opening;
+			}
+		}
+	}
+
+
+call( 74);
+
+
+
+[*****
+:exit;
+[*****
+
+if (waiting)
+	{
+	if (posn( ego, 122, 129, 128, 138))
+		{
+		toFloor = 4;
+		new.room( 66);
+		}
+	}
+
+if ((edge.ego.hit == bottom || ego.y == 167))
+	{
+	toFloor = 3;
+	if (bainsEgoTogether)
+		{
+		reset( bainsEgoTogether);
+		print( 3);				[	You lost him!
+		set( certainDeath);
+		}
+	else
+		{
+		new.room( 77);
+		}
+	}
+
+if (snd.done)
+	{
+	sound( mTension, snd.done);
+	}
+
+

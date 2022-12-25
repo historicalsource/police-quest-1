@@ -1,0 +1,21 @@
+[ POLICE QUEST
+[ rm2.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 08/13/86
+[ Last Update July 26, 1987al
+
+[ lgc.ego
+
+
+%message	1
+"%g88"
+
+%message	2
+"load gun"
+
+%message	3
+"draw gun"
+
+%message	4
+"fire gun"
+

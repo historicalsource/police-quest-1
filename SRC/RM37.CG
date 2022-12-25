@@ -1,0 +1,1517 @@
+[ POLICE QUEST
+[ rm37.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls, and Al Lowe
+[ For: Sierra On-Line Inc. 2/13/87
+[ Last Update October 6, 1987GR
+
+[rm.biker.bar
+
+
+%include "gamedefs"
+%include "rm37.msg"
+
+
+
+%define	WAITING_FOR_FIGHT	50		[	Moving0 value.
+
+[%var	Biker.scene		98
+%define	no.bikers			0
+%define	bikers.are.in		1
+%define	biker.posn		2
+%define	bikers.pissed		3
+%define	bikers.gone		4
+%define	biker.ended		5
+%define	biker.completed	255
+
+
+%define	moved0			lf0
+%define	moved1			lf1
+%define	moved2			lf2
+%define	moved3			lf3
+%define	moved4			lf4
+%define	moved5			lf5
+%define	moved6			lf6
+%define	moved7			lf7
+%define	pr24Done			lf8
+%define	bartenderHere		lf9
+%define	nearTable			lf10
+%define	biker1Done		lf11		[	These are used only in the
+%define	biker2Done		lf12		[		"let's get out of here"
+%define	biker3Done		lf13		[		exit after ego impresses
+%define	biker4Done		lf14		[		them with his big stick!
+%define	biker3First		lf15
+%define	musicDone			lf16
+%define	conver0			lf17
+
+
+%define	moving0			lcl0
+%define	moving1			lcl1
+%define	moving2			lcl2
+%define	moving3			lcl3
+%define	moving4			lcl4
+%define	moving5			lcl5
+%define	moving6			lcl6
+%define	moving7			lcl7
+%define	cheeks			lcl8
+%define	biker1Distance		lcl9
+%define	biker2Distance		lcl10
+%define	biker3Distance		lcl11
+%define	biker4Distance		lcl12
+%define	dartGame			lcl13
+%define	bikerTimer		lcl14
+%define	swingTimer		lcl15
+%define	moving0Timer		lcl16
+%define	biker1Script		lcl17
+%define	biker2Script		lcl18
+%define	biker3Script		lcl19
+%define	biker4Script		tmp0
+
+
+%object	a.bartender		1
+%object	aBiker1			2
+%object	aBiker2			3
+%object	aBiker3			4
+%object	aBiker4			5
+%object	aDartboard		6
+%object	aDarts			7
+[	Also aSweetCheeks		15
+
+
+
+
+if (init.log)
+	{
+	if (hercules)
+		{
+		set( outOfMemory);
+		}
+
+	functionKeys = GUN;
+
+	set( NOcase);
+	dynamic1 = 0;
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+
+
+	load.view( v.biker.misc);
+	[	behind bar
+	add.to.pic( v.biker.misc, 1, 0, 53, 85, 4, 4);
+	add.to.pic( v.biker.misc, 1, 0, 53, 99, 4, 4);
+	add.to.pic( v.biker.misc, 1, 1, 80, 86, 4, 4);
+	add.to.pic( v.biker.misc, 1, 1, 80, 100, 4, 4);
+	add.to.pic( v.biker.misc, 1, 2, 55, 66, 4, 4);
+	add.to.pic( v.biker.misc, 1, 3, 29, 105, 12, 12);
+	
+	if (biker.scene == bikers.are.in &&
+		!current.sonny)			[	He's in uniform.
+		{
+		[	glass of beer on bar
+		add.to.pic( v.biker.misc, 0, 0, 96, 114, 11, 11);
+		add.to.pic( v.biker.misc, 0, 0, 90, 115, 11, 11);
+		add.to.pic( v.biker.misc, 0, 1, 81, 114, 11, 11);
+	
+		[	glass of beer on table
+		add.to.pic( v.biker.misc, 0, 1, 42, 151, 14, 14);
+		add.to.pic( v.biker.misc, 0, 0, 47, 154, 14, 14);
+		add.to.pic( v.biker.misc, 0, 3, 42, 153, 14, 14);
+
+		[	cans on bar
+		add.to.pic( v.biker.misc, 0, 2, 107, 114, 11, 11);
+		add.to.pic( v.biker.misc, 0, 2, 105, 115, 11, 11);
+	
+		add.to.pic( v.biker.misc, 0, 3, 79, 114, 11, 11);
+		add.to.pic( v.biker.misc, 0, 2, 74, 115, 11, 11);
+		add.to.pic( v.biker.misc, 0, 3, 87, 114, 11, 11);
+	
+		add.to.pic( v.biker.misc, 0, 3, 61, 114, 11, 11);
+		add.to.pic( v.biker.misc, 0, 2, 49, 115, 11, 11);
+		}
+	discard.view( v.biker.misc);
+
+
+
+	load.sound( mSweetCheeks);
+	load.view( v.darts);
+
+	load.view( v.ego.cop.ns);
+
+
+	animate.obj( aDartboard);
+	set.view( aDartboard, v.darts);
+	set.loop( aDartboard, 0);
+	fix.loop( aDartboard);
+	set.cel( aDartboard, 0);
+	stop.cycling( aDartboard);
+	position( aDartboard, 30, 135);
+	draw( aDartboard);
+
+
+	if (biker.scene != bikers.are.in)
+		{
+		set( bartenderHere);
+
+		stop.update( aDartboard);
+
+		dynamic1 = 48;
+		load.logics.f( dynamic1);	[	bartender
+		call.f( dynamic1);
+		}
+	else
+		{
+		if (!current.sonny)
+			{
+			dartGame = 1;
+
+			load.view( v.BslugSc);
+			load.view( v.sweet.cheeks);
+			load.view( v.biker1);
+			load.view( v.biker2);
+			load.view( v.biker3);
+			load.view( v.biker4);
+			load.view( v.SDeadCop);
+			load.sound( s.darts);
+			load.sound( mBadGuy);
+
+			animate.obj( aSweetCheeks);
+			animate.obj( aBiker1);
+			animate.obj( aBiker2);
+			animate.obj( aBiker3);
+			animate.obj( aBiker4);
+			animate.obj( aDarts);
+		
+			ignore.blocks( aSweetCheeks);
+			ignore.objs( aSweetCheeks);
+
+			set.view( aSweetCheeks, v.BslugSc);
+			set.view( aBiker1, v.biker1);
+			set.view( aBiker2, v.biker2);
+			set.view( aBiker3, v.biker3);
+			set.view( aBiker4, v.biker4);
+			set.view( aDarts, v.darts);
+		
+			set.loop( aSweetCheeks, 0);
+			set.loop( aBiker1, 3);
+			set.loop( aBiker2, 3);
+			set.loop( aBiker3, 1);
+			set.loop( aBiker4, 2);
+			set.loop( aDarts, 1);
+		
+			set.cel( aSweetCheeks, 1);
+			set.cel( aDarts, 0);
+		
+			stop.cycling( aSweetCheeks);
+			stop.cycling( aDarts);
+
+			position( aSweetCheeks, 87, 136);
+			position( aBiker1, 80, 134);
+			position( aBiker2, 96, 134);
+			position( aBiker3, 63, 147);
+			position( aBiker4, 53, 141);
+		
+			draw( aSweetCheeks);
+			draw( aBiker1);
+			draw( aBiker2);
+			draw( aBiker3);
+			draw( aBiker4);
+		
+			stop.update( aSweetCheeks);
+			stop.update( aBiker1);
+			stop.update( aBiker2);
+			stop.update( aBiker3);
+			stop.update( aBiker4);
+			}
+		}
+
+	if (priorX) {
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		}
+	else {
+		position( ego, 74, 166);
+		}
+
+	draw( ego);
+
+	show.pic( );
+	return( );
+	}
+
+
+
+if (edge.ego.hit == bottom)
+	{
+	if (!conver0 &&
+		biker.scene < 255 &&
+		biker.scene > bikers.pissed)	[	Marie says, "Goodbye. Forever!"
+		{
+		print( 57);
+		}
+	new.room( 35);					[	rm.caffine.entrance
+	}
+
+if (posn( ego, 46, 132, 65, 140)) {	[	Force ego's pri behind bikers 
+	set.priority( ego, 11);
+	}
+else {
+	release.priority( ego);
+	}
+
+reset( nearTable);
+if (posn( ego, 36, 154, 56, 167))
+	{
+	set( nearTable);
+	}
+
+
+
+[ Animation timers 
+
+if (moved0) {
+	reset( moved0);
+	++moving0;
+	}
+if (moved1) {
+	reset( moved1);
+	++moving1;
+	}
+if (moved2) {
+	reset( moved2);
+	++moving2;
+	}
+if (moved3) {
+	reset( moved3);
+	++moving3;
+	}
+if (moved4) {
+	reset( moved4);
+	++moving4;
+	}
+if (moved5) {						[	bartender
+	reset( moved5);
+	++moving5;
+	}
+if (moved6) {						[	Dart game biker3 & biker4
+	reset( moved6);
+	++moving6;
+	}
+if (moved7) {
+	reset( moved7);
+	++moving7;
+	}
+
+
+distance( ego, aSweetCheeks, cheeks);
+distance( ego, aBiker1, biker1Distance);
+distance( ego, aBiker2, biker2Distance);
+distance( ego, aBiker3, biker3Distance);
+distance( ego, aBiker4, biker4Distance);
+if ((cheeks < dist ||
+	biker1Distance < dist ||
+	biker2Distance < dist ||
+	biker3Distance < dist ||
+	biker4Distance < dist)) {
+	set( nearPerson);
+	}
+
+if (aSecondPassed) {
+	--moving0Timer;
+	if (moving0Timer == 1)
+		{
+		set( moved0);
+		}
+
+	if (!typing) {
+		--swingTimer;
+		}
+
+	if (wait.1) {
+		--wait.1;
+		}
+
+	if (timer.1 && !typing) {
+		--timer.1;
+		}
+	}
+
+
+[ Biker scenes 
+
+if (biker.scene > no.bikers && biker.scene < 6) {
+	if (moving5 == 0 && biker.scene == 1) {
+		print( 21);				[	here comes trouble
+		moving5 = 50;
+		}
+	
+	if (moving5 == 51) {
+		++moving5;
+		}
+
+	if (!moving1 &&		    		[	kick start
+		biker.scene < biker.posn &&
+		posn( ego, 0, 0, 159, 155)) {
+		moving1 = 1;
+		}
+	
+	if (moving1 == 1) {
+		start.update( aBiker1);
+		move.obj( aBiker1, 80, 138, 1, moved1);
+		bikerTimer = 1;			[	moving time out mess
+		++moving1;
+		}
+	
+	if (moving1 == 3) {
+		stop.update( aBiker1);
+		start.update( aBiker2);
+		move.obj( aBiker2, 94, 136, 1, moved1);
+		bikerTimer = 1;
+		++moving1;
+		}
+	
+	if (moving1 == 5) {
+		stop.update( aBiker2);
+		print( 7);				[	tiddy bowl man
+		set.cel( aSweetCheeks, 1);
+		force.update( aSweetCheeks);
+		bikerTimer = 0;			[	arrived at location
+		scriptTimer = 4;
+		moving2 = 252;				[	setup cheeks face front stop 
+		set( moved1);
+		}
+
+	if (moving1 == 6 && scriptTimer == 1) {
+		print( 8);				[	what'd you want pig?
+		++moving1;
+		biker.scene = biker.posn;	[	in position 1
+		scriptTimer = 10;
+		}
+	
+	if (moving1 == 7 &&
+		scriptTimer == 1 &&
+		biker.scene < bikers.pissed)	[	heckling
+		{
+		random( 9, 10, work);
+		print.f( work);
+		scriptTimer = 20;
+		}
+
+
+	[	Sweet cheeks
+
+	if  (moving2 != 255 &&
+		biker.scene < bikers.pissed)
+		{
+		if (aSecondPassed) {
+			++moving2;			[	timer
+			work = 255;			[	set or stop
+
+			if (moving2 == 5) {
+				work = 0;			[ = cheeks turns left
+				}
+			else {
+				if (moving2 == 10) {
+					work = 1;		[ = cheeks turns middle
+					}
+				else {
+					if (moving2 == 15) {
+						work = 2;	[ = cheeks turns right
+						moving2 = 0;[ start over
+						}
+					else {
+						if (moving2 == 253) {[face front and stop 
+							work = 3;
+							}
+						}
+					}
+				}
+			
+			if (work != 255) {		[	set or stop
+				set.cel.f( aSweetCheeks, work);
+				start.update( aSweetCheeks);
+				}
+			else {
+				stop.update( aSweetCheeks);
+				}
+			}
+		}
+
+	
+	[	they're gone
+
+	if (biker.scene == 4) {
+		if (!moving2 && ego.y != 138) {
+			start.update( aSweetCheeks);
+			sound( mSweetCheeks, musicDone);
+			set.view( aSweetCheeks, v.sweet.cheeks);
+			reposition.to( aSweetCheeks, 83, 138);
+			observe.objs( aSweetCheeks);
+			set( moved2);
+			}
+		
+		if (moving2 > 0 && moving2 < 20) {
+			get.posn( aSweetCheeks, work1, work2);
+			work5 = work1;
+			work1 -= 7;
+			work5 += 13;
+			
+			if (ego.x < work1) {
+				set.loop( aSweetCheeks, 1);
+				}
+			else {
+				if (ego.x > work5) {
+					set.loop( aSweetCheeks, 0);
+					}
+				else {
+					if (ego.y < work2) {
+						set.loop( aSweetCheeks, 3);
+						}
+					else {
+						set.loop( aSweetCheeks, 2);
+						}
+					}
+				}
+			}
+		
+		if (moving2 == 1) {			[	Sweet Cheeks says "HI":
+			++moving2;
+			print( 23);			[	girl gets off stool
+			print( 24);			[	sonny zat you
+			print( 25);			[	my hero
+			accept.input( );
+			}
+		
+		if (moving2 == 20 && ego.y > 138) {
+			set.cel( aSweetCheeks, 1);
+			force.update( aSweetCheeks);
+			set( moved2);
+			}
+		
+		if (moving2 == 21) {
+			set.priority( aSweetCheeks, 11);
+			ignore.blocks( aSweetCheeks);
+			set.view( aSweetCheeks, v.BslugSc);
+			set.loop( aSweetCheeks, 0);
+			set.cel( aSweetCheeks, 1);
+ 			reposition.to( aSweetCheeks, 87, 136);
+			stop.sound();
+			reset( musicDone);
+			set( moved2);
+			}
+		
+		if (moving2 == 22) {
+			stop.update( aSweetCheeks);
+			set( moved2);
+			}
+		
+		if (moving2 == 23) {
+			print( 34);			[	Cheeks steps back into office
+			++moving2;
+			biker.scene = biker.ended;	
+			}
+		}
+
+
+	[	Dart game 
+
+	if (dartGame) {
+		if (moving6 == 0) {			[	set up biker3 throw
+			stop.update( aBiker4);
+			set.priority( aDarts, 13);
+			ignore.objs( aDarts);
+			set.cel( aDarts, 0);
+			set.loop( aBiker3, 3);
+			start.update( aBiker3);
+			++moving6;
+			}
+		
+		if (moving6 == 1) {
+			set.cel( aBiker3, 0);
+			end.of.loop( aBiker3, moved6);
+			bikerTimer = 0;
+			++moving6;
+			}
+		
+		if (moving6 == 3) {
+			position( aDarts, 61, 127);
+			draw( aDarts);
+			move.obj( aDarts, 34, 127, 4, moved6);
+			++moving6;
+			}
+		
+		if (moving6 == 5) {
+			set.cel.f( aDartboard, dartGame);
+			erase( aDarts);
+			position( aDarts, 0, 0);
+			++dartGame;
+			++moving6;
+			random( 2, 3, wait.1);	[	introduce ranodom darts
+			}
+
+		if (moving6 == 6 && wait.1 == 1) {	[	biker.3 throws again
+			--wait.1;
+			if (dartGame == 4) {
+				start.cycling( aBiker3);
+				set.loop( aBiker3, 1);
+				moving7 = 1;		[	start.biker4
+				++moving6;
+				}
+			else {
+				moving6 = 1;
+				}
+			}
+
+
+		[	Rotate thrower 
+
+		if (moving7 == 1) {
+			stop.update( aBiker3);
+			start.update( aBiker4);
+			move.obj( aBiker4, 53, 147, 1, moved7);
+			bikerTimer = 1;
+			++moving7;
+			}
+		
+		if (moving7 == 3) {
+			stop.update( aBiker4);
+			start.update( aBiker3);
+			move.obj( aBiker3, 53, 141, 1, moved7);
+			bikerTimer = 1;
+			++moving7;
+			}
+		
+		if (moving7 == 5) {
+			set.loop( aBiker3, 2);
+			set( moved7);			[	waits one animation cycle for 
+			}
+		
+		if (moving7 == 6) {
+			stop.update( aBiker3);
+			start.update( aBiker4);
+			move.obj( aBiker4, 53, 147, 1, moved7);
+			bikerTimer = 1;
+			++moving7;
+			}
+		
+		if (moving7 == 8) {
+			stop.update( aBiker3);
+			start.update( aBiker4);
+			move.obj( aBiker4, 63, 147, 1, moved7);
+			bikerTimer = 1;
+			++moving7;
+			}
+		
+		if (moving7 == 10) {
+			moving6 = 10;
+			++moving7;
+			}
+
+		if (moving6 == 10) {		[	set up biker4 throw
+			set.loop( aBiker4, 3);
+			set.priority( aDarts, 13);
+			ignore.objs( aDarts);
+			set.cel( aDarts, 1);
+			++moving6;
+			}
+		
+		if (moving6 == 11) {
+			set.cel( aBiker4, 0);
+			end.of.loop( aBiker4, moved6);
+			bikerTimer = 0;
+			++moving6;
+			}
+		
+		if (moving6 == 13) {
+			position( aDarts, 61, 127);
+			draw( aDarts);
+			move.obj( aDarts, 34, 127, 4, moved6);
+			++moving6;
+			}
+		
+		if (moving6 == 15) {
+			set.cel.f( aDartboard, dartGame);
+			erase( aDarts);
+			position( aDarts, 0, 0);
+			++dartGame;
+			++moving6;
+			random( 2, 3, wait.1);	[	introduce ranodom darts
+			}
+		
+		if (moving6 == 16 && wait.1 == 1) { [ biker.4 throws again
+			--wait.1;
+			if (dartGame == 7) {
+				start.cycling( aBiker4);
+				set.loop( aBiker4, 1);
+				moving7 = 20;		[	start.biker4
+				++moving6;
+				}
+			else {
+				moving6 = 11;
+				}
+			}
+
+
+		[	biker4 shags darts
+
+		if (moving7 == 20) {
+			move.obj( aBiker4, 34, 147, 1, moved7);
+			bikerTimer = 1;
+			}
+		
+		if (moving7 == 21) {
+			set.loop( aBiker4, 3);
+			set.cel( aBiker4, 0);
+			end.of.loop( aBiker4, moved7);
+			bikerTimer = 1;
+			++moving7;
+			}
+		
+		if (moving7 == 23) {
+			--dartGame;
+			set.cel.f( aDartboard, dartGame);
+			
+			if (dartGame > 0) {
+				moving7 = 21;		[	remove next dart
+				}
+			else {
+				dartGame = 1;
+				++moving7;
+				}
+			}
+		
+		if (moving7 == 24) {
+			start.cycling( aBiker4);
+			set.loop( aBiker4, 0);
+			move.obj( aBiker4, 45, 141, 1, moved7);
+			bikerTimer = 1;
+			++moving7;
+			}
+		
+		if (moving7 == 26) {
+			stop.update( aBiker4);
+			start.update( aBiker3);
+			set.loop( aBiker3, 1);
+			set( moved7);
+			}
+		
+		if (moving7 == 27) {
+			set.loop( aBiker3, 2);
+			move.obj( aBiker3, 63, 147, 1, moved7);
+			bikerTimer = 1;
+			}
+		
+		if (moving7 == 28) {
+			set.loop( aBiker3, 3);
+			set( moved7);
+			}
+		
+		if (moving7 == 29) {
+			stop.update( aBiker3);
+			start.update( aBiker4);
+			move.obj( aBiker4, 53, 141, 1, moved7);
+			bikerTimer = 1;
+			++moving7;
+			}
+		
+		if (moving7 == 31) {
+			set.loop( aBiker4, 2);
+			set( moved7);
+			}
+		
+		if (moving7 == 32) {
+			stop.cycling( aBiker3);
+			set.loop( aBiker3, 3);
+			set.cel( aBiker3, 0);
+			stop.update( aBiker4);
+			start.update( aBiker3);
+			set( moved7);
+			}
+		
+		if (moving7 == 33) {
+			set.cel( aDarts, 0);
+			moving6 = 1;
+			++moving7;
+			}
+
+
+		[	drill ego with a biker's dart
+
+		if (moving6 < 100 &&
+			posn( ego, 0, 145, 54, 150))
+			{
+			get.posn( aDarts, work, y);
+			work -= 5;			[	Allow for windage.
+			x = ego.x;
+			x += 10;				[	x = ego's right head pixel.
+
+			if (work > ego.x && work < x)
+				{
+				start.motion( ego);
+				stop.motion( aDarts);
+				erase( aDarts);
+				set( game.control);
+				set( no.cycling);
+				moving6 = 100;
+				moving7 = 100;
+				set( moved6);
+				}
+			}
+		
+		if (moving6 == 101) {
+			set.view.f( ego, current.Sdead);
+			set.loop( ego, 0);		[	Always fall away from throw.
+			set.cel( ego, 0);
+			if (ego.x > 40)
+				{
+				ego.x -= 5;		[	Force of the fall throws him...
+				reposition.to.f( ego, ego.x, ego.y);
+				}
+
+			
+			if (dartGame < 4) {		[	choose color of dart
+				set.cel( aDarts, 2);
+				}
+			else {
+				set.cel( aDarts, 3);
+				}
+			set( moved6);
+			}
+		
+		if (moving6 == 102) {
+			stop.update( ego);
+			set( moved6);
+			}
+		
+		if (moving6 == 103) {
+			x = ego.x;
+			y = ego.y;
+			y -= 3;
+			x += 1;
+			position.f( aDarts, x, y);
+			draw( aDarts);
+			set( moved6);
+			}
+		
+		if (moving6 == 104) {
+			print( 4);
+			print( 5);			[	tossed by biker
+			print( 6);			[	good job
+			set( certainDeath);
+			bikerTimer = 0;
+			++moving6;
+			}
+		}
+
+
+	[	Bikers are pissed
+
+	if (biker.scene == bikers.pissed)
+		{
+		if (!moving0)
+			{
+			moving0 = 2;
+			start.motion( ego);
+			set( game.control);
+			move.obj( ego, 90, 143, 1, moved0);
+
+			erase( aDarts);
+			scriptTimer = 0;
+			bikerTimer = 0;		[	stop random threats
+			dartGame = 0;
+
+			normal.cycle( aBiker3);
+			normal.cycle( aBiker4);
+			stop.motion( aBiker3);
+			stop.motion( aBiker4);
+			release.loop( aBiker3);
+			release.loop( aBiker4);
+			set.loop( aBiker3, 0);
+			set.loop( aBiker4, 0);
+
+			moving6 = 200;			[	force end of dart game
+			moving7 = 200;
+			set( moved6);
+			}
+		}
+
+	if (moving6 == 201)
+		{
+		stop.update( aBiker3);
+		stop.update( aBiker4);
+		set( moved6);
+		}
+
+	
+	if (moving0 == 3)
+		{
+		set.loop( ego, facing.left);
+
+		start.update( aBiker1);
+		move.obj( aBiker1, 80, 142, 1, moved0);
+		}
+	
+	if (moving0 == 4)
+		{
+		set.loop( aBiker1, facing.right);
+	
+		stop.update( aBiker1);
+		start.update( aBiker2);
+		move.obj( aBiker2, 94, 140, 1, moved0);
+		}
+	
+	if (moving0 == 5)
+		{
+		set.loop( aBiker2, facing.left);
+		set( moved0);
+		}
+
+	if (moving0 == 6)
+		{
+		stop.update( aBiker2);
+		print( 16);				[	we'll kick the shit out of you.
+
+		start.update( aBiker1);
+		stop.cycling( aBiker1);
+		moving0 = WAITING_FOR_FIGHT;
+		swingTimer = 5;
+		}
+
+
+	[	Waiting to see who wins the fight...
+
+
+	if (moving0 == WAITING_FOR_FIGHT &&
+		swingTimer == 1)			[	Ego didn't finish swing in time.
+		{
+		swingTimer = 0;
+
+		start.update( aBiker1);
+		start.cycling( aBiker1);
+		prevent.input( );
+		set( no.cycling);
+		move.obj( aBiker1, 88, 142, 1, moved0);
+		moving0 = 100;
+		}
+
+
+
+	[	We take this branch if ego was too slow to swing his dick.
+
+
+	if (moving0 == 101) {
+		start.update( aBiker2);
+		start.cycling( aBiker2);
+		set.loop( aBiker2, 2);
+		move.obj( aBiker2, 92, 143, 1, done);
+
+		set.view.f( ego, current.Sdead);
+		set.loop( ego, 0);
+		set.cel( ego, 0);
+		reposition.to( ego, 84, 143);
+
+		set.priority( aBiker1, 15);
+		set.view( aBiker1, v.BslugSc);
+		set.loop( aBiker1, 1);
+		reposition.to( aBiker1, 81, 145);
+		bikerTimer = 0;
+		moving0Timer = 4;
+		set( moved0);
+		}
+
+	if (moving0 == 103)
+		{
+		moving0Timer = 4;
+		set( moved0);
+		print( 19);				[	just what animals want
+		}
+
+	if (moving0 == 105)
+		{
+		print( 20);				[	dummy to pound on
+		biker.scene = 255;
+		set( certainDeath);
+		}
+	}
+
+
+
+if (biker1Done)
+	{
+	reset( biker1Done);
+	++biker1Script;
+
+	if (biker1Script == 1)
+		{
+		prevent.input( );
+		bikerTimer = 0;			[	No more messages.
+		dartGame = 0;
+	
+		print( 18);				[	if your going to get rough
+
+		start.cycling( aBiker1);
+		move.obj( aBiker1, 74, 141, 1, biker1Done);
+		}
+
+	if (biker1Script == 2)
+		{
+		move.obj( aBiker1, 74, 154, 1, biker1Done);
+		}
+
+	if (biker1Script == 3)
+		{
+		print( 22);				[	let's blow
+
+		move.obj( aBiker1, 74, 167, 1, biker1Done);
+
+		set( biker2Done);			[	Hey, Biff!  Wait for me!!
+		}
+
+	if (biker1Script == 4)
+		{
+		erase( aBiker1);
+		biker1Script = 255;
+
+		get.posn( aBiker3, x, y);
+		get.posn( aBiker4, work, y);
+		if (x > work)
+			{
+			set( biker3First);
+			set( biker3Done);		[	Move 'em out.
+			}
+		else
+			{
+			set( biker4Done);
+			}
+		}
+	}							[	bikers all gone
+
+
+if (biker2Done)
+	{
+	reset( biker2Done);
+	++biker2Script;
+
+	if (biker2Script == 1)
+		{
+		start.update( aBiker2);
+		start.cycling( aBiker2);
+		move.obj( aBiker2, 101, 140, 1, biker2Done);
+		}
+
+	if (biker2Script == 2)
+		{
+		move.obj( aBiker2, 74, 167, 1, biker2Done);
+		}
+
+	if (biker2Script == 3)
+		{
+		erase( aBiker2);
+		biker2Script = 255;
+		}
+	}
+
+if (biker3Done)
+	{
+	reset( biker3Done);
+	++biker3Script;
+
+	if (biker3Script == 1)
+		{
+		start.update( aBiker3);
+		start.cycling( aBiker3);
+		start.motion( aBiker3);
+		get.posn( aBiker3, x, y);
+		x = 72;
+		move.obj.f( aBiker3, x, y, one, biker3Done);
+		}
+
+	if (biker3Script == 2)
+		{
+		move.obj( aBiker3, 72, 167, 1, biker3Done);
+		}
+
+	if (biker3Script == 3)
+		{
+		erase( aBiker3);
+		biker3Script = 255;
+
+		if (biker3First)
+			{
+			set( biker4Done);
+			}
+		}
+	}
+
+
+if (biker4Done)
+	{
+	reset( biker4Done);
+	++biker4Script;
+
+	if (biker4Script == 1)
+		{
+		start.update( aBiker4);
+		start.motion( aBiker4);
+		start.cycling( aBiker4);
+		get.posn( aBiker4, x, y);
+		x = 72;
+		move.obj.f( aBiker4, x, y, one, biker4Done);
+		}
+
+	if (biker4Script == 2)
+		{
+		move.obj( aBiker4, 72, 167, 1, biker4Done);
+		}
+
+	if (biker4Script == 3)
+		{
+		erase( aBiker4);
+		biker4Script = 255;
+		if (!biker3First)
+			{
+			set( biker3Done);
+			}
+		}
+	}
+
+
+if  (biker1Script == 255 &&
+	biker2Script == 255 &&
+	biker3Script == 255 &&
+	biker4Script == 255 &&
+	biker.scene < 4)
+	{
+	score += 5;
+	biker.scene = 4;				[	bikers.gone
+	moving2 = 0;					[	Ok, sweet cheeks, say Hi!
+	set( moved0);
+
+	reset( game.control);
+	accept.input();
+	}
+
+
+[ ego using pr24 
+
+if ((said( use, pr24) ||
+	said( swing, pr24, rol) ||
+	said( hit, man, with, pr24) ||
+	said( use, pr24, hit, man))) {
+	set(func10);
+	}
+
+
+if ((func6 ||
+	said( load, gun) ||
+	said( put, ammo, gun) ||
+	said( load, gun, with, ammo) ||
+	func8 ||						[	F8 to Draw OR Holster weapon
+	said( draw, gun) ||
+	said( return, gun, holster) ||
+	said( put, gun, away) ||
+	said( stop, using, gun) ||
+	said( aim, gun, rol) ||
+	said( remove, gun, from, holster))) {
+	reset( func6);
+	reset( func8);
+	print( 53);		 			[	can't use gun.
+	}
+
+if (func10) {
+	reset( func10);
+	set( have.match);
+
+	if (!has( i.pr24)) {
+		print( 17);		 		[	if had nightstick
+		}
+	else {
+		if (moving0 == WAITING_FOR_FIGHT)
+			{
+			++moving0;
+			cycle.time( ego, two);
+			start.motion( ego);
+			set.view( ego, v.ego.cop.ns);
+			set.cel( ego, 0);
+			ego.x -= 5;
+			reposition.to.f( ego, ego.x, ego.y);
+			end.of.loop( ego, pr24Done);
+			set( keep.cycling);
+			swingTimer = 0;
+			}
+		else
+			{
+			if (moving0 < WAITING_FOR_FIGHT)
+				{
+				print( 54);
+				}
+			else
+				{
+				if (moving0 == 255)	[	This means "swing is done."
+					{
+					print( 55);
+					}
+				}
+			}
+		}
+	}
+ 
+
+if (pr24Done)						[	If we're here, he's safe!
+	{
+	reset( pr24Done);
+	cycle.time( ego, one);
+	set.view.f( ego, current.sonny);
+	set.loop( ego, facing.front);
+	ego.x += 5;
+	reposition.to.f( ego, ego.x, ego.y);
+	reset( keep.cycling);
+	moving0 = 255;					[	That's all for moving0's today!
+	set( biker1Done);				[	Start the parade out of here.
+	}
+
+
+
+[ timed messages
+
+if (aSecondPassed)
+	{
+	if (bikerTimer != 0) { 			[	print messages at intervals
+		++bikerTimer;
+		if (bikerTimer == 255) {
+			bikerTimer = 1;
+			}
+		}
+
+	if (bikerTimer == 50) {
+		bikerTimer = 1;
+		random( 1, 2, work);
+		print.f( work);			[	heckling
+		}
+	}
+
+
+
+[ Text Response
+
+if (!have.input) {
+	goto exit;
+	}
+
+if  (biker.scene && 
+	biker.scene < 5) {
+    if (( said( hit, man, rol) ||
+		said( write, ticket, rol) ||
+		said( show, license, rol) ||
+		said( show, driver, license, rol) ||
+		said( show, me, license, rol) ||
+		said( show, me, driver, license, rol) ||
+		said( ask, man, show, license, rol) ||
+		said( ask, man, license, rol) ||
+		said( show, license, rol) ||
+		said( question, man, rol)))
+		{
+		print( 56);
+		}
+	if ((said( talk, man) ||
+		said( ask, biker))) {
+		if ( nearPerson) {
+			print( 15);		[ "The man in black says, \"We don't
+			}
+		else {
+			print( 13);
+			}
+		}
+	if ((said( arrest, man, rol) ||
+		said( arrest, suspect, rol))) 
+		{
+		print( 61);
+	 	}
+	if (said( look, biker)) {
+		print( 67);
+		}
+	}
+
+if ( has( i.extnd) &&
+	said( call)) {
+	set.string( 3, 70);		[ default
+
+	if ( !current.sonny) {
+		set.string( 2, 11);
+		}
+	else {
+		set.string( 2, 47);
+		}
+
+
+	if (current.suspect == 4) { [ bikers
+		if (biker.scene < bikers.gone) {
+			set.string( 3, 68);
+			}
+		else {
+			set.string( 3, 69);
+			}
+		}
+	print( 3);
+	}
+
+
+if (	biker.scene &&
+	biker.scene < 4)
+	{
+	if ((said( remove, bikes, rol) ||
+		said( move, bikes, rol))) {
+
+		if (posn( ego, 70, 130, 130, 156)) {
+			biker.scene = bikers.pissed;
+			sound( mBadGuy, done);
+			print( 14);
+			}
+		else {
+			print( 13);
+			}
+		}
+	}
+
+
+[ discourse with sweet cheeks
+
+if  (biker.scene > bikers.pissed &&
+	biker.scene < 255)
+	{
+	if ((said( ask, girl, rol) ||
+		said( ask, hooker, rol) ||
+		said( question, girl, rol) ||
+		said( question, hooker, rol) ||
+		said( hello, rol) ||
+		said( talk, whore, rol)))
+		{
+		if (!SxSCTip)
+			{
+			print( 26);
+			}
+		else
+			{
+			print( 32);
+			}
+		}
+
+	if ((said( look, girl, rol) ||
+		said( look, hooker, rol)))
+		{
+		print( 58);
+		}
+
+	if (said( me))
+		{
+		print( 27);
+		}
+	
+	if ((said( ok) ||
+		said( kiss, me, rol) ||
+		said( kiss, girl, rol) ||
+		said( anyword, kiss, girl, rol) ||
+		said( kiss, hooker, rol) ||
+		said( pay, girl, rol) ||
+		said( pay, hooker, rol) ||
+		said( give, girl, money, rol) ||
+		said( give, hooker, money, rol) ||
+		said( give, money, girl, rol) ||
+		said( give, money, hooker, rol) ||
+		said( anyword, kiss, hooker, rol) ||
+		said( nasty, rol) ||
+		said( anyword, nasty, rol) ||
+		said( ask, nasty, rol) ||
+		said( ask, girl, nasty, rol) ||
+		said( give, nasty, rol) ||
+		said( get, cunt, rol) ||
+		said( nasty, tit, rol) ||
+		said( go)))
+		{
+		print( 28);
+		}
+
+	if ((said( tip, rol) ||
+		said( drugs, rol) ||
+		said( anyword, drugs, rol) ||
+		said( anyword, anyword, drugs, rol) ||
+		said( anyword, tip, rol) ||
+		said( anyword, anyword, tip, rol)))
+		{
+		print( 29);				[	Sweet Cheeks spills her guts...
+		if (musicDone)
+			{
+			sound( mSweetCheeks, musicDone);
+			}
+		print( 30);
+		if (musicDone)
+			{
+			sound( mSweetCheeks, musicDone);
+			}
+		print( 31);
+		if (!SxSCTip)
+			{
+			set( SxSCTip);
+			score += 3;
+			}
+		if (musicDone)
+			{
+			sound( mSweetCheeks, musicDone);
+			}
+		print( 32);
+		if (musicDone)
+			{
+			sound( mSweetCheeks, musicDone);
+			}
+		print( 44);
+		}
+	
+	if ((said( thanks, rol) ||
+		said( thanks, girl, rol) ||
+		said( anyword, thanks, rol) ||
+		said( thanks, whore, rol))) {
+		print( 33);
+		set( conver0);
+		moving2 = 20;				[	boot her on stool.
+		}
+
+	if ((said( arrest, girl, rol) ||
+		said( arrest, anyword, girl, rol)))
+		{
+		print( 48);
+		}
+
+	if (said( bye, rol))
+		{
+		print( 57);
+		set( conver0);
+		moving2 = 20;				[	boot her on stool.
+		}
+	}
+
+
+[ if biker in they catch man stuff
+if (	ego.y < 142 &&
+	said( talk, bartender)) {
+	random( 50, 51, work);
+	print.f( work);
+	}
+
+if (said( look, bartender)) {
+	print( 52);
+	}
+
+
+if ((said( look, right, picture) ||
+	said( look, picture, on, right, rol)))
+	{
+	print( 37);
+	}
+
+if ((said( look, left, picture) ||
+	said( look, picture, on, left, rol)))
+	{
+	print( 36);
+	}
+
+if ((said( look, back, picture) ||
+	said( look, picture, on, back, rol)))
+	{
+	print( 38);
+	}
+
+if (said( look, picture, rol)) {
+	current.loop( ego, work);
+	if (work == facing.front) {
+		print( 35);				[	where are you looking
+		}
+	else {
+		if (work == facing.left) {
+			print( 36);			[	Donna
+			}
+		else {
+			if (work == facing.right) {
+				print( 37);		[	Cheryl
+				}
+			else {
+				print( 38);		[	Harley
+				}
+			}
+		}
+	}
+
+if (said( look, speaker)) {
+	print( 39);					[	JBL
+	}
+
+if (said( look, crack)) {
+	print( 40);					[	JBL
+	}
+
+if (said( look, dart)) {
+	print( 42);					[	K-mart
+	}
+
+if (said( look, chair))
+	{
+	print( 60);
+	}	
+
+if (nearTable &&
+	said( look, bottle))
+	{
+	print( 59);
+	}
+
+if ((said( play, dart) ||
+	said( get, dart) ||
+	said( throw, dart))) {
+	print( 43);					[	maybe pq2
+	}
+
+if (said( look, table)) {
+	if ((posn( ego, 33, 150,  58, 167) ||
+		posn( ego, 93, 148, 128, 166)))
+		{
+		print( 41);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( sit) ||
+	said( sit, on, stool) ||
+	said( sit, stool))) {
+	print( 49);
+	}
+
+if ((said( look) ||	
+	said( look, room))) {
+	random( 45, 46, work);
+	print.f( work);
+	}
+
+
+[
+exit
+[
+
+if (dynamic1) {
+	call.f( dynamic1);
+	}
+
+if (musicDone)
+	{
+	sound( mSweetCheeks, musicDone);
+	}
+
+
+[	if (QA)
+[		{
+[		%message 77 "B1%v237 B2%v238 B3%v239 B4%v240"
+[		display( 24, 0, 77);
+[		}
+

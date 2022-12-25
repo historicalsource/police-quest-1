@@ -1,0 +1,47 @@
+[ POLICE QUEST 
+[ rm104.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. July 27, 1987
+[ Last Update September 25, 1987al
+
+[	messages for room 104 -- rmWinner2
+
+
+%message	1
+"Following a ticker tape parade down Main Street in your honor,
+ a huge crowd has gathered on the Courthouse steps."
+
+%message	2
+"Mayor Fuddrucker and Chief Whipplestick wait at the
+ top of the steps, while you pass through the Department Honor Guard."
+
+%message	3
+"\"Sonny Bonds,\" the Mayor reads, \"as Mayor,
+ I wish to express the appreciation of the people of the City of Lytton
+ for your service to them, and present you with this expression of our
+ gratitude, the Key to the City!\""
+
+%message	4
+"Congratulations. You've won \"Police Quest!\""
+
+%message	5
+"You are a true, veteran police officer, proven in the line of duty.
+ We hope you have enjoyed playing."
+
+%message	6
+"If you liked \"Police Quest,\" be sure to play the other 3D, animated,
+ graphic adventure games from Sierra:
+ \"King's Quest I, II, and III;\"
+ \"The Black Cauldron;\"
+ \"Space Quest I and II;\"
+ and \"Leisure Suit Larry in the Land of the Lounge Lizards.\""
+
+%message	7
+"You'll also enjoy our 3D \"Helicopter Simulator\" that allows you
+ to have dogfights with your friends via modem,
+ or just fly through many cities for fun."
+
+%message	8
+"\"Oh, Sonny!
+ My HERO!!\""
+

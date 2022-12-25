@@ -1,0 +1,440 @@
+[ POLICE QUEST
+[ rm95.cg
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. 12/12/86
+[ Last Update October 17, 1987GR
+
+[ lgc.traffic.stop
+
+%include "gamedefs"
+%include "rm117.h"
+%include "rm95.msg"
+
+[ Room setup .............................
+
+if (init.log) {
+	if (suspect.present && gotcha) {
+		set.view( a.suspect, v.misc.cars);
+		set.loop.f( a.suspect, car.loop);
+	 	set.cel.f( a.suspect, current.suspect.car);
+		set.priority.f( a.suspect, priority);
+		position.f( a.suspect, parkedSuspectX, parkedSuspectY);
+		draw( a.suspect);
+
+		if (foxScene == 199) {		[ fox all done
+			foxScene = 200;
+			}
+		}
+	if (previous.room == 26) {
+		set.view( a.suspect, v.diag.misc.cars);
+		set.loop( a.suspect, 1);
+		fix.loop( a.suspect);
+
+		if (wreck.scene == 199) {		[wreck done
+			set.view( a.back.up, v.patrol.car);
+			set.loop( a.back.up, 2);
+			set.cel( a.back.up, 0);
+			position( a.back.up, 76, 47);
+			draw( a.back.up);
+			wreck.scene = 200;			[until next room
+			}
+		}
+	return( );
+	}
+
+[ Access control ........................
+
+if ( func4 &&
+	gotcha) {
+
+	reset( func4);
+	street.address = 0;
+
+	if (current.suspect == wreck) {
+		if (wreck.scene < 199) {
+			street.address = 26;			[rm.wreck
+			}
+		else {
+			print( 24);
+			}
+		}
+	else {
+		if (current.suspect == tit.fox) {
+			if ( SxGaveFoxTicket) {
+				print( 25);
+				}
+			else {
+				if ( hasfPhone) {
+					print( 26);
+					}
+				else {
+					street.address = 30;		[rm.foxstop
+					}
+				}
+			}
+		else {
+			if (current.suspect == drunk) {
+				if ( has.suspect) {
+					print( 27);
+					}
+				else {
+					street.address = 31;	[rm.drunkstop
+					}
+				}
+			else {
+				if (current.suspect == taselli) {
+					if ( has.suspect) {
+						print( 27);
+						}
+					else {
+						street.address = 32; [rm.felony;
+						}
+					}
+				}
+			}
+		}
+
+	if (street.address != 0) {
+		car.x = ego.x;
+		car.y = ego.y;
+		car.loop = loop;
+		car.location = current.room;
+	
+	 	get.posn( a.suspect, parkedSuspectX, parkedSuspectY);
+		new.room.f( street.address);
+		}
+	}
+
+[ Sonny leaves scene ......................
+
+if (progress < dead &&
+	wreck.scene &&
+	wreck.scene < 255 &&
+	current.room != 15 &&
+	posn( ego, 14, 18, 147, 138)) {
+
+	print( 23);
+	set( certainDeath);			[ basicly.dead
+	}
+[ Suspect leaves scene ....................
+
+
+[ wreck ....................
+if (!current.suspect &&
+	!posn( ego, 76, 55, 78, 80) &&
+	gotcha) {
+	if (wreck.scene < 199) {
+		print( 22);
+		reset( gotcha);
+		}
+	reset( gotcha);
+	}
+	
+[ Leaving Drunk or Felony
+if (!stopBackUp &&
+	gotcha &&
+	has.suspect &&
+	ego.dir != 0) {
+	if (current.suspect == drunk) {
+		print( 13);
+		print( 14);
+		}
+	if (current.suspect == 38) {		[ taselli
+		work = 1;
+		move.obj.f( a.back.up, backup.x, backup.y, work, backup.mess);
+		}
+	reset( gotcha);
+	reset( suspect.present);
+	}
+
+if (backup.mess && !certainDeath) {
+	print( 16);			[ If anything happens to my car
+	print( 17);			[ Keep it down back there slime
+	print( 18);			[ Jack comes on the radio
+	print( 19);			[ confirming CODE-4
+	print( 20);			[ Affirmative tow truck enroute
+	reset( backup.mess);
+	}
+	
+[ Drives off after stopping suspect .........................
+if (gotcha &&
+	!has.suspect &&
+	current.suspect > 2 &&
+	suspect > 11) {
+	if (current.suspect == tit.fox) {
+		if (SxGaveFoxTicket) {
+			print( 9);
+			}
+		else {
+			if (hasfPhone) {
+				print( 10);
+				}
+			else {
+				print( 11);
+				}
+			}
+		}
+	else {
+		print( 4);
+		}
+
+	if ( !has.suspect && previous.room != 30) {
+		release.loop( a.suspect);
+		start.update( a.suspect);
+		move.obj.f( a.suspect, suspect.x, suspect.y, suspect.speed, moved0);
+		moving0 = 1;
+		}
+	else {
+		moving0 = 255;
+		}
+
+	stop.suspect = 0;
+	reset( gotcha);
+ 	}
+[ Gotcha ...........................
+
+if (current.suspect == wreck &&
+	current.room == 15 &&
+	suspect.present &&
+	!gotcha) {
+	if (posn( ego, 76, 55, 78, 80)) {
+		if (wreck.scene <199) {
+			print( 21);
+			}
+		else {
+			print( 24);
+			}
+		start.motion( ego);
+		set( gotcha);
+		}
+	}
+
+if (current.suspect == taselli &&
+	suspect < 20 &&
+	suspect.speed == cruising &&
+	good.dir == suspect.dir) {
+	suspect.speed = lights;
+	move.obj.f( a.suspect, suspect.x, suspect.y, suspect.speed, moved0);
+	}
+
+
+[ Stop suspect .................
+if ( suspect < 10 &&
+	moving0 == 1 &&
+	!gotcha) {
+	get.posn( a.suspect, x, y);
+
+	if (good.dir == suspect.dir) {
+
+		if (good.dir == ego.up) {
+			if (current.suspect == drunk) {
+				if ( x != s2x &&
+					x != s4x &&
+					x != s6x) {
+					++x;
+					}
+				}
+			if ( ego.y > y &&
+				current.room != 13 &&
+				current.room != 16 &&
+				current.room != 19 &&
+				current.room != 22 &&
+				(posn( ego, 22, 57, 27, 117) ||
+				posn( ego, 80, 57, 85, 117) ||
+				posn( ego, 138, 57, 143, 117))) {
+				x += 2;
+				y -= 6;
+				ego.x = x;
+				ego.y = y;
+				ego.y += 9;
+				stop.suspect = 255;
+				}
+			else {
+				goto exit;
+				}
+			}
+		if (good.dir == ego.down) {
+			if (current.suspect == drunk) {
+				if ( x != s1x &&
+					x != s3x &&
+					x != s5x) {
+					--x;
+					}
+				}
+			if ( ego.y < y &&
+				current.room != 13 &&
+				current.room != 16 &&
+				current.room != 19 &&
+				current.room != 22 &&
+				(posn( ego, 17, 39, 22, 99) ||
+				posn( ego, 75, 39, 80, 99) ||
+				posn( ego, 133, 39, 138, 99))) {
+		  		x -= 2;
+		  		y += 6;
+		  		ego.x = x;
+		  		ego.y = y;
+		  		ego.y -= 9;
+		  		stop.suspect = 255;
+		  		}
+		  	else {
+		  		goto exit;
+		  		}
+		  	}
+		if (good.dir == ego.left) {
+			if (current.suspect == drunk) {
+				if ( y != s7y &&
+					y != s9y) {
+					--y;
+					}
+				}
+			if ( ego.x > x &&
+				(posn( ego, 47, 25, 75, 32) ||
+				posn( ego, 105, 25, 133, 32) ||
+				posn( ego, 47, 117, 75, 124) ||
+				posn( ego, 105, 117, 133, 124))) {
+				x -= 8;
+				y -= 4;
+				ego.x = x;
+				ego.y = y;
+				ego.x += 9;
+				stop.suspect = 255;
+				}
+			else {
+				goto exit;
+				}
+			}
+		if (good.dir == ego.right) {
+			if (current.suspect == drunk) {
+				if ( y != s8y &&
+					y != s10y) {
+					++y;
+					}
+				}
+			if (ego.x < x &&
+				(posn( ego, 27, 32, 55, 39) ||
+				posn( ego, 85, 32, 113, 39) ||
+				posn( ego, 27, 124, 55, 131) ||
+				posn( ego, 85, 124, 113, 131))) {
+				x += 8;
+				y += 4;
+				ego.x = x;
+				ego.y = y;
+				ego.x -= 9;
+				stop.suspect = 255;
+				}
+			else {
+				goto exit;
+				}
+			}
+[zz
+		if (stop.suspect == 255) {
+			fix.loop( ego);
+			fix.loop( a.suspect);
+			work = 1;
+			start.motion( ego);
+			impact = 0;
+			set( game.control);
+			move.obj.f( a.suspect, x, y, work, moved0);
+			move.obj.f( ego, ego.x, ego.y, work, work.f);
+			moving0 = 7;
+			set( gotcha);
+			}
+		}
+	}
+
+if (moving0 == 8) {
+	reset( game.control);
+	release.loop( ego);
+
+	if (current.suspect == tit.fox) {
+		print( 6);
+		}
+	else {
+		if (current.suspect == drunk) {
+			print( 12);
+			}
+		else {
+			if (current.suspect == taselli) {
+				print( 15);
+				}
+			else {
+				print( 1);
+				}
+			}
+		}
+	moving0 = 9;
+	}
+
+
+[ Text ............................
+
+if ((!have.input ||
+	progress == dead)) {
+	goto exit;
+	}
+
+if (gotcha) {
+	if ((said( look, car) ||
+		said( look, plate))) {
+		print( 2);
+		}
+	if ((said( run, plate))) {
+		print( 3);
+		}
+	if (said( get, out)) {
+		print( 7);
+		}
+	if (said( write, pinch)) {
+		print( 8);
+		}
+	}
+	
+[.....
+:exit
+[.....
+
+[	[ Ctemp .............
+[	%message 100
+[	"Cs %v67, Sa %v47, Got %v159, Pre %v160, Fp %v161, Np %v162"
+[	%message 101
+[	"Sm %v158 Nr %v80, M0 %v220, Ic %v157, Em %v156"
+[	%message 102
+[	"work3 %v155"
+[	
+[	if (said( test)) {
+[		if (evasive.move) {
+[			work4 = 1;
+[			}
+[		else {
+[			work4 = 0;
+[			}
+[		if (intersection.clear) {
+[			work5 = 1;
+[			}
+[		else {
+[			work5 = 0;
+[			}
+[		if (suspect.moving) {
+[			work6 = 1;
+[			}
+[		else {
+[			work6 = 0;
+[			}
+[		if (gotcha) {
+[			work7 = 1;
+[			}
+[		else {
+[			work7 = 0;
+[			}
+[		if (suspect.present) {
+[			work8 = 1;
+[			}
+[		else {
+[			work8 = 0;
+[			}
+[		display( 22, 0, 100);
+[		display( 23, 0, 101);
+[		}
+[					
+[	
+

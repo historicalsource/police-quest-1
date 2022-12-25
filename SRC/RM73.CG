@@ -1,0 +1,276 @@
+[ POLICE QUEST
+[ rm73.cg
+[ By:  Greg Rowland, Scott Murphy, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 6, 1987GR
+
+[	Sweet Cheeks following dynamic
+
+
+%include "gamedefs"
+%include "rm73.msg"
+
+
+
+%define	inPos			tf1
+%define	toDoor			tf2
+%define	SCdone			tf3
+%define	SCinElevator		tf4
+
+%define	whoreDelay		tmp0
+%define	scDistance		tmp1
+%define	SweetCheeksX		tmp2
+%define	SweetCheeksY		tmp3
+%define	SCscript			tmp4
+
+
+if (init.log)
+	{
+	reset( caughtEgo);
+	reset( testDist);
+
+	load.view( v.sweet.cheeks);
+
+	animate.obj( aSweetCheeks);
+	set.view( aSweetCheeks, v.sweet.cheeks);
+
+	get.posn( ego, ego.x, ego.y);
+
+	if (!togetherInElev)
+		{
+		if (current.room == 67)
+			{
+			x = 69;
+			y = 167;
+			}
+		else {
+			x = ego.x;
+			y = ego.y;
+			y -= 1;
+			}
+
+		position.f( aSweetCheeks, x, y);
+		current.loop( ego, loop);
+		set.loop.f( aSweetCheeks, loop);
+		whoreDelay = 18;
+
+		if (previous.room == 69)
+			{
+			ego.x += 10;
+			ego.y -= 1;
+			loop = 1;
+			position.f( aSweetCheeks, ego.x, ego.y);
+			set.loop.f( aSweetCheeks, loop);
+			whoreDelay = 2;
+			}
+		}
+	}
+
+
+distance( ego, aSweetCheeks, scDistance);
+if (scDistance < dist) {
+	set( nearPerson);
+	}
+
+
+if (doSc)							[ Sweet Ckeeks 
+	{
+	reset( doSc);
+	get.posn( ego, ego.x, ego.y);
+	ego.y -= 1;
+	position.f( aSweetCheeks, ego.x, ego.y);
+	current.loop( ego, loop);
+	set.loop.f( aSweetCheeks, loop);
+
+	if (togetherInElev) {
+		reset( togetherInElev);
+		set( inElevator);
+		set( SCinElevator);
+		set( testDist);
+
+		normal.motion( aSweetCheeks);
+		set.loop( aSweetCheeks, 2);
+		set.cel( aSweetCheeks, 0);
+	
+		if (current.room == 64) {
+			position( aSweetCheeks, 69, 85);
+			}
+		
+		if (current.room == 66) {
+			position( aSweetCheeks, 88, 123);
+			}
+		}
+
+	draw( aSweetCheeks);
+	stop.cycling( aSweetCheeks);
+	set( testDist);
+	}
+
+--whoreDelay;
+if (whoreDelay == 1) {
+	draw( aSweetCheeks);
+	if (current.room == 67) {
+		script = 100;
+		move.obj( aSweetCheeks, 41, 139, 0, scriptDone);
+		}
+	else {
+		stop.cycling( aSweetCheeks);
+		set( testDist);
+		}
+	}
+
+
+
+[	The Legendary Sweet Cheeks' Leash
+
+if (caughtEgo)
+	{
+	reset( caughtEgo);
+	stop.cycling( aSweetCheeks);
+	set( testDist);
+	}
+
+if (testDist)
+	{
+	if (inElevator && !SCinElevator)
+		{
+		reset( testDist);
+		set( SCdone);
+		SCscript = 0;
+		}
+	else
+		{
+		if (!inElevator && SCinElevator)
+			{
+			reset( SCinElevator);
+			}
+		else
+			{
+			if (scDistance > 18)
+				{
+				reset( testDist);
+				start.cycling( aSweetCheeks);
+				follow.ego( aSweetCheeks, 10, caughtEgo);
+				}
+			}
+		}
+	}
+
+if (SCdone)						[	Get in the elevator, you Whore!!
+	{
+	reset( SCdone);
+	++SCscript;
+
+	if (SCscript == 1)
+		{
+		start.cycling( aSweetCheeks);
+		if (current.room == 64) {
+			x = 68;
+			}
+		else {
+			x = 87;
+			}
+		move.obj.f( aSweetCheeks, x, SweetCheeksY, one, SCdone);
+		}
+
+	if (SCscript == 2)
+		{
+		if (current.room == 64) {
+			y = 85;
+			}
+		else {
+			y = 123;
+			}
+		move.obj.f( aSweetCheeks, SweetCheeksX, y, one, SCdone);
+		}
+
+	if (SCscript == 3)
+		{
+		set( testDist);
+		set( SCinElevator);
+		}
+	}
+
+
+get.posn( aSweetCheeks, x, y);		[	Cheeks pedaling
+if ((SweetCheeksX != x || SweetCheeksY != y))
+	{
+	start.cycling( aSweetCheeks);
+	SweetCheeksX = x;
+	SweetCheeksY = y;
+	}
+else {
+	stop.cycling( aSweetCheeks);
+	}
+
+
+[*****
+[ SAID
+[*****
+
+if (said( stay, here)) {
+	print( 9);
+	}
+
+
+
+if ((said( fuck, rol) ||
+	said( cunt, rol) ||
+	said( prick, rol) ||
+	said( anyword, fuck, rol) ||
+	said( anyword, cunt, rol) ||
+	said( anyword, prick, rol) ||
+	said( get, undressed) ||
+	said( undress) ||
+	said( undress, hooker) ||
+	said( hooker, to, strip) ||
+	said( pay, hooker) ||
+	said( give, money, to, hooker) ||
+	said( kiss, hooker) ||
+	said( pinch, her) ||
+	said( give, head, rol) ||
+	said( give, anyword, head, rol)))
+	{
+	print( 1);					[	"Sounds like a good idea.."
+	}
+
+if (said( look, hooker))
+	{
+	print( 2);					[	"Sweet Cheeks is 
+	}
+
+if (said( search, hooker))
+	{
+	print( 4);
+	}
+
+if (said( talk, hooker))
+	{
+	print( 5);
+	}
+
+if ((said( talk, drugs) ||
+	said( ask, death$angel)))
+	{
+	print( 6);
+	}
+
+if ((said( ask, number) ||
+	said( give, me, phone, number) ||
+	said( me, phone, number) ||
+	said( phone, number)))
+	{
+	print( 7);
+	}
+
+if (said( handcuff, hooker))
+	{
+	print( 8);
+	}
+
+[if (QA)
+[	{
+[	display( 24, 0, 3);
+[	}
+
+

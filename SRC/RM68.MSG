@@ -1,0 +1,283 @@
+[ POLICE QUEST
+[ rm68.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 26, 1987GR
+
+[ Messages for room 68 -- Cocktail Lounge
+
+
+%message	1
+"\"What'll it be?\""
+
+%message	2
+"\"Ok. Coming right up.\""
+
+%message	3
+"He's the kind of guy you'd expect to find working the
+ bar in a place like this."
+
+%message	4
+"The tables look ordinary, except for the wear of years of serious drinking."
+
+%message	5
+"Sweet Cheeks is her normal, outgoing, bubbly self.
+ She has dressed to the nines for her assignment, and is wearing an
+ enticing perfume."
+
+%message	6
+"Around the dimly-lit lounge, people sit at tables.
+ Behind the bar stands the bartender."
+
+%message	7
+"Constructed in the late 1800's, imported from France,
+ this bar has had enough beverage passed across it
+ to float the City of Lytton in alcohol."
+
+%message	8
+"The walls are adorned in an attractive fashion."
+
+%message	9
+"The only door is that darling, little, red, padded, vinyl number over there."
+
+%message	10
+"Sweet Cheeks pretends she has just noticed you.
+ \"Whitey, is that YOU?\" she shouts."
+
+%message	11
+"\"Oh, Whitey, it's so good to see you,\"
+ says Sweet Cheeks, playing her role to the hilt.
+ \"It's been such a long, long time!\""
+
+%message	12
+"\"Come on, Cheeks,\" you say, \"let's sit at that table over there.\""
+
+%message	13
+"\"Here you are, sir,\" says the bartender.
+ \"That'll be five dollars, please.\""
+
+%message	14
+"You slip a marked hundred from your wallet and hand it to the bartender."
+
+%message	15
+"\"Thank you, sir,\" he says. \"I'll be right back with your change.\""
+
+%message	16
+"\"You know, Sonny,\" says Sweet Cheeks softly,
+ \"I've seen four guys go in that door since I got here!\""
+
+%message	17
+"\"Here is your change, sir.\""
+
+%message	18
+"\"Well, how about it, Sweet Cheeks?\" the bartender says.
+ \"Are you going to introduce me to your new friend?\""
+
+%message	19
+"You swig the rancid fluid until you see the bottom of the glass."
+
+%message	20
+"\"Woody, I'd like you to meet Jimmy Lee Banksten,
+ but everyone I know calls him 'Whitey,'\" says Sweet Cheeks.
+ \"Whitey's a dear, old friend that I haven't seen for over a year.\""
+
+%message	21
+"The bartender asks you what you do for a living.
+ \"I'm presently unemployed; just taking it easy, you know.
+ Enjoying life, and looking for a good time,\" you tell him."
+
+%message	22
+"\"I just finished doing a little time for embezzlement
+ and haven't had a chance to land a job yet,\" you tell Woody.
+ Acting surprised at your slip, you lower your voice and say,
+ \"but I'd sure appreciate your keeping that information under your hat, ok?\"
+ Woody assures you that you can trust him."
+
+%message	23
+"Sweet Cheeks returns.
+ Even after the drinks, and your conversation with the bartender,
+ Woody Roberts is tight-lipped about any back room gambling."
+
+%message	24
+"\"Say, Sweet Cheeks,\" you say loudly.
+ \"How'd you like to go to Vegas with me for the weekend?\"
+ Sweet Cheeks acts quite excited as she accepts your offer."
+
+%message	25
+"Just before leaving the cocktail lounge,
+ you ask Sweet Cheeks to remain at the table, while you try to
+ get Woody to open up."
+
+%message	26
+"You slip the bartender a twenty... and then, it happens!"
+
+%message	27
+"In a suddenly soft voice, the bartender asks,
+ \"Whitey, exactly what are you looking for in the way of a good time?\""
+
+%message	28
+"\"Just about anything,\" you tell him,
+ \"but women, gambling, and money top the list.\""
+
+%message	29
+"\"Well, Whitey,\" Woody whispers, \"there IS a little card
+ game in our back room that is available by invitation only.
+ It's pretty serious; it'll cost ya two hundred just to get into the game.\""
+
+%message	30
+"He continues, \"If you think you can handle it,
+ come back a little later with the two hundred,
+ and I'll see what I can do for ya.\"
+ With your heart pounding, you offer him your thanks,
+ and assure him you'll be right back after you finish with Sweet Cheeks."
+
+%message	31
+"\"Gee! Thanks, Mac!\""
+
+%message	32
+"Woody says, \"If you decide you want a drink, I'm at your service."
+
+%message	33
+"\"Hey, Whitey,\" says Sweet Cheeks.
+ \"When you've been walkin' the streets as long as I have,
+ you don't need to climb stairs!
+ What'cha say we take the elevator?\""
+
+%message	34
+"It would benefit you to stay put for the moment."
+
+%message	35
+"\"Here you go, Sir. That'll be on the house!\""
+
+%message	36
+"\"So, you want to try your luck,\" says Woody.
+ \"Come on, Whitey. Follow me.\""
+
+%message	37
+"Sweet Cheeks says, \"Baby, you can go in that ol' storeroom if you want to,
+ but I'm gonna wait out here!\""
+
+%message	38
+"\"Nice to see you again, Mr. Banksten. Please, follow me.\""
+
+%message	39
+"\"Just one moment, Sir.\""
+
+%message	40
+"Push on it."
+
+%message	41
+"OK. You do!"
+
+%message	42
+"This is private property. It's locked; don't mess with it!"
+
+%message	43
+"There are no empty stools at the bar."
+
+%message	44						[ your basic don't sit message
+"This is no time to fool around.
+ Sweet Cheeks is nervously watching your every move."
+
+%message	45
+"\"Excuse me, sir, but I'd rather you not sit in my lap.
+ REALLY, dahrling! Some people!\""
+
+%message	46
+"Great idea: make yourself unnoticed by sitting on the floor!"
+
+%message	47
+""
+
+%message	48
+"You have to buy one first."
+
+%message	49
+"It seems no one notices you."
+
+%message	50
+"\"Come back later, if you want in the big game.\""
+
+%message	51
+"\"Some people!!\""
+
+%message	52
+"The floor is covered by a plush, red carpet."
+
+%message	53
+"\"We're not interested, sir!\""
+
+%message	54
+"\"Get lost!\""
+
+%message	55
+"\"Can't you see this is a private conversation!\""
+
+%message	56
+""
+
+%message	57
+"Remember the policeman's commandment:
+ \"Thou Shalt Not Drink On Duty.\""
+
+%message	58
+"\"So you can't pay, eh? Get lost, chump!\""
+
+%message	59
+"\"Thank You!\""
+
+%message	60
+"\"Thanks for nothing!\""
+
+%message	61
+"\"I have no idea what you're talking about!\""
+
+%message	62
+"\"Hey, buddy, this ain't no charity show!\""
+
+%message	63
+"\"I told you, Whitey,\" says Woody,
+ \"I've gotta see two hundred cash just to open the door.\""
+
+%message	64
+"Woody glances left, then right.
+ He looks you straight in the eyes and whispers,
+ \"Come back after you ditch the broad, and I'll see what I can do.\""
+
+%message	65
+"Woody says, \"Oh, that's all right, Mr. Banksten.
+ You're good around here.\""
+
+%message	66
+"\"Ok, Mr. Banksten,\" says Woody. \"Let's go.\""
+
+%message	67
+"\"I'm here to push booze, Buddy. What can I getcha?\""
+
+%message	68
+"\"You must not be all bad, Whitey;
+ not when you know a cute, little number like that Sweet Cheeks!\""
+
+%message	69
+"They're engrossed in their own, little worlds."
+
+%message	70
+"\"Why, Sonny! What a wonderful thought; but now ain't the time, Honey!\""
+
+%message	71
+"Sweet Cheeks squeals,
+ \"Ooooh! This is so exciting, Son-- I mean, Whitey!\""
+
+%message	72
+"Sweet Cheeks whispers,
+ \"Having just a small part in this is SO thrilling!\""
+
+%message	73
+"Sweet Cheeks smiles as she says, \"Gawd, this is fun!\""
+
+%message	74
+"Hmm... the door is locked!"
+
+%message	75
+"She then excuses herself to powder her (already heavily-powdered) nose."
+

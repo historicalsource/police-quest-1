@@ -1,0 +1,362 @@
+[ POLICE QUEST
+[ rm20.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/11/86
+[ Last Update October 12, 1987GR
+
+[ rm.map20
+
+%include "gamedefs"
+%include "rm117.h"
+%include	"rm20.msg"
+
+
+if (init.log) {
+	animate.obj( a.dummy1);
+	animate.obj( a.dummy2);
+	animate.obj( a.dummy3);
+	animate.obj( a.dummy4);
+
+	stop.cycling( a.dummy1);
+	stop.cycling( a.dummy2);
+	stop.cycling( a.dummy3);
+	stop.cycling( a.dummy4);
+
+	set.view( a.dummy1, v.patrol.car);
+	set.view( a.dummy2, v.patrol.car);
+
+	set.cel( a.dummy1, 0);
+	set.cel( a.dummy2, 0);
+
+	position( a.dummy1, 33, 47);
+	position( a.dummy2, 32, 60);
+
+	position( a.intersection, 75, 40);
+
+	if (current.car == patrol.car) {
+		set.view( a.dummy3, v.misc.cars);
+		set.view( a.dummy4, v.misc.cars);
+	
+		set.cel( a.dummy3, 2);		[ cad
+		set.cel( a.dummy4, 1);		[ vett
+
+		position( a.dummy3, 36, 61);	[ cad
+		position( a.dummy4, 29, 61);	[ vet
+		}
+	else {
+		set.view( a.dummy3, v.patrol.car);
+		set.cel( a.dummy3, 0);		[ cop
+		position( a.dummy3, 30, 47);	[ cop
+
+		if (current.car == cadillac.car) {
+			set.view( a.dummy4, v.misc.cars);
+			set.cel( a.dummy4, 1);		[ vett
+			position( a.dummy4, 29, 61);	[ vet
+			}
+		else {			[ current.car = corvette.car 
+			set.view( a.dummy4, v.misc.cars);
+			set.cel( a.dummy4, 2);		[ cad
+			position( a.dummy4, 36, 61);	[ cad
+			}
+		}
+
+	set.loop( a.dummy1, 2);
+	set.loop( a.dummy2, 2);
+	set.loop( a.dummy3, 2);
+	set.loop( a.dummy4, 2);
+
+	set.priority( a.dummy1, 5);
+	set.priority( a.dummy2, 5);
+	set.priority( a.dummy3, 5);
+	set.priority( a.dummy4, 5);
+
+	draw( a.dummy1);
+	draw( a.dummy2);
+	draw( a.dummy3);
+	draw( a.dummy4);
+
+	add.to.pic( vBuildings1, 0, 1, 087, 112, 0, 4);
+	add.to.pic( vBuildings1, 0, 0, 111, 112, 0, 4);
+	add.to.pic( vBuildings1, 1, 2, 001, 167, 0, 4);
+	add.to.pic( vBuildings1, 1, 3, 001, 110, 0, 4);
+	add.to.pic( vBuildings1, 1, 3, 001, 040, 0, 4);
+	add.to.pic( vBuildings1, 0, 4, 001, 072, 0, 4);
+	add.to.pic( vBuildings1, 0, 5, 144, 167, 0, 4);
+	add.to.pic( vBuildings1, 0, 2, 144, 079, 0, 4);
+	add.to.pic( vBuildings1, 0, 2, 144, 113, 0, 4);
+	add.to.pic( vBuildings1, 2, 0, 053, 024, 0, 4);
+[	add.to.pic( vBuildings1, 0, 2, 053, 024, 0, 4);
+	add.to.pic( vBuildings1, 2, 0, 030, 024, 0, 4);
+	add.to.pic( vBuildings1, 2, 3, 089, 024, 0, 4);
+	add.to.pic( vBuildings1, 2, 3, 112, 024, 0, 4);
+	add.to.pic( vBuildings1, 2, 2, 112, 160, 0, 4);
+	add.to.pic( vBuildings1, 2, 2, 089, 160, 0, 4);
+	add.to.pic( vBuildings1, 2, 1, 032, 160, 0, 4);
+	add.to.pic( vBuildings1, 2, 1, 052, 160, 0, 4);
+
+	position.f( ego, car.x, car.y);
+	draw( ego);
+	draw( a.intersection);
+
+	show.pic( );
+[	return( );
+	}
+
+[ Logic
+
+if (( ego.y < 33 ||
+	ego.y > 124)) {
+	streetScene = 80;
+	}
+else {
+	streetScene = 92;
+	}
+
+[ Death by No Check car 
+if (	!posn( ego, 17, 26, 39, 71) &&
+	!hasSafeCar &&
+	progress < dead) {
+	if ((current.car == patrol.car ||
+		current.car == cadillac.car)) {
+		start.motion( ego);
+		print( 1);
+		set( certainDeath);
+		}
+	}
+
+
+[ Lights
+
+if (posn( a.car1, 76, 46, 84, 50) 
+&& intersection != east.stop)	{
+	observe.blocks( a.car1);
+	}
+else	{
+	ignore.blocks( a.car1);
+	}
+
+if (posn( a.car2, 70, 27, 71, 38)
+&& intersection != north.stop)	{
+	observe.blocks( a.car2);
+	}
+else	{
+	ignore.blocks( a.car2);
+	}
+
+if (posn( a.car3, 87, 27, 90, 38) 
+&& intersection != north.stop) {
+	observe.blocks( a.car3);
+	}
+else	{
+	ignore.blocks( a.car3);
+	}
+
+
+[ Start.cars 
+[ car1
+
+if ( !stopCar1) {
+	if (!posn( ego, 143, 117, 159, 131)
+	&& !posn( a.suspect, 143, 117, 159, 131)) {
+		if (moving1 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car1, work);
+			position( a.car1, right.edge, t9y);
+			ignore.blocks( a.car1);
+			set.priority( a.car1, 5);
+			set( moved1);
+			}
+		if (moving1 == 1) {
+			move.obj( a.car1, t4x, t9y, 1, moved1);
+			draw( a.car1);		  
+			}
+		}
+	if (moving1 == 2) {
+		move.obj( a.car1, t4x, top.edge, 1, moved1);
+		}
+	if (moving1 == 3) {
+		erase( a.car1);			 
+		moving1 = 0;
+		}
+	}
+
+[ car2
+if ( !stopCar2) {
+	if (!posn( ego, 17, 0, 27, 25)
+	&& !posn( a.suspect, 17, 0, 27, 25)) {
+		if (moving2 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car2, work);
+			position( a.car2, t1x, top.edge);
+			ignore.blocks( a.car2);
+			set.priority( a.car2, 5);
+			set( moved2);
+			}
+		if (moving2 == 1) {
+			move.obj( a.car2, t1x, t7y, 1, moved2);
+			draw( a.car2);		  
+			}
+		}
+	if (moving2 == 2) {
+		move.obj( a.car2, t3x, t8y, 1, moved2);
+		}
+	if (moving2 == 3) {
+		move.obj( a.car2, t3x, t9y, 1, moved2);
+		}
+	if (moving2 == 4) {
+		move.obj( a.car2, right.edge, t10y, 1, moved2);
+		}
+	if (moving2 == 5) {
+		erase( a.car2);
+		moving2 = 0;
+		}
+	}
+
+[ car3
+[upper right
+if ( !stopCar3) {
+	if (!posn( ego, 143, 25, 159, 39)
+	&& !posn( a.suspect, 143, 25, 159, 39)) {
+		if (moving3 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car3, work);
+			position( a.car3, right.edge, t7y);
+			ignore.blocks( a.car3);
+			set.priority( a.car3, 5);
+			set( moved3);
+			}
+		if (moving3 == 1) {
+			move.obj( a.car3, t2x, t7y, 1, moved3);
+			draw( a.car3);		  
+			}
+		}
+	if (moving3 == 2) {
+		move.obj( a.car3, t1x, bottom.edge, 1, moved3);
+		}
+	if (moving3 == 3) {
+		erase( a.car3);			 
+		moving3 = 0;
+		}
+	}
+
+
+current.view( ego, view);
+if ((view == 99 || view == 101)) {
+	current.loop( ego, loop);
+	[ hit top car 
+	[ position( a.dummy1, 33, 47);[bu1
+	if (loop > 1) {
+		[ 0, -05, 0, +05
+		if (posn( ego, 33, 42, 33, 52)) {		[ up down
+			crashing = 50;
+[		%message 100 "Loop > 1"
+[			print( 100)
+			}
+		}
+	else {
+		[ -03, -05, 0, +01
+		if (posn( ego, 30, 42, 33, 48)) {	[ left right
+			crashing = 50;						[ screw diag
+[			%message 101 "Loop < 2"
+[				print( 101)
+				}
+		}
+			
+	[ hit bot cop car 
+	[position( a.dummy2, 32, 60);[bu1
+	[ -03, -04, 0, +01
+	if (posn( ego, 29, 56, 33, 61) && loop < 2) {	[ left right
+		crashing = 50;
+		}
+	[ 0, -05, 0, +05
+	if (posn( ego, 32, 55, 32, 65) && loop > 1) {	[ up down
+		crashing = 50;						[ screw diag
+		}
+	
+	[ hit cad car 
+	[ position( a.dummy3, 36, 61);	[ cad
+	if (current.car != cadillac.car) {
+		[ -03, -04, 0, +01
+		if (posn( ego, 33, 57, 36, 62) && loop < 2) {	[ left right
+			crashing = 50;
+			}
+		[ 0, -05, 0, +05
+		if (posn( ego, 36, 56, 36, 66) && loop > 1) {	[ up down
+			crashing = 50;						[ screw diag
+			}
+		}
+	[ hit Vet car 
+	[	position( a.dummy4, 29, 61);	[ vet
+	if (current.car != corvette.car) {
+		[ -03, -04, 0, +01
+		if (posn( ego, 26, 57, 29, 62) && loop < 2) {	[ left right
+			crashing = 50;
+			}
+		[ 0, -05, 0, +05
+		if (posn( ego, 29, 56, 29, 66) && loop > 1) {	[ up down
+			crashing = 50;						[ screw diag
+			}
+		}
+	[ hit Patrol car 
+	[	position( a.dummy3, 30, 47);	[ cop
+	if (current.car != patrol.car) {
+		[ -03, -05, 0, +01
+		if (posn( ego, 27, 42, 30, 48) && loop < 2) {	[ left right
+			crashing = 50;
+			}
+		[ 0, -05, 0, +05
+		if (posn( ego, 30, 42, 30, 52) && loop > 1) {	[ up down
+			crashing = 50;						[ screw diag
+			}
+		}
+	}
+else {
+	[ method #2
+	distance( a.dummy1, ego, work);
+	if (work < 3) {
+		crashing = 50;
+		}
+	else {
+		distance( a.dummy1, ego, work);
+		if (work < 3) {
+			crashing = 50;
+			}
+		else {
+			distance( a.dummy1, ego, work);
+			if (work < 3) {
+				crashing = 50;
+				}
+			else {
+				distance( a.dummy1, ego, work);
+				if (work < 3) {
+					crashing = 50;
+					}
+				}
+			}
+		}
+	}
+
+:exit
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look, town)))	{
+	print( 2);
+	}
+
+
+[....................................
+[%message 100 "Ex %v142|3, X %v144|3, work %v152|3"
+

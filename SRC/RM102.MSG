@@ -1,0 +1,54 @@
+[ POLICE QUEST
+[ rm102.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 19, 1987al
+
+
+#message	1	             "POLICE QUEST"				[
+#message	2	                 "Help"					[
+[			 |    |    |    |    |    |    |    |   |
+[			 0    5    10   15   20   25   30   35 39
+
+
+#message	3	" F1 displays this message."				[
+#message	17	" F1 or HELP displays this message."		[
+#message	4	" F2 turns the sound off and on."			[
+#message	5	" F3 retypes the last line typed."			[
+#message	7	" F5 saves your current game."			[
+#message	9	" F7 restores a saved game."				[
+#message	11	" F9 restarts the game."					[
+												[
+#message	21	" F4, F6, F8, F10 vary throughout game."	[
+												[
+#message	14	"ESC displays the menus."				[
+#message	13	"TAB shows the status screen."			[
+%message	28	"Ctrl-D radios Dispatch."				[
+#message	15	"Ctrl-J sets up your joystick."			[
+#message	16	"Ctrl-R toggles RGB monitor modes." 		[
+#message	19	"Double-click joystick button or\n
+ right mouse button for status screen."					[
+												[
+												[
+%message	20	"For a Hint Book, call (209) 683-6858."		[
+
+
+
+
+%message	6	" F4 goes in/out of car; to/from map."		[	If nearCar
+
+%message	8	" F6 loads%m26"						[	If gun
+%message	10	" F8 draws%m26"
+%message	12	"F10 fires%m26"
+
+%message	18	" F6%m25normal%m29-1)."					[	If driving
+%message	27	" F8%m25faster%m29-2)."
+%message	22	"F10%m25fastest%m29-3)."
+
+%message	23	"F10 swings your PR-24."					[	If nightstick
+
+%message	24	"F10 turns the shower off and on."			[	If shower
+
+%message	25	" drive car "
+%message	26	" your weapon."
+%message	29	" speed (Code"

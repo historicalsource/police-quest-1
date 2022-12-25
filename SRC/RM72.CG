@@ -1,0 +1,25 @@
+[ POLICE QUEST 
+[ rm72.cg 
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. July 23, 1987
+[ Last Update September 25, 1987al
+
+[ rmRights
+
+
+%include "gamedefs"
+%include "rm72.msg"
+
+if (certainDeath)
+	{
+	print( 6);
+	}
+else
+	{
+	print( 1);
+	print( 2);
+	print( 3);
+	print( 4);
+	print( 5);
+	}
+

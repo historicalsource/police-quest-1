@@ -1,0 +1,103 @@
+[ POLICE QUEST
+[ rm95.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 12/12/86
+[ Last Update September 21, 1987al
+
+[ lgc.traffic.stop
+
+
+%message	1
+"You managed to stop a reckless driver."
+
+%message	2
+"You've made the stop. Now try getting closer."
+
+%message	3
+"You need to be more specific."
+
+%message	4
+"Seeing you don't have control of the situation,
+ the violator drives off."
+
+%message	5
+"You observe a small, red, sports car fail to stop for that red light."
+
+%message	6
+"You activate your red emergency lights and observe the sports car
+ pull to the curb and stop."
+
+%message	7
+"You'd better check your \"PIG\" manual for proper stop procedures."
+
+%message	8
+"You'll need the suspect's driver's license to do that."
+
+%message	9
+"Enraged, the young woman shrieks as you drive off,
+ \"Your Mama wears Army boots, you $%^&!head.\""
+
+%message	10
+"You just made that broad's day, Studly!"
+
+%message	11
+"The driver of the car you stopped wonders,
+ \"Are all cops that lame?\" as she drives away."
+
+%message	12
+"He slowly pulls to the right, jumps the curb, and comes to a stop."
+
+%message	13
+"\"What about my car?\""
+
+%message	14
+"\"Don't worry. It'll be towed somewhere safe. At your expense.\""
+
+%message	15
+"Noting your persistence and driving skill,
+ the driver of the Cadillac pulls it over
+ after his attempts to lose you fail."
+
+%message	16
+"\"If anything happens to my car I'll have my lawyer on you so fast,
+ he'll...\""
+
+%message	17
+"\"Keep it down back there, Slimeball!\""
+
+%message	18
+"Jack comes on the radio..."
+
+%message	19
+"\"Dispatch, this is 83-31 confirming Code-4 on felony stop, one in custody.
+ 83-32 proceeding to jail.
+ Request tow truck to location.\""
+
+%message	20
+"Dispatch responds, \"Affirmative, 83-31. Code-4, tow truck en route.\""
+
+%message	21
+"Upon your arrival at the scene of the accident, you observe a group of
+ bystanders gawking at a green sedan that attempted
+ to carve its own door in the side of a brick building."
+
+%message	22
+"This accident looks serious! Where are you going?"
+
+%message	23
+"Your first assignment, and you blew it."
+
+%message	24
+"There is no reason to return to the accident scene!
+ You have your orders, now move."
+
+%message 25
+"You may as well return to patrol. That gal is mad!"
+
+%message 26
+"You already have her telephone number, don't go back to make
+ an even bigger fool of yourself!"
+
+%message 27
+"No sense returning to the scene. Transport your suspect to jail!"
+

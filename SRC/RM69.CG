@@ -1,0 +1,422 @@
+[ POLICE QUEST
+[ rm69.cg
+[ By:  Greg Rowland, Scott Murphy and Jim Walls
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 25, 1987al
+
+[ storage room off cocktail lounge
+
+%include "gamedefs"
+%include "rm69.msg"
+
+
+
+%define	doorDone			lf0
+%define	doFrisk			lf1
+%define	nearDoor			lf2
+%define	nearBooze			lf3
+
+
+%define	doorStatus		lcl0
+	%define	closed		0
+	%define	openingPanel	1
+	%define	closingPanel	2
+	%define	opening		3
+	%define	open			4
+
+%define	closeWait			lcl1
+%define	bartenderDistance	lcl2
+
+
+%object	aDoor			1
+%object	aBartender		2
+
+
+
+if (init.log)
+	{
+	set.horizon( 105);
+
+	load.view( v.door69);
+	if (btJimmyTogether)
+		{
+		load.view( v.bartender);
+		load.view( v.btSearchingEgo);
+		}
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	if (btJimmyTogether)
+		{
+		animate.obj( aBartender);
+		set.view( aBartender, v.bartender);
+		set.loop( aBartender, 1);
+		position( aBartender, 126, 136);
+		start.cycling( aBartender);
+		draw( aBartender);
+
+		move.obj( aBartender, 82, 128, 0, scriptDone);
+		script = 0;
+		}
+
+	animate.obj( aDoor);
+	set.view( aDoor, v.door69);
+	ignore.horizon( aDoor);
+	ignore.blocks( aDoor);
+	position( aDoor, 75, 106);
+	if (previous.room == 70)
+		{
+		set.cel( aDoor, 3);
+		doorStatus = open;
+		closeWait = 9;
+		}
+	else
+		{
+		set.cel( aDoor, 0);
+		}
+	draw( aDoor);
+	stop.update( aDoor);
+	work = DOOR_CYCLE_TIME;
+	cycle.time( aDoor, work);
+
+
+	if (previous.room == 68)
+		{
+		position( ego, 137, 138);
+		}
+	else
+		{
+		position( ego, 77, 108);
+		}
+
+	draw( ego);
+
+	show.pic( );
+	return( );
+	}				 			[***		End Inits		***
+
+
+
+reset( nearDoor);
+if (posn( ego, 72, 107, 85, 111))
+	{
+	set( nearDoor);
+	}
+
+distance( ego, aBartender, bartenderDistance);
+if (bartenderDistance < dist)
+	{
+	set( nearPerson);
+	}
+
+reset( nearBooze);
+if ((posn( ego, 35,  72,  70, 115) ||
+	posn( ego, 80, 107, 110, 124) ||
+	posn( ego, 80, 107, 118, 116) ||
+	posn( ego, 75, 150, 125, 167) ||
+	posn( ego, 50, 138,  75, 167) ||
+	posn( ego, 20, 108,  42, 135) ||
+	posn( ego, 12, 152,  70, 167)))
+	{
+	set( nearBooze);
+	}
+
+if (doFrisk &&	posn( ego, 77, 107, 86, 112))
+	{
+	reset( doFrisk);
+	set( scriptDone);
+	}
+
+--closeWait;
+if (closeWait == 1)
+	{
+	if (doorStatus == open)
+		{
+		start.update( aDoor);
+		reverse.loop( aDoor, doorDone);
+		}
+	}
+
+if (doorDone)
+	{
+	reset( doorDone);
+	
+	if (doorStatus == open)
+		{
+		stop.update( aDoor);
+		doorStatus = closed;
+		}
+	
+	if (doorStatus == opening)
+		{
+		stop.update( aDoor);
+		doorStatus = open;
+		}
+	}
+
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+	if (script == 1)
+		{
+		move.obj( aBartender, 72, 109, 0, scriptDone);
+		}
+
+	if (script == 2)
+		{
+		set.cel( aBartender, 2);		[	This cel has 2 complete legs.
+		stop.cycling( aBartender);
+		print( 3);				[	"The bartender raps on the door."
+		scriptTimer = 4;
+		}
+
+	if (script == 3)
+		{
+		start.update( aDoor);		[		panel opening
+		set.loop( aDoor, 1);
+		set.cel( aDoor, 0);
+		end.of.loop( aDoor, scriptDone);
+		}
+
+	if (script == 4)
+		{
+		scriptTimer = 4;
+		}
+
+	if (script == 5)
+		{
+		if (progress > wonPoker1)
+			{
+			print( 8);			[	"The panel opens once again.."
+			}
+		else
+			{
+			print( 4);			[	"A panel on the door slides open.."
+			}
+		scriptTimer = 4;
+		}
+
+	if (script == 6)
+		{
+		reverse.loop( aDoor, scriptDone);
+		}
+
+	if (script == 7)
+		{
+		set.loop( aBartender, facing.front);
+		set.cel( aBartender, 2);		[	This cel has 2 complete legs.
+		scriptTimer = 3;
+		}
+
+	if (script == 8)
+		{
+		if (progress > wonPoker1)
+			{
+			print( 11);			[	"Come over here. I'll have to 
+			}
+		else
+			{
+			print( 10);			[	"Come over here. I'll have to frisk 
+			}
+		scriptTimer = 4;
+		}
+
+	if (script == 9)
+		{
+		set.loop( aDoor, 0);
+		set.cel( aDoor, 0);
+
+		set( doFrisk);
+		}
+
+	[	Here, we pause until ego gets close enough to be frisked.
+
+	if (script == 10)
+		{
+		set( game.control);
+		stop.motion( ego);
+		prevent.input();
+
+		set.view( aBartender, v.btSearchingEgo);
+		start.cycling( aBartender);
+		cycle.time( aBartender, two);
+
+		erase( ego);
+		scriptTimer = 4;
+		}
+
+	if (script == 11)
+		{
+		set.view( aBartender, v.bartender);
+		set.loop( aBartender, facing.right);
+		stop.cycling( aBartender);
+
+		get.posn( aBartender, x, ego.y);
+		ego.x = 79;
+		ego.y -= 1;
+		position.f( ego, ego.x, ego.y);
+		set.loop( ego, facing.left);
+		draw( ego);
+
+		if (progress > wonPoker1)
+			{
+			set.loop( ego, 3);
+			print( 9);			[	"Woody escorts you.
+			}
+		else
+			{
+			print( 12);			[	"The bartender tells you to step 
+			reset( btJimmyTogether);
+			}
+
+		scriptTimer = 4;
+		}
+
+	if (script == 12)
+		{
+		end.of.loop( aDoor, scriptDone);
+		}
+
+	if (script == 13)
+		{
+		scriptTimer = 4;
+		new.room( 70);
+		}
+	}
+
+
+
+[*****
+[ SAID
+[*****
+
+if (said( look, door))
+	{
+	if (!nearDoor)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 17);
+		}
+	}
+
+if ((said( search, box) ||
+	said( search, case, booze) ||
+	said( search, booze, case) ||
+	said( open, box) ||
+	said( open, case, booze) ||
+	said( open, booze, case)))
+	{
+	if (nearBooze)
+		{
+		print( 18);
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( get, rum))
+	{
+	if (nearBooze)
+		{
+		print( 19);
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( open, window))
+	{
+	if (!nearDoor)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 20);
+		}
+	}
+
+if ((said( look, down) ||
+	said( look, floor)))
+	{
+	print( 1);
+	}
+
+
+if ((said( look, up) ||
+	said( look, ceiling) ||
+	said( look, light)))
+	{
+	print( 13);
+	}
+
+if ((said( get, light) ||
+	said( get, box)))
+	{
+	print( 14);
+	}
+
+if ((said( look) ||
+	said( look, room)))
+	{
+	print( 15);
+	}
+
+if (said( look, box))
+	{
+	print( 16);
+	}
+
+if ((said( open, door) ||
+	said( unlock, door)))
+	{
+	if (nearDoor)
+		{
+		print( 6);				[	"The door is securely locked.."
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( knock, door))
+	{
+	if (nearDoor)
+		{
+		if (progress < playingPoker1)
+			{
+			print( 5);			[	"Go away!"
+			}
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}							[***		End SAID		***
+
+
+
+[*****
+[ EXIT
+[*****
+
+if (!btJimmyTogether &&
+	posn( ego, 142, 131, 149, 143))
+	{
+	new.room( 68);
+	}
+

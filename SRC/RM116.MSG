@@ -1,0 +1,117 @@
+[ POLICE QUEST
+[ rm116.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 9/25/86
+[ Last Update October 3, 1987GR
+
+[ lgc.lytton -- Lytton Tribune
+
+
+%message	1	"            THE LYTTON TRIBUNE        "		[	Page 1
+
+%message	2	" DOPE IN THE CITY  \\| PRESIDENT HICKLE"
+
+%message	3	"The city of Lytton,\\|"
+%message	4	"once a beautiful,  \\|"
+%message	5	"peaceful, quiet    \\|"
+%message	6	"city with few major\\|"
+%message	7	"crime problems, is \\|"
+%message	8	"now experiencing   \\|"
+%message	9	"rapid growth and   \\|Smugsville, U.S.A."
+%message	10	"prosperity. But,   \\|President Hickle"
+%message	11	"along with growth  \\|was in Smugsville"
+%message	12	"has come an alarm- \\|yesterday evening,"
+%message	13	"ing increase in the\\|observing the"
+%message	14	"crime rate that is \\|annual migration"
+
+%message	15	"     see Dope, pg 2\\|   see Birds, pg 2"
+
+
+
+
+
+
+
+%message	16	"   Birds, from pg 1\\|   Dope, from pg 1"		[	Page 2
+
+%message	17	"of the red-bellied \\|threatening the"
+%message	18	"swamp coddlers.    \\|peace of Lytton."
+%message	19	"The President, who \\|Police Sgt. John"
+%message	20	"has been a bird    \\|Dooley states that"
+%message	21	"lover since child- \\|dangerous drugs"
+%message	22	"hood, rates the    \\|are showing up on"
+%message	23	"mating dance of the\\|the streets and in"
+%message	24	"coddler as being   \\|our schools."
+%message	25	"\"as spectacular as \\|The homicide rate"
+%message	26	"the golden-crowned \\|and prostitution"
+%message	27	"scum sucker.\" The  \\|are at a level the"
+%message	28	"President candidly \\|city has never"
+%message	29	"admitted that he   \\|seen. The Tribune"
+%message	30	"once skipped the   \\|has learned from a"
+
+%message	31	"    see Birds, pg 3\\|    see Dope, pg 3"
+
+
+
+
+
+
+%message	32	"   Birds, from pg 2\\|   Dope, from pg 2"		[	Page 3
+
+%message	33	"Geneva Arms Conven-\\|reliable source"
+%message	34	"tion to watch some \\|that a big-time"
+%message	35	"old coddlers mate. \\|drug dealer with a"
+%message	36	"The President says \\|street name of"
+%message	37	"a bill is presently\\|\"Death Angel\" may"
+%message	38	"before the Senate  \\|be responsible for"
+%message	39	"proclaiming Nat-   \\|the drug traffic."
+%message	40	"ional Coddler Day! \\|"
+%message	41	"                   \\|  LPD OFFICER OF"
+%message	42	"      ESCAPED      \\| THE YEAR NOMINEES"
+%message	43	"Lytton City Jail   \\|Lytton PD Chief"
+%message	44	"reported the escape\\|Whipplestick has"
+%message	45	"of a female prison \\|nominated Sonny"
+%message	46	"inmate last night. \\|Bonds and Joe"
+
+%message	47	"  see Escaped, pg 4\\| see Nominee, pg 4"
+
+
+
+
+
+
+%message	48	" Escaped, from pg 3\\|Nominee, from pg 3"		[	Page 4
+
+%message	49	"Floreen \"Flustered \\|"
+%message	50	"Flora\" Paxton flew \\|"
+%message	51	"the coop by hiding \\|"
+%message	52	"beneath a pile of  \\|"
+%message	53	"soiled prison      \\|"
+%message	54	"laundry in a hand- \\|"
+%message	55	"pushed basket.     \\|"
+%message	56	"                   \\|"
+%message	57	"KINGDOM OF DAVENTRY\\|Bonds and Walters"
+%message	58	"is now under siege \\|"
+%message	59	"by a renegade, 3-  \\|Walters for LPD"
+%message	60	"headed dragon. One \\|\"Officer of the"
+%message	61	"unidentified gnome \\|Year Award\" due to"
+%message	62	"stated the kingdom \\|outstanding effort"
+%message	63	"is in a \"state of  \\|and commitment in"
+%message	64	"emergency.\"        \\|crime prevention."
+
+
+
+
+
+
+
+
+%message	65
+"You may also use the cursor keys to turn the pages."
+
+%message	66
+"Since your shift is beginning, you discard the newspaper."
+
+%message	67
+"You ARE reading the paper."
+

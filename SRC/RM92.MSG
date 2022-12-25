@@ -1,0 +1,37 @@
+[ POLICE QUEST
+[ rm92.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. September 17, 1987
+[ Last Update September 24, 1987GR
+
+
+
+[ lgcCommercial
+
+
+
+
+%message 1
+"Don't bother. You'd just be spinning your wheels!"
+
+%message 2
+"There is no answer."
+
+%message 3
+"The door is locked."
+
+%message 4
+"Much urine, from many dogs, has taken its toll on the paint."
+
+%message 5
+"You can't see it, but believe it or not,
+ there is a light at the top of the pole."
+
+%message 6
+"It's just an old, abandoned disco, left over from another Sierra game."
+
+%message 7
+"This is private property. You have no business here."
+
+%message 8
+"Fresno 41 miles."

@@ -1,0 +1,212 @@
+[ POKER QUEST
+[ rm86.cg
+[ By:  Ken Williams, Greg Rowland, and Al Lowe
+[ For: Sierra On-Line Inc. 11/17/86
+[ Last Update August 14, 1987al
+
+%include "rm75.h"
+
+
+[ evaluate.cards
+
+
+
+[*****
+[	START WITH PLAYER #1
+[*****
+
+if (p1.bet == 255)
+	{
+	p1.hand = 0;
+	p1.kicker = 0;
+	goto score.p2;
+	}
+
+current.card = p1.card1;
+function = split.card;
+call( poker.subs);
+card1 = card.value;
+suit1 = current.suit;
+
+current.card = p1.card2;
+function = split.card;
+call( poker.subs);
+card2 = card.value;
+suit2 = current.suit;
+
+current.card = p1.card3;
+function = split.card;
+call( poker.subs);
+card3 = card.value;
+suit3 = current.suit;
+
+current.card = p1.card4;
+function = split.card;
+call( poker.subs);
+card4 = card.value;
+suit4 = current.suit;
+
+current.card = p1.card5;
+function = split.card;
+call( poker.subs);
+card5 = card.value;
+suit5 = current.suit;
+
+x = 0;
+y = 43;
+call( score.hand);
+p1.hand = current.hand;
+p1.kicker = current.kicker;
+
+
+
+[*****
+:score.p2							[	NO DO PLAYER #2
+[*****
+
+if (p2.bet == 255)
+	{
+	p2.hand = 0;
+	p2.kicker = 0;
+	goto score.p3;
+	}
+
+current.card = p2.card1;
+function = split.card;
+call( poker.subs);
+card1 = card.value;
+suit1 = current.suit;
+
+current.card = p2.card2;
+function = split.card;
+call( poker.subs);
+card2 = card.value;
+suit2 = current.suit;
+
+current.card = p2.card3;
+function = split.card;
+call( poker.subs);
+card3 = card.value;
+suit3 = current.suit;
+
+current.card = p2.card4;
+function = split.card;
+call( poker.subs);
+card4 = card.value;
+suit4 = current.suit;
+
+current.card = p2.card5;
+function = split.card;
+call( poker.subs);
+card5 = card.value;
+suit5 = current.suit;
+
+x = 0;
+y = 78;
+call( score.hand);
+p2.hand = current.hand;
+p2.kicker = current.kicker;
+
+
+
+[*****
+:score.p3							[	NOW DO PLAYER #3
+[*****
+
+if (p3.bet == 255)
+	{
+	p3.hand = 0;
+	p3.kicker = 0;
+	goto score.p4;
+	}
+
+current.card = p3.card1;
+function = split.card;
+call( poker.subs);
+card1 = card.value;
+suit1 = current.suit;
+
+current.card = p3.card2;
+function = split.card;
+call( poker.subs);
+card2 = card.value;
+suit2 = current.suit;
+
+current.card = p3.card3;
+function = split.card;
+call( poker.subs);
+card3 = card.value;
+suit3 = current.suit;
+
+current.card = p3.card4;
+function = split.card;
+call( poker.subs);
+card4 = card.value;
+suit4 = current.suit;
+
+current.card = p3.card5;
+function = split.card;
+call( poker.subs);
+card5 = card.value;
+suit5 = current.suit;
+
+x = 0;
+y = 113;
+call( score.hand);
+p3.hand = current.hand;
+p3.kicker = current.kicker;
+
+
+
+[*****
+:score.p4							[	NOW DO PLAYER #4
+[*****
+
+if (p4.bet == 255)
+	{
+	p4.hand = 0;
+	p4.kicker = 0;
+	goto exit;
+	}
+
+current.card = p4.card1;
+function = split.card;
+call( poker.subs);
+card1 = card.value;
+suit1 = current.suit;
+
+current.card = p4.card2;
+function = split.card;
+call( poker.subs);
+card2 = card.value;
+suit2 = current.suit;
+
+current.card = p4.card3;
+function = split.card;
+call( poker.subs);
+card3 = card.value;
+suit3 = current.suit;
+
+current.card = p4.card4;
+function = split.card;
+call( poker.subs);
+card4 = card.value;
+suit4 = current.suit;
+
+current.card = p4.card5;
+function = split.card;
+call( poker.subs);
+card5 = card.value;
+suit5 = current.suit;
+
+x = 0;
+y = 148;
+call( score.hand);
+p4.hand = current.hand;
+p4.kicker = current.kicker;
+
+
+[*****
+:exit
+[*****
+

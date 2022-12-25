@@ -1,0 +1,1038 @@
+[ POLICE QUEST
+[ rm47.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 7/31/86
+[ Last Update October 10, 1987al
+
+[ locker.room
+
+
+%include "gamedefs"
+%include "rm47.msg"
+
+
+
+%define	getGun			lf1
+%define	getAmmo			lf2
+%define	getBriefcase		lf3
+%define	getKeys			lf4
+%define	getTowel			lf5
+%define	getCopClothes		lf6
+%define	getCiviClothes		lf7
+%define	getNarcClothes		lf8
+%define	getPimpClothes		lf9
+%define	enteredRoomInTowel	lf10
+%define	putGun			lf11
+%define	putAmmo			lf12
+%define	putBriefcase		lf13
+%define	putKeys			lf14
+%define	putTowel			lf15
+%define	putCopClothes		lf16
+%define	putCiviClothes		lf17
+%define	putNarcClothes		lf18
+%define	putPimpClothes		lf19
+
+%define	getAll			tf1
+%define	putAll			tf2
+
+
+%define	msg0				lcl0
+%define	msg1				lcl1
+%define	msg2				lcl2
+%define	msg3				lcl3
+							
+							
+%object	aGun				1
+%object	aAmmo			2
+%object	aCane			3
+%object	aKeys			4
+%object	aBriefcase		5
+%object	aTowel			6
+%object	aCopClothes		7
+%object	aCiviClothes		8
+%object	aPimpClothes		9
+%object	aNarcClothes		10
+							
+							
+							
+if (init.log) {
+	dynamic2 = 0;
+	current.sonny = current.ego;
+
+
+  	load.view( v.gun.case.ammo);		[view.78 gunbelt, briefcase, ammo
+	load.view( v.vett.keys.towel);	[view.79 keys, towel, small.towel
+	load.view( v.clothes);
+
+	load.sound( s.door.close);
+
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+	
+
+	animate.obj( aGun);
+	animate.obj( aAmmo);
+	animate.obj( aCane);
+	animate.obj( aKeys);
+	animate.obj( aBriefcase);
+	animate.obj( aTowel);
+	animate.obj( aCopClothes);
+	animate.obj( aCiviClothes);
+	animate.obj( aPimpClothes);
+	animate.obj( aNarcClothes);
+
+	set.view( aGun, v.gun.case.ammo);
+	set.view( aAmmo, v.gun.case.ammo);
+	set.view( aCane, v.gun.case.ammo);
+	set.view( aKeys, v.vett.keys.towel);
+	set.view( aBriefcase, v.gun.case.ammo);
+	set.view( aTowel, v.vett.keys.towel);
+	set.view( aCopClothes, v.clothes);
+	set.view( aCiviClothes, v.clothes);
+	set.view( aPimpClothes, v.clothes);
+	set.view( aNarcClothes, v.clothes);
+
+	set.cel( aGun, 0);
+	set.cel( aAmmo, 2);
+	set.cel( aCane, 3);
+	set.cel( aKeys, 0);
+	set.cel( aBriefcase, 1);
+	set.cel( aTowel, 1);
+	set.cel( aCopClothes, 0);
+	set.cel( aCiviClothes, 1);
+	set.cel( aPimpClothes, 3);
+	set.cel( aNarcClothes, 2);
+
+	ignore.objs( aCopClothes);
+	ignore.objs( aCiviClothes);
+	ignore.objs( aPimpClothes);
+	ignore.objs( aNarcClothes);
+
+	set.priority( aCane, 4);
+	set.priority( aCopClothes, 7);
+	set.priority( aCiviClothes, 6);
+	set.priority( aPimpClothes, 5);
+	set.priority( aNarcClothes, 4);
+
+	stop.cycling( aGun);
+	stop.cycling( aAmmo);
+	stop.cycling( aCane);
+	stop.cycling( aKeys);
+	stop.cycling( aBriefcase);
+	stop.cycling( aTowel);
+	stop.cycling( aCopClothes);
+	stop.cycling( aCiviClothes);
+	stop.cycling( aPimpClothes);
+	stop.cycling( aNarcClothes);
+	stop.cycling( aTowel);
+		
+	position( aGun, 38, 78);
+	position( aAmmo, 75, 39);
+	position( aCane, 100, 150);
+	position( aKeys, 106, 72);
+	position( aBriefcase, 95, 158);
+	position( aTowel, 57, 157);
+	position( aCopClothes, 60, 123);
+	position( aCiviClothes, 68, 123);
+	position( aPimpClothes, 76, 123);
+	position( aNarcClothes, 85, 123);
+
+	if (obj.in.room( i.gun, current.room)) {
+		draw( aGun);
+		stop.update( aGun);
+		}
+	
+	if (obj.in.room( i.ammo, current.room)) {
+		draw( aAmmo);
+		stop.update( aAmmo);
+		}
+	
+	if (obj.in.room( i.case, current.room)) {
+		draw( aBriefcase);
+		stop.update( aBriefcase);
+		}
+	
+	if (obj.in.room( i.corvkey, current.room)) {
+		draw( aKeys);
+		stop.update( aKeys);
+		}
+
+	if (current.sonny == in.uniform) {
+		draw( aCiviClothes);
+		draw( aNarcClothes);
+		stop.update( aCiviClothes);
+		stop.update( aNarcClothes);
+		}
+	
+	if (current.sonny == sonny.civies)	{
+		draw( aCopClothes);
+		draw( aNarcClothes);
+		stop.update( aCopClothes);
+		stop.update( aNarcClothes);
+		}
+	
+	if (current.sonny == sonny.narc) {
+		draw( aCopClothes);
+		draw( aCiviClothes);
+		stop.update( aCopClothes);
+		stop.update( aCiviClothes);
+		}
+	
+	if (current.sonny == disguised.sonny) {
+		draw( aCopClothes);
+		draw( aCiviClothes);
+		draw( aNarcClothes);
+		stop.update( aCopClothes);
+		stop.update( aCiviClothes);
+		stop.update( aNarcClothes);
+		}
+	
+	if ((current.sonny == in.towel.dark ||
+		current.sonny == in.towel.light))
+		{
+		set( enteredRoomInTowel);
+
+		draw( aCopClothes);
+		draw( aCiviClothes);
+		draw( aNarcClothes);
+		stop.update( aCopClothes);
+		stop.update( aCiviClothes);
+		stop.update( aNarcClothes);
+		
+		if  (progress > 70 &&		[	Has pimp suit.
+			progress < 80)			[	Doesn't have pimp suit on.
+			{
+			draw( aPimpClothes);
+			draw( aCane);
+			stop.update( aPimpClothes);
+			stop.update( aCane);
+			}
+		}
+	else
+		{
+		draw( aTowel);
+		stop.update( aTowel);
+		}
+
+	show.pic( );
+	return( );
+	}							[*****	END INIT LOG	*****]
+
+
+
+
+if ((said( undress, rol) ||
+	said( get, dressed, rol) ||
+	said( remove, clothes, rol) ||
+	said( take, off, clothes, rol) ||
+	said( get, towel, rol) ||
+	said( take, towel, rol) ||
+	said( wear, towel, rol) ||
+	said( put, clothes, rol) ||
+	said( get, clothes, rol) ||
+	said( wear, clothes, rol) ||
+	said( take, off, towel, rol) ||
+	said( take, clothes, from, locker, rol) ||
+	said( put, towel, rol) ||
+	said( put, on, clothes, rol) ||
+	said( change, clothes, rol)))
+	{
+	if (progress > 79)
+		{
+		print( 1);				[	Wear that pimp suit
+		}
+	else
+		{
+		if (current.sonny == in.towel.light) [	Wear Pimp Suit only!
+			{
+			current.sonny = disguised.sonny;
+			current.dead = disguised.dead;
+			current.draw = disguised.draw;
+			current.car = cadillac.car;
+
+			progress = 80;
+			set( putTowel);
+			set( getPimpClothes);
+			}
+		else
+			{
+			if (current.sonny != in.towel.dark)
+				{
+				current.sonny = in.towel.dark;
+				set( getTowel);
+				set( putAll);
+
+				set( putCopClothes);
+				set( putCiviClothes);
+				set( putNarcClothes);
+				if (progress > 69)
+					{
+					set( putPimpClothes);
+					}
+				}
+			else					[	Wear some outfit.
+				{
+				if (progress > 69 && progress < 80)
+					{
+					print( 26);	[	Go try the bleach again.
+					}
+				else
+					{
+					set( putTowel);
+
+					if (progress == narc)
+						{
+						current.sonny = sonny.narc;
+						current.dead = dead.sonny.narc;
+						current.Sdead = SDeadNarc;
+						current.draw = sonny.narc.draw;
+						current.car = cadillac.car;
+
+						set( getNarcClothes);
+						}
+					else
+						{
+						if (bluerm.scene && bluerm.scene < 4)
+							{
+							current.sonny = sonny.civies;
+							current.Sdead = SDeadNarc;
+							current.dead = sonny.civies.dead;
+							current.car = corvette.car;
+
+							set( getCiviClothes);
+							}
+						else
+							{
+							current.sonny = in.uniform;
+							current.dead = dead.sonny.uniform;
+							current.Sdead = SDeadCop;
+							current.draw = ego.draw.gun;
+							current.car = patrol.car;
+
+							set( getCopClothes);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+if  (progress > 69 &&
+	said( get, anyword))
+	{
+	print( 2);					 [	too bulky
+	}
+
+if ((putAll ||
+	said( put, all, rol)))
+	{
+	reset( putAll);
+
+	set( putGun);
+	set( putAmmo);
+	set( putBriefcase);
+	set( putKeys);
+	}
+
+if ((getAll ||
+	said( get, all, rol)))
+	{
+	reset( getAll);
+
+	if ((current.sonny == in.towel.dark ||
+		current.sonny == in.towel.light))
+		{
+		print( 18);
+		}
+	else
+		{
+		if (current.sonny == sonny.civies)
+			{
+			set( getKeys);
+			if (!obj.in.room( i.corvkey, current.room))
+				{
+				print( 35);
+				}
+			}
+		else
+			{
+			set( getGun);
+			set( getAmmo);
+			set( getBriefcase);
+			}
+		}
+	}
+
+
+
+
+:text
+
+[	Get things from locker.
+
+if ((getGun ||
+	said( get, gun, rol) ||
+	said( get, cuffs, rol) ||
+	said( get, gun$belt, rol) ||
+	said( wear, gun, rol)))
+	{
+	if ((current.sonny == in.towel.dark ||
+		current.sonny == in.towel.light))
+		{
+		print( 18);
+		}
+	else
+		{
+		if (current.sonny == sonny.civies)
+			{
+			print( 25);
+			}
+		else
+			{
+			if (obj.in.room( i.gun, current.room))
+				{
+				start.update( aGun);
+				erase( aGun);
+				get( i.gun);
+				get( i.cuffs);
+
+				if (!SxGun)
+					{
+					score += 1;
+					set( SxGun);
+					}
+				print( 5);		[ Don't leave home with out it
+				}
+			else {
+				if (check.gun)
+					{
+					if (!getGun)
+						{
+						print( 19);[ gun @ jail
+						}
+					}
+				else {
+					if (has( i.gun)) {
+						if (!getGun)
+							{
+							set( alreadyGotIt);
+							}
+						}
+					else {
+						if (!getGun)
+							{
+							set( dontHaveIt);
+							}
+						}
+					}
+				}
+			}
+		}
+	reset( getGun);
+	}
+
+
+if ((getAmmo ||
+	said( get, ammo, rol) ||
+	said( wear, ammo, rol)))
+	{
+	if ((current.sonny == in.towel.dark ||
+		current.sonny == in.towel.light))
+		{
+		print( 18);
+		}
+	else
+		{
+		if (current.sonny == sonny.civies)
+			{
+			print( 25);
+			}
+		else
+			{
+			if (obj.in.room( i.ammo, current.room))
+				{
+				start.update( aAmmo);
+				erase( aAmmo);
+				get( i.ammo);
+
+				if (!SxAmmo)
+					{
+					score += 1;
+					set( SxAmmo);
+					}
+				print( 7);		[ take a speed loader
+				}
+			else {
+				if (has( i.ammo)) {
+					if (!getAmmo)
+						{
+						set( alreadyGotIt);
+						}
+					}
+				else {
+					if (!getAmmo)
+						{
+						print( 33);[ so you lost, it hu?
+						}
+					}
+				}
+			}
+		}
+	reset( getAmmo);
+	}
+
+
+if ((getBriefcase ||
+	said( get, briefcase, rol) ||
+	said( carry, briefcase, rol)))
+	{
+	if ((current.sonny == in.towel.dark ||
+		current.sonny == in.towel.light))
+		{
+		print( 18);
+		}
+	else
+		{
+		if (current.sonny == sonny.civies)
+			{
+			print( 25);
+			}
+		else
+			{
+			if (obj.in.room( i.case, current.room))
+				{
+				start.update( aBriefcase);
+				erase( aBriefcase);
+				get( i.case);
+
+				if (!SxCase)
+					{
+					score += 1;
+					set( SxCase);
+					}
+				print( 9);		[ rather handy item
+				}
+			else
+				{
+				if (has( i.case))
+					{
+					if (!getBriefcase)
+						{
+						set( alreadyGotIt);
+						}
+					}
+				else
+					{
+					if (!getBriefcase)
+						{
+						print( 32);
+						}
+					}
+				}
+			}
+		}
+	reset( getBriefcase);
+	}
+
+
+if ((getKeys ||
+	said( get, key, rol)))
+	{
+	if ((current.sonny == in.towel.dark ||
+		current.sonny == in.towel.light))
+		{
+		print( 18);
+		}
+	else
+		{
+		if (obj.in.room( i.corvkey, current.room))
+			{
+			if (current.sonny != sonny.civies)
+				{
+				if (!getKeys)
+					{
+					print( 30);	[ won't until shift over
+					}
+				}
+			else {
+				start.update( aKeys);
+				erase( aKeys);
+				get( i.corvkey);
+				if (!SxVetKey) {
+					score += 1;
+					set( SxVetKey);
+					}
+
+				if (!getKeys)
+					{
+					print( 21);	[ snag the keys to your vet
+					}
+				}
+			}
+		else {
+			if (has( i.corvkey)) {
+				if (!getKeys)
+					{
+					set( alreadyGotIt);
+					}
+				}
+			else {
+				if (!getKeys)
+					{
+					print( 34);	[ Gee where are they?
+					}
+				}
+			}
+		}
+	reset( getKeys);
+	}
+
+
+
+if (getTowel)
+	{
+	reset( getTowel);
+	start.update( aTowel);
+	erase( aTowel);
+	print( 29);
+	}
+
+if (getCopClothes)
+	{
+	reset( getCopClothes);
+	start.update( aCopClothes);
+	erase( aCopClothes);
+	}
+
+if (getCiviClothes)
+	{
+	reset( getCiviClothes);
+	start.update( aCiviClothes);
+	erase( aCiviClothes);
+
+	if (!SxClothes)
+		{
+		set( SxClothes);
+		score += 2;
+		}
+	}
+
+if (getNarcClothes)
+	{
+	reset( getNarcClothes);
+	start.update( aNarcClothes);
+	erase( aNarcClothes);
+	}
+
+if (getPimpClothes)
+	{
+	reset( getPimpClothes);
+	start.update( aPimpClothes);
+	erase( aPimpClothes);
+
+	start.update( aCane);
+	erase( aCane);
+	get( i.cane);
+	}
+
+
+
+
+[	Put things in locker.
+
+if ((putGun ||
+	said( put, gun, rol) ||
+	said( put, cuffs, rol) ||
+	said( put, gun$belt, rol) ||
+	said( hang, gun, rol)))
+	{
+	if (obj.in.room( i.gun, current.room))
+		{
+		if (!putGun)
+			{
+			print( 14);
+			}
+		}
+	else
+		{
+		if (has( i.gun))
+			{
+			drop( i.cuffs);
+			draw( aGun)
+			stop.update( aGun);
+			put( i.gun, current.room);
+			if (!putGun)
+				{
+				print( 10);		[ back in the
+				}
+			}
+		else
+			{
+			if (has( i.loaded.gun))
+				{
+				set( putAmmo);		[	let "putAmmo" handle this
+				}
+			else
+				{
+				if (check.gun)
+					{
+					if (!putGun)
+						{
+						print( 19);	[ gun @ jail
+						}
+					}
+				else
+					{
+					if (!putGun)
+						{
+						set( dontHaveIt);
+						}
+					}
+				}
+			}
+		}
+	reset( putGun);
+	}
+
+
+if ((putAmmo ||
+	said( put, ammo, rol)))
+	{
+	if (obj.in.room( i.ammo, current.room))
+		{
+		if (!putAmmo)
+			{
+			print( 14);
+			}
+		}
+	else
+		{
+		if (has( i.loaded.gun))
+			{
+			drop( i.cuffs);
+			drop( i.loaded.gun);
+
+			put( i.gun, current.room);
+			draw( aGun)
+			stop.update( aGun);
+
+			put( i.ammo, current.room);
+			draw( aAmmo)
+			stop.update( aAmmo);
+			if (!putAmmo)
+				{
+				print( 3);
+				}
+			}
+		else
+			{
+			if (has( i.ammo))
+				{
+				put( i.ammo, current.room);
+				draw( aAmmo)
+				stop.update( aAmmo);
+				if (!putAmmo)
+					{
+					print( 12);	[ return to locker
+					}
+				}
+			else {
+				if (!putAmmo)
+					{
+					set( dontHaveIt);
+					}
+				}
+			}
+		}
+	reset( putAmmo);
+	}
+
+
+if ((putBriefcase ||
+	said( put, briefcase, rol)))
+	{
+	if (obj.in.room( i.case, current.room))
+		{
+		if (!putBriefcase)
+			{
+			print( 14);
+			}
+		}
+	else {
+		if (!has( i.case))
+			{
+			if (!putBriefcase)
+				{
+				set( dontHaveIt);
+				}
+			}
+		else
+			{
+			draw( aBriefcase)
+			stop.update( aBriefcase);
+			put( i.case, current.room);
+
+			work = 38;			[	rm.briefcase
+			if (has( i.TB)) 	{put( i.TB,  work);}
+			if (has( i.NB)) 	{put( i.NB,  work);}
+			if (has( i.pen)) 	{put( i.pen, work);}
+
+			if (!putBriefcase)
+				{
+				print( 15);		[ return to locker
+				}
+			}
+		}
+	reset( putBriefcase);
+	}
+
+
+if ((putKeys ||
+	said( put, key, rol) ||
+	said( hang, key, rol)))
+	{
+	if (obj.in.room( i.corvkey, current.room))
+		{
+		if (!putKeys)
+			{
+			print( 14);
+			}
+		}
+	else {
+		if (has( i.corvkey)) {
+			draw( aKeys);
+			stop.update( aKeys);
+			put( i.corvkey, current.room);
+
+			if (!putKeys)
+				{
+				print( 22);		[ Keys returned to locker affirmative
+				}
+			}
+		else {
+			if (!putKeys)
+				{
+				set( dontHaveIt);
+				}
+			}
+		}
+	reset( putKeys);
+	}
+
+
+if (putTowel)
+	{
+	reset( putTowel);
+	draw( aTowel);
+	stop.update( aTowel);
+
+	if (!enteredRoomInTowel)
+		{
+		print( 36);
+		}
+	}
+
+if (putCopClothes)
+	{
+	reset( putCopClothes);
+	draw( aCopClothes);
+	stop.update( aCopClothes);
+	}
+
+if (putCiviClothes)
+	{
+	reset( putCiviClothes);
+	draw( aCiviClothes);
+	stop.update( aCiviClothes);
+	}
+
+if (putNarcClothes)
+	{
+	reset( putNarcClothes);
+	draw( aNarcClothes);
+	stop.update( aNarcClothes);
+	}
+
+if (putPimpClothes)
+	{
+	reset( putPimpClothes);
+	put( i.suit, current.room);
+	draw( aPimpClothes);
+	stop.update( aPimpClothes);
+
+	put( i.cane, current.room);
+	draw( aCane);
+	stop.update( aCane);
+
+	if (progress == 70)
+		{
+		progress = 71;
+		}
+	}
+	 
+
+
+[ look 
+
+if ((said( look) ||
+	said( look$in, locker) ||
+	said( look, locker) ||
+	said( look, room)))
+	{
+	print( 16);
+
+	if (obj.in.room( i.gun, current.room))
+		{
+		print( 4);
+		}
+
+	if (obj.in.room( i.ammo, current.room))
+		{
+		print( 6);
+		}
+
+	if (obj.in.room( i.case, current.room))
+		{
+		print( 8);
+		}
+
+	if (obj.in.room( i.corvkey, current.room))
+		{
+		print( 11);
+		}
+
+	if  (current.sonny != in.towel.light &&
+		current.sonny != in.towel.dark)
+		{
+		print( 13);
+		}
+
+	if (current.sonny != in.uniform)
+		{
+		print( 17);
+		}
+
+	if (current.sonny != sonny.civies)
+		{
+		print( 20);
+		}
+
+	if (current.sonny != sonny.narc)
+		{
+		print( 23);
+		}
+
+	if (obj.in.room( i.suit, current.room))
+		{
+		print( 24);
+		}
+
+	if (obj.in.room( i.cane, current.room))
+		{
+		print( 27);
+		}
+	}
+
+
+if (obj.in.room( i.gun, current.room) &&
+	said( look, gun, rol))
+	{
+	print( 4);
+	}
+
+if (obj.in.room( i.ammo, current.room) &&
+	said( look, ammo, rol))
+	{
+	print( 6);
+	}
+
+if (obj.in.room( i.case, current.room) &&
+	said( look, case, rol))
+	{
+	print( 8);
+	}
+
+if (obj.in.room( i.corvkey, current.room) &&
+	said( look, keys, rol))
+	{
+	print( 11);
+	}
+
+if (said( look, towel, rol))
+	{
+	if  (current.sonny != in.towel.light &&
+		current.sonny != in.towel.dark)
+		{
+		print( 13);
+		}
+	else
+		{
+		print( 28);
+		}
+	}
+
+
+if ((said( look, clothes, rol) ||
+	said( look, white$suit, rol) ||
+	said( look, jeans, rol) ||
+	said( look, jeans, tshirt, rol)))
+	{
+	if (current.sonny != in.uniform)
+		{
+		print( 17);
+		}
+
+	if (current.sonny != sonny.civies)
+		{
+		print( 20);
+		}
+
+	if (current.sonny != sonny.narc)
+		{
+		print( 23);
+		}
+
+	if (obj.in.room( i.suit, current.room))
+		{
+		print( 24);
+		}
+	}
+
+if (obj.in.room( i.cane, current.room) &&
+	said( look, cane, rol))
+	{
+	print( 27);
+	}
+
+
+
+[
+:exit
+[
+
+if ((said( close, locker, rol) ||
+	said( look, away, rol) ||
+	said( stop, looking, locker, rol) ||
+	said( lock, locker, rol) ||
+	said( lock, door, rol) ||
+	said( close, door, rol)))
+	{
+	if (current.sonny == disguised.sonny)
+		{
+		print( 31);
+		}
+
+	dynamic2 = 5;
+	sound( s.door.close, snd.done);
+	}
+
+if (dynamic2 && snd.done) {
+	reset( snd.done);
+	new.room.f( dynamic2);
+	}
+
+

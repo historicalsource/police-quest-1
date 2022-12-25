@@ -1,0 +1,53 @@
+[ POKER QUEST
+[ rm75.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. July 24, 1987
+[ Last Update August 20, 1987al
+
+[	All these messages are included in EVERY poker room that has messages!!
+[Wasteful, but true!! (And safe!)
+
+
+											[	Old room-message#
+
+%message	1	"Gene"									[	75-1
+%message	2	"Otto"									[	75-2
+%message	3	"Frank"									[	75-3
+%message	4	"Whitey"									[	75-4
+%message	5	"You have $%v170%v171.     Pot is %v234 chips.  "	[	75-5
+%message	6	""
+%message	7	"All antes are in."							[	75-7
+%message	8	"\"What's your hurry,\nWhitey?\""
+%message	9	""
+%message	10	""
+%message	11	"One Pair"								[	85-1
+%message	12	"Two Pair"								[	85-2
+%message	13	"Three of\na kind"							[	85-3
+%message	14	"Straight"								[	85-4
+%message	15	"Flush"									[	85-5
+%message	16	"Full\nHouse"								[	85-6
+%message	17	"Four of\na kind"							[	85-7
+%message	18	"Straight\nflush"							[	85-8
+%message	19	"Royal\n Flush"							[	85-9
+%message	20	""
+%message	21	"Wins    "								[	81-1
+%message	22	"Folds   "								[	88-10
+%message	23	"Shuffles"								[	87-3
+%message	24	"Deals   "								[	87-4
+%message	25	"        "
+%message	26	"%s2 calls."								[	88-13
+%message	27	"%s2 bets %v236."							[	88-7
+%message	28	"%s2 passes."								[	88-8
+%message	29	"%s2 raises %v206."							[	88-9
+%message	30	"%s2 stands."								[	89-11
+%message	31	""
+%message	32	"How many $10 chips (%v207-%v152)? "			[	88-14
+%message	33	"%s2 folds."
+%message	34	""
+%message	35	"%s2 takes %v158 cards."						[	89-12
+%message	36	"How many cards (0-3)? "						[	89-6
+%message	37	"Which card to discard (1-5)? "				[	89-7
+%message	38	"First card to discard (1-5)? "				[	89-8
+%message	39	"Second card to discard? "					[	89-9
+%message	40	"Last card to discard? "						[	89-10
+

@@ -1,0 +1,31 @@
+[ POLICE QUEST
+[ rm78.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 2, 1987al
+
+[	a stair room in hotel
+
+
+%message	1
+"You cautiously follow Jessie Bains up the flight of stairs."
+
+%message	2
+"The door is locked."
+
+%message	3
+"An interesting manuever on your part has separated you from your suspect.
+ Now what will you do?"
+
+%message	4
+"This door is labeled \"Basement.\""
+
+%message	5
+"This door is labeled \"Cocktail Lounge.\""
+
+%message	6
+"This door is labeled \"Second Floor.\""
+
+%message	7
+"You have no key to fit this door."
+

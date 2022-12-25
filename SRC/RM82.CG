@@ -1,0 +1,50 @@
+[ POKER QUEST 
+[ rm82.cg
+[ By:  Ken Williams, Greg Rowland, and Al Lowe
+[ For: Sierra On-Line Inc. 11/17/86
+[ Last Update August 14, 1987al
+
+%include "rm75.h"
+
+
+[ find.not.kicker -- find the cards that aren't the kicker and discard 'em.
+
+
+
+
+work7 = card1.var.number;
+work8 = 0;
+
+:loopy
+
+work9 =@ work7;
+if (work9 != current.kicker)
+	{
+	work = work7;
+	function = throw.away;
+	call( poker.subs);
+	if (work8 == 0)
+		{
+		throwaway.1 = work;
+		}
+	else
+		{
+		if (work8 == 1)
+			{
+			throwaway.2 = work;
+			}
+		else
+			{
+			throwaway.3 = work;
+			}
+		}
+	++work8;
+	}
+if (work7 < card5.var.number)
+	{
+	++work7;
+	goto loopy;
+	}
+
+:exit
+

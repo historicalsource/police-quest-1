@@ -1,0 +1,644 @@
+[ POLICE QUEST
+[ rm42.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 15, 1987GR
+
+[srgoff.room
+
+
+%include "gamedefs"
+%include "rm42.msg"
+
+
+
+%define	FEATHERS_BEFORE_SHOW_PIC	100
+%define	FEATHERS_AFTER_SHOW_PIC	150
+
+
+[%var	chicken.scene		32
+%define	no.chicken		0
+%define	call.chicken		1
+%define	in.hall.chicken	2
+%define	has.chicken		3
+%define	done.chicken		4
+
+
+%define	moved0			lf0
+%define	moved1			lf1
+%define	conver0			lf2
+%define	conver1			lf3
+%define	nearFileCabinet	lf4
+%define	preventDooleyTalk	lf5
+%define	sawMemo			lf6
+%define	dooleyInRoom		lf7
+%define	doorDone			lf8
+%define	doorOpen			lf9
+%define	musicDone			lf10
+%define	memoOnDesk		lf11
+
+
+%define	moving0			lcl0
+%define	moving1			lcl1
+%define	feathers			lcl2
+%define	dooley			lcl5
+%define	dooleyTimer		lcl6
+
+
+%object	a.dooley		  	1
+%object	a.chicken			2
+%object	aDoor			3
+%object	a.memo			4
+
+
+
+if (init.log) {
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	load.view( v.dooley);
+	load.view( v.Ddoor);
+	load.sound( s.door.open);
+	load.sound( s.door.close);
+
+	animate.obj( a.dooley);
+	set.view( a.dooley, v.dooley);
+	ignore.blocks( a.dooley);
+	position( a.dooley, 122, 137);
+
+	if (priorX) {
+		set.loop( ego, 0);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		}
+	else {
+		position( ego, 70, 143);
+		if (previous.room == 6) {	[rm.hqhall1
+		  	position( ego, 124, 138);
+			}
+		}
+	
+	if (chicken.scene == call.chicken)
+		{
+		set( preventDooleyTalk);
+
+		load.view( v.feathers);
+		load.sound( mChicken);
+
+		animate.obj( a.chicken);
+		load.view( v.chicken);
+		set.view( a.chicken, v.chicken);
+		set.priority( a.chicken, 11);
+		position( a.chicken, 67, 100);
+		draw( a.chicken);
+
+		set( no.script);
+		feathers = FEATHERS_BEFORE_SHOW_PIC;
+		view = 107;
+		loop = 0;
+
+		:loop1;
+		--feathers;
+		if (feathers)
+			{
+			random( 0, 1, cell);
+		 	random(  56, 110, x);
+		 	random( 104, 129, y);
+			add.to.pic.f( view, loop, cell, x, y, four, four);
+			goto loop1;
+			}
+		reset( no.script);
+
+		set.loop( a.dooley, facing.left);
+		draw( a.dooley);
+		sound( mChicken, musicDone);
+		}
+	else {
+		position( a.dooley, 76, 116);
+		set.loop( a.dooley, 2);
+		stop.cycling( a.dooley);
+		draw( a.dooley);
+		set( dooleyInRoom);
+		dooleyTimer = 6;
+		}
+
+	if (hasTbooked && progress < narc) {
+		set( preventDooleyTalk);
+		animate.obj( a.memo);
+		set.view( a.memo, v.Ddoor);
+		set.loop( a.memo, 3);
+		position( a.memo, 76, 101);
+		set.priority( a.memo, 11);
+		stop.cycling( a.memo);
+		draw( a.memo);
+
+		scriptTimer = 5;
+		}
+		
+	animate.obj( aDoor);
+	ignore.blocks( aDoor);
+	ignore.objs( aDoor);
+	set.priority( aDoor, 11);
+	set.view( aDoor, v.Ddoor);
+	set.loop( aDoor, 1);
+	set.cel( aDoor, 0);
+	position( aDoor, 128, 140);
+	stop.cycling( aDoor);
+	draw( aDoor);
+	stop.update( aDoor);
+	work = DOOR_CYCLE_TIME;
+	cycle.time( aDoor, work);
+
+	observe.blocks( ego);
+	draw( ego);
+
+	show.pic( );
+
+	return( );
+
+	}
+
+
+
+if (aSecondPassed && secondsInRoom == 5 && !hasBrief1 && dooleyInRoom)
+	{
+	print( 14);
+	}
+
+if (posn( ego, 134, 127, 150, 141))
+	{
+	new.room( 6);					[rm.hqhall1;
+	}
+
+
+
+[ Dooley in chair
+
+if (posn( a.dooley, 70, 108, 83, 118) &&
+	(!chicken.scene || chicken.scene == 255)) {
+	block( 67, 108, 84, 119);
+	}
+else {
+	unblock( );
+	}
+
+if (posn( ego, 60, 108, 90, 119)) {
+	observe.blocks( ego);
+	}
+else {
+	if (doorOpen) {
+		ignore.blocks( ego);
+		}
+	}
+
+
+reset( nearFileCabinet);
+if (posn( ego, 104, 115, 116, 122))
+	{
+	set( nearFileCabinet);
+	}
+
+distance( ego, a.dooley, dooley);
+if (dooley < dist) {
+	set( nearPerson);
+	}
+
+
+
+[ timers 
+if (moved0) {
+	reset( moved0);
+	++moving0;
+	}
+if (moved1) {
+	reset( moved1);
+	++moving1;
+	}
+
+
+
+[ chicken logics 
+
+if (chicken.scene && chicken.scene < 255)
+	{
+	++feathers;
+	if (feathers < FEATHERS_AFTER_SHOW_PIC) {
+		set( preventSaveGame);
+		set( no.script);
+		view = 107;
+		loop = 0;
+		random( 0, 1, cell);
+	 	random(  56, 110, x);
+	 	random( 104, 129, y);
+	 	add.to.pic.f( view, loop, cell, x, y, four, four);
+		reset( preventSaveGame);
+		reset( no.script);
+		}
+
+
+	if (!moved0) {
+		follow.ego( a.dooley, 10, moved0);
+		chicken.scene = has.chicken;
+		}
+	
+	if (!conver0 &&
+		posn( ego, 110, 0, 110, 166) &&
+		chicken.scene == has.chicken)
+		{
+		print.at( 6, 2, 3, 35);		[ hardly believe his eyes
+		print.at( 7, 2, 3, 35);		[ feathers everywhere
+		set( conver0);
+		observe.blocks( a.dooley);
+		scriptTimer = 5;
+		}
+	
+	if (moving0 && scriptDone) {
+		print.at( 8, 2, 3, 35);		[ if I find out who the gremlin is
+		reset( scriptDone);
+		scriptTimer = 30;
+		}
+	
+
+	[ Stop Dooley Pedaling
+	
+	get.posn( a.dooley, x, y);
+	if ((work1 != x || work2 != y)) {
+		work1 = x;
+		work2 = y;
+		start.cycling( a.dooley);
+		}
+	else {
+		stop.cycling( a.dooley);
+		}
+
+	if ((said( get, chicken, rol) ||
+		said( hold, chicken, rol))) {
+		print( 9);				[ wearing a clean uniform
+		}
+	
+	if (said( take, feather))
+		{
+		print( 46);
+		}
+
+	if (said( look, chicken)) {
+		print( 34);
+		}
+
+	if (said( talk, chicken))
+		{
+		print( 5);
+		}
+
+	if (said( kill, chicken))
+		{
+		print( 36);
+		}
+
+	if ((said( talk, man) ||
+		said( talk, partner)))
+		{
+		print( 38);
+		}
+
+	if (said( talk, chicken, rol)) {
+		print( 10);				[ talking to chicken
+		}
+	}
+
+
+
+[ Promotion logic 
+
+if (hasTbooked && progress < narc && scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+	if (script == 1) {
+		print( 27);				[ Hello sonny let me read memo
+		scriptTimer = 4;
+		}
+
+	if (script == 2) {
+		reposition.to( a.dooley, 76, 114);
+		set.loop( a.dooley, 2);
+		set.view( a.dooley, v.Ddoor);
+		cycle.time( a.dooley, three);
+		start.cycling( a.dooley);
+		erase( a.memo);
+		scriptTimer = 4;
+		}
+
+	if (script == 3) {
+		print( 28);
+		scriptTimer = 4;
+		}
+
+	if (script == 4) {
+		draw( a.memo);
+		set( memoOnDesk);
+
+		set.view( a.dooley, v.dooley);
+		set.loop( a.dooley, 1);
+		cycle.time( a.dooley, one);
+		moving1 = 1;
+		scriptTimer = 10;
+		}
+
+	if (script == 5) {
+		print( 29);				[ get out of my way
+		scriptTimer = 10;
+		script = 4;
+		}
+	}
+
+
+
+if (hasTbooked && progress < narc) {
+	if (moving1 == 1) {
+		move.obj( a.dooley, 98, 118, 2, moved1);
+		}
+
+	if (moving1 == 2) {
+		print( 30);				[ racing out cussing
+		move.obj( a.dooley, 120, 136, 2, moved1);
+		start.update( aDoor);
+		end.of.loop( aDoor, doorDone);
+		sound( s.door.open, snd.done);
+		++moving1;
+		}
+	
+	if (moving1 == 4) {
+		print( 31);				[ if can read the memo
+		move.obj( a.dooley, 136, 136, 2, moved1);
+		++moving1;
+		}
+
+	if (moving1 == 6) {
+		print( 32);				[ out side he's going to kill
+		erase( a.dooley);
+		reset( dooleyInRoom);
+		scriptTimer = 0;
+		script = 6;
+		++moving1;
+		}
+	}
+
+	
+
+if (aSecondPassed)
+	{
+	--dooleyTimer;
+	if (dooleyInRoom && dooleyTimer == 1)
+		{
+		if (moroff.scene == 9)		[	He's supposed to be at the hotel
+			{
+			print( 4);
+			}
+		else
+			{
+			if ( !script && !feathers) {
+				random( 2, 3, message);
+				print.f( message);		[ you don't belong here
+				dooleyTimer = 33;
+				}
+			}
+		}
+	}
+	
+
+	
+[ Text 
+
+if (!have.input) {
+	goto exit;
+	}
+
+if (memoOnDesk &&
+	said( get, memo, rol))
+	{
+	if (!posn( ego, 55, 116, 98, 124))
+		{
+		set( notCloseEnough);
+		}
+	else {
+		print( 33);				[ don't be stupid
+		}
+	}
+
+if (memoOnDesk &&
+	said( read, memo, rol))
+	{
+	if (posn( ego, 72, 111, 86, 119))
+		{
+		if (SxMemo)
+			{
+			print( 37);				[ request for transfer OK'd
+			}
+		else
+			{
+			print( 47);				[ transfered anyhow, dumb shit!
+			}
+
+		if (!SxMaceMemo)
+			{
+			set( SxMaceMemo);
+			progress = narc;
+			score += 2;
+			}
+		}
+	else {
+		if (posn( ego, 68, 122, 88, 124))
+			{
+			print( 35);			[ it's upside down
+			}
+		else {
+			set( notCloseEnough);
+			}
+		}
+	}
+
+		
+if (said( open, door)) {
+	if (posn( ego, 117, 128, 134, 140)) {
+		if (doorOpen) {
+			print( 23);			[ door open
+			}
+		else {
+			start.update( aDoor);
+			end.of.loop( aDoor, doorDone);
+			sound( s.door.open, snd.done);
+			}
+		}
+	else {
+	 	print( 25);				[ to far
+		}
+	}
+
+if (said( close, door)) {
+	if (posn( ego, 117, 128, 134, 140)) {
+		if (hit.special) {
+			print( 26);			[ close on body
+			}
+		else {
+			if (!doorOpen) {
+				print( 24);		[door closed
+				}
+			else {
+				start.update( aDoor);
+  				reverse.loop( aDoor, doorDone);
+				sound( s.door.close, snd.done);
+				}
+			}
+		}
+	else {
+		print( 25);				[to far
+		}
+ 	}
+
+if (said( look)) {
+	print( 1);					[ You sizen up my office or somthin
+	}
+
+if (said( hello)) {
+	print( 20);					[ Well Hello Mr. Bonds
+	}
+
+if (said( look, room))
+	{
+	print( 43);
+	}
+
+if (said( get, book))
+	{
+	print( 39);
+	}
+
+if (said( look, book))
+	{
+	print( 40);
+	}
+
+if (said( look, desk))
+	{
+	print( 41);
+	}
+
+if (dooleyInRoom &&
+    (said( look, man) ||
+	said( look, partner)))
+	{
+	print( 42);
+	}
+
+if (!preventDooleyTalk &&
+	dooleyInRoom &&
+    (said( talk, man) ||
+	said( talk, partner)))
+	{
+	print( 45);
+	}
+
+if (said( look, file, cabinet))
+	{
+	if (!nearFileCabinet)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 16);
+		}
+	}
+
+if (said( raise, curtain))
+	{
+	print( 44);
+	}
+
+if (said( open, file, cabinet)) {
+	if (nearFileCabinet) {
+		print( 18);				[ off limits
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( look, plaque)) {
+	if (posn( ego, 95, 109, 113, 117)) {
+		print( 17);				[ Certificate of accomplishment
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( look, trophy)) {
+	if (posn( ego, 36, 109, 56, 118)) {
+		print( 13);
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( look, bookcase)) {
+	if (posn( ego, 36, 109, 58, 120)) {
+		print( 15);				[ volumes of procedures
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( look, picture)) {
+	if (posn( ego, 111, 115, 118, 126))
+		{
+		print( 21);				[ The photograph of Sgt.
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( look, window)) {
+	print( 22);				[ brick work
+	}
+
+if (!have.match && !preventDooleyTalk)
+	{
+	dooleyTimer = 6;
+	}
+
+
+
+[
+:exit
+[
+
+if (doorDone) {
+	reset( doorDone);
+	stop.update( aDoor);
+
+	toggle( doorOpen);
+	if (doorOpen) {
+		ignore.blocks( ego);
+		}
+	else {
+		observe.blocks( ego);
+		}
+	}
+
+if (musicDone)
+	{
+	sound( mChicken, musicDone);
+	}
+

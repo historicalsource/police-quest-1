@@ -1,0 +1,127 @@
+[ POLICE QUEST
+[ rm47.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 8/2/86
+[ Last Update October 10, 1987al
+
+[ lgc.locker
+
+
+%message	1
+"The department has gone to great lengths to organize this undercover
+ operation.
+ Your informant is in a dangerous situation.
+ You're all dressed for the occasion. Now, go do it!"
+
+%message	2
+"You don't need it for this operation. Leave it here."
+
+%message	3
+"You carefully unload your weapon before returning it to your locker."
+
+%message	4
+"You see your weapon in your gun belt."
+
+%message	5
+"The policeman's tool belt! Don't leave home without it."
+
+%message	6
+"There is a speed loader of ammunition on the shelf."
+
+%message	7
+"You take a speed loader with six rounds of .357-magnum, hollow-point,
+ silver-jacketed bullets."
+
+%message	8
+"Your briefcase rests on the bottom of the locker."
+
+%message	9
+"Your briefcase contains many items you'll need in the field."
+
+%message	10
+"You remove the ammunition from your revolver, place it on the shelf,
+ then hang your gunbelt on the locker door."
+
+%message	11
+"The keys to your Corvette are hanging on a hook."
+
+%message	12
+"You replace your ammo on the shelf."
+
+%message	13
+"Your towel is neatly folded in the bottom of the locker."
+
+%message	14
+"It's already in the locker."
+
+%message	15
+"You return the contents to your briefcase and place it in the locker."
+
+%message	16
+"You store your personal gear in your locker."
+
+%message	17
+"Your Lytton PD uniform is hanging neatly on a hanger."
+
+%message	18
+"There's not enough room in that towel!"
+
+%message	19
+"Your gun is still in the jail locker!
+ Perhaps you should get it first."
+
+%message	20
+"Your civilian clothes are hanging on a hanger."
+
+%message	21
+"You grab the keys to your 'Vette."
+
+%message	22
+"You put the keys in your locker."
+
+%message	23
+"An old T-shirt and a pair of jeans hang here."
+
+%message	24
+"Your new, white, pimp suit is hanging on a hanger."
+
+%message	25
+"You have no use for it if you're not in uniform."
+
+%message	26
+"You have your orders. Now, get with the plan and bleach your hair!"
+
+%message	27
+"Your cane with the derringer handle is leaning in the corner."
+
+%message	28
+"Where!?"
+
+%message	29
+"Regulations require a shower before changing."
+
+%message	30
+"You don't need the keys until you're off-duty."
+
+%message	31
+"How wonderful!
+ Fifteen years of service have come to this:
+ wearing a pimp suit to meet a hooker!
+ Now, that's professional advancement!!
+ (Wouldn't your Mommy be proud!)"
+
+%message	32
+"Where's your other briefcase?"
+
+%message	33
+"What did you do with the other ammo?"
+
+%message	34
+"Where did you put your car keys?"
+
+%message	35
+"Change clothes first."
+
+%message	36
+"Ok. Who'll know?"
+

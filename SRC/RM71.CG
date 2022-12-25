@@ -1,0 +1,594 @@
+[ POLICE QUEST
+[ rm71.cg
+[ By:  Greg Rowland, Scott Murphy, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 26, 1987al
+
+[ poker room
+
+
+%include "gamedefs"
+%include "rm71.msg"
+
+
+
+[	%var		progress					31
+[	%define	playingPoker1		160	[ set after intros;
+[	%define	lostPoker1		165	[ set in rm75
+[	%define	wonPoker1			170	[ set in rm70
+[	%define	game2Time			175	[ set in rm67
+[	%define	playingPoker2		180	[ set in rm71 after intros
+[	%define	lostPoker2		185	[ set in rm75
+[	%define	wonPoker2			190
+
+
+
+%define	doorDone			lf0
+%define	nearTable			lf2
+%define	conver0			lf4
+%define	nearPlayers		lf5
+%define	timeToDie			lf6
+%define	fromGame			lf7
+%define	sitting			lf8
+
+						
+%define	closeWait			lcl0
+%define	bainsDistance		lcl1
+%define	doorStatus		lcl5
+	%define	closed	0
+	%define	opening	1
+	%define	open		2
+						
+						
+%object	aBains			1
+%object	aDoor			2
+%object 	aCardTable		3
+
+
+
+if (init.log) {
+	if (forceAtest)
+		{
+		previous.room = 75;
+		progress = wonPoker2;
+		}
+
+	if (debugging && !marked.cash)
+		{
+		marked.cash = 100;
+		}
+
+	prevent.input( );
+	set( game.control);
+
+	load.view( v.door71);
+	load.view( v.bains);
+	load.view( v.cardPlayers);
+	load.view( v.jimmyScSitting);		[	has bains sitting cell
+
+	load.sound( mBadGuy);
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	animate.obj( aBains);
+	set.view( aBains, v.bains);
+	set.loop( aBains, 2);
+	stop.cycling( aBains);
+	ignore.blocks( aBains);
+	position( aBains, 77, 128);
+
+	animate.obj( aDoor);
+	ignore.horizon( aDoor);
+	ignore.blocks( aDoor);
+	ignore.objs( aDoor);
+	set.view( aDoor, v.door71);
+	set.cel( aDoor, 0);
+	set.priority( aDoor, 4);
+	work = DOOR_CYCLE_TIME;
+	cycle.time( aDoor, work);
+	position( aDoor, 133, 141);
+	draw( aDoor);
+	stop.update( aDoor);
+
+	animate.obj( aCardTable);
+	ignore.blocks( aCardTable);
+	ignore.objs( aCardTable);
+	set.priority( aCardTable, 12);
+	set.view( aCardTable, v.cardPlayers);
+	set.loop( aCardTable, 2);
+	set.cel( aCardTable, 1);
+	stop.cycling( aCardTable);
+	position( aCardTable, 58, 143);
+	draw( aCardTable);
+	stop.update( aCardTable);
+
+		
+	start.motion( ego);
+
+	if (previous.room == 75) {
+		set( game.control);
+		set( no.cycling);
+		set( fromGame);
+		set( sitting);
+
+		stop.cycling( ego);
+		ignore.blocks( ego);
+		prevent.input();
+
+		set.view( ego, v.cardPlayers);
+		set.loop( ego, 3);
+		set.cel( ego, 1);
+		position( ego, 88, 135);
+
+		scriptTimer = 4;
+		}
+	else							[	Previous.room was 70.
+		{
+		reset( game.control);
+		accept.input();
+
+		pokerGameMin = marked.cash;
+		if (marked.cash > POKER_MIN)
+			{
+			pokerGameMin -= POKER_MIN;
+			}
+
+		pokerGameMax = marked.cash;
+		if (pokerGameMax < 200)
+			{
+			pokerGameMax += POKER_MAX;
+			}
+
+		hands.played = 0;
+
+		position( ego, 74, 167);
+		progress = playingPoker2;
+		}
+	draw( ego);
+
+	show.pic( );
+	if (fromGame)
+		{
+		set( enable.menu);
+		status.line.on();
+		}
+
+	return( );
+	}							[***		End Inits		***
+
+
+		
+reset( nearTable);
+if (posn(ego, 52, 120, 98, 147)) {
+	set( nearTable);
+	}
+
+distance( ego, aBains, bainsDistance);
+if (bainsDistance < dist) {
+	set( nearPerson);
+	}
+
+reset( nearPlayers);
+if ((posn( ego, 50, 129, 75, 138) ||
+	posn( ego, 66, 124, 83, 145))) {
+	set( nearPerson);				[ global
+	set( nearPlayers);				[ local
+	}
+
+
+
+[*****
+[	handle input
+[*****
+
+if (script > 4 &&
+    (said( come, room, rol) ||
+	said( how, room, rol) ||			[	How about my room?
+	said( room, rol)))				[	Like, come, my, room
+	{
+	print( 18);					[	"come on bankston!"
+	}
+
+if ((said( sit) ||
+	said( sit, down) ||
+	said( sit, chair) ||
+	said( use, chair) ||
+	said( get, chair))) {
+	if (sitting) {
+		print( 13);				[ you are sitting
+		}
+	else {
+		set( func4);
+		}
+	}
+
+if ((said( rise) ||
+	said( rise, up) ||
+	said( use, chair) ||
+	said( get, out, chair) ||
+	said( get, up))) {
+	if (!sitting) {
+		print( 13);				[ you are standing
+		}
+	else {
+		set( func4);
+		}
+	}
+
+if ((said( look ) ||
+	said( look, room )))	{
+	print( 28);
+	}
+
+if ((said( look, ceiling ) ||
+	said( look, up ))) {
+	print( 29);
+	}
+
+if ((said( look, down) ||
+	said( look, floor))) {
+	print( 30);
+	}
+
+if ((said( hello ) ||
+	said( hello, man ) ||
+	said( talk ) ||
+	said( talk, man))) {
+	if (nearTable) {
+		print( 32);
+		}
+	else {
+		print(1);		 			[ existing msg
+		}
+	}
+		
+if (said( look, under, table)) {
+	print( 33);
+	}
+
+ if (said( arrest, man)) {
+	print( 34);
+	}
+
+
+if (said( open, door)) {
+	if (!posn( ego, 122, 135, 130, 143)) {
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (doorStatus != open) {
+			print( 03);			[ coward
+			}
+		}
+	}
+
+if ((said( deal, rol) ||
+	said( anyword, play, poker, rol) ||
+	said( play, poker, rol))) {
+	if (!sitting) {
+		random( 4, 5, work);
+		print.f( work);			[ chair occupied
+		}
+	}
+
+
+[*****
+:no.input
+[*****
+
+
+if (func4) {
+	reset( func4);
+
+	if (nearPlayers) {
+		random( 4, 5, work);
+		print.f( work);			[ chair occupied
+		}
+	else {
+		if (!posn( ego, 88, 130, 95, 137)) {
+			print( 6);			[ on floor thing
+			}
+		else {
+			if (!sitting) {
+				if (previous.room == 75)
+					{
+				 	print( 35);
+					}
+				else
+					{
+					ignore.blocks( ego);
+					stop.motion( ego);
+					stop.cycling( ego);
+					set( game.control);
+					set( no.cycling);
+					prevent.input();
+		
+					set.cel( ego, 1);
+					set.view( ego, v.cardPlayers);
+					set.loop( ego, 3);
+					reposition.to( ego, 88, 135);
+					set( sitting);
+
+					script = 100;
+					scriptTimer = 4;
+					}
+				}
+			else
+				{
+				if ((script <  5  ||
+					script > 99))
+					{
+					print( 3);	[ you can't leave now
+					}
+				else {
+					set( bainsEgoTogether);
+					set.view.f( ego, current.sonny);
+					reposition.to( ego, 88, 137);
+					observe.blocks( ego);
+					reset( game.control);
+					reset( no.cycling);
+					reset( sitting);
+					if (script == 11)
+						{
+						set( scriptDone);
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+
+[	Handle responses to Bains' questions:
+
+if  (have.input &&
+    !have.match &&
+    (script == 1 ||					[	Looking for work?
+	script == 5))					[	Wanna go to my room, big boy?
+	{
+	if ((said( yes, rol) ||
+		said( anyword, yes, rol)))
+		{
+		set( scriptDone);
+		++script;
+		}
+
+	if ((said( no, rol) ||
+		said( anyword, no, rol)))
+		{
+		set( scriptDone);
+		script = 254;
+		}
+
+	if (!have.match)
+		{
+		set( have.match);
+		print( 17);
+		scriptTimer = 2;
+		}
+	}
+
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+	if (script == 1)
+		{
+		if (progress == wonPoker2)
+			{
+			score += 3;
+			reset( scriptDone);
+			print( 14);			[ good poker player
+			print( 15);			[ Frank then asks, Whitey look work
+			accept.input();
+			scriptTimer = 20;
+			}
+		else
+			{
+			scriptTimer = 4;
+			script = 254;
+
+			if (progress == lostPoker2)
+				{
+				print( 36);		[	You're no poker player!
+				}
+			else
+				{
+				print( 37);		[	a quiter, eh?
+				}
+			}
+		}
+
+	if (script == 2)
+		{
+		print( 22);				[	"Well Banksten interested?
+		scriptTimer = 20;
+		script = 1;
+		}
+
+	if (script == 3)
+		{
+		prevent.input( );
+		print( 16);				[	"I like your style
+		start.update( aCardTable);
+		scriptTimer = 3;
+		}
+
+	if (script == 4)
+		{
+		set.cel( aCardTable, 0);
+		draw( aBains);
+		scriptTimer = 3;
+		}
+
+	if (script == 5)
+		{
+		stop.update( aCardTable);
+		print( 18);				[ join me for drink
+		accept.input( );
+		scriptTimer = 20;
+		}
+
+	if (script == 6)
+		{
+		print( 23);				[ Well Banksten what
+		scriptTimer = 20;
+		script = 5;
+		}
+
+	if (script == 7)
+		{
+		scriptTimer = 0;
+		print( 21);				[ Follow me
+		start.cycling( aBains);
+		move.obj( aBains, 99, 128, 0, scriptDone);
+		}
+
+	if (script == 8)
+		{
+		move.obj( aBains, 112, 141, 0, scriptDone);
+		}
+
+	if (script == 9)
+		{
+		move.obj( aBains, 129, 141, 0, scriptDone);
+		}
+
+	if (script == 10)
+		{
+		stop.cycling( aBains);
+
+		start.update( aDoor);
+		end.of.loop( aDoor, scriptDone);
+		}
+
+	if (script == 11)
+		{
+		stop.update( aDoor);
+		doorStatus = open;
+		script = 12;
+		}
+
+	if (script == 12)
+		{
+		if (sitting)
+			{
+			print( 24);
+			scriptTimer = 10;
+			script = 11;
+			}
+		else
+			{
+			scriptTimer = 0;
+			start.cycling( aBains);
+			move.obj( aBains, 141, 141, 0, scriptDone);
+			}
+		}
+
+	if (script == 13)
+		{
+		erase( aBains);
+		}
+
+
+	if (script == 101)
+		{
+		print( 7);				[ the man called Frank
+		print( 8);				[ hello whitey
+		print( 9);				[ Frank begins to shuffle
+		sound( mBadGuy, scriptDone);
+		print( 10);				[ Death Angel
+		if (!sound.on)
+			{
+			reset( scriptDone);
+			scriptTimer = 4;
+			}
+		}
+
+	if (script == 102)
+		{
+		new.room( 75);
+		}
+
+
+
+	if (script == 255)
+		{
+		print( 25);
+		print( 26);
+		print( 27);
+		set( certainDeath);
+		}
+
+[		if (script == )
+[			{
+[			}
+
+	}
+
+
+
+--closeWait;
+if (closeWait == 1) {
+	start.update( aDoor);
+	reverse.loop( aDoor, doorDone);
+	}
+
+if (doorDone) {
+	reset( doorDone);
+	stop.update( aDoor);
+	if (doorStatus == open) {
+		doorStatus = closed;
+		}
+	else {
+		if (doorStatus == opening) {
+			reset( game.control);
+			set( bainsEgoTogether);
+			new.room( 78);
+			}
+		else {
+			doorStatus = open;
+			}
+		}
+	}
+
+
+
+[*****
+:exit
+[*****
+
+if (edge.ego.hit == bottom) {
+	if (!conver0) {
+		print( 3);				[ you can't leave now
+		set( conver0);
+		}
+	}
+else {
+	reset( conver0);
+	}
+
+if (!sitting)
+	{
+	if (doorStatus == open &&
+		posn( ego, 124, 133, 139, 143))
+		{
+		ignore.blocks( ego);
+		}
+	else
+		{
+		observe.blocks( ego);
+		}
+	}
+
+if (posn( ego, 139, 133, 159, 143)) {
+	new.room( 78);
+	}
+

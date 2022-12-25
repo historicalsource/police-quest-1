@@ -1,0 +1,777 @@
+[ POLICE QUEST
+[ rm66.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 10, 1987al
+
+[ 	Elevator hall
+
+
+%include "gamedefs"
+%include "rm66.msg"
+
+
+
+%define	closing			1		[	Elevator status equates.
+%define	movingUp			2
+%define	movingDown		3
+%define	fromBelow			4
+%define	fromAbove			5
+
+%define	doorOpening		1		[	doorStatus equates
+%define	doorOpen	 		2
+%define	doorClosing		3
+%define	doorWaiting		4
+
+
+%define	elevatorDone		lf0
+%define	testElev			lf1
+%define	nextFloor			lf2
+%define	elevatorOpen		lf3
+%define	drawEgo			lf4
+%define	doorDone			lf5
+%define	nearDoorL			lf6
+%define	nearDoorR			lf7
+%define	nearDoorStairs		lf9
+%define	nearDoor			lf10
+%define	bDone			lf11
+
+
+%define	elevatorStatus		lcl0
+%define	doorStatus		lcl1
+%define	bainsDistance		lcl2
+%define	bMove			lcl3
+
+
+%object	aElevator			1
+%object	aDoor			2
+%object	aBains			3
+
+
+
+[ Room Setup 
+
+if (init.log)
+	{
+	set( NOcase);
+
+	set.horizon( 10);
+
+	load.view( v.door66);
+	load.view( v.floorNums);
+	load.view( v.roomNums);
+	
+	if (bainsEgoTogether)
+		{
+		load.view( v.bains);
+		}
+	
+	if (together)
+		{
+		load.logics( 73);						[scDyn
+		load.view( v.jimmyScInElev);
+		}
+	else
+		{
+		load.view( v.jimmyInElev);
+		}
+
+	
+	load.logics( 74);							[hotelText
+
+	load.pic( current.room);
+	draw.pic( current.room);
+
+	animate.obj( aDoor);
+	set.view( aDoor, v.door66);
+	ignore.blocks( aDoor);
+	ignore.objs( aDoor);
+	set.priority( aDoor, 11);
+	position( aDoor, 18, 141);
+	work = DOOR_CYCLE_TIME;
+	cycle.time( aDoor, work);
+	draw( aDoor);
+	
+	if ((previous.room == 76 ||
+		previous.room == 77 ||
+		previous.room == 78))
+		{
+		set.cel( aDoor, 3);
+		stop.update( aDoor);
+		doorStatus = doorWaiting;
+		ignore.blocks( ego);
+		}
+	else
+		{
+		set.cel( aDoor, 0);
+		stop.update( aDoor);
+		}
+
+	if (bainsEgoTogether)
+		{
+		animate.obj( aBains);
+		set.view( aBains, v.bains);
+		set.loop( aBains, 1);
+		ignore.blocks( aBains);
+		position( aBains, 52, 136);
+		draw( aBains);
+		move.obj( aBains, 153, 136, 0, bDone);
+		bMove = 0;
+		}
+
+	animate.obj( aElevator);
+
+	if (together)
+		{
+		set.view( aElevator, v.jimmyScInElev);
+		}
+	else
+		{
+		set.view( aElevator, v.jimmyInElev);
+		}
+	
+	ignore.objs( aElevator);
+	ignore.blocks( aElevator);
+	set.priority( aElevator, 4);
+	
+	if ((previous.room == 65 ||
+		previous.room == 76 ||
+		previous.room == 77 ||
+		previous.room == 78))
+		{
+		position( aElevator, 85, 125);
+		set.loop( aElevator, 0);
+		set.cel( aElevator, 0);
+		draw( aElevator);
+		stop.update( aElevator);
+		}
+	else
+		{
+		if (previousFloor < toFloor)
+			{
+			set.loop( aElevator, 0);
+			set.cel( aElevator, 5);
+			position( aElevator, 85, 167);
+			draw( aElevator);
+			stop.cycling( aElevator);
+			move.obj( aElevator, 85, 125, 0, elevatorDone);
+			elevatorStatus = fromBelow;
+			}
+		
+		if (previousFloor > toFloor)
+			{
+			set.loop( aElevator, 1);
+			set.cel( aElevator, 3);
+			position( aElevator, 85, 31);
+			draw( aElevator);
+			stop.cycling( aElevator);
+			move.obj( aElevator, 85, 125, 0, elevatorDone);
+			elevatorStatus = fromAbove;
+			set( testElev);
+			}
+		}
+
+	
+	if ((!toFloor || toFloor == 2))
+		{
+		add.to.pic( v.floorNums, 0, 0,  92, 59, 15, 4);
+		add.to.pic(  v.roomNums, 0, 0,  53, 73,  4, 4);
+		add.to.pic(  v.roomNums, 0, 1, 126, 73,  4, 4);
+		}
+	
+	if (toFloor == 3)
+		{
+		add.to.pic( v.floorNums, 0, 1,  92, 59, 15, 4);
+		add.to.pic(  v.roomNums, 1, 0,  53, 73,  4, 4);
+		add.to.pic(  v.roomNums, 1, 1, 126, 73,  4, 4);
+		}
+	
+	if (toFloor == 4)
+		{
+		add.to.pic( v.floorNums, 0, 2,  92, 59, 15, 4);
+		add.to.pic(  v.roomNums, 2, 0,  53, 73,  4, 4);
+		add.to.pic(  v.roomNums, 2, 1, 126, 73,  4, 4);
+		}
+
+	if  (previous.room != 64 &&		[	for t.p.'ing
+		previous.room != 65 &&
+		previous.room != 66 &&
+		previous.room != 76 &&
+		previous.room != 77 &&
+		previous.room != 78)
+		{
+		position( ego, 75, 130);
+		toFloor = 2;
+		}
+
+	if ((previous.room == 76 ||
+		previous.room == 77 ||
+		previous.room == 78))
+		{
+		position( ego, 19, 137);
+		}
+
+	if  (previous.room != 66 &&
+		previous.room != 64)
+		{
+		draw( ego);
+		}
+	
+	if (together)
+		{
+		call( 73);				[scDyn
+		}
+
+	show.pic( );
+	return( );					[***		End Inits		***
+	}
+
+
+
+reset( inElevator);
+if (posn( ego, 80, 119, 108,126))
+	{
+	set( inElevator);
+	}
+
+reset( nearDoor);
+reset( nearDoorL);
+if (posn(ego, 50, 121, 65, 126))
+	{
+	set( nearDoor);
+	set( nearDoorL);
+	}
+
+reset( nearDoorR);
+if (posn( ego, 124, 121, 139, 126))
+	{
+	set( nearDoor);
+	set( nearDoorR);
+	}
+
+reset( nearDoorStairs);
+if (posn( ego, 16, 134, 24, 145))
+	{
+	set( nearDoorStairs);
+	}
+
+distance( ego, aBains, bainsDistance);
+if (bainsDistance < dist)
+	{
+	set( nearPerson);
+	}
+
+
+if (bDone)
+	{
+	reset( bDone);
+	erase( aBains);
+	}
+
+if ((doorStatus == doorWaiting ||
+	doorStatus == doorOpen))
+	{
+
+	if (posn( ego, 5, 131, 32, 145))
+		{
+		ignore.blocks( ego);
+		}
+	else
+		{
+		observe.blocks( ego);
+		}
+
+	if (!posn( ego, 11, 128, 32, 145))
+		{
+		start.update( aDoor);
+		reverse.loop( aDoor, doorDone);
+		doorStatus = doorClosing;
+		observe.blocks( ego);
+		}
+	}
+else
+	{
+	if (posn( ego, 26, 128, 32, 130))
+		{
+		ignore.blocks( ego);
+		}
+	else
+		{
+		observe.blocks( ego);
+		}
+	}
+
+
+if (doorDone)
+	{
+	if (doorStatus == doorOpening)
+		{
+		stop.update( aDoor);
+		doorStatus = doorOpen;
+		}
+	
+	if (doorStatus == doorClosing)
+		{
+		stop.update( aDoor);
+		doorStatus = 0;
+		reset( game.control);
+		observe.blocks( ego);
+		}
+	}
+
+
+
+[*****
+[ SAID
+[*****
+
+if (!have.input)
+	{
+	goto no.input;
+	}
+
+if (said( look, door))
+	{
+	if ((nearDoor || nearDoorStairs))
+		{
+		print( 4);
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (said( open, door))
+	{
+	if (nearDoorStairs)
+		{
+		if (together)
+			{
+			print( 2);			[	"SC may do a lot of things.."
+			start.motion( ego);
+			}
+		else
+			{
+			if ((doorStatus != doorOpening ||
+				doorStatus != doorOpen))
+				{
+				start.update( aDoor);
+				end.of.loop( aDoor, doorDone);
+				doorStatus = doorOpening;
+				}
+			else
+				{
+				print( 12);		[	"It is already open."
+				}
+			}
+		}
+	else
+		{
+		if (nearDoor)
+			{	
+			print( 22);
+			}
+		else
+			{
+			set( notCloseEnough);
+			}
+		}
+	}
+
+if (said( close, door))
+	{
+	if (nearDoorStairs)
+		{
+		print( 14);				[	"This door closes automatically."
+		}
+	else
+		{
+		if (nearDoor)
+			{	
+			print( 13);			[	"It is already closed."
+			}
+		else
+			{
+			set( notCloseEnough);
+			}
+		}
+	}
+
+
+
+
+if ((said( key) ||
+	said( unlock, door) ||
+	said( use, key, unlock, door) ||
+	said( unlock, door, use, key) ||
+	said( use, key) ||
+	said( open, with, key) ||
+	said( open, door, with, key)))
+	{
+	if (nearDoor)
+		{
+		print( 10);
+		}
+	else
+		{
+		if (nearDoorStairs)
+			{
+			print( 34);
+			}
+		else
+			{
+			set( notCloseEnough);
+			}
+		}
+	}
+
+if ((said( knock) ||
+	said( knock, door) ||
+	said( knock, on, door)))
+	{
+	if (nearDoorStairs)
+		{
+		print( 35);
+		}
+	else
+		{
+		if (nearDoor)
+			{
+			random( 24, 33, work);
+			print.f( work);
+			}
+		else
+			{
+			set( notCloseEnough);
+			}
+		}
+	}
+
+if (inElevator)
+	{
+	if ((said( look) ||
+		said( look, room) ||
+		said( look, wall) ||
+		said( look, buttons) ||
+		said( look, elevator)))
+		{
+		print( 3);				[	"You are in an elevator.."
+		}
+	
+	if ((said( push, one) ||
+		said( one)))
+		{
+		previousFloor = toFloor;
+		toFloor = 1;
+		set( nextFloor);
+		}
+	
+	if ((said( push, two) ||
+		said( two)))
+		{
+		if (toFloor != 2)
+			{
+			previousFloor = toFloor;
+			toFloor = 2;
+			set( nextFloor);
+			}
+		else
+			{
+			print( 1);			[	"You are already on that floor.."
+			}
+		}
+	
+	if ((said( push, three) ||
+		said( three)))
+		{
+		if (toFloor != 3)
+			{
+			previousFloor = toFloor;
+			toFloor = 3;
+			set( nextFloor);
+			}
+		else
+			{
+			print( 1);			[	"You are already on that floor.."
+			}
+		}
+	
+	if ((said( push, four) ||
+		said( four)))
+		{
+		if (toFloor != 4)
+			{
+			previousFloor = toFloor;
+			toFloor = 4;
+			set( nextFloor);
+			}
+		else
+			{
+			print( 1);			[	"You are already on that floor.."
+			}
+		}
+	
+	if (said( push, button, rol))
+		{
+		print( 11);
+		}
+
+	if (nextFloor && together)
+		{
+		set( togetherInElev);
+		erase( aSweetCheeks);
+		reset( caughtEgo);
+		reset( testDist);
+		}
+	}
+else
+	{
+	if (said( look, elevator))
+		{
+		print( 5);
+		}
+	}
+
+
+if ((said( look) ||
+	said( look, room)))
+	{
+	if (toFloor == 2)
+		{
+		print( 15);
+		}
+	else
+		{
+		if (toFloor == 3)
+			{
+			print( 16);
+			}
+		else
+			{
+			print( 17);
+			}
+		}
+	}
+
+
+call( 74);						[hotelText
+
+
+
+[*****
+:no.input
+[*****
+
+if (nextFloor)
+	{
+	reset( nextFloor);
+
+	if (progress < undercover)
+		{
+		print( 23);
+		}
+	else
+		{
+		set( game.control);
+		prevent.input();
+		start.update( aElevator);
+		set.cel( aElevator, 1);
+		end.of.loop( aElevator, elevatorDone);
+		erase( ego);
+		elevatorStatus = closing;
+		}
+	}
+
+if (elevatorOpen)
+	{
+	reset( elevatorOpen);
+	stop.update( aElevator);
+	reset( game.control);
+	accept.input();
+	elevatorStatus = 0;
+	reset( testElev);
+	}
+
+if (elevatorDone)
+	{
+	reset( elevatorDone);
+	if ((elevatorStatus == fromBelow ||
+		elevatorStatus == fromAbove))
+		{
+		reverse.loop( aElevator, elevatorOpen);
+		set( drawEgo);
+		}
+	
+	if (elevatorStatus == movingUp)
+		{
+		if (bainsEgoTogether)
+			{
+			reset( bainsEgoTogether);
+			print( 21);			[	You lost him!
+			set( certainDeath);
+			}
+		else
+			{
+			new.room( 66);
+			}
+		}
+	
+	if (elevatorStatus == movingDown)
+		{
+		if (toFloor == 1)
+			{
+			erase( aElevator);
+			if (bainsEgoTogether)
+				{
+				reset( bainsEgoTogether);
+				print( 21);		[	You lost him!
+				set( certainDeath);
+				}
+			else
+				{
+				new.room( 64);
+				}
+			}
+		else
+			{
+			erase( aElevator);
+			if (bainsEgoTogether)
+				{
+				reset( bainsEgoTogether);
+				print( 21);		[	You lost him!
+				set( certainDeath);
+				}
+			else
+				{
+				new.room( 66);
+				}
+			}
+		}
+	
+	if (elevatorStatus == closing)
+		{
+		if (toFloor > previousFloor)
+			{
+			set.loop( aElevator, 1);
+			set.cel( aElevator, 0);
+			stop.cycling( aElevator);
+			move.obj( aElevator, 85, 31, 0, elevatorDone);
+			elevatorStatus = movingUp;
+			set( testElev);
+			}
+		else
+			{
+			move.obj( aElevator, 85, 167, 0, elevatorDone);
+			elevatorStatus = movingDown;
+			}
+		}
+	}
+
+
+if (drawEgo)
+	{
+	current.cel( aElevator, work);
+	if (work == 1)
+		{
+		reset( drawEgo);
+		start.motion( ego);
+		set.loop( ego, 2);
+		set.cel( ego, 0);
+		
+		if (togetherInElev)
+			{
+			set( doSc);
+			position( ego, 95, 123);
+			}
+		else
+			{
+			position( ego, 91, 123);
+			}
+		draw( ego);
+		}
+	}
+
+if (testElev)
+	{
+	get.posn( aElevator, x, y);
+	if (elevatorStatus == movingUp)
+		{
+		if (y == 46)
+			{
+			set.cel( aElevator, 4);
+			}
+		}
+	
+	if (elevatorStatus == fromAbove)
+		{
+		if (y == 45)
+			{
+			set.loop( aElevator, 0);
+			set.cel( aElevator, 5);
+			}
+		}
+	}
+
+
+
+[*****
+:exit
+[*****
+
+if (edge.ego.hit == right)
+	{
+	new.room( 65);
+	}
+
+if (posn( ego, 1, 131, 11, 145))
+	{
+	if (toFloor == 2)
+		{
+		if (bainsEgoTogether)
+			{
+			reset( bainsEgoTogether);
+			print( 21);			[	You lost him!
+			set( certainDeath);
+			}
+		else
+			{
+			new.room( 78);
+			}
+		}
+	
+	if (toFloor == 3)
+		{
+		if (bainsEgoTogether)
+			{
+			reset( bainsEgoTogether);
+			print( 21);			[	You lost him!
+			set( certainDeath);
+			}
+		else
+			{
+			new.room( 77);
+			}
+		}
+	
+	if (toFloor == 4)
+		{
+		if (bainsEgoTogether)
+			{
+			reset( bainsEgoTogether);
+			print( 21);			[	You lost him!
+			set( certainDeath);
+			}
+		else
+			{
+			new.room( 76);
+			}
+		}
+	}
+
+
+if (together)
+	{
+	call( 73);					[scDyn
+	}
+

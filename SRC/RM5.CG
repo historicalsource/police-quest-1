@@ -1,0 +1,724 @@
+[ POLICE QUEST
+[ rm5.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 7/30/86
+[ Last Update October 4, 1987GR
+
+[ rm.locker
+
+
+%include "gamedefs"
+%include "rm5.msg"
+%include "rm5.h"
+
+
+
+if (init.log)
+	{
+	functionKeys = SHOWER;
+
+	dynamic1 = 0;
+	dynamic2 = 0;
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	if (locker.scene == beforeBrief1 && hasBrief1)
+		{
+		locker.scene = janitor1;
+		reset( shower.talk0);
+		reset( shower.talk1);
+		reset( shower.talk2);
+		}
+	
+	if (locker.scene < beforeBrief2 && hasBrief2)
+		{
+		locker.scene = janitor2;
+		}
+	
+	if (locker.scene < janitor3 && narcoff.scene)
+		{
+		locker.scene = janitor3;
+		}
+
+	set.string( 1, 17);
+	set.string( 2, 18);
+	set.horizon( 0);
+
+	load.view( v.in.towel.light);
+	load.view( v.toilet);
+	load.view( v.shower);
+	load.sound( s.door.open);
+	load.sound( s.door.close);
+
+	animate.obj( aPants);
+	ignore.blocks( aPants);
+	set.view( aPants, v.toilet);
+	set.priority( aPants, 4);
+	position( aPants, 129, 155);
+	draw( aPants);
+	stop.update( aPants);
+	
+	if (locker.scene == beforeBrief1)
+		{						[during brief1
+		dynamic1 = 39;				[lgc.lockerm1
+		load.view( v.steve);
+		load.view( v.buford);
+		load.view( v.jack);
+		}
+	else
+		{
+		if (locker.scene == beforeBrief2)
+			{
+			dynamic1 = 39;			[lgc.lockerm2
+			load.view( v.steve);
+			load.view( v.jackson);
+			load.view( v.jack);
+			}
+		else
+			{
+			dynamic1 = 29;			[lgc.janitor
+			load.view( v.janitor);
+			}
+		}
+
+	animate.obj( a.sonny.shower);
+	animate.obj( a.towel);
+
+	set.view( a.sonny.shower, v.shower);
+	set.view( a.towel, v.shower);
+
+	set.loop( a.sonny.shower, 1);
+	set.loop( a.towel, 2);
+
+	stop.cycling( a.towel);
+	
+	if (has( i.bleach))
+		{
+		set.cel( a.towel, 1);
+		}
+	else
+		{
+		set.cel( a.towel, 0);
+		}
+
+	position( a.sonny.shower, 94, 84);
+	position( a.towel, 99, 86);
+
+	set.priority( a.sonny.shower, 4);
+	set.priority( a.towel, 9);
+
+	if (dynamic1)
+		{
+		load.logics.f( dynamic1);
+		call.f( dynamic1);
+		}
+	
+	if (priorX)
+		{
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		}
+	else
+		{
+		position( ego, 20, 130);
+		}
+
+	if (shower.on)
+		{
+		draw( a.sonny.shower);
+		set( leftShowerOn);
+		}
+
+	draw( ego);
+	show.pic( );
+	return( );
+	}
+
+
+
+if (dynamic1)
+	{
+	call.f( dynamic1);
+	}
+
+if (posn( ego, 0, 122, 19, 132))
+	{
+	if (locker.scene == janitor1)
+		{
+		reset( shower.talk0);
+		reset( shower.talk1);
+		reset( shower.talk2);
+		}
+	
+	if (locker.scene == janitor2)
+		{
+		reset( shower.talk0);
+		reset( shower.talk1);
+		reset( shower.talk2);
+		}
+	
+	new.room( 6);					[	rm.hqhall1;
+	}
+
+
+
+if (!hit.special)					[	handle special priority problems
+	{
+	release.priority( ego);
+	}
+else
+	{
+	if (posn( ego, 62, 115, 95, 131))
+		{
+		set.priority( ego, 12);
+		}
+	
+	if (posn( ego, 45, 130, 57, 143))
+		{
+		set.priority( ego, 11);
+		}
+	
+	if (posn( ego, 100, 130, 106, 143))
+		{
+		set.priority( ego, 11);
+		}
+	}
+
+
+
+if (leftShowerOn &&
+	posn( ego, 40, 100, 50, 167))
+	{
+	reset( leftShowerOn);
+	
+	if (score)
+		{
+		print( 10);
+		score -= 1;
+		}
+	else
+		{
+		print( 32);
+		}
+	}
+
+
+
+set( dressed);
+if ((current.sonny == 4 ||
+	current.sonny == 7))
+	{
+	reset( dressed);
+	}
+
+reset( inShower);
+if (posn( ego, 90, 90, 106, 96))
+	{
+	set( inShower);
+	}
+
+reset( nearToilet);
+if (posn( ego, 109, 111, 144, 166))
+	{
+	set( nearToilet);
+	}
+
+
+
+
+[ Animation timers 
+
+if (moved0)
+	{
+	reset( moved0);
+	++moving0;
+	}
+if (moved1)
+	{
+	reset( moved1);
+	++moving1;
+	}
+if (moved2) {
+	reset( moved2);
+	++moving2;
+	}
+if (moved3) {
+	reset( moved3);
+	++moving3;
+	}
+
+
+
+[ Shower logics 
+
+if (func10)
+	{
+	reset( func10);
+	if (!shower.on)
+		{
+		set( turnShowerOn);
+		}
+	else {
+		set( turnShowerOff);
+		}
+	}
+
+
+if ((turnShowerOn ||
+	turnShowerOff))
+	{
+	if (posn( ego, 55, 90, 68, 96))
+		{
+		if (dynamic1 == 39)
+			{
+			print( 15);			[ shower occupied
+			}
+		else
+			{
+			print( 16);			[ doesn't function
+			}
+		}
+	else
+		{
+		if (!inShower)
+			{
+			print( 7);			[ out of reach
+			}
+		else
+			{
+			if (turnShowerOn)
+				{
+				if (shower.on)
+					{
+					print( 5);	[ shower IS on
+					}
+				else
+					{
+					draw( a.sonny.shower);
+					set( shower.on);
+					print( 17);	[ ah !!!!!!!!!!!
+					}
+				}
+			else
+				{
+				if (!shower.on)
+					{
+					print( 6);	[ shower IS off
+					}
+				else
+					{
+					erase( a.sonny.shower);
+					reset( shower.on);
+					}
+				}
+			}
+		}
+	reset( turnShowerOn);
+	reset( turnShowerOff);
+	}
+		
+
+if (inShower)
+	{
+	if (!conver6 &&
+		shower.on &&
+		dressed)
+		{
+		set( conver6);
+		if (score)
+			{
+			print( 8);				[ clothed
+			score -= 1;
+			}
+		else
+			{
+			print( 33);				[ if had points
+			}
+		}
+	}
+else
+	{
+	reset( conver6);
+	}
+
+
+
+[ Locker logics 
+
+if (in.locker && snd.done)
+	{
+	if (!beenInLocker)
+		{
+		set( beenInLocker);
+		score += 1;
+		}
+	get.posn( ego, priorX, priorY);
+	current.loop( ego, loop);
+	new.room( 47);					[lgc.locker
+	}
+	
+
+
+[ towel stuff 
+if (inShower)
+	{
+	if (!towel && !dressed)
+		{
+		draw( a.towel);
+		stop.update( a.towel);
+		set( towel);
+		}
+	}
+else
+	{
+	if (towel)
+		{
+		start.update( a.towel);
+		erase( a.towel);
+		reset( towel);
+		}
+	}
+
+
+
+[ Text response 
+
+if (!have.input)
+	{
+	goto exit;
+	}
+
+
+if (nearToilet)
+	{
+	if ((said( open, door, toilet, rol) ||
+		said( open, stall, door, rol) ||
+		said( open, toilet, door, rol) ||
+   		said( use, toilet, rol)))
+		{
+		random( 22, 25, work);
+		print.f( work);
+		}
+
+	if ((said( talk, rol) ||
+		said( take, piss, rol) ||
+		said( take, shit, rol) ||
+		said( go, toilet, rol) ||
+		said( knock, toilet, rol) ||
+   		said( talk, man, rol) ||
+		said( hello, rol) ||
+		said( talk, occupant, rol) ||
+		said( knock, door, rol)))
+		{
+		random( 26, 29, work);
+		print.f( work);
+		}
+
+	if ((said( look, under, toilet, rol) ||
+		said( look, under, door, rol) ||
+		said( look$in, toilet, rol) ||
+		said( look$in, door, rol)))
+		{
+		print( 30);
+		}
+	}
+
+if ((said( open, locker, rol) ||
+	said( open, door, rol) ||
+	said( look$in, locker, rol) ||
+	said( unlock, locker, rol)))
+	{
+	if (posn( ego, 83, 131, 98, 141))
+		{
+		sound( s.door.open, snd.done);
+		set( in.locker);
+		}
+	else
+		{
+		print( 13);
+		}
+	}
+
+
+if ((said( on) ||
+	said( wash) ||
+	said( wash, me) ||
+	said( wash, me, off) ||
+	said( turn, on) ||
+	said( shower) ||
+	said( take, shower) ||
+	said( turn, shower, on) ||
+	said( turn, on, shower)))
+	{
+	set( turnShowerOn);
+	}
+
+if ((said( off) ||
+	said( turn, off) ||
+	said( turn, off, shower) ||
+	said( turn, shower, off) ||
+	said( close, off) ||
+	said( close, off, shower)))
+	{
+	set( turnShowerOff);
+	}
+
+if (has( i.bleach) &&
+    (said( use, bleach) ||
+	said( use, bleach, hair) ||
+	said( use, bleach, on, hair) ||
+	said( put, bleach, hair) ||
+	said( put, bleach, on, hair) ||
+	said( bleach, my, hair) ||
+	said( bleach, hair)))
+	{
+	if (!inShower)
+		{
+		print( 34);
+		}
+	else
+		{
+		if (!shower.on)
+			{
+			reset( have.match);		[	How can you do that?
+			}
+		else
+			{
+			if (rinseStatus < 3) {
+		    		rinseStatus = 2;
+				print( 38);
+				}
+			}
+		}
+	}
+
+if (has( i.bleach) &&
+    (said( wet) ||
+	said( wash, hair) ||
+	said( wash, my, hair) ||
+	said( clean, hair) ||
+	said( clean, my, hair) ||
+	said( wet, my, hair) ||
+	said( wet, hair)))
+	{
+	if (!inShower)
+		{
+		print( 34);
+		}
+	else
+		{
+		if (!shower.on)
+			{
+			reset( have.match);
+			}
+		else
+			{
+			if (!rinseStatus)
+				{
+				print( 35);
+				rinseStatus = 1;
+				}
+			else
+				{
+				print( 41);
+				}
+			}
+		}
+	}
+
+if (has( i.bleach) &&
+    (said( rinse) ||
+	said( rinse, bleach, off, hair, rol) ||
+	said( rinse, bleach, off, my, hair, rol) ||
+	said( rinse, off, bleach, rol) ||
+	said( rinse, out, bleach, rol) ||
+	said( rinse, bleach, off, rol) ||
+	said( rinse, bleach, out, rol) ||
+	said( rinse, off, my, hair, rol) ||
+	said( rinse, off, hair, rol) ||
+	said( rinse, my, hair, rol) ||
+	said( rinse, hair, rol)))
+	{
+	if (!inShower)
+		{
+		print( 34);
+		}
+	else
+		{
+		if (!shower.on)
+			{
+			reset( have.match);
+			}
+		else
+			{
+			if (rinseStatus == 2)
+				{
+				print( 35);
+				print( 42);
+				scriptTimer = 4;
+				set( game.control);
+				stop.motion( ego);
+				rinseStatus = 3;
+				}
+			else
+				{
+				print( 40);
+				}
+			}
+		}
+	}
+
+if (said( sing, rol))
+	{
+	if (!shower.on)
+		{
+		print( 34);
+		}
+	else
+		{
+		print( 45);
+		}
+	}
+
+if (said( look, locker))
+	{
+   	print( 37);
+	}
+
+if (said( close, locker))
+	{
+	print( 14);
+	}
+
+if (said( lock, locker))
+	{
+	set( OK);
+	}
+
+if (said( look, bench))
+	{
+ 	print( 1);
+	}
+
+if (said( get, bench))
+	{
+ 	print( 2);
+	}
+
+if (said( move, bench))
+	{
+ 	print( 3);
+	}
+
+if (said( look, shower))
+	{
+ 	print( 4);
+	}
+
+if ((said( take, off, clothes) ||
+	said( change, clothes)))
+	{
+ 	print( 9);
+	}
+
+if ((current.sonny == in.towel.dark ||
+	current.sonny == in.towel.light))
+	{
+	if ((said( remove, towel, rol) ||
+		said( take, off, towel, rol)))
+		{
+		print( 44);
+		}
+
+	if ((said( use, towel, rol) ||
+		said( dry, rol)))
+		{
+		print( 43);
+		}
+	}
+
+if (said( climb, locker))
+	{
+ 	print( 11);
+	}
+
+if ((said( climb, bench) ||
+	said( climb, on, bench) ||
+	said( jump, on, bench)))
+	{
+ 	print( 12);
+	}
+
+if ((said( sit) ||
+	said( sit, on, bench) ||	 
+	said( sit, bench) ||	 
+	said( lay, on, bench) ||
+	said( lay, bench) ||
+	said( lie, down, on, bench) ||
+	said( rest) ||
+	said( use, bench) ||
+	said( sit, down)))
+	{
+	print( 18);
+	}
+
+if (said( look, under, bench))
+	{
+	if (!posn( ego, 72, 114, 83, 145))
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 21);
+		}
+	}
+
+
+if ((said( look, up) ||
+	said( look, ceiling)))
+	{
+  	print( 19);
+	}
+
+if ((said( look, down) ||
+	said( look, floor)))
+	{
+  	print( 20);
+	}
+
+if ((said( look) ||
+	said( look, locker, room) ||
+	said( look, room)))
+	{
+	print( 31);
+	}
+
+
+
+[
+:exit
+[
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+
+	set.view( ego, v.in.towel.light);
+	drop( i.bleach);
+	score += 3;
+	current.sonny = in.towel.light;
+	progress = 75;
+
+	force.update( ego);
+
+	reset( game.control);
+	start.motion( ego);
+
+	print.at( 36, 2, 3, 36);			[ Like Magic
+	moroff.scene = 8;
+	}
+

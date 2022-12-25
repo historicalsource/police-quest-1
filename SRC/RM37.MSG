@@ -1,0 +1,263 @@
+[ POLICE QUEST
+[ rm37.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 3/11/87
+[ Last Update October 21, 1987GR
+
+[ rm.biker.bar
+
+
+%message	1
+"You feel your stomach grow tense when you hear,
+ \"Hey, Flat Foot! Move it!!\""
+
+%message	2
+"\"You're in my way Mr. PO-lice.\""
+
+%message	3
+"You radio in, %s2"
+
+%message	4
+"BULLSEYE!"
+
+%message	5
+"You've been nailed by a 4-gram dart,
+ tossed by a 250-pound biker. Good job!"
+
+%message	6
+"Next time, watch where you're walking!"
+
+%message	7
+"The leader of this bunch, comes over to you and says,
+ \"Well, well! If it ain't the Tidy Bowl Man!\""
+
+%message	8
+"\"What the (*&^$(# do you want, PIG?\""
+
+%message	9
+"\"Lose somethin', son?\""
+
+%message	10
+"\"This ain't the kind of place for do-gooders, Chump!\""
+
+%message	11
+"\"83-32, %s3"
+
+%message	12
+"The animal in the black-leather jacket says, "
+
+%message	13
+"%m12\"Hey, Pal! I'm da leader 'round here! Ya wanna talk?
+ Come over here and talk to me!!\""
+
+%message	14
+"\"How do ya plan to make us move our %w2, wimp?\""
+
+%message	15
+"%m12\"We don't talk to no pigs.\""
+
+%message	16
+"\"Say goodnight, Pig! We're gonna kick the S!@#$^&* out of you!!\""
+
+%message	17
+"%m53 If only you had your PR-24!"
+
+%message	18
+"You remove your PR-24 and take a defensive stance.
+ The head biker quickly backs down, saying,
+ \"Excuse us, Sir! If you're going to be rough with us,
+ we'll just leave quietly!\""
+
+%message	19
+"It appears you are just what these low-lifes wanted..."
+
+%message	20
+"...a cop to pound on!"
+
+%message	21
+"As he heads for the back room, the bartender mumbles under his breath,
+ \"Here comes trouble!\""
+
+%message	22
+"\"Com' on, guys. Let's blow this joint!\""
+
+%message	23
+"The local working girl seated at the bar seems to know you!
+ She hops from the stool and shouts..."
+
+%message	24
+"\"SONNY BONDS! 'Zat you?\""
+
+%message	25
+"\"My hero!
+ Boy, am I glad you showed up.
+ Those guys had some pretty strange ideas!\""
+
+%message	26
+"\"What's cookin', good lookin'?\" asks your old friend, Sweet Cheeks Marie.
+ \"It's been too long, Sonny.
+ I haven't seen ya around lately; I just know you want something!\""
+
+%message	27
+"\"Well, you know, Sonny, I'm yours any time you're ready!\""
+
+%message	28
+"Sweet Cheeks' eyes brighten, \"Oh, Sonny!
+ You know I'd just love that, but I'm meeting someone in a few minutes.\"" 
+
+%message	29
+"Obviously, you have come to the right place.
+ Sweet Cheeks Marie spills her guts to you..."
+
+%message	30
+"\"You know what I heard the other day?\" says Marie,
+ \"there's a big dope man tryin' to take over Lytton.
+ He likes to call himself 'The Death Angel!'
+ I don't know no more about him, but this john was sure a peculiar duck.\""
+
+%message	31
+"\"I only seen him once, and I'm not sure about his name.
+ I think it was Coffman, or Hoffman, or something like that.
+ He's a real spiffy dresser, but the funniest thing:
+ the guy has a sweet, little, flower tattoo above his left nipple.
+ It was kinda cute, really.\""
+
+%message	32
+"\"That's the only real news in town, Sweet Thing!\""
+
+%message	33
+"\"Any time, Sonny.%m62"
+
+%message	34
+"Sweet Cheeks steps back into her office and says, \"See ya later, Sonny!\""
+
+%message	35
+"Where are you looking?"
+
+
+%message	36
+"%m64July, '65%m65Donna Lovely%m66"
+
+%message	37
+"%m64June '86%m65Sweet Cheryl%m66"
+
+%message	38
+"A boss plaque on the back wall reads, \"Give Me Harley or Give Me Death!\""
+
+%message	39
+"The bar's speakers sound like they've been \"rode hard and put up wet!\""
+
+%message	40
+"The only thing in the cracks of these walls is an occasional cockroach."
+
+%message	41
+"The table is covered with scratches, dents and cracks.
+ It looks like it was salvaged from Joe's Junk Yard."
+
+%message	42
+"You see a well-used dartboard, and, being a trained observer,
+ you conclude by the pattern of holes around the bulls-eye
+ that local competition isn't that tough."
+
+%message	43
+"The best way to play darts is to save your game, turn off your computer,
+ and buy a dart board!
+ (Maybe you'll get to play darts in \"Police Quest II!\")"
+
+%message	44
+"In return for the information on the Death Angel,
+ you tell Sweet Cheeks of the upcoming undercover crack down on prostitution
+ called \"Operation Trick Trap.\""
+
+%message	45
+"This is the worst dive in town. Everything that crawls lives here!"
+
+%message	46
+"Lots of blood,
+ sweat and tears (and other things) have been deposited in Wino Willy's!"
+
+%message	47
+"\"83-Nora-10, %s3"
+
+%message	48
+"\"Why, Sweet Thing!\" says the hooker.
+ \"You'd arrest your old sweetie, Sweet Cheeks Marie?\""
+
+%message	49
+"Keep moving, you don't need to sit here."
+
+%message	50
+"The barkeep isn't very talkative as he says, \"Nice day outside.\""
+
+%message	51
+"The bartender sums everything up by saying,
+ \"Looks like a good day for fishing.\""
+
+%message	52
+"It's Willy Wily, in the flesh."
+
+%message	53
+"You can't use your gun here,
+ with all%m63around."
+											
+%message	54
+"Why hurt%m63?"
+
+%message	55
+"Once was enough; they're on their way."
+
+%message	56
+"\"What for, Man? We ain't done nothin' wrong!\""
+
+%message	57
+"\"So long, Sweetie!%m62"
+
+%message	58
+"You recognize Sweet Cheeks Marie as an old chum from high school.
+ She obviously failed stewardess school!"
+
+%message	59
+"Probably the lips of those ugly bikers 
+ have been wrapped around these bottles."
+
+%message	60
+"These rickety old stools have seen better days."
+
+%message	61
+"All they've done is hog Carol's parking."
+
+%message	62																													[	PROTECTED MESSAGE.
+"\" says Sweet Cheeks Marie.
+ \"Come see me some time when we can spend more time, Darlin'!\""
+
+%message 63
+" these (presumedly) innocent people "
+
+%message 64
+"On this wall hangs the centerfold from the "
+
+%message 65
+" issue of \"Gnarly Biker\" magazine, \""
+
+%message 66
+", Gnarly of the Month.\""
+
+%message	 67
+"These are some pretty rough-looking dudes!"
+
+%message	68
+"10-97%m71"
+
+%message	69
+"10-8%m72"
+
+%message	70
+"10-20%m71"
+
+%message	71
+" at Wino Willy's.\""
+
+%message	72
+", complaint resolved.\""
+
+

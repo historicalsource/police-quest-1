@@ -1,0 +1,451 @@
+[ POLICE QUEST
+[ rm79.cg
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. 9/18/86
+[ Last Update October 6, 1987GR
+
+[	Bains' room
+
+
+%include "gamedefs"
+%include "rm79.msg"
+
+
+
+%define	DELAY			4		[	later, make slower
+
+%define	bainsSeconds		lcl0
+%define	lclEgoStatus		lcl1
+%define	soundTimer		lcl2
+
+%object	aBains			1
+%object	aCop1			2
+%object	aCop2			3
+%object	aCop3			4
+%object	aBottle			5
+
+
+
+if (init.log)
+	{
+	start.motion( ego);
+	set( game.control);
+	prevent.input();
+	animation.interval = FAST;
+
+	load.view( v.bains);
+	load.view( v.cavalry);
+	load.view( v.bainsShootingDiag);
+	load.view( v.bainsBlasted);
+	load.view( v.jimmyShooting);
+	load.view( v.jimmyBlasted79);
+	load.view( v.bulletDamage79);
+	load.view( v.disguised.sonny);
+
+	load.sound( s.gun.fire);
+	load.sound( sPhoneRing);
+	load.sound( mBadGuy);
+
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+
+	animate.obj( aBains);
+	set.view( aBains, v.bains);
+	set.loop( aBains, 3);
+	position( aBains, 79, 166);
+	draw( aBains);
+	move.obj( aBains, 79, 139, 0, scriptDone);
+
+	animate.obj( aCop1);
+	set.view( aCop1, v.cavalry);
+	set.loop( aCop1, 0);
+	fix.loop( aCop1);
+	position( aCop1, 69, 167);
+
+	animate.obj( aCop2);
+	set.view( aCop2, v.cavalry);
+	set.loop( aCop2, 1);
+	fix.loop( aCop2);
+	position( aCop2, 76, 167);
+
+	animate.obj( aCop3);
+	set.view( aCop3, v.cavalry);
+	set.loop( aCop3, 2);
+	fix.loop( aCop3);
+	position( aCop3, 85, 167);
+
+	animate.obj( aBottle);
+	set.priority( aBottle, 12);
+	set.view( aBottle, v.bulletDamage79);
+	set.loop( aBottle, 0);
+	set.cel( aBottle, 0);
+	cycle.time( aBottle, three);
+	ignore.objs( aBottle);
+	ignore.blocks( aBottle);
+	position( aBottle, 45, 115);
+	draw( aBottle);
+	stop.cycling( aBottle);
+
+	set.loop( ego, 3);
+	position( ego, 72, 167);
+	draw( ego);
+
+	show.pic( );
+	
+	return( );
+
+	}							[***		End Inits		***
+
+
+
+if ((said( transmit, location) ||
+	said( give, location) ||
+	said( give, room, number) ||
+	said( give, number) ||
+	said( number) ||
+	said( call) ||
+	said( room, number) ||
+	said( transmit, number) ||
+	said( transmit, room, number)))
+	{
+	if (!has( i.transmitter))
+		{
+		print( 14);				[	"You whisper into your pocket...
+		}
+	else
+		{
+		if (!SxUsedTrans)
+			{
+			calledBackups = current.room;
+			set( SxUsedTrans);
+			score += 2;
+			}
+
+		print( 12);
+		print( 13);
+		}
+	}
+
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+	if (script == 1)
+		{
+		stop.cycling( aBains);
+		set.loop( aBains, 2);
+		force.update( aBains);
+		print( 9);
+		scriptTimer = DELAY;
+		}
+	
+	if (script == 2)
+		{
+		print( 10);
+		soundTimer = 2;
+		scriptTimer = 3;			[	Let the phone ring.
+		}
+
+	if (script == 3)
+		{
+		print(  1);				[	"The phone rings.
+		sound( sPhoneRing, done);
+		print( 11);
+		move.obj( aBains, 79, 124, 0, scriptDone);
+		start.cycling( aBains);
+		}
+
+	if (script == 4)
+		{
+		move.obj( aBains, 85, 118, 0, scriptDone);
+		}
+
+	if (script == 5)
+		{
+		move.obj( aBains, 134, 118, 0, scriptDone);
+		move.obj( ego, 40, 135, 0, done);
+		}
+
+	if (script == 6)
+		{
+		stop.sound();
+		soundTimer = 0;
+		print( 7);				[	"You step up to the bar and 
+		set.loop( aBains, 1);
+		set.loop( ego, 3);
+		scriptTimer = 15;
+		}
+
+	if (script == 7)
+		{
+		move.obj( aBains, 76, 112, 0, scriptDone);
+		}
+
+	if (script == 8)
+		{
+		stop.cycling( aBains);
+		set.view( aBains, v.bainsShootingDiag);
+		set.loop( aBains, 0);
+		set.cel( aBains, 0);
+		tempX = -1;
+		tempY = 0;
+		reposition( aBains, tempX, tempY);
+		cycle.time( aBains, three);
+		scriptTimer = DELAY;
+		}
+
+	if (script == 9)
+		{
+		sound( mBadGuy, done);
+		print.at( 2, 2, 3, 35);		[	You were recognized!
+
+		if (calledBackups == 65)		[	Called from hallway.
+			{
+			script = 51;
+			}
+		else
+			{
+			script = 101;			[	Jump to losers' script
+			}
+		}
+
+
+
+	if (script == 51)
+		{
+		print( 3);				[	knock on the door
+
+		draw( aCop1);
+		draw( aCop2);
+		draw( aCop3);
+
+		move.obj( aCop1, 66, 164, 0, scriptDone);	[	3 pixels
+		move.obj( aCop2, 76, 162, 0, scriptDone);	[	5 pixels
+		move.obj( aCop3, 86, 160, 0, scriptDone);	[	7 pixels
+		}
+
+	if (script == 52)
+		{
+		stop.cycling( aCop1);
+		}
+
+	if (script == 53)
+		{
+		stop.cycling( aCop2);
+		}
+
+	if (script == 54)
+		{
+		stop.cycling( aCop3);
+
+		set( keep.cycling);
+		set.view( ego, v.jimmyShooting);
+		set.cel( ego, 0);
+		force.update( ego);
+		cycle.time( ego, three);
+		end.of.loop( ego, scriptDone);
+
+		print.at( 4, 2, 3, 35);
+		sound( s.gun.fire, done);
+		end.of.loop( aBains, done);
+		}
+
+	if (script == 55)				[	This happens if DID give location
+		{
+		reset( keep.cycling);
+		sound( s.gun.fire, done);
+		add.to.pic( v.bulletDamage79, 1, 0, 65, 105, 4, 4);
+		scriptCycles = 6;
+		}
+
+	if (script == 56)
+		{
+		sound( s.gun.fire, done);
+		add.to.pic( v.bulletDamage79, 1, 0, 88, 106, 4, 4);
+		scriptCycles = 3;
+		}
+
+	if (script == 57)
+		{
+		sound( s.gun.fire, done);
+		add.to.pic( v.bulletDamage79, 1, 0, 86, 90, 4, 4);
+		scriptCycles = 5;
+		}
+
+	if (script == 58)
+		{
+		sound( s.gun.fire, done);
+		end.of.loop( aBottle, scriptDone);
+		}
+
+	if (script == 59)
+		{
+		sound( s.gun.fire, done);
+		add.to.pic( v.bulletDamage79, 1, 0, 78, 100, 4, 4);
+
+		set.view( aBains, v.bainsBlasted);
+		set.cel( aBains, 0);
+		work = DEATH_CYCLE_TIME;
+		cycle.time( aBains, work);
+		end.of.loop( aBains, scriptDone);
+		}
+
+	if (script == 60)
+		{
+		scriptTimer = DELAY;		[	Pause to survey death scene!
+		}
+
+	if (script == 61)
+		{
+		print( 5);				[	"Bains is taken down 
+		scriptTimer = DELAY;
+		}
+
+	if (script == 62)
+		{
+		print( 6);
+		scriptTimer = 10;
+		}
+
+	if (script == 63)
+		{
+		new.room( 103);
+		}
+
+
+
+
+	if (script == 101)				[	Didn't call backups in time.
+		{
+		sound( s.gun.fire, done);
+		end.of.loop( aBains, scriptDone);
+		end.of.loop( aBottle, done);
+		}
+
+	if (script == 102)
+		{
+		set.cel( aBains, 0);
+		end.of.loop( aBains, done);
+
+		set( keep.cycling);
+		set.view( ego, v.jimmyBlasted79);
+		set.cel( ego, 0);
+		ego.x -= 12;
+		reposition.to.f( ego, ego.x, ego.y);
+		work = DEATH_CYCLE_TIME;
+		cycle.time( ego, work);
+		sound( s.gun.fire, done);
+		end.of.loop( ego, scriptDone);
+		}
+
+	if (script == 103)
+		{
+		reset( keep.cycling);
+		scriptTimer = DELAY;
+		}
+
+	if (script == 104)
+		{
+		if (!calledBackups)			[	Didn't call at ALL!?
+			{
+			print( 15);			[	"Due to your failure to
+			set( certainDeath);
+			}
+		else
+			{
+			script = 200;
+			}
+		}
+
+	if (script == 200)
+		{
+		draw( aCop1);
+		draw( aCop2);
+		draw( aCop3);
+
+		move.obj( aCop1, 66, 164, 0, scriptDone);	[	3 pixels
+		move.obj( aCop2, 76, 162, 0, scriptDone);	[	5 pixels
+		move.obj( aCop3, 86, 160, 0, scriptDone);	[	7 pixels
+		}
+
+	if (script == 201)
+		{
+		stop.cycling( aCop1);
+		}
+
+	if (script == 202)
+		{
+		stop.cycling( aCop2);
+		}
+
+	if (script == 203)
+		{
+		stop.cycling( aCop3);
+
+		sound( s.gun.fire, done);
+		set.cel( aBains, 0);
+		end.of.loop( aBains, scriptDone);
+		}
+
+	if (script == 204)				[	This happens if DID give location
+		{
+		sound( s.gun.fire, done);
+		add.to.pic( v.bulletDamage79, 1, 0, 65, 105, 4, 4);
+		scriptCycles = 6;
+		}
+
+	if (script == 205)
+		{
+		sound( s.gun.fire, done);
+		add.to.pic( v.bulletDamage79, 1, 0, 88, 106, 4, 4);
+		scriptCycles = 3;
+		}
+
+	if (script == 206)
+		{
+		sound( s.gun.fire, done);
+		add.to.pic( v.bulletDamage79, 1, 0, 78, 100, 4, 4);
+
+		set.view( aBains, v.bainsBlasted);
+		set.cel( aBains, 0);
+		work = DEATH_CYCLE_TIME;
+		cycle.time( aBains, work);
+		end.of.loop( aBains, scriptDone);
+		}
+
+	if (script == 207)
+		{
+		scriptTimer = DELAY;		[	Pause to survey death scene!
+		}
+
+	if (script == 208)
+		{
+		print( 5);				[	"Bains is taken down 
+		scriptTimer = DELAY;
+		}
+
+	if (script == 209)
+		{
+		print( 8);
+		set( certainDeath);
+		}
+
+	}
+
+
+
+if (aSecondPassed)
+	{
+	--soundTimer;
+	if (soundTimer == 1)
+		{
+		sound( sPhoneRing, done);
+		soundTimer = 4;
+		}
+	}

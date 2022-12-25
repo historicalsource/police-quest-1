@@ -1,0 +1,18 @@
+[ POLICE QUEST
+[ rm93.cg
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. September 17, 1987
+[ Last Update September 17, 1987GR
+
+
+[ lgcOceanFront
+
+
+%include "gamedefs"
+%include "rm93.msg"
+
+
+if ((said( look) ||
+	said(look, room))) {
+	print( 1);
+	}

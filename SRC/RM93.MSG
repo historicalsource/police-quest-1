@@ -1,0 +1,19 @@
+[ POLICE QUEST
+[ rm93.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. September 17, 1987
+[ Last Update September 17, 1987GR
+
+
+
+[ lgcOceanFront
+
+
+
+%message 1
+"Looking out over the ocean,
+ you see perfect ten- to twelve-foot \"peelers\" sliding out of mirror glass,
+ and realize this is a rotten day to be working."
+
+
+

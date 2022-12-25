@@ -1,0 +1,194 @@
+[ POKER QUEST
+[ rm85.cg
+[ By:  Ken Williams, Greg Rowland, and Al Lowe
+[ For: Sierra On-Line Inc. 11/17/86
+[ Last Update September 24, 1987al
+
+%include	"rm75.h"
+%include	"rm75.msg"		[	This way every dynamic uses same text.
+
+
+[ score.hand -- let's see who's got the biggest one!
+
+
+
+his.hand = h.garbage;				[	Assume he ain't got shit!
+current.hand = h.garbage;
+
+function = sort.cards;
+call( poker.subs);
+
+
+function = test.same.suit;			[	Is it a royal flush?
+call( poker.subs);
+if (same.suit)
+	{
+	function = test.straight;
+	call( poker.subs);
+	if (is.straight)
+		{
+		[If one card is an ace, it's royal; otherwise, it's just a straight.
+		if ((card1 == ace ||
+			card2 == ace ||
+			card3 == ace ||
+			card4 == ace ||
+			card5 == ace))
+			{
+			his.hand = h.rflush;
+			}
+		else
+			{
+			his.hand = h.sflush;
+			}
+		card = card5;
+		goto put.it.out;
+		}
+	}
+
+
+function = count.most.of.one.type;		[	Is it a 4 of a kind?
+call( poker.subs);
+if (count == 4)
+	{
+	his.hand = h.4kind;
+	goto put.it.out;
+	}
+
+
+if (count == 3)					[	Is it a a full house?
+	{
+	current.kicker = card;
+	if (card != card1)
+		{
+		card = card1;
+		function = how.many.of.card;
+		call( poker.subs);
+		}
+	else
+		{
+		if (card != card2)
+			{
+			card = card2;
+			function = how.many.of.card;
+			call( poker.subs);
+			}
+		else
+			{
+			if (card != card3)
+				{
+				card = card3;
+				function = how.many.of.card;
+				call( poker.subs);
+				}
+			else
+				{
+				card = card4;
+				function = how.many.of.card;
+				call( poker.subs);
+				}
+			}
+		}
+	card = current.kicker;
+	if (count2 == 2)
+		{
+		his.hand = h.fullh;
+		goto put.it.out;
+		}
+	}
+
+
+function = test.same.suit;			[	Is it a flush?
+call( poker.subs);
+if (same.suit)
+	{
+	his.hand = h.flush;
+	card = card5;
+	goto put.it.out;
+	}
+
+
+function = test.straight;			[	Is it a straight?
+call( poker.subs);
+if (is.straight)
+	{
+	his.hand = h.straight;
+	card = card5;
+	goto put.it.out;
+	}
+
+
+if (count == 3)					[	Is it a 3 of a kind?
+	{
+	his.hand = h.3kind;
+	goto put.it.out;
+	}
+
+
+if (count == 2)					[	Is it a 2 pair?
+	{
+	if (f.2pair)
+		{
+		his.hand = h.2pair;
+		card = card4;
+		goto put.it.out;
+		}
+	}
+
+
+if (count == 2)					[	Is it a pair?
+	{
+	his.hand = h.2kind;
+	goto put.it.out;
+	}
+
+current.kicker = card5;
+
+goto exit;
+
+
+
+[*****
+:put.it.out
+[*****
+
+current.hand = his.hand;
+current.kicker = card;
+
+if (dont.show.hands)
+	{
+	goto exit;
+	}
+
+if (y == 43)
+	{
+	base = 4;
+	}
+else
+	{
+	if (y == 78)
+		{
+		base = 8;
+		}
+	else
+		{
+		if (y == 113)
+			{
+			base = 12;
+			}
+		else
+			{
+			base = 16;
+			}
+		}
+	}
+
+
+box = 0;
+view = his.hand;
+view += 10;						[	To print messages 11-19.
+display.f( base, box, view);
+
+[*****
+:exit
+[*****
+

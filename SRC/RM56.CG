@@ -1,0 +1,645 @@
+[ POLICE QUEST
+[ rm56.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls, and Al Lowe
+[ For: Sierra On-Line Inc. 11/21/86
+[ Last Update October 12, 1987GR
+
+[ rm.park.entrance
+
+
+%include "gamedefs"
+%include "rm56.msg"
+%include "rm94.h"
+
+
+%define	moved0			lf0		[ego
+%define	moved1			lf1		[simms
+%define	moved2			lf2		[laura
+%define	moved3			lf3		[open flag
+%define	warning			lf4
+%define	simmsTalkedOnce	lf5
+%define	colbyTalkedOnce	lf6
+%define	saidWiseToQuestionTheseGuys	lf7
+%define	nearColby			lf8
+%define	nearSimms			lf9
+%define	nearLaura			lf10
+
+
+%define	moving0			lcl0		[ego
+%define	moving1			lcl1		[simms
+%define	moving2			lcl2		[laura
+%define	moving3			lcl3		[open var
+
+
+%object	aLaura			1
+%object	aColby			2
+%object	aSimms			3
+
+
+
+if (init.log)
+	{
+	set.horizon( 114);
+	
+	load.logics( 94);				[lgc.stopped.cars
+	load.pic( current.room);
+	draw.pic( current.room);
+
+	position( ego, 70, 116);
+
+	if (park.bust == 199) {
+		set( NOcase);
+		set( game.control);
+		reset( LauraCar);
+
+		load.view( v.laura);
+		load.view( v.colby.cuffed);
+		load.view( v.simms.cuffed);
+
+		animate.obj( aLaura);
+		animate.obj( aColby);
+		animate.obj( aSimms);
+  	
+		set.view( aLaura, v.laura);
+		set.view( aColby, v.colby.cuffed);
+		set.view( aSimms, v.simms.cuffed);
+
+		position( ego, 70, 116);
+		position( aLaura, 105, 153);
+		position( aColby, 132, 155);
+		position( aSimms, 79, 116);
+
+		set.loop( aLaura, facing.back);
+		set.loop( aColby, facing.left);
+		set.loop( aSimms, facing.front);
+
+		stop.cycling( aLaura);
+		stop.cycling( aColby);
+
+		draw( ego);
+		draw( aColby);
+		draw( aSimms);
+		draw( aLaura);
+		}
+	else {
+		if ( !in.car &&
+			(f.car.door ||
+			b.car.door)) {
+			carStolen = 4;
+			}
+		}
+
+	
+	if (priorX) {
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		}
+	
+	if (LauraCar)
+		{
+		scriptTimer = 15;
+		if (previous.room != 57)
+			{
+			score += 1;
+			}
+		}
+
+	call( 94);					[lgc.stopped.cars
+
+	show.pic();
+	return();
+	}
+
+
+
+if ( !warning &&
+	(edge.ego.hit == right ||
+	edge.ego.hit == left)) {
+	print( 19);
+	set( warning);
+	}
+
+if (edge.ego.hit == top && !warning) {
+	if (park.bust > 180) {
+		print( 19);
+		set( warning);
+		}
+	else {
+		new.room( 57);
+		}
+	}
+
+if (!edge.ego.hit) {
+	reset( warning);
+	}
+
+
+if (moved0) {
+	reset( moved0);
+	++moving0;
+	}
+if (moved1) {
+	reset( moved1);
+	++moving1;
+	}
+if (moved2) {
+	reset( moved2);
+	++moving2;
+	}
+if (moved3) {
+	reset( moved3);
+	++moving3;
+	}
+
+
+
+reset( nearColby);
+distance( ego, aColby, work);
+if (work < dist)
+	{
+	set( nearColby);
+	set( nearPerson);
+	}
+
+reset( nearSimms);
+distance( ego, aSimms, work);
+if (work < dist)
+	{
+	set( nearSimms);
+	set( nearPerson);
+	}
+
+reset( nearLaura);
+distance( ego, aLaura, work);
+if (work < dist)
+	{
+	set( nearLaura);
+	set( nearPerson);
+	}
+
+
+
+[ Timed Messages
+
+if (park.bust && park.bust < 190) {
+	if (func4 && !f.car.door) {
+		print( 20);				[ Go stake out picnic area
+		reset( func4);
+		}
+	
+	if (scriptDone) {
+		reset( scriptDone);
+		scriptTimer = 40;
+
+		if (!in.car) {
+			print( 14);			[ let's get this show on the road
+			}
+		else {
+			print( 20);			[ Go stake out picnic area
+			}
+		}
+	}
+
+
+if (park.bust > 220 &&
+	park.bust < 255 &&
+	scriptDone) {
+
+	print( 16);					[ Let's get these boys to jail
+	scriptTimer = 20;
+	}
+
+
+
+[ Ego return with suspect
+
+if (park.bust > 190) {				[ Ego
+	if (moving0 == 0) {
+		move.obj( ego, 70, 132, 1, moved0);
+		set( moved0);
+		}
+	
+	if (moving0 == 1) {				[ Laura
+		set.loop( aLaura, facing.left);
+		set( moved1);
+		}
+	
+	if (moving0 == 2) {				[ laura spoke1
+		print( 3);				[ just grabbed the first Caucasian
+		move.obj( ego, 70, 164, 1, moved0);
+		set( moved0);
+		}
+	
+	if (moving0 == 4) {
+		move.obj( ego, 120, 164, 1, moved0);
+		++moving0;
+		}
+	
+	if (moving0 == 6) {
+		++moving0;
+		}
+
+	
+	if (moving1 == 1) {				[ Laura spoke1
+		print( 2);				[ What took so long
+		start.cycling( aLaura)
+		move.obj( aLaura, 118, 155, 1, moved1);
+		++moving1;
+		}
+	
+	if (moving1 == 3) {
+		stop.cycling( aLaura);
+		set.loop( aLaura, facing.right);
+		++moving1;
+		}
+
+
+	if (moving3 == 0) {				[ Sims
+		move.obj( aSimms, 79, 139, 1, moved3);
+		}
+	
+	if (moving3 == 1) {
+		stop.cycling( aSimms);
+		set( moved3)
+		}
+	
+	if (moving3 == 2) {				[ laura spoke1
+		start.cycling( aSimms);
+		move.obj( aSimms, 79, 166, 1, moved3);
+		}
+	
+	if (moving3 == 3) {
+		move.obj( aSimms, 135, 166, 1, moved3);
+		}
+	
+	if (moving3 == 4) {
+		move.obj( aSimms, 133, 163, 1, moved3);
+		}
+	
+	if (moving3 == 5) {
+		stop.cycling( aSimms);
+		set.loop( aSimms, facing.left);
+		set( moved3);
+		park.bust = 200;
+		}
+	}
+	
+	
+
+[ Put Assholes in car
+
+if (moving1 == 200) {
+	start.cycling( aLaura);
+	move.obj( aLaura, 118, 155, 1, moved1);
+	}
+
+if (moving1 == 201) {
+	stop.cycling( aLaura);
+	sound( s.car.open, snd.done);
+	set.cel( a.Bdoor, 2);
+	draw( a.Bdoor);
+	set( moved1);
+	}
+
+if (moving1 == 202) {
+	start.cycling( aColby);
+	start.cycling( aSimms);
+	move.obj( aColby, 128, 155, 1, moved2);
+	move.obj( aSimms, 128, 161, 1, moved3);
+	++moving1;
+	}
+
+if (moving2 == 201 && moving3 == 201) {
+	set.cel( a.Bdoor, 1);
+	erase( aColby);
+	erase( aSimms);
+	park.bust = 210;
+	set( has.suspect);
+	set( moved2);
+	set( moved3);
+	}
+
+
+
+[ Get Laura back in car
+
+if (moving1 == 225) {
+	start.cycling( aLaura);
+	move.obj( aLaura, 116, 155, 1, moved1);
+	set( moved1);
+	}
+
+if (moving1 == 227) {
+	stop.cycling( aLaura);
+	print( 15);					[ Morgan is going to be happy 
+	reset( game.control);
+	set( moved1);
+	}
+
+if (f.car.door && moving1 == 228) {
+	set.loop( a.Fdoor, 1);
+	set( LauraCar);
+	erase( aLaura);
+	scriptTimer = 15;
+	park.bust = 220;
+	set( moved1);
+	}
+
+
+
+[ Text
+
+if (!have.input) {
+	goto exit;
+	}
+
+if ((in.car || has( i.extnd)))
+	{
+	if (park.bust > 209 && park.bust < 255)
+		{
+		if (said( call))
+			{
+			print( 36);
+			}
+		}
+	}
+	
+if (park.bust && park.bust < 255) {
+	if ((said( look, partner) ||
+		said( look, laura))) {
+		print( 33);
+		}
+
+	if ((said( talk, girl) ||
+		said( talk, laura))) {
+		if ( park.bust < 190) {
+			print( 1);					[ I'll stay here and backup
+			}
+		else {
+			if ( park.bust < 211) {
+				print( 2);
+				}
+			else {
+				print( 15);
+				}
+			}
+		}
+	}
+
+
+if (park.bust > 199 && park.bust < 211)
+	{
+	if ((said( open, back, door) ||
+		said( open, back, door, car) ||
+		said( open, back, car, door) ||
+		said( open, door) ||
+		said( open, door, car) ||
+		said( open, car, door)))
+		{
+		if (park.bust == 200 && !LauraCar && !saidWiseToQuestionTheseGuys)
+			{
+			set( saidWiseToQuestionTheseGuys);
+			print( 13);			[ wise to question these guys
+			++park.bust;
+			}
+		else
+			{
+			if (posn( ego, 120, 160, 135, 164))
+				{
+				if (has.suspect)
+					{
+					print( 17); 	[ Can't let them go here
+					}
+				else {
+					if (moving0 < 200)
+						{
+						moving0 = 200;
+						moving1 = 200;
+						moving2 = 200;
+						moving3 = 200;
+						}
+					}
+				}
+			}
+		}
+
+	if (said( close, door))
+		{
+		if (park.bust != 210)
+			{
+			print( 18);			[ The back door is already shut
+			}
+		else
+			{
+			set( has.suspect);
+			sound( s.car.close, snd.done);
+			set.cel( a.Bdoor, 0);
+			suspect.in.car = 0;
+			moving0 = 225;
+			moving1 = 225;
+			++park.bust;
+			}
+		}
+	}
+		
+
+if (park.bust > 199 && park.bust < 210)	[ They're at the car, but not inside.
+	{
+	if (said( look, colby)) {
+		print( 35);
+		}
+
+	if ((said( look, man) ||
+		said( look, simms) ||
+		said( look, suspect))) {
+		print( 34);
+		}
+
+	if ( SxCSdope &&
+		said( look, id))
+		{
+		print( 32);				[	I.D. is Jefferson High School
+		}
+
+	if ((said( arrest, man) ||
+		said( arrest, suspect) ||
+		said( arrest, colby) ||
+		said( arrest, simms)))
+		{
+		if (!nearPerson)
+			{
+			set( notCloseEnough);
+			}
+		else
+			{
+			print( 30);
+			}
+		}
+
+	if ((said( read, rights, rol) ||
+		said( read, anyword, rights, rol) ||
+		said( give, rights, rol) ||
+		said( give, anyword, rights, rol) ||
+		said( rights, rol) ||
+		said( anyword, rights, rol)))
+		{
+		if (!nearColby && !nearSimms)
+			{
+			print( 31);
+			}
+		else
+			{
+			set( readRights);
+			call( 72);
+			}
+		}
+
+
+	if ((said( question, simms, rol) ||
+		said( talk, simms, rol) ||
+		said( ask, simms, rol) ||
+		said( question, suspect, rol) ||
+		said( question, man, rol) ||
+		said( ask, suspect, rol) ||
+		said( ask, man, rol) ||
+		said( talk, suspect, rol) ||
+		said( talk, man, rol)))
+		{
+		if (!readRights)
+			{
+			set( certainDeath);
+			call( 72);
+			}
+		else {
+			if (!simmsTalkedOnce)
+				{
+				set( saidWiseToQuestionTheseGuys);
+				set( simmsTalkedOnce);
+				print( 8);			[ Simms is reluctant
+				}
+			else {
+				print( 9);			[ regular run down
+				if (!knowsColbyName)
+					{
+					set( knowsColbyName);
+					score += 2;
+					}
+				}
+			}
+		}
+
+	if ((said( question, colby, rol) ||
+		said( talk, drug, dealer) ||
+		said( talk, colby, rol) ||
+		said( ask, colby, rol))) {
+		if (!readRights) {
+			set( certainDeath);
+			call( 72);
+			}
+		else {
+			if (!colbyTalkedOnce) {
+				set( saidWiseToQuestionTheseGuys);
+				set( colbyTalkedOnce);
+				print( 10);		[ Colby refuses to answer questions
+				}
+			else {
+				print( 11);		[ Colby, Leroy Pierson & 4376537
+				if (!SxPierson) {
+					set( SxPierson);
+					score += 3;
+					}
+				}
+			}
+		}
+
+	if ((said( who, partner)	||
+		said( name, partner) ||
+		said( partner, name) ||
+		said( ask, name) ||
+		said( ask, who, partner))) {
+		if (!readRights) {
+			set( certainDeath);
+			call( 72);
+			}
+		else {
+			print( 21);			[ He's Colby!
+			if (!knowsColbyName) {
+				set( knowsColbyName);
+				score += 5;
+				}
+			}
+		}
+	
+	if ((said( go, rol) ||
+		said( walk, car, rol) ||
+		said( walk, patrol, car, rol) ||
+		said( follow, me, rol) ||
+		said( move, rol) ||
+		said( get$in, car, rol) ||
+		said( get$in, patrol, car, rol) ||
+		said( come, with, me, rol)))
+		{
+		print( 28);
+		}
+
+	if ((said( search) ||
+		said( search, man, rol) ||
+		said( search, colby, rol) ||
+		said( search, simms, rol) ||
+		said( search, suspect, rol)))
+		{
+		print( 12);
+		if (!SxCSdope)
+			{
+			set( SxCSdope);
+			score += 3;
+
+			print( 6);
+			print( 7);
+			print( 22);
+			}
+		else
+			{
+			print( 23);
+			}
+
+
+		if (!SxColbySearch)
+			{
+			set( SxColbySearch);
+			score += 3;
+
+			print( 26);
+			print( 27);
+			}
+		else
+			{
+			print( 29);
+			}
+		}
+	}
+
+
+if ((said( look) ||
+	said( look, park)))
+	{
+	print( 5);
+	}
+
+
+
+[
+:exit
+[
+
+call( 94);						[lgc.stopped.cars
+
+[if (QA) {
+[	display( 24, 0, 29);
+[	}
+[
+[%message 29
+["Pb %v63|3, M0 %v220, M1 %v221, M2 %v222, W1 %v166|3"
+[
+

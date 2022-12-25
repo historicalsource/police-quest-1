@@ -1,0 +1,98 @@
+[ POLICE QUEST
+[ rm35.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 2/13/86
+[ Last Update October 21, 1987GR
+
+[ COFFEE SHOP ENTRANCE
+
+
+%message	1
+"From a distance you hear, \"We've got your number, Pig!\""
+
+%message	2
+"This is the front entrance of Carol's Caffeine Castle, and the
+ \"lovely\" Wino Willy's Cocktail Lounge."
+
+%message	3
+"You see a beautiful, blue, cloudless sky."
+
+%message	4
+"You see an oil-stained asphalt street, bordered by a hot concrete sidewalk."
+
+%message	5
+"As you peer in the window,
+ you see a couple of Carol's patrons giggling and pointing out at you."
+
+%message	6
+"Looking in the window, you see Carol waiting on some customers."
+
+%message	7
+"A quick scan of your partner's patrol car interior clearly
+ shows he is not in it."
+
+%message	8
+"When the department bought these cars,
+ they had a choice between comfort and power.
+ They picked comfort."
+
+%message	9
+"You wonder if Carol's designer once worked for a cab company!"
+
+%message	10
+"The new, red, brick facade at Wino Willy's sure dresses up an otherwise
+ depressing joint!"
+
+%message	11
+"Your partner's car is locked."
+
+%message	12
+"Oooops!"
+
+%message	13
+"Somebody is gonna have to answer to four angry people!"
+
+%message	14
+"Parked in front of Carol's are four bad-news motorcycles."
+
+%message	15
+"You can't see through translucent glass."
+
+%message	16
+"Get closer."
+
+%message	17
+"The plates on these hogs appear to be currently registered."
+
+%message	18
+"Forget it!"
+
+%message	19
+"You radio dispatch and request checks on the license plates."
+
+%message	20
+"Your radio sings out,
+ \"%m23 All plates are clear and currently registered.\""
+
+%message 21 [ GR
+"\"%m27 copies %s3 at Carol's Caffeine Castle.\""
+
+%message 22
+"\"%m23 %m27 copies 10-8.\""
+
+%message 23
+"83-32,"
+
+%message 24
+"You key your radio, \"%m27, %m23 complaint resolved.\""
+
+%message 25
+"10-97"
+
+%message 26
+"10-7"
+
+%message 27
+"Dispatch"
+
+

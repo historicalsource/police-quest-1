@@ -1,0 +1,302 @@
+[ POLICE QUEST
+[ rm62.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 3/10/87
+[ Last Update October 6, 1987al
+
+[ lgc.cheeks.jail
+
+
+%include "gamedefs"
+%include "rm40.h"
+%include "rm62.msg"
+
+
+
+%define	WAITING_FOR_RESPONSE	50	[	Script value
+
+
+
+if (init.log)
+	{
+	set( conver0);					[ stop generic jailer talk
+	load.view( v.sweet.cheeks);
+	load.view( v.egok);
+	load.sound( mSweetCheeks);
+
+	animate.obj( a.sweet.cheeks);
+	set.view( a.sweet.cheeks, v.sweet.cheeks);
+	position( a.sweet.cheeks, 57, 98);
+	set.priority( a.sweet.cheeks, 4);
+
+	animate.obj( aKiss);
+	set.view( aKiss, v.egok);
+	position( aKiss, 52, 84);
+	set.priority( aKiss, 15);
+	set.loop( aKiss, 0);
+	set.cel( aKiss, 0);
+	cycle.time( aKiss, three);
+
+	if (jail.scene == 6)
+		{
+		prevent.input( );
+		set( game.control);
+
+		draw( a.sweet.cheeks);
+		stop.cycling( a.sweet.cheeks);
+		}
+
+	return( );
+	}
+
+
+reset( nearSC);
+if (posn( ego, 44, 105, 74, 126))
+	{
+	set( nearSC);
+	}
+
+
+if  (jail.scene == 7 &&
+	MiddleOfFrontRoom &&
+	script == 105)
+	{
+	set( scriptDone);
+	}
+
+
+if (script == WAITING_FOR_RESPONSE)
+	{
+	if ((said( help, hotel, rol) ||
+		said( help, operation, rol) ||
+		said( help, with, hotel, rol) ||
+		said( help, with, operation, rol) ||
+		said( help, with, undercover, operation, rol)))
+		{
+		if (!nearSC)
+			{
+			print( 20);
+			}
+		else
+			{
+			script = 100;
+			set( scriptDone);
+			}
+		}
+
+	if ((said( help) ||
+		said( ask, help, rol) ||
+		said( ask, marie, help, rol) ||
+		said( help, rol)))
+		{
+		if (!nearSC)
+			{
+			print( 20);
+			}
+		else
+			{
+			print( 14);
+			}
+		}
+
+	if ((said( talk, girl, rol) ||
+		said( talk, hooker, rol)))
+		{
+		if (!nearSC)
+			{
+			print( 20);
+			}
+		else
+			{
+			print( 12);
+			}
+		}
+	}
+
+
+if (!script &&
+	jail.scene == 6 &&
+	moving0 == 1)
+	{
+	set( scriptDone);
+	}
+
+
+[ Talk.sweet.cheeks
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+	if (script == 1)
+		{
+		print( 1);				[ It's about time, she's been waiting
+		print( 2);				[ Tell her to shut up
+		move.obj( ego, 70, 115, 1, scriptDone);
+		scriptCycles = 40;
+		}
+
+	if (script == 2)
+		{
+		print( 3);				[ As you approach
+		print( 4);				[ OH PRECIOUS! I'm so glad to see you
+		}
+
+	if (script == 3)				[	triggered by end of ego's move
+		{
+		start.cycling( a.sweet.cheeks);
+		move.obj( a.sweet.cheeks, 67, 98, 1, scriptDone);
+		}
+
+	if (script == 4)
+		{
+		move.obj( a.sweet.cheeks, 67, 103, 1, scriptDone);
+		}
+
+	if (script == 5)
+		{
+		set.loop( a.sweet.cheeks, facing.front);
+		stop.cycling( a.sweet.cheeks);
+		print( 5);				[ come here! I need your help Sonny
+		scriptCycles = 11;
+		}
+
+	if (script == 6)
+		{
+		print( 6);				[ I got trick trapped
+		print( 7);				[ You told but
+		start.cycling( a.sweet.cheeks);
+		move.obj( a.sweet.cheeks, 55, 103, 1, scriptDone);
+		}
+
+	if (script == 7)
+		{
+		stop.cycling( a.sweet.cheeks);
+		set.loop( a.sweet.cheeks, facing.front);
+		move.obj( ego, 54, 112, 1, scriptDone);
+		}
+
+	if (script == 8)
+		{
+		print( 8);				[ I'll do anything
+		move.obj( ego, 54, 106, 1, scriptDone);
+		}
+
+	if (script == 9)
+		{
+		sound( mSweetCheeks, done);
+		print( 9);				[ If I had someone like you
+
+		draw( aKiss);
+		scriptCycles = 22;
+		}
+
+	if (script == 10)
+		{
+		set.loop( aKiss, 1);
+		scriptTimer = 4;
+		}
+
+	if (script == 11)
+		{
+		erase( aKiss);
+
+		fix.loop( a.sweet.cheeks);
+		start.cycling( a.sweet.cheeks);
+		move.obj( a.sweet.cheeks, 58, 101, 1, scriptDone);
+		}
+
+	if (script == 12)
+		{
+		stop.cycling( a.sweet.cheeks);
+		scriptCycles = 5;
+		}
+
+	if (script == 13)
+		{
+		print( 10);				[ Wow hot kiss
+		scriptCycles = 5;
+		}
+
+	if (script == 14)
+		{
+		print( 11);				[ I couldn't resist
+		scriptCycles = 5;
+		}
+
+	if (script == 15)
+		{
+		print( 12);				[ Please how can I get out
+		accept.input( );
+		reset( game.control);
+		start.motion( ego);
+
+		jail.scene = 7;
+		script = WAITING_FOR_RESPONSE;
+		}
+
+
+	[	Here we pause, while player figures out what to say.
+
+
+	if (script == 101)
+		{
+		start.motion( ego);
+		prevent.input( );
+		set( game.control);
+		move.obj( ego, 55, 106, 1, scriptDone);
+		}
+
+	if (script == 102)
+		{
+		score += 5;
+		print( 13);				[ Oh yes I'll help
+		print( 14);				[ tell me what to do
+		
+		start.cycling( a.sweet.cheeks);
+		move.obj( a.sweet.cheeks, 55, 103, 1, scriptDone);
+		}
+
+	if (script == 103)
+		{
+		set.loop( ego, facing.back);
+
+		stop.cycling( a.sweet.cheeks);
+		set.cel( aKiss, 0);
+		sound( mSweetCheeks, done);
+		draw( aKiss);
+		scriptCycles = 40;
+		}
+
+	if (script == 104)
+		{
+		erase( aKiss);
+		scriptTimer = 4;
+		}
+
+	if (script == 105)
+		{
+		print( 15);				[ Feeling embarrassed
+		print( 16);				[ arrangements will be made
+		print( 17);				[ Meet use at morgans office
+		reset( game.control);
+		accept.input();
+		moroff.scene = 6;			[ Briefing w/ Cheeks
+		cotton.scene = 1;
+		}
+
+
+	[	Here we pause for ego to walk near the jailer.
+
+
+	if (script == 106)
+		{
+		print( 18);				[ Sonny you been messing with 
+		print( 19);				[ Morgan just called
+		jail.scene = 199;
+		}
+	}
+	
+
+:exit

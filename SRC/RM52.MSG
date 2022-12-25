@@ -1,0 +1,144 @@
+[ POLICE QUEST
+[ rm52.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 25, 1987al
+
+[
+
+
+%message	1
+"It looks good enough to submit!"
+
+%message	2
+"It IS open!"
+
+%message	3
+"The door is closed."
+
+%message	4
+"A sign on the door says,
+ \"This door to remain open during business hours.\""
+
+%message	5
+"Although you're anxious to get on your beat,
+ missing Sgt. Dooley's briefing is not wise."
+
+%message	6
+"You really don't need it."
+
+%message	7
+"There is a table against the far wall below a photograph.
+ The three doorways lead to Lt. Morgan's office, to the outside,
+ and to the Narcotics Office."
+
+%message	8
+"A group photograph of the Lytton Superior Court Justices hangs on the wall."
+
+%message	9
+"You try to look through the window but you can't see in,
+ since the blinds are shut."
+
+%message	10
+"Knocking on the window brings no response."
+
+%message	11
+"No way. Cops don't break windows!"
+
+%message	12
+"It's another acoustic ceiling, complete with florescent lighting."
+
+%message	13
+"Below your feet is a clean, gray-tiled floor."
+
+%message	14
+"This window does not open."
+
+%message	15
+""
+
+%message	16
+"So! Did you decide to just skip work today, or what?"
+
+%message	17
+"On the table is a basket marked \"In.\"
+ This is where you submit your reports and memos.
+ Next to the basket is a pad of blank memos."
+
+%message	18
+"The basket is empty."
+
+%message	19
+"On the table you see a stack of blank office memos."
+
+%message	20
+"You don't need to submit a memo at this time.
+ But, if you did, this would be a perfect place to do it!"
+
+%message	21
+"You look under the table and conclude..."
+
+%message	22
+"...Everyone here must chew gum!"
+
+%message	23
+"Climbing up on this table would rip the crotch right out of your trousers!"
+
+%message	24
+"You don't need to write any reports right now,
+ but if you did, this would be a perfect place to do it!"
+
+%message	25
+"You write out a request for transfer to the \"Narcotics Division.\""
+
+%message	26
+"You place your request into the \"In\" basket."
+
+%message	27
+""
+
+%message	28
+"Sorry, but the \"In\" basket stays here!"
+
+%message	29
+"They must remain on the table."
+
+%message	30
+"Your prior request for transfer is still current."
+
+%message	31
+""
+
+%message	32
+"Carefully you double-check your request."
+
+%message	33
+""
+
+%message	34
+"Submitting a blank memo will get you nowhere."
+
+%message	35
+"Your freshly-written request for transfer is in the \"In\" basket."
+
+%message	36
+"Your request is being processed in the usual bureaucratic manner.
+ Having been removed by the officially-designated individual,
+ it is at this very moment being distributed, in triplicate,
+ to the LPD brass."
+
+%message	37
+"Your request for transfer has been granted.
+ No further memos are required."
+
+%message	38
+"You'd better return that radio extender.
+ It makes an unsightly bulge in your trousers!"
+
+%message	39
+"Sonny, you can't use the patrol car now.
+ You'd better return the keys to the key board."
+
+%message	40
+""
+

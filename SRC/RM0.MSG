@@ -1,0 +1,392 @@
+[ POLICE QUEST
+[ rm0.msg
+[ By:  Greg Rowland, Scott Murphy, Jim Walls, and Al Lowe
+[ For: Sierra On-Line Inc. 7/3/86
+[ Last Update October 23, 1987GR
+
+
+%message	1
+"\n
+      Police Quest\n\n
+   in Pursuit of the\n
+      Death Angel\n\n
+      by Jim Walls\n\n
+  Ver 2.0A     10/23/87   \n"
+[  Ver 1.0H     10/21/87   \n"
+[  Ver 1.15     9/29/87   \n"
+
+%message	2
+"On the back of your hand?"
+
+%message	3
+"You can't write with a radio!"
+
+%message	4
+"You see nothing special."
+
+%message	5
+"How can you do that?"
+
+%message	6
+"Using what?"
+
+%message	7
+"%m8it."
+
+%message	8
+"You don't need "
+
+%message	9
+"Just do that yourself."
+
+%message	10
+"What would you do with it?"
+
+%message	11
+" key is documented in%m17 Please refer to it for proper usage."
+
+%message	12	""		[	NOTE: DO NOT REMOVE; must remain a null string
+
+
+%message	13
+"call"
+
+%message	14	" "		[	NOTE: DO NOT REMOVE; must remain a single blank space
+
+
+%message	15
+"Note: "
+
+%message	16
+"Once you tasted it, you wouldn't want it!"
+
+["Nah! It'd taste like crap!"
+
+%message	17
+" your \"LPD Policeman's Indoctrination Guide.\""
+
+%message	18
+"You shouldn't have done that!"
+
+%message	19
+"It's more valuable to you as it is!"
+
+%message	20
+"Please refer to%m17"
+
+%message	21
+"%m8to close it."
+
+%message	22
+"%m87 Please review proper gun handling procedures in%m17"
+
+%message	23
+"%m87 You'll blow out a window!"
+
+%message	24
+"My, what a filthy mind you have!"
+
+%message	25
+"%m8to open it."
+
+%message	26
+"If you climb that, Sgt. Dooley will climb your back!"
+
+%message	27
+"\"Hey, thanks a lot!\""
+
+%message	28
+"But now you'll NEVER get it back!"
+
+%message	29
+"\"Hello.\""
+
+%message	30
+"%m8to move it."
+
+%message	31
+"There's no one nearby."
+
+%message	32
+"That's not necessary at this time."
+
+%message	33
+"Save your writing for reports."
+
+%message	34
+"You are wearing blue polyester and gabardine trousers,
+ a long-sleeve shirt, and shiny black shoes."
+
+%message	35
+"Not here!"
+
+%message	36
+"You're not close enough."
+
+%message	37
+"You already have it."
+
+%message	38
+"You don't have it."
+
+%message	39
+"Ok."
+
+%message	40
+"Your clothes are stylish, but the pockets are empty."
+
+%message	41	"Locals missed it!"	    	[	Debug LOG message.
+%message	42	"Everybody missed!"	    	[	Debug LOG message.
+
+%message	43
+"Captain Whipplestick comes on the air and advises you to review
+ proper radio procedures in%m17"
+
+%message	44
+"Caught undressed in public, you spend the rest of your life in shame!"
+
+%message	45
+"Thanks for playing\n
+\"Police Quest.\"\n
+\n
+Next time, don't make\n
+this mistake again!"
+
+%message	46
+"Since you're dead...\n\n
+all you can do is restore a saved game or start over."
+
+%message	47
+"\"'Bye.\""
+
+%message	48
+"\"You're welcome.\""
+
+%message	49
+"There's no answer."
+
+
+%message	50	"What's a "
+%message	51	"%m50%w1?"
+%message	52	"%m50%w2?"
+%message	53	"%m50%w3?"
+%message	54	"%m50%w4?"
+%message	55	"%m50%w5?"
+%message	56	"%m50%w6?"
+%message	57	"%m50%w7?"
+%message	58	"%m50%w8?"
+
+
+%message	59
+"You find them quite illuminating!"
+
+%message	60
+"It holds you up (which, in this case, is not a felony)."
+
+%message	61
+"Yep, it's still up there!"
+
+%message	62
+"You are carrying a blank notebook."
+
+%message	63
+"Just a moment, please..."
+
+%message	64
+"The F4%m11"
+
+%message	65
+"The F6%m11"
+
+%message	66
+"The F8%m11"
+
+%message	67
+"The F10%m11"
+
+%message	68
+"With what, Sonny?"
+
+%message	69
+"Your beat covers from Palm Street to Parkway Drive,
+ and from River Road to Clearwater Drive."
+
+%message	70
+"Your briefcase IS closed."
+
+%message	71
+"A police officer without a weapon, is like being..."
+
+%message	72
+"...up a creek without a paddle!"
+
+%message	73
+"As Chief Whipplestick would say,
+ \"A cop without ammo is like a bullet without powder!\""
+
+%message	74
+"These walls do a fine job of holding up the ceiling."
+
+%message	75
+"Do you have a kidney problem?"
+
+%message	76
+"My gawd! Do you have a weak sphincter?"[	spelling per Merriam-Webster!
+
+%message	77
+"You don't have time to relax."
+
+%message	78	
+"You can't see the Help Screen right now.
+ Try again elsewhere."
+
+%message	79						[	PROTECTED NUMBER.
+"%m8to do that."
+
+%message	80	
+"You don't have them."
+
+%message	81
+"Fastest%m85"
+
+%message	82
+"Fast%m85"
+
+%message	83
+"Normal%m85"
+
+%message	84
+"Slow%m85"
+
+%message	85
+" speed."
+
+%message	86
+""								[	%v8/4K memory left."
+
+
+%message	87
+"Now?!"
+
+%message	88						[	PROTECTED NUMBER! Used in rm2.msg
+"As you blow off your right leg, you resolve that, in the future,
+ you will DRAW your weapon before you FIRE it!"
+
+%message	89
+"Go where?"
+
+%message	90
+"You rip out the speed loader and load your weapon."
+
+%message	91
+"It is loaded. You have %v34 shells left."
+
+%message	92
+"What are you going to load? %m93"
+
+%message	93
+"You're unarmed."
+
+%message	94
+"Click! (Dry firing an empty gun is good practice for proper grip.)"
+
+%message	95
+"Why do that?"
+
+%message	96
+"You have no ammunition."
+
+%message	97
+"Nah. Just wear it."
+
+%message	98
+"An interesting approach -- but fatal!"
+
+%message	99
+"What are you going to do?
+ Scream, and pray that Dispatch will hear you?"
+
+%message	100
+"Handling your weapon while driving is dangerous."
+
+%message	101
+"Your backups ARE listening."
+
+%message	102
+"This car has a tape player, but no police radio."
+
+%message	103
+"\n\nYou've been playing for\n"
+
+%message	104
+"Notebook? What notebook?"
+
+%message	105
+"You don't have one."
+
+%message	106
+"Jim Walls, Greg Rowland, Al Lowe, Mark Crowe, Scott Murphy, Ken Williams,
+ Jerry Moore, Jeff Stephenson, Chris Iden and Bob Heitman."
+
+%message	107
+"%m1%m103%v14 days, %v13 hours, %v12 minutes and %v11 seconds.\n"
+
+%message	108
+"%m1%m103%v13 hours, %v12 minutes and %v11 seconds.\n"
+
+%message	109
+"%m1%m103%v12 minutes and %v11 seconds.\n"
+
+
+
+[ Pull-Down Menus text ................
+
+%message	110		"Sierra"
+%message	111	"About PQ  "
+%message	112	"Help  <F1>"
+
+%message	114		"File"
+%message	115	"Save     <F5>"
+%message	116	"Restore  <F7>"
+%message	117	"-------------"
+%message	118	"Restart  <F9>"
+[%message	117	"-------------"
+%message	119	"Quit  <Alt-Z>"
+
+%message	121		"Action"
+%message	122	"Inventory      <Tab>"
+%message	123	"See Object  <Ctrl-S>"
+%message	124	"Dispatcher  <Ctrl-D>"
+
+%message	126		"Special"
+%message	127	"Sound On/Off       <F2>"
+%message	128	"Graphics Mode  <Ctrl-R>"
+%message	129	"Joystick/Mouse <Ctrl-J>"
+%message	130	"Joystick       <Ctrl-J>"
+%message	131	"Pause Game             "
+
+%message	133		"Speed"
+%message	134	"Normal "
+%message	135	"Slow   "
+%message	136	"Fast   "
+%message	137	"Fastest"
+%message	138	"-------"
+%message	139	"Slower "
+
+[%message	141		"Debug"
+[%message	149	"QA Level  <Alt-L>"
+[%message	142	"Ego Info  <Alt-E>"
+[%message	143	"P-Screen  <Alt-P>"
+[%message	144	"Memory    <Alt-M>"
+[%message	145	"Obj Info  <Alt-I>"
+[%message	146	"X/Y & Rm# <Alt-X>"
+[%message	147	"Get All Inventory"
+[%message	148	"Inventory Numbers"
+[	%message	150	""		  
+
+%message	151
+"Give away your handcuffs?"
+
+%message	152
+"No way!"
+

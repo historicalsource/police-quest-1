@@ -1,0 +1,83 @@
+[ POLICE QUEST
+[ rm46.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 10/6/86
+[ Last Update September 6, 1987al
+
+[ lgc.squadrm
+
+
+%include "gamedefs"
+%include "rm46.msg"
+%include "rm4.h"
+
+
+
+if (init.log)
+	{
+	if (progress < narc) {
+		if (SxMemo) {
+			cell = 3;
+			}
+		else {
+			cell = 2;
+			}
+		}
+	else {
+		cell = 4;
+		}
+
+	view = 77;					[ v.chalk
+	x = 52;
+	y = 66;
+	box = 4;
+  	add.to.pic.f( view, zero, cell, x, y, box, box);
+
+	return( );
+	}
+
+
+
+[ Logic 
+
+
+if (!have.input) {
+	return( );
+	}
+
+if (lookInMyBox)
+	{
+	reset( lookInMyBox);			[	Assume he's close enough.
+	if (progress > 3) {
+ 		print( 5);				[	"not no more!"
+		}
+	else
+		{
+		if (nearHole1) {
+			print( 1);
+			}
+		else {
+			if (nearHole2) {
+			 	print( 2);
+			 	}
+			else {
+				if (nearHole3) {
+				   	print( 3);		
+				 	}
+				else {
+					if (nearHole4) {
+						print( 4);
+						}
+					else {
+						set( lookInMyBox);	[	He wasn't. Give it back 
+						}
+					}
+				}
+			}
+		}
+	}
+
+[
+:exit
+[
+

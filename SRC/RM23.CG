@@ -1,0 +1,159 @@
+[ POLICE QUEST
+[ rm23.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/11/86
+[ Last Update October 4, 1987GR
+
+[ rm.map23
+
+%include "gamedefs"
+%include "rm117.h"
+
+
+
+if (init.log) {
+	draw( ego);
+	add.to.pic( vBuildings0, 0, 0, 028, 112, 0, 4);
+	add.to.pic( vBuildings0, 0, 1, 053, 112, 0, 4);
+	add.to.pic( vBuildings0, 1, 1, 086, 112, 0, 4);
+	add.to.pic( vBuildings0, 0, 2, 144, 077, 0, 4);
+	add.to.pic( vBuildings0, 0, 2, 144, 115, 0, 4);
+	add.to.pic( vBuildings0, 1, 3, 001, 036, 0, 4);
+	add.to.pic( vBuildings0, 1, 3, 001, 116, 0, 4);
+	add.to.pic( vBuildings0, 1, 2, 001, 074, 0, 4);
+	add.to.pic( vBuildings0, 2, 0, 146, 024, 0, 4);
+	add.to.pic( vBuildings0, 2, 0, 119, 024, 0, 4);
+	add.to.pic( vBuildings0, 2, 0, 087, 024, 0, 4);
+	add.to.pic( vBuildings0, 2, 0, 061, 024, 0, 4);
+	add.to.pic( vBuildings0, 2, 0, 045, 024, 0, 4);
+	add.to.pic( vBuildings0, 2, 0, 029, 024, 0, 4);
+	add.to.pic( vBuildings0, 1, 6, 041, 109, 0, 4);
+	add.to.pic( vBuildings0, 1, 4, 054, 064, 0, 4);
+	add.to.pic( vBuildings0, 1, 4, 099, 097, 0, 4);
+
+	show.pic( );
+	return( );
+	}
+
+
+[ Logic
+if ( ego.y > 124) {
+	streetScene = 93;
+	}
+else {
+	streetScene = 80;
+	}
+
+
+[ Traffic logic 
+[ start.cars
+[ car1
+if ( !stopCar1) {
+	if (!posn( ego, 143, 117, 159, 131)
+	&& !posn( a.suspect, 143, 117, 159, 131)) {
+		if (moving1 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car1, work);
+			position( a.car1, right.edge, t9y);
+			ignore.blocks( a.car1);
+			set.priority( a.car1, 5);
+			set( moved1);
+			}
+		if (moving1 == 1) {
+			move.obj( a.car1, t4x, t9y, 1, moved1);
+			draw( a.car1);		  
+			}
+		}
+	if (moving1 == 2) {
+		move.obj( a.car1, t4x, top.edge, 1, moved1);
+		}
+	if (moving1 == 3) {
+		erase( a.car1);			 
+		moving1 = 0;
+		}
+	}
+
+[ car2
+[upper left
+if ( !stopCar2) {
+	if (!posn( ego, 17, 0, 27, 25)
+	&& !posn( a.suspect, 17, 0, 27, 25)) {
+		if (moving2 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car2, work);
+			position( a.car2, t1x, top.edge);
+			ignore.blocks( a.car2);
+			set.priority( a.car2, 5);
+			set( moved2);
+			}
+		if (moving2 == 1) {
+			move.obj( a.car2, t1x, t7y, 1, moved2);
+			draw( a.car2);		  
+			}
+		}
+	if (moving2 == 2) {
+		move.obj( a.car2, t3x, t8y, 1, moved2);
+		}
+	if (moving2 == 3) {
+		move.obj( a.car2, t3x, t9y, 1, moved2);
+		}
+	if (moving2 == 4) {
+		move.obj( a.car2, right.edge, t10y, 1, moved2);
+		}
+	if (moving2 == 5) {
+		erase( a.car2);
+		moving2 = 0;
+		}
+	}
+
+[ car3
+if ( !stopCar3) {
+	if (!posn( ego, 143, 25, 159, 39)
+	&& !posn( a.suspect, 143, 25, 159, 39)) {
+		if (moving3 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car3, work);
+			position( a.car3, right.edge, t7y);
+			ignore.blocks( a.car3);
+			set.priority( a.car3, 5);
+			set( moved3);
+			}
+		if (moving3 == 1) {
+			move.obj( a.car3, t6x, t7y, 1, moved3);
+			draw( a.car3);		  
+			}
+		}
+	if (moving3 == 2) {
+		move.obj( a.car3, t6x, top.edge, 1, moved3);
+		}
+	if (moving3 == 3) {
+		erase( a.car3);			 
+		moving3 = 0;
+		}
+	}
+
+[*****
+:exit
+[*****
+%message 1
+"The Clearwater River borders the southern edge of this neighborhood."
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look, town)))	{
+	print( 1);
+	}
+
+

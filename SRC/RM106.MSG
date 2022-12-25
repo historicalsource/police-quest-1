@@ -1,0 +1,20 @@
+[ POLICE QUEST
+[ rm106.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 3/22/87
+[ Last Update August 24, 1987al
+
+[rm.test
+
+
+%message	1
+"If you didn't just do a Restart, assume this isn't going to work!\n\n
+Use Level 255 to quit.\n
+Use Level 0 to Restore.\n
+Any Level > 31 to Restart.\n\n
+Levels 1 thru 31 are valid."
+
+
+%message	2
+"Pick a level from 1 thru 31: "
+

@@ -1,0 +1,50 @@
+[ POLICE QUEST
+[ rm80.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. September 17, 1987
+[ Last Update September 17, 1987GR
+
+
+[ lgcResidential
+
+%include "gamedefs"
+%include "rm80.msg"
+%include "rm94.h"
+
+
+
+[ atempt to go site seeing
+if (hit.special && !private) {
+	print( 5);					[private property
+	set( refresh);
+	set( private);
+	}
+if (!hit.special && private) {
+	reset( private);
+	}
+
+[ text
+
+if ((said( go, up, stairs) ||
+	said( go, upstairs))) {
+	print( 1);
+	}
+
+if (ego.y < 144) {
+	if (posn( ego, 145, 112, 153, 120)) {
+		if (said( knock, door)) {
+			print( 2);
+			}
+		if (said( open, door)) {
+			print( 3);
+			}
+		}
+	}
+
+
+if ((said( look) ||
+	said(look, room))) {
+	print( 4);
+	}
+
+

@@ -1,0 +1,168 @@
+[ POLICE QUEST
+[ rm8.cg
+[ By:  Greg Rowland, Ed Anderson, and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 3, 1987GR
+
+[ rm.gloveBox
+
+
+%include "gamedefs"
+%include "rm8.msg"
+
+
+
+%define	has.license		lf0
+
+
+
+if (init.log) {
+	set( NOcase);
+	dynamic1 = 0;
+	load.pic( current.room);
+	draw.pic( current.room);
+
+	load.view( v.tasMug);			[ 92
+	load.view( v.TGLB);				[ 112
+	load.sound( s.case);
+
+	add.to.pic( v.TGLB, 0, 0, 50, 105, 4, 4);[License, book
+
+	show.pic( );
+	status.line.off( );
+	reset( enable.menu);
+
+	return( );
+	}
+
+
+[ Show tasselli license 
+
+if (has.license && refresh)
+	{
+	reset( refresh);
+
+	clear.text.rect( 6,  0, 14, 19, 15);
+	clear.text.rect( 8, 20, 16, 39, 15);
+			[top, left, bottom, right, attribute
+
+	if ( hercules) {
+		add.to.pic( v.tasMug, 0, 0,  2, 87, 15, 15);
+		add.to.pic( v.tasMug, 0, 1, 82, 103, 15, 15);
+		}
+	else {
+		add.to.pic( v.tasMug, 0, 0,  2, 77, 15, 15);
+		add.to.pic( v.tasMug, 0, 1, 82, 93, 15, 15);
+		}
+
+	[ L1 Hoffman
+	set.text.attribute( BG_COLOR, TEXT_COLOR);
+	display(  6,  6,  1);
+	display(  7,  6,  2);
+	display(  8,  6,  3);
+	display(  9,  6,  4);
+	display( 10,  6,  5);
+	display( 11,  6,  6);
+	display( 12,  6,  7);
+	display( 13,  6,  8);
+	display( 14,  6,  9);
+
+	[ L2 Pierson
+	display(  8, 26, 10);
+	display(  9, 26, 11);
+	display( 10, 26, 12);
+	display( 11, 26, 13);
+	display( 12, 26, 14);
+	display( 13, 26, 15);
+	display( 14, 26, 16);
+	display( 15, 26,  8);
+	display( 16, 26,  9);
+
+	set.text.attribute( TEXT_COLOR, BG_COLOR);
+	}
+
+
+if (has.license && have.key()) {
+	reset( has.license);
+	reset( refresh);
+	draw.pic( current.room);
+	add.to.pic( v.TGLB, 0, 0, 50, 105, 4, 4);	[	License, book
+	show.pic( );
+	print( 21);					[ jack will catalog
+	accept.input( );
+	}
+
+
+
+[ Text
+
+if (!have.input) {
+	goto exit;
+	}
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look, box, rol))) {
+	print( 22);					[ observe book license.
+	}
+
+if ((said( close, box, rol) ||
+	said( look, room, rol) ||
+	said( stop, looking, rol) ||
+	said( look, away, rol))) {
+	print( 21);
+	dynamic1 = 32;
+	sound( s.case, snd.done);
+	scriptCycles = 5;
+	}
+
+if ((said( get, book, rol) ||
+	said( get, notebook, rol) ||
+	said( get, black, book, rol) ||
+	said( get, black, notebook, rol) ||
+	said( open, book, rol) ||
+	said( open, notebook, rol) ||
+	said( open, black, book, rol) ||
+	said( open, black, notebook, rol) ||
+	said( look$in, book, rol) ||
+	said( look$in, notebook, rol) ||
+	said( look$in, black, book, rol) ||
+	said( look$in, black, notebook, rol) ||
+	said( look, black, notebook, rol) ||
+	said( look, black, book, rol) ||
+	said( look, notebook, rol) ||
+	said( look, book, rol))) {
+	if (!SxTbook) {
+		score += 2;
+		set( SxTbook);
+		}
+	print( 20);					[ You open the note book
+	set( snd.done);
+	dynamic1 = 113;
+	scriptCycles = 4;
+	}
+
+
+if ((said( get, license, rol) ||
+	said( get, driver, license, rol) ||
+	said( look, driver, license, rol) ||
+	said( look, license, rol))) {
+	if (!SxTlicense) {
+		set( SxTlicense);
+		score += 2;
+		}
+	prevent.input( );
+	set( has.license);
+	set( refresh);
+	}
+
+[
+:exit
+[
+
+if (dynamic1 && snd.done && scriptDone) {
+	reset( snd.done);
+	reset( scriptDone);
+	new.room.f( dynamic1);
+	}
+

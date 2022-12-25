@@ -1,0 +1,182 @@
+[ POLICE QUEST
+[ rm29.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 8/18/86
+[ Last Update August 30, 1987al
+
+[ lgc.janitor
+
+
+%include "gamedefs"
+%include "rm29.msg"
+%include "rm5.h"
+
+
+
+if (init.log)
+	{
+	animate.obj( a.janitor);
+	set.view( a.janitor, v.janitor);
+	set.loop( a.janitor, 1);
+	position( a.janitor, 60, 156);
+	step.time( a.janitor, three);
+	cycle.time( a.janitor, three);
+	draw( a.janitor);
+
+	if (locker.scene == janitor1)
+		{
+		msg1 = 1;
+		msg2 = 2;
+		msg3 = 3;
+		msg4 = 4;
+		}
+	else
+		{
+		if (locker.scene == janitor2)
+			{
+			msg1 = 8;
+			msg2 = 9;
+			msg3 = 10;
+			msg4 = 11;
+			}
+		else
+			{
+			msg1 = 15;
+			msg2 = 16;
+			msg3 = 17;
+			msg4 = 18;
+			}
+		}
+
+	return( );
+	}
+
+
+
+distance( ego, a.janitor, work);
+if (work < dist)
+	{
+	set( nearPerson);
+	}
+
+
+if (said( look, janitor, rol))
+	{
+	if (!nearPerson)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 22);
+		}
+	}
+
+if ((said( hello) ||
+	said( talk, man)))
+	{
+	if (!nearPerson)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (!conver1)
+			{
+			print.f( msg1);
+			set( conver1);
+			}
+		else
+			{
+			if (!conver2)
+				{
+				print.f( msg2);
+				set(conver2);
+				}
+			else
+				{
+				if (!conver3)
+					{
+					print.f( msg3);
+					set( conver3);
+					}
+				else
+					{
+					print.f( msg4);
+					reset( conver1);
+					reset( conver2);
+					reset( conver3);
+					}
+				}
+			}
+		}
+	}
+
+if (!conver0 && work < 12)
+	{
+	set( conver0);
+	if (locker.scene == janitor1)
+		{
+		random( 5, 7, work);
+		print.f( work)
+		}
+	else
+		{
+		if (locker.scene == janitor2)
+			{
+			random( 12, 14, work);
+			print.f( work)
+			}
+		else
+			{
+			if (locker.scene == janitor3 &&
+				previous.room == 47 &&	[	was in locker
+				current.sonny == 13)	[	pimp suit
+				{
+				print( 23);
+				locker.scene = sawPimpSuit;
+				}
+			else
+				{
+				random( 19, 21, work);
+				print.f( work)
+				}
+			}
+		}
+	}
+
+if (!nearPerson)
+	{
+	reset( conver0);
+	}
+
+
+if (moving0 == 0)					[	trek him
+	{
+	step = 1;
+	random( 21, 60, x);
+	random( 145, 166, y);
+	move.obj.f( a.janitor, x, y, step, moved0);
+	++moving0;
+	}
+
+if (moving0 == 2)
+	{
+	step = 1;
+	random( 70, 110, x);
+	random( 145, 166, y);
+	move.obj.f( a.janitor, x, y, step, moved0);
+	++moving0;
+	}
+
+if (moving0 == 4)
+	{
+	moving0 = 0;
+	}
+
+
+
+[
+:exit
+[
+

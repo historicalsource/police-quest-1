@@ -1,0 +1,310 @@
+[ POLICE QUEST 
+[ rm50.cg 
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 9/10/86
+[ Last Update September 26, 1987al
+
+[	narc office FBI wanted list clipboard
+
+
+%include "gamedefs"
+%include "rm50.msg"
+
+
+%define	lastPage			lcl1
+
+
+
+if (init.log)
+	{
+	load.view( v.mug.shots);
+
+	load.pic( current.room);
+	draw.pic( current.room);
+
+	if ((!narcoff.scene	||
+		!obj.in.room( i.Wposter, current.room)))
+		{
+		lastPage = 4; 				[	nolaura.intro
+		}
+	else
+		{
+		lastPage = 6;
+		}
+
+	show.pic( );
+	status.line.off( );
+
+	page = 1;
+	start.motion( ego);
+	set( refresh);
+	}
+
+
+
+if ((ego.dir || refresh))			[	Update screen.
+	{
+	reset( refresh);
+
+	if ((ego.dir == ego.right ||
+		ego.dir == ego.down.right ||
+		ego.dir == ego.down))
+		{
+		++page;
+		if (page > lastPage)
+			{
+			page = 1;
+			}
+		}
+
+	if ((ego.dir == ego.up ||
+		ego.dir == ego.up.right ||
+		ego.dir == ego.left))
+		{
+		--page;
+		if (!page)
+			{
+			page = lastPage;
+			}
+		}
+
+	if (ego.dir == ego.up.left)
+		{
+		page = 1;
+		}
+
+	if (ego.dir == ego.down.left)
+		{
+		page = lastPage;
+		}
+
+	start.motion( ego);
+	set.text.attribute( BG_COLOR, TEXT_COLOR);
+
+
+
+
+	if (page == 1)
+		{
+		clear.text.rect( 3, 10, 19, 29, 15);
+		display(  3, 10, 63);
+		display(  4, 10, 18);
+		
+
+		display(  7, 10, 19);
+		display(  8, 10, 20);
+		display(  9, 10, 22);
+		display( 10, 10, 23);
+		display( 11, 10, 21);
+		
+
+		display( 14, 10, 24);
+		display( 15, 10, 25);
+		display( 16, 10, 26);
+		display( 17, 10, 27);
+		display( 18, 10, 28);
+		display( 19, 10, 21);
+		}
+
+	if (page == 2)
+		{
+		clear.text.rect( 3, 10, 19, 29, 15);
+		display(  3, 10, 29);
+
+		
+		display(  6, 10, 31);
+		display(  7, 10, 55);
+		display(  8, 10, 30);
+		display(  9, 10, 32);
+		display( 10, 10, 33);
+
+
+		display( 13, 10, 34);
+		display( 14, 10, 35);
+		display( 15, 10, 37);
+		display( 16, 10, 38);
+		display( 17, 10, 36);
+		display( 18, 10, 62);
+		}
+
+
+	if (page == 3)
+		{
+		clear.text.rect( 3, 10, 19, 29, 15);
+		display(  3, 10, 29);
+
+		display(  5, 10, 39);
+		display(  6, 10, 40);
+		display(  7, 10, 41);
+		display(  8, 10, 57);
+		
+		display( 10, 10, 42);
+		display( 11, 10, 43);
+		display( 12, 10, 56);
+		display( 13, 10, 44);
+		display( 14, 10, 45);
+
+		display( 16, 10, 49);
+		display( 17, 10, 59);
+		display( 18, 10, 50);
+		display( 19, 10, 51);
+		}
+
+	if (page == 4)
+		{
+		clear.text.rect( 3, 10, 19, 29, 15);
+	  	display(  3, 10, 46);
+
+
+		display(  6, 10, 47);
+		display(  7, 10, 58);
+		display(  8, 10, 48);
+		display(  9, 10, 61);
+		}
+
+	if (page == 5)
+		{
+		clear.text.rect( 3, 10, 19, 29, 15);
+		display(  3, 10, 2);
+
+		display(  5, 10, 3);
+		display(  6, 10, 4);
+		display(  7, 10, 5);
+
+
+		if  (hercules)			[ On Herc Machines
+			{
+	  		add.to.pic( v.mug.shots, 0, 5, 56, 99, 4, 4);
+			}
+		else {
+	  		add.to.pic( v.mug.shots, 0, 5, 56, 106, 4, 4);
+			}
+
+
+
+
+
+
+		display( 15, 10, 6);
+		display( 16, 10, 7);
+		display( 17, 10, 8);
+		display( 18, 10, 9);
+		}
+
+
+	if (page == 6)
+		{
+		clear.text.rect( 3, 10, 19, 29, 15);
+		display(  4, 10,  1);	
+		display(  5, 10, 10);	
+		display(  6, 10, 11);
+		display(  7, 10, 12);
+		display(  8, 10, 13);
+		display(  9, 10, 14);
+
+
+		display( 12, 10, 15);
+		display( 13, 10, 16);
+		display( 14, 10, 17);
+		display( 15, 10, 60);
+		}
+
+
+	set.text.attribute( TEXT_COLOR, BG_COLOR);
+	}
+	
+
+
+[HANDLE INPUT
+
+if ((have.input || controller( c.menu)))
+	{
+	set( refresh);
+	}
+else
+	{
+	goto exit;
+	}
+
+
+if ((said( previous, page, rol) ||
+	said( turn, previous, page, rol) ||
+	said( look, previous, page, rol)))
+	{
+	set( refresh);
+	print( 66);
+	--page;
+	if (!page)
+		{
+		page = lastPage;
+		}
+	}
+
+if ((said( turn, page) ||
+	said( read) ||
+	said( read, next, page) ||
+	said( read, clipboard)))
+	{
+	set( refresh);
+	print( 66);
+	++page;
+	if (page > lastPage)
+		{
+		page = 1;
+		}
+	}
+
+
+if ((said( take, clipboard) ||
+	said( keep, clipboard) ||
+	said( take)))
+	{
+	print( 64);
+	}
+
+
+if ((said( remove, poster, rol) ||
+	said( remove, anyword, list, rol) ||
+	said( remove, hoffman, poster, rol) ||
+	said( get, poster, rol) ||
+	said( get, anyword, list, rol) ||
+	said( get, hoffman, poster, rol)))
+	{
+	if (!obj.in.room( i.Wposter, current.room))
+		{
+		set( alreadyGotIt);
+		}
+	else
+		{
+		if (page < 5)
+			{
+			print( 53);			[ you don't see one
+			}
+		else
+			{
+			get( i.Wposter);
+			score += 2;
+			print( 52);
+			lastPage = 4;
+			page = 1;
+			}
+		}
+	}
+
+
+if ((said( put, clipboard, away) ||
+	said( stop, looking, clipboard) ||
+	said( put, back, clipboard) ||
+	said( return, clipboard, rol) ||
+	said( hang, up, clipboard, rol) ||
+	said( hang, clipboard, rol) ||
+	said( put, clipboard, back)))
+	{
+	new.room( 49);
+	}
+
+
+[*****
+:exit
+[*****
+

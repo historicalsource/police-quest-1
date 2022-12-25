@@ -1,0 +1,443 @@
+[ POLICE QUEST
+[ rm65.cg
+[ By:  Greg Rowland, Scott Murphy, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 10, 1987al
+
+[ Hallway to right of elevator
+
+
+%include "gamedefs"
+%include "rm65.msg"
+
+
+
+%define	doorOpening		1		[	doorStatus equates
+%define	doorClosing		2
+
+
+%define	doorDone			lf0
+%define	waiting			lf1
+%define	doorOpenBains		lf2
+%define	nearDoorR			lf3
+%define	nearDoorL			lf4
+%define	nearDoorStairs		lf5
+%define	bainsDone			lf6
+
+						
+%define	doorStatus		lcl0
+%define	delay			lcl1
+%define	bainsDistance		lcl2
+%define	bainsScript		lcl3
+
+
+%object	aDoor			1
+%object	aBains			2
+
+
+
+if (init.log)
+	{
+	set( NOcase);
+
+	load.view( v.roomNums);
+	load.view( v.door65);
+	
+	if (bainsEgoTogether)
+		{
+		load.view( v.bains);
+		}
+
+	if (together)
+		{
+		load.logics( 73);			[scDyn
+		}
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	animate.obj( aDoor);
+	ignore.blocks( aDoor);
+	set.view( aDoor, v.door65);
+	position( aDoor, 86, 120);
+	draw( aDoor);
+	work = DOOR_CYCLE_TIME;
+	cycle.time( aDoor, work);
+
+	
+	if ((previous.room == 67 ||
+		previous.room == 79))
+		{
+		set.cel( aDoor, 3);
+		stop.cycling( aDoor);
+		doorStatus = doorClosing;
+		delay = 18;
+		}
+	else
+		{
+		set.cel( aDoor, 0);
+		stop.update( aDoor);
+		}
+	
+	if (bainsEgoTogether)
+		{
+		animate.obj( aBains);
+		set.view( aBains, v.bains);
+		set.loop( aBains, 0);
+		ignore.blocks( aBains);
+		position( aBains, 39, 129);
+		draw( aBains);
+		move.obj( aBains, 84, 129, 0, bainsDone);
+		bainsScript = 0;
+		}
+
+	if ((!toFloor || toFloor == 2))
+		{
+		add.to.pic( v.roomNums, 0, 2, 22, 73, 4, 4);
+		add.to.pic( v.roomNums, 0, 3, 88, 73, 4, 4);
+		}
+	
+	if (toFloor == 3)
+		{
+		add.to.pic( v.roomNums, 1, 2, 22, 73, 4, 4);
+		add.to.pic( v.roomNums, 1, 3, 88, 73, 4, 4);
+		}
+	
+	if (toFloor == 4)
+		{
+		add.to.pic( v.roomNums, 2, 2, 22, 73, 4, 4);
+		add.to.pic( v.roomNums, 2, 3, 88, 73, 4, 4);
+		}
+
+	if (previous.room != 67 && previous.room != 66 && previous.room != 79)
+		{
+		position( ego, 75, 125);
+		toFloor = 2;
+		}
+	
+	if ((previous.room == 67 || previous.room == 79))
+		{
+		position( ego, 89, 121);
+		}
+	
+	draw( ego);
+	
+	if (together)
+		{
+		call( 73);				[scDyn
+		}
+
+	show.pic( );
+	return( );
+	}							[***		End Inits		***
+
+
+
+reset( nearDoorL);
+if (posn( ego, 20, 121, 34, 126))
+	{
+	set( nearDoorL);
+	}
+
+reset( nearDoorR);
+if (posn( ego, 86, 121, 100, 126))
+	{
+	set( nearDoorR);
+	}
+
+reset( nearDoorStairs);
+if (posn( ego, 16, 134, 24, 145))
+	{
+	set( nearDoorStairs);
+	}
+
+distance( ego, aBains, bainsDistance);
+if (bainsDistance < dist)
+	{
+	set( nearPerson);
+	}
+
+
+if (bainsDone)
+	{
+	reset( bainsDone);
+	++bainsScript;
+	
+	if (bainsScript == 1)
+		{
+		move.obj( aBains, 90, 129, 0, bainsDone);
+		}
+	
+	if (bainsScript == 2)
+		{
+		stop.cycling( aBains);
+		start.update( aDoor);
+		end.of.loop( aDoor, bainsDone);
+		}
+	
+	if (bainsScript == 3)
+		{
+		set( waiting);
+		start.cycling( aBains);
+		move.obj( aBains, 90, 120, 0, bainsDone);
+		}
+	
+	if (bainsScript == 4)
+		{
+		erase( aBains);
+		}
+	}
+
+
+--delay;
+if (delay == 1)
+	{
+	reverse.loop( aDoor, doorDone);
+	}
+
+
+if (doorDone)
+	{
+	if (doorStatus == doorOpening)
+		{
+		if (toFloor == 2)
+			{
+			new.room( 67);			[	ego room
+			}
+		
+		if (toFloor == 4)
+			{
+			new.room( 79);			[	Bains' room
+			}
+		}
+	
+	if (doorStatus == doorClosing)
+		{
+		stop.update( aDoor);
+		doorStatus = 0;
+		}
+	}
+
+
+
+[*****
+:said.it
+[*****
+
+if (!have.input)
+	{
+	goto exit;
+	}
+
+if (said( open, door))
+	{
+	if ((nearDoorL || nearDoorR))
+		{
+		print( 12);
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( knock) ||
+	said( knock, door)))
+	{
+	if (nearDoorStairs)
+		{
+		print( 22);
+		}
+	else
+		{
+		if (!nearDoorL && !nearDoorR)
+			{
+			set( notCloseEnough);
+			}
+		else
+			{
+			if (nearDoorR &&
+			    (toFloor == 2 || toFloor == 4))
+				{
+				print( 15);			[ no answer
+				}
+			else
+				{
+				random( 15, 19, work);
+				print.f( work);
+				}
+			}
+		}
+	}
+
+if ((said( key) ||
+	said( unlock, door) ||
+	said( use, key, unlock, door) ||
+	said( use, key, open, door) ||
+	said( unlock, door, use, key) ||
+	said( use, key) ||
+	said( open, with, key) ||
+	said( open, door, with, key)))
+	{
+	if (!nearDoorL && !nearDoorR)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if  (nearDoorR &&
+			toFloor == 2 &&
+			has( i.roomKey))
+			{
+			if (waiting)
+				{
+				print( 8);
+				}
+			else
+				{
+				start.update( aDoor);
+				end.of.loop( aDoor, doorDone);
+				doorStatus = doorOpening;
+				if (!SxRoom)
+					{
+					set( SxRoom);
+					score += 1;
+					}
+				}
+			}
+		else
+			{
+			print( 13);
+			}
+		}
+	}
+
+if  (toFloor == 2 &&
+	has( i.roomKey) &&
+	said( lock, door))
+	{
+	if (!nearDoorR)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		set( OK);
+		}
+	}
+
+
+
+if (bainsEgoTogether &&
+    (said( transmit, location) ||
+	said( give, location) ||
+	said( give, room, number) ||
+	said( give, number) ||
+	said( talk, pen) ||
+	said( talk, transmitter, pen) ||
+	said( talk, transmitter) ||
+	said( use, pen) ||
+	said( use, transmitter, pen) ||
+	said( use, transmitter) ||
+	said( number) ||
+	said( call) ||
+	said( room, number) ||
+	said( transmit, number) ||
+	said( transmit, room, number)))
+	{
+	if (!has( i.transmitter))
+		{
+		print( 1);
+		}
+	else
+		{
+		calledBackups = current.room;
+		if (!SxUsedTrans)
+			{
+			set( SxUsedTrans);
+			score += 5;
+			}
+
+		print( 9);					[	"You whisper the number 404.."
+		}
+	}
+
+
+if ((said( look) ||
+	said( look, room)))
+	{
+	if (toFloor == 2)
+		{
+		print( 2);
+		}
+	else
+		{
+		if (toFloor == 3)
+			{
+			print( 3);
+			}
+		else
+			{
+			print( 4);
+			}
+		}
+	}
+
+if ((said( look, down) ||
+	said( look, floor)))
+	{
+	print( 10);
+	}
+
+if (said( look, door))
+	{
+	if ((nearDoorL || nearDoorR))
+		{
+	     print( 11);
+		}
+	 else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+
+
+[*****
+:exit
+[*****
+
+if (waiting)
+	{
+	if (posn( ego, 86, 120, 94, 120))
+		{
+		new.room( 79);				[	Bains' room
+		}
+	}
+
+if (obj.in.box( ego, 86, 117, 101, 118))
+	{
+	if (toFloor == 2)
+		{
+		new.room( 67);
+		}
+	}
+
+if (edge.ego.hit == left)
+	{
+	if (bainsEgoTogether)
+		{
+		print( 21);				[	You lost him!
+		set( certainDeath);
+		}
+	else
+		{
+		new.room( 66);				[rm.hotelhall1
+		}
+	}
+
+if (together)
+	{
+	call( 73);					[scDyn
+	}

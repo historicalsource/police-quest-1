@@ -1,0 +1,501 @@
+[ POLICE QUEST
+[ rm52.cg
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 25, 1987al
+
+[ hqhall2.room
+
+
+%include "gamedefs"
+%include "rm52.msg"
+
+
+
+%define	nearTable			lf0
+%define	writeMemo			lf1
+%define	doorOpen			lf2
+%define	doorDone			lf3
+%define	warned			lf4
+%define	nearWindow		lf5
+%define	outside			lf6
+
+
+%object	aDoor			1
+
+
+
+if (init.log)
+	{
+	reset( hasSafeCar);
+
+	load.sound( s.door.open);
+	load.sound( s.door.close);
+	
+	load.view( v.MdoorRt);
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	animate.obj( aDoor);
+	ignore.objs( aDoor);
+	ignore.blocks( aDoor);
+	set.priority( aDoor, 4);
+	set.view( aDoor, v.MdoorRt);
+	set.loop( aDoor, 0);
+	set.cel( aDoor, 0);
+	position( aDoor, 51, 120);
+	draw( aDoor);
+	stop.update( aDoor);
+	work = DOOR_CYCLE_TIME;
+	cycle.time( aDoor, work);
+
+	if (priorX) {
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		}
+	else {
+		position( ego, 80, 140);
+
+		if (previous.room == 43) {	[rm.moroff
+			position( ego, 54, 120);
+			}
+		
+		if (previous.room == 49) {	[rm.narcoff
+			position( ego, 129, 120);
+			}
+		
+		if (previous.room == 7) {	[rm.yard
+			position( ego, 15, 137);
+			}
+		
+		if (previous.room == 6) {	[rm.hqhall1
+			position( ego, 150, 140);
+			}
+		}
+
+	add.to.pic( v.MdoorRt, 1, 0, 79, 125, 11, 0);	[ report.table
+
+	draw( ego);
+	show.pic( );
+	
+	return( );
+	}
+
+
+
+reset( nearWindow);
+if (posn( ego, 68, 121, 99, 128))
+	{
+	set( nearWindow);
+	}
+
+if (doorDone)
+	{
+	reset( doorDone);
+	toggle( doorOpen);
+	stop.update( aDoor);
+	}
+
+reset( outside);
+if (posn( ego, 11, 130, 16, 144))
+	{
+	set( outside);
+	}
+
+if (!outside)
+	{
+	reset( warned);
+	
+	if (doorOpen)
+		{
+		ignore.blocks( ego);
+		}
+	else
+		{
+		observe.blocks( ego);
+		}
+	}
+else
+	{
+	if (hit.special && !warned)
+		{
+		set( warned);
+		observe.blocks( ego);
+		
+		if (!current.sonny)
+			{
+			ignore.blocks( ego);
+			}
+		else
+			{
+			if (has( i.extnd) &&
+				current.sonny != 8)	[ sonny.narc
+				{
+				print( 38);		[ better return radio
+				}
+			else
+				{
+				if (has( i.PCkey))
+					{
+					print( 39);	[ better return keys
+					}
+				else
+					{
+					ignore.blocks( ego);
+					}
+				}
+			}
+		}
+	}
+
+	
+
+if (posn( ego, 50, 116, 64, 119)) {
+	new.room( 43);					[rm.moroff
+	}
+
+if (posn( ego, 124, 116, 138, 119)) {
+	new.room( 49);					[rm.narcoff
+	}
+
+if (posn( ego, 11, 130, 14, 144)) {
+	new.room( 7);					[rm.yard
+	}
+
+if (edge.ego.hit == right) {
+	new.room( 6);					[rm.hqhall1
+	}
+
+if  (scriptDone &&
+	bluerm.scene == 4 &&
+	progress < has.brief2 &&
+	previous.room == 6)
+	{
+	squad.scene = 0;
+	set( certainDeath);
+
+	if (current.sonny == in.uniform)
+		{
+		print( 5);				[ walk out fired
+		}
+	else
+		{
+		print( 16);				[ skip work or what
+		}
+	}
+
+reset( nearTable);
+if (posn( ego, 70, 120, 115, 128))
+	{
+	set( nearTable);
+	}
+
+
+
+[ Text 
+
+if (!have.input) {
+	goto exit;
+	}
+
+if (said( open, door))
+	{
+	if (posn( ego, 50, 120, 64, 125)) {
+		if (doorOpen) {
+			print( 2);			[ it's open
+			}
+		else {
+			start.update( aDoor);
+			end.of.loop( aDoor, doorDone);
+			sound( s.door.open, snd.done);
+			}
+		}
+	else {
+		if ((posn( ego,  16, 131,  29, 144) ||
+			posn( ego, 120, 120, 140, 132))) {
+			print( 4);			[ door to remain open
+			}
+		else {
+			set( notCloseEnough);
+			}
+		}
+	}
+
+if (said( close, door))
+	{
+	if (posn( ego, 50, 120, 64, 125)) {
+		if (!doorOpen) {
+			print( 3);			[ it is closed
+			}
+		else {
+			start.update( aDoor);
+			reverse.loop( aDoor, doorDone);
+			sound( s.door.close, snd.done);
+			}
+		}
+	else {
+		if ((posn( ego,  16, 131,  29, 144) ||
+			posn( ego, 120, 120, 140, 132))) {
+			print( 4);			[ door to remain open
+			}
+		else {
+			set( notCloseEnough);
+			}
+		}
+	}
+				
+if ((posn( ego,  16, 131,  29, 144) ||
+	posn( ego, 120, 120, 140, 132)))
+	{
+	if (said( look, door))
+		{
+		print( 4);				[ door to remain open
+		}
+	}
+
+
+[ Memo
+
+if ((said( get, memo, rol) ||
+	said( get, blank, memo, rol)))
+	{
+	if (!nearTable) {
+		set( notCloseEnough);
+		}
+	else	{
+		if (!jail.scene) {
+			print( 20);			[ don't need memo at this time
+			}
+		else {
+			print( 29);			[ They are to remain on the table
+			}
+		}
+	}
+
+if ((said( request, transfer, rol) ||
+	said( write, letter, rol) ||
+	said( write, note, rol) ||
+	said( write, memo, rol)))
+	{
+	if (!nearTable) {
+		set( notCloseEnough);
+		}
+	else	{
+		if (!jail.scene) {
+			print( 20);			[ don't need memo at this time
+			}
+		else {
+			if (!SxMemo)
+				{
+				if (!writeMemo)
+					{
+					print( 25);	[ request transfer Narcotics
+					set( writeMemo);
+					}
+				else {
+					print( 32);	[ double check your request
+					}
+				}
+			else {
+				if (progress < narc) {
+					print( 30);	[ would be like begging
+					}
+				else {
+					print( 37);	[ Request granted. No memos
+					}
+				}
+			}
+		}
+	}
+
+if ((said( submit, memo, rol) ||
+	said( submit, letter, rol) ||
+	said( submit, note, rol) ||
+	said( give, memo, rol) ||
+	said( put, basket, rol) ||
+	said( put, memo, basket, rol) ||
+	said( turn, memo, rol) ||
+	said( place, memo, basket, rol) ||
+	said( place, basket, rol)))
+	{
+	if (!nearTable) {
+		set( notCloseEnough);
+		}
+	else	{
+		if (!jail.scene) {
+			print( 20);			[ don't need memo at this time
+			}
+		else {
+			if (!SxMemo) {
+				if (!writeMemo) {
+					print( 34);	[ submit blank memo
+					}
+				else {
+					print( 26);	[ place request in basket
+					set( SxMemo);
+					score += 2;
+					}
+				}
+			else {
+				if (progress < narc) {
+					print( 30);	[ would be like begging
+					}
+				else {
+					print( 37);	[ Request granted. No memos
+					}
+				}
+			}
+		}
+	}
+
+if (said( look, under, table)) {
+  	if (!nearTable) {
+		set( notCloseEnough);
+		}
+	else {
+		print( 21);				[ under the table and see
+		print( 22);				[ The under side of the table
+		}
+	}
+
+if ((said( climb, table) ||
+	said( climb, on, table))) {
+	if (!nearTable) {
+		set( notCloseEnough);
+		}
+	else	{
+		print( 23);				[ Climbing table rip trousers
+		}
+	}
+
+if ((said( look, table) ||
+	said( look, on, table))) {
+	if (!nearTable) {
+		set( notCloseEnough);
+		}
+	else	{
+		print( 17);				[ basket marked In	
+		}
+	}
+
+if ((said( look, basket, rol) ||
+	said( look, memo, basket, rol) ||
+	said( look$in, basket, rol)))
+	{
+	if (!nearTable) {
+		set( notCloseEnough);
+		}
+	else	{
+		if (SxMemo) {				[ current ego COP 0
+			if (writeMemo) {
+				print( 35);		[ request in basket
+				}
+			else {
+				if (progress < narc) {
+					print( 36);	[ being processed
+					}
+				else {
+					print( 37);	[ Request granted. No memos
+					}
+				}
+			}
+		else {
+			print( 18);			[ The basket is empty
+			}
+		}
+	}
+
+if ((said( get, basket) ||
+	said( get, in, basket))) {
+	if (!nearTable) {
+		set( notCloseEnough);
+		}
+	else	{
+		print( 28);				[ Sorry, but the basket stays here
+		}
+	}
+
+if ((said( look, memo, rol) ||
+	said( look, blank, memo, rol) ||
+	said( look, office, memo, rol)))
+	{
+	if (!nearTable) {
+		set( notCloseEnough);
+		}
+	else	{
+		if (writeMemo && !SxMemo)
+			{
+			print( 1);
+			}
+		else
+			{
+			print( 19);				[ stack of blank office memos
+			}
+		}
+	}
+
+[ END OF MEMO SHIT 
+
+		
+if ((said( look) ||	
+	said( look, room))) {
+	print( 7);
+	}
+
+if (said( look, photograph))
+	{
+	print( 8);
+	}
+
+if (said( get, photograph, rol))
+	{
+	print( 6);
+	}
+
+if (said( look, window)) {
+	print( 9);
+	}
+
+if (said( knock, on, window))
+	{
+	if (!nearWindow)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 10);
+		}
+	}
+
+if (said( break, window)) {
+	print( 11);
+	}
+
+if ((said( look, up) ||
+	said( look, ceiling))) {
+	print( 12);
+	}
+
+if ((said( look, down) ||
+	said( look, floor))) {
+	print( 13);
+	}
+
+if (said( open, window)) {
+	print( 14);
+	}
+
+if (said( write, report))
+	{
+	print( 24);
+	}
+
+
+[****
+:exit
+[****
+

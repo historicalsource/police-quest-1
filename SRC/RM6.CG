@@ -1,0 +1,1032 @@
+[ POLICE QUEST
+[ rm6.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 25, 1987al
+
+[ hqhall1.room
+
+
+%include "gamedefs"
+%include "rm6.msg"
+
+
+
+[%var	chicken.scene		32
+%define	no.chicken		0
+%define	call.chicken		1
+%define	in.hall.chicken	2
+%define	has.chicken		3
+%define	done.chicken		4
+
+
+%define	moved0			lf0
+%define	moved1			lf1
+%define	moved2			lf2
+%define	moved3			lf3
+%define	nearDoor42		lf4
+%define	nearKeyboard		lf5
+%define	nearDoor51		lf6
+%define	nearTable			lf7
+%define	nearEvidence		lf8
+%define	nearDoor4			lf9
+%define	nearDoor5			lf10
+%define	conver0			lf11
+%define	conver1			lf12
+%define	conver2			lf13
+%define	conver3			lf14
+%define	doorDone			lf15
+%define	at.ego			lf16
+%define	following			lf17
+%define	doorOpen			lf18
+
+
+%define	moving0			lcl0
+%define	moving1			lcl1
+%define	moving2			lcl2
+%define	moving3			lcl3
+%define	story			lcl4
+%define	extender			lcl5
+%define	jackson			lcl6
+%define	bigsam			lcl7
+%define	steve			lcl8
+%define	dooley			lcl9
+%define	russ				lcl10
+%define	laura			lcl11
+
+
+%object	a.extender		1
+%object	a.keys			2
+%object	a.jackson			3
+%object	a.bigsam			4
+%object	a.steve			5
+%object	a.dooley			6
+%object	aDoor			7
+%object	a.russ			8
+%object	a.laura			9
+
+
+[ Room setup 
+
+if (init.log) {
+	set( init.dyn);
+	dynamic3 = 0;
+
+	if  (moroff.scene == 3 &&		[ back from blue room
+		narcoff.scene == 2) {		[ go no bail
+		moroff.scene = 4;			[ force sweet cheeks
+		}						[ rem if not get taber now never will
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	load.view( v.keys.extender);
+	load.view( v.Ddoor);
+	load.view( v.jack);
+
+ 	load.sound( s.door.open);
+	load.sound( s.door.close);
+
+	animate.obj( ego);
+	animate.obj( a.jackson);
+	animate.obj( a.bigsam);
+	animate.obj( a.steve);
+	animate.obj( a.dooley);
+	animate.obj( a.extender);
+	animate.obj( a.keys);
+	animate.obj( aDoor);
+	animate.obj( a.russ);
+
+	set.view( a.russ, v.jack);
+	
+	set.view( a.extender, v.keys.extender);
+	set.view( a.keys, v.keys.extender);
+	set.view( aDoor, v.Ddoor);
+	set.loop( aDoor, 0);
+
+		
+	position( a.extender, 75, 81);
+	position( a.keys, 33, 85);
+	position( aDoor, 21, 144);
+	position( a.russ, 75, 85);
+
+
+	if (chicken.scene && chicken.scene < 255) {
+		load.view( v.jackson);
+		load.view( v.bigsam);
+		load.view( v.steve);
+		load.view( v.dooley);
+
+		set.view( a.jackson, v.jackson);
+		set.view( a.bigsam, v.bigsam);
+
+		set.view( a.steve, v.steve);
+		set.view( a.dooley, v.dooley);
+		}
+	else {
+		load.view( v.laura);
+		animate.obj( a.laura);
+		set.view( a.laura, v.laura);
+		position( a.laura, 36, 99);
+		}
+	
+	
+	position( ego, 60, 120);		[ default
+
+	if (priorX) {
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		}
+	else {
+		if ((restart.in.progress ||
+			previous.room == 1))		[	rm.title
+			{
+			set.text.attribute( TEXT_COLOR, BG_COLOR);
+			status.line.on();
+			set( enable.menu);
+			disable.item( c.dummy);
+			accept.input( );
+			reset( game.control);
+			player.control( );
+			reset( demo);
+			accept.input( );
+
+			load.view( v.ego);
+			set.view( ego, v.ego);
+			set.loop( ego, 2);
+
+			if (!test.room)
+				{
+				animation.interval = 2;
+				}
+			}
+		}
+		
+		
+	if (previous.room == 42) {	[rm.srgoff
+  		position( ego, 25, 137);
+		}
+	
+	if (previous.room == 4) {	[rm.squad
+		wait.1 = 1;
+	   	position( ego, 118, 112);
+		}
+	
+	if (previous.room == 5) {	[rm.locker
+		wait.1 = 1;
+	   	position( ego, 140, 145);
+		}
+	
+	if (previous.room == 51) {	[rm.teletype
+		position( ego, 46, 93);
+		}
+	
+	if (previous.room == 52) {	[rm.hqhall2
+		position( ego, 36, 98);
+		}
+
+	ignore.objs( aDoor);
+	ignore.blocks( aDoor);
+	set.priority( aDoor, 12);
+	stop.cycling( aDoor);
+
+	if (doorOpen) {
+		ignore.blocks( ego);
+		set.cel( aDoor, 2);
+		}
+	else {
+		observe.blocks( ego);
+		set.cel( aDoor, 0);
+		}
+
+	draw( aDoor);
+	stop.update( aDoor);
+	work = DOOR_CYCLE_TIME;
+	cycle.time( aDoor, work);
+
+	set.cel( a.extender, 1);
+	set.cel( a.keys, 0);
+
+	stop.cycling( a.extender);
+	stop.cycling( a.keys);
+
+	set.priority( a.extender, 5);
+	set.priority( a.keys, 10);
+
+	if (obj.in.room( i.extnd, current.room)) {
+		draw( a.extender);
+		}
+
+	if (obj.in.room( i.PCkey, current.room)) {
+		draw( a.keys);
+		}
+
+	add.to.pic( v.keys.extender, 0, 0, 35, 83, 10, 10);
+	add.to.pic( v.keys.extender, 0, 0, 33, 93, 10, 10);
+	add.to.pic( v.keys.extender, 0, 0, 35, 91, 10, 10);
+
+	add.to.pic( v.keys.extender, 0, 1, 65, 81, 5, 5);
+	add.to.pic( v.keys.extender, 0, 1, 70, 81, 5, 5);
+	add.to.pic( v.keys.extender, 0, 1, 63, 83, 5, 5);
+	add.to.pic( v.keys.extender, 0, 1, 68, 83, 5, 5);
+	add.to.pic( v.keys.extender, 0, 1, 72, 83, 5, 5);
+	
+	if (chicken.scene == call.chicken) {
+		position( a.jackson, 40, 141);
+		position( a.bigsam, 105, 148);
+		position( a.steve, 87, 160);
+		position( a.dooley, 60, 140);
+
+		stop.cycling( a.jackson);
+		stop.cycling( a.bigsam);
+		stop.cycling( a.steve);
+
+		draw( a.jackson);
+		draw( a.bigsam);
+		draw( a.steve);
+		draw( a.dooley);
+		}
+
+	if (chicken.scene == has.chicken) {		[has chicken
+		position( a.jackson, 60, 141);
+		position( a.bigsam, 65, 148);
+
+		stop.cycling( a.jackson);
+		stop.cycling( a.bigsam);
+
+		set.loop( a.jackson, 1);
+		set.loop( a.bigsam, 1);
+
+		draw( a.jackson);
+		draw( a.bigsam);
+		}
+	
+	if ((previous.room == 113 ||
+		previous.room == 114))
+		{
+		moving3 = 5;
+		position( a.russ, 90, 89);
+	  	set.priority( a.russ, 4);
+		stop.cycling( a.russ);
+		draw( a.russ);
+		}
+
+	draw( ego);		
+	show.pic( );
+
+	if ((previous.room == 113 ||
+		previous.room == 114))
+		{
+		status.line.on( );
+		set( enable.menu);
+		}
+	}
+
+	
+
+[	Go to new room?
+
+if (posn( ego, 12, 129, 20, 143)) {
+	dynamic3 = 42;					[rm.srgoff
+	}
+if (posn( ego, 123, 108, 127, 118)) {
+	dynamic3 = 04;					[rm.squad
+	}
+if (posn( ego, 143, 136, 145, 154)) {
+	dynamic3 = 05;					[rm.locker
+	}
+if (posn( ego, 43, 91, 54, 92)) {
+	dynamic3 = 51;					[rm.teletype
+	}
+if (posn( ego, 30, 93, 32, 107)) {
+	dynamic3 = 52;					[rm.hqhall2
+	}
+if (dynamic3) {
+	if (chicken.scene == has.chicken) {
+		set( NOcase);
+		chicken.scene = 255;
+		}
+	new.room.f( dynamic3);
+	}
+
+
+
+[ Near Shit
+
+reset( nearDoor42);
+if (posn( ego, 21, 129, 30, 143)) {	[ nearDoor42
+	set( nearDoor42);
+	}
+
+reset( nearKeyboard);
+if (posn( ego, 32, 109, 43, 120)) {	[ nearKeyboard
+	set( nearKeyboard);
+	}
+
+reset( nearDoor51);
+if (posn( ego, 43, 92, 54, 100)) {		[ nearDoor51
+	set( nearDoor51);
+	}
+
+reset( nearTable);
+if (posn( ego, 55, 92, 85, 100)) {		[ nearTable
+	set( nearTable);
+	}
+
+reset( nearEvidence);
+if (posn( ego, 84, 92, 110, 100)) {	[ nearEvidence
+	set( nearEvidence);
+	}
+
+reset( nearDoor4);
+if (posn( ego, 110, 107, 125, 120)) {	[ nearDoor4
+	set( nearDoor4);
+	}
+
+reset( nearDoor5);
+if (posn( ego, 125, 135, 145, 155)) {	[ nearDoor5
+	set( nearDoor5);
+	}
+
+distance( ego, a.jackson, jackson);
+distance( ego, a.bigsam, bigsam);
+distance( ego, a.steve, steve);
+distance( ego, a.dooley, dooley);
+distance( ego, a.russ, russ);
+distance( ego, a.laura, laura);
+if ((jackson < dist ||
+	bigsam < dist ||
+	dooley < dist ||
+	laura < dist ||
+	steve < dist ||
+	russ < dist)) {
+	set( nearPerson);
+	}
+
+
+
+[ trouble timer 
+
+if (aSecondPassed) {
+	if (wait.1) {
+		++wait.1;
+		if (wait.1 == 255) {
+			wait.1 = 1;
+			}
+		}
+	}
+
+
+
+[ Animation timer
+
+if (moved0) {
+	++moving0;
+	reset( moved0);
+	}
+if (moved2) {
+	++moving2;
+	reset( moved2);
+	}
+if (moved3) {
+	++moving3;
+	reset( moved3);
+	}
+
+
+
+[ after brief 1
+
+if (previous.room == 4 &&
+	squad.scene &&
+	wait.1 == 2)					[ walked out on brief
+	{
+	wait.1 = 0;
+	
+	if (squad.scene < 4) {
+		print( 26);
+		squad.scene = 0;
+		set( certainDeath);			[ops your dead
+		}
+	else {
+		if (squad.scene < 11) {		[ people still leaving
+			print( 27);			[sure cleared out quick
+			squad.scene = 11;		[ got out ok
+			}
+		else {
+			if (bluerm.scene == 4 && progress < has.brief2)
+				{
+				if (current.sonny == in.uniform)
+					{
+					print( 26);	[ walk out fired
+					squad.scene = 0;
+					set( certainDeath);	[ ops your dead
+					}
+				else {
+					print( 11);	[ fired neglect
+					}
+				}
+			}
+		}
+	}
+
+
+
+[ Clad in towel
+
+if (!moving2 &&
+	wait.1 == 2 &&
+    (current.sonny == 4 || current.sonny == 7))
+	{
+	set( game.control);
+	start.motion( ego);
+	set.loop( ego, 1);
+	moving2 = 1;
+	wait.1 = 0;
+	}
+
+if (moving2 == 1) {
+	draw( a.laura);
+	move.obj( a.laura, 65, 110, 1, moved2);
+	++moving2;
+	}
+
+if (moving2 == 3) {
+	move.obj( a.laura, 75, 120, 1, moved2);
+	++moving2;
+	}
+
+if (moving2 == 5) {
+	print( 41);
+	wait.1 = 1;
+	++moving2;
+	}
+
+if (moving2 == 6 && wait.1 == 2) {
+	move.obj( a.laura, 65, 110, 1, moved2);
+	wait.1 = 0;
+	++moving2;
+	}
+
+if (moving2 == 8) {
+	move.obj( a.laura, 36, 99, 1, moved2);
+	++moving2;
+	}
+
+if (moving2 == 10) {
+	erase( a.laura);
+	set( certainDeath);
+	++moving2;
+	}
+
+
+
+[ Chicken scene 
+
+if (chicken.scene && chicken.scene < 255)	
+	{
+	follow.ego( a.dooley, 10, moved0);
+	get.posn( a.dooley, x, y);
+	
+	if ((work3 != x || work4 != y)) {
+		work3 = x; work4 = y;
+		start.cycling( a.dooley);
+		}
+	else {
+		stop.cycling( a.dooley);
+		}
+
+	if (!conver0 && moving0) {
+		print( 24);
+		print( 25);
+		wait.1 = 1;
+		set( conver0)
+		}
+	
+	
+	if ((conver0 || chicken.scene == has.chicken))
+		{
+		follow.ego( a.jackson, 17, work.f);
+		get.posn( a.jackson, x, y);
+		if ((work5 != x || work6 != y)) {
+			work5 = x; work6 = y;
+			start.cycling( a.jackson);
+			}
+		else {
+			stop.cycling( a.jackson);
+			}
+
+		follow.ego( a.bigsam, 31, work.f);
+		get.posn( a.bigsam, x, y);
+		if ((work7 != x || work8 != y)) {
+			work7 = x; work8 = y;
+			start.cycling( a.bigsam);
+			}
+		else {
+			stop.cycling( a.bigsam);
+			}
+
+		follow.ego( a.steve, 24, work.f);
+		get.posn( a.steve, x, y);
+		if ((work9 != x || work10 != y)) {
+			work9 = x; work10 = y;
+			start.cycling( a.steve);
+			}
+		else {
+			stop.cycling( a.steve);
+			}
+		}
+
+	if (conver0) {
+		if (jackson < 10 && !conver1)	{
+			print( 29);
+			set( conver1);
+			}
+		
+		if (bigsam < 10 && !conver2) {
+			print( 28);
+			set( conver2);
+			}
+		
+		if (steve < 10 && !conver3) {
+			print( 23);
+			set( conver3);
+			}
+		}
+	
+	if (chicken.scene == has.chicken) {
+		if (jackson < 17 && !conver1)	{
+			print( 42);
+			bluerm.scene = 1;		[ Jacks BD
+			set( conver1);
+			}
+		
+		if (bigsam < 15 && !conver2) {
+			print( 43);
+			set( conver2);
+			}
+		}
+
+	if (wait.1 == 30) {
+		print( 30);
+		wait.1 = 1;
+		}
+	}
+
+
+
+[ move em 
+[ Evidence locker 
+
+if (nearEvidence && moving3 == 0) {
+  	set.priority( a.russ, 4);
+	draw( a.russ);
+	move.obj( a.russ, 90, 85, 1, moved3);
+	++moving3;
+	}
+
+if (moving3 == 2) {
+	move.obj( a.russ, 90, 89, 1, moved3);
+	++moving3;
+	}
+
+if (moving3 == 4) {
+	if (jail.scene > 1) { 			[ hoffman jail
+		print( 36);				[ what can I do for you
+		}
+	else {
+		print( 38);				[ nothing	with your name on it
+		}
+	stop.cycling( a.russ);
+	++moving3;
+	}
+
+if (!nearEvidence && moving3 == 5) {
+	move.obj( a.russ, 75, 85, 1, moved3);
+	++moving3;
+	}
+
+if (moving3 == 7) {
+	erase( a.russ);
+	moving3 = 0;
+	}
+
+
+
+[ Text 
+
+if (!have.input) {
+	goto exit;
+	}
+
+if  (chicken.scene == has.chicken &&
+    (said( ok, rol) ||
+	said( anyword, ok, rol)))
+	{
+	print( 44);
+	}
+
+if (moving3 == 5)
+	{
+	if (said( get, drug)) {
+		print( 19);
+		}
+	}
+
+
+if (moving3 == 5 && jail.scene > 1)
+	{
+	if ((said( get, license, rol) ||
+		said( get, anyword, license, rol)))
+		{
+		print( 33);
+		}
+
+	if ((said( book, rol) ||
+		said( check, out, black, book) ||
+		said( read, black, book) ||
+		said( get, black, book) ||
+		said( give, me, black, book) ||
+		said( black, book, rol) ||
+		said( get, book, rol) ||
+		said( get, black, book, rol) ||
+		said( ask, book, rol) ||
+		said( ask, black, book, rol) ||
+		said( look, black, book, rol) ||
+		said( notebook, rol) ||
+		said( black, notebook, rol) ||
+		said( get, notebook, rol) ||
+		said( get, black, notebook, rol) ||
+		said( ask, notebook, rol) ||
+		said( ask, black, notebook, rol) ||
+		said( look, black, notebook, rol) ||
+		said( give, me, notebook, rol) ||
+		said( give, me, black, notebook, rol)))
+		{
+		if (!nearEvidence) {
+			print( 38);
+			}
+		else {
+			print( 37);
+			get.posn( ego, priorX, priorY);
+			status.line.off( );
+			new.room ( 113);		[ black book
+			}
+		}
+
+	if ((said( gun, rol) ||
+		said( get, gun, rol) ||
+		said( ask, gun, rol) ||
+		said( look, gun, rol) ||
+		said( give, me, gun, rol)))
+		{
+		if (!nearEvidence) {
+			print( 38);
+			}
+		else {
+			print( 37);
+			get.posn( ego, priorX, priorY);
+			status.line.off( );
+			new.room ( 114);		[	gun
+			}
+		}
+	}
+
+if (said( open, door))
+	{
+	if (nearDoor42) {
+		if (!doorOpen) {
+			start.update( aDoor);
+			end.of.loop( aDoor, doorDone);
+			sound( s.door.open, snd.done);
+			}
+		else {
+			print( 34);			[ it's open
+			}
+		}
+	else {
+		if ((nearDoor51 || nearDoor4)) {
+			print( 31);			[ door remain open during hours
+			}
+		else {
+			if (nearDoor5) {
+				print( 32); 		[ locker has a partition no door
+				}
+			else {
+				set( notCloseEnough);
+				}
+			}
+		}
+	}
+
+if (said( close, door))
+	{
+	if (nearDoor42) {
+		if (hit.special) {
+			print( 45);			[ close on head
+			}
+		else {
+			if (!doorOpen) {
+				print( 35);		[ it's closed
+				}
+			else {
+				start.update( aDoor);
+  				reverse.loop( aDoor, doorDone);
+				sound( s.door.close, snd.done);
+				}
+			}
+		}
+	else {
+		if ((nearDoor51 || nearDoor4)) {
+			print( 31);			[ door remain open during hours
+			}
+		else {
+			if (nearDoor5) {
+				print( 32); 		[ locker has a partition no door
+				}
+			else {
+				set( notCloseEnough);
+				}
+			}
+		}
+	}
+
+
+if ((said( get, extender) ||
+	said( get, radio, extender) ||
+	said( get, radio, extender, from, table) ||
+	said( get, radio, extender, off, table) ||
+	said( get, extender, off, table) ||
+	said( get, extender, from, table)))
+	{
+	if (has( i.extnd)) {
+		print( 08);				[ you've got it
+		}
+	else {
+		if (!nearTable) {
+			set( notCloseEnough);
+			}
+		else {
+			if (current.sonny == sonny.civies) {
+				print( 12);		[off duty
+				}
+			else {
+				if (current.sonny == disguised.sonny) {
+					print( 13);	[too big for under cover
+					}
+				else {
+					if (!obj.in.room( i.extnd, current.room)) {
+						print( 54);
+						print( 55);
+						}
+					else {
+						print( 9);
+						erase( a.extender);
+						get( i.extnd);
+						if (!SxExtender)
+							{
+							set( SxExtender);
+							score += 2;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+if (has( i.extnd) &&
+	said( put, extender, rol))
+	{
+	if (!nearTable) {
+		set( notCloseEnough);
+		}
+	else {
+		print( 15);			[ put back
+		draw( a.extender);
+		put( i.extnd, current.room);
+		}
+	}
+  	
+
+if (said( get, keys, rol)) {
+	if (!nearKeyboard) {	
+		set( notCloseEnough);
+		}
+	else {
+		if (current.sonny) {
+			print( 39);			[ don't need
+			}
+		else {
+			if (has( i.PCkey)) {
+				print( 17);		[ you have
+				}
+			else {
+				if (!obj.in.room( i.PCkey, current.room)) {
+					print( 56);	[ you lost
+					}
+				else {
+					print( 18);	[ you take
+					erase( a.keys);
+					get( i.PCkey);
+					if (!SxPCKeys)
+						{
+						set( SxPCKeys);
+						score += 1;
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+if  (has( i.PCkey) &&
+    (said( put, keys, rol) ||
+	said( hang, keys, rol)))
+	{
+	if (!nearKeyboard) {
+		set( notCloseEnough);
+		}
+	else {
+		print( 21);			[ you put
+		draw( a.keys);
+		put( i.PCkey, current.room);
+		}
+	}
+
+if ((said( look) ||
+	said( look, room))) {
+	print( 1);
+	}
+
+
+if ((said( look, down) ||
+	said( look, floor)))
+	{
+	print( 10);
+	}
+
+
+if (!has( i.extnd) &&
+    (said( look, radio) ||
+	said( look, radio, extender) ||
+	said( look, extender)))
+	{
+	if (nearTable)
+		{
+		print( 2);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( look, table) ||
+	said( look, objects, table) ||
+	said( look, objects, on, table) ||
+	said( look, on, table) ||
+	said( look, on, top, table) ||
+	said( look, top, table) ||
+	said( look, table) ||
+	said( look, on, table)))
+	{
+	if (nearTable)
+		{
+		print( 2);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if (said( look, under, table))
+	{
+	if (nearTable)
+		{
+ 		print( 46);
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( look, keys) ||
+	said( look, board) ||
+	said( look, keyboard)))
+	{
+ 	print( 3);
+	}
+
+if (said( look, photograph)) {
+ 	print( 4);
+	}
+
+if (said( look, wall)) {
+ 	print( 5);
+	}
+
+if (said( get, photograph)) {
+ 	print( 6);
+	}
+
+if (said( move, photograph)) {
+ 	print( 7);
+	}
+
+if ((said( look, up) ||
+	said( look, ceiling)))
+	{
+	print( 16);
+	}
+
+if ((said( look, window) ||
+	said( look$in, window)))
+	{
+	if (!nearEvidence)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 40);
+		}
+	}
+
+if (said( look, window)) {
+	print( 20);
+	}
+
+if (said( talk, man))
+	{
+	if (nearEvidence && moving3 == 5) {
+		if (jail.scene < 2) {
+			random( 47, 49, work);
+			print.f( work);
+			}
+		else {
+			print( 50);
+			print( 22);
+			}
+		}
+	else {
+		if (nearPerson) {
+			if ( chicken.scene && chicken.scene < has.chicken) {
+				print( 51);	[ Dooley ain't fit to talk to now!
+				}
+			else {
+				if ( chicken.scene < 255) {
+					print( 42);
+					}
+				else {
+					reset( have.match);
+					}
+				}
+			}
+		else {
+			set( notCloseEnough);
+			}
+		}
+	}
+
+if (said( look, man))
+	{
+	if (nearEvidence && moving3 == 5)
+		{
+		print( 14);
+		}
+	else
+		{
+		if (nearPerson)
+			{
+			reset( have.match);
+			}
+		else
+			{
+			set( notCloseEnough);
+			}
+		}
+	}
+
+
+		
+[
+:exit
+[
+
+if (doorDone) {
+	stop.update( aDoor);
+	toggle( doorOpen);
+	reset( doorDone);
+
+	if (doorOpen) {
+		ignore.blocks( ego);
+		}
+	else {
+		observe.blocks( ego);
+		}
+	}
+

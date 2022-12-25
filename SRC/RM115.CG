@@ -1,0 +1,81 @@
+[ POLICE QUEST
+[ rm115.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. September 18, 1987
+[ Last Update October 15, 1987GR
+
+
+%include "gamedefs"
+%include "rm117.h"
+
+
+
+[ rm115.cg ...............
+
+
+if ( carDist < impact &&
+	victim.priority == priority &&
+	crashing < collision) {
+	crashing = collision;
+	}
+else {
+	if ( egoLastDir == victimDir &&
+		victim.priority == 5) {
+
+		if ( victimDir == ego.up	&&
+			y < ego.y) {
+			carHit = 0;
+			}
+		if ( victimDir == ego.right &&
+			x > ego.x) {
+			carHit = 0;
+			}
+		if ( victimDir == ego.down &&
+			y > ego.y) {
+			carHit = 0;
+			}
+		if ( victimDir == ego.left &&
+			x < ego.x) {
+			carHit = 0;
+			}
+		}
+	else {
+		carHit = 0;
+		}
+	}
+
+if ((carHit ||
+	crashing == collision)) {
+	:stopCars
+	if ( carHit == 1 && !stopCar1) {
+		stop.update( a.car1);
+		set( stopCar1);
+		}
+	if ( carHit == 2 && !stopCar2) {
+		stop.update( a.car2);
+		set( stopCar2);
+		}
+	if ( carHit == 3 && !stopCar3) {
+		stop.update( a.car3);
+		set( stopCar3);
+		}
+	if ( carHit == 4 && !stopCar4) {
+		stop.update( a.car4);
+		set( stopCar4);
+		}
+	if ( carHit == 5 && !stopCar5) {
+		stop.update( a.car5);
+		set( stopCar5);
+		}
+	if ( carHit == 6 && !stopCar6) {
+		stop.update( a.car6);
+		set( stopCar6);
+		}
+	if ( carHit == 7 && !stopBackUp) {
+		stop.update( a.back.up);
+		set( stopBackUp);
+		}
+	}
+
+
+	

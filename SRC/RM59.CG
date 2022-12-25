@@ -1,0 +1,396 @@
+[ POLICE QUEST
+[ rm59.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 3/10/87
+[ Last Update September 26, 1987al
+
+[ lgc.taselli.jail
+
+
+%include "gamedefs"
+%include "rm40.h"
+%include "rm59.msg"
+
+
+
+if (init.log) {
+	load.view( v.taselli);
+	load.view( v.taselli.cuffed);
+	load.view( v.jack);
+
+	if (jail.scene == 3) {
+		set(conver0);				[ disable generic jailer message
+		set.view( a.suspect, v.taselli);
+		set.loop( a.suspect, facing.front);
+		stop.cycling( a.suspect);
+		position( a.suspect, 58, 99);
+		set.priority( a.suspect, 4);
+		draw( a.suspect);
+		stop.update( a.suspect);
+		}
+	else {
+		set.view( a.suspect, v.taselli.cuffed);
+		position( a.suspect, 135, 117);
+		}
+
+	set.view( a.jack, v.jack);
+	position( a.jack, 144, 116);
+
+	draw( a.suspect);
+	ignore.blocks( a.jack);
+	return( );
+	}
+
+
+
+distance( a.jack, ego, work);
+reset( nearJack);
+if (work <dist) {
+	set( nearJack);
+	}
+
+
+
+[ BOOKING TASELLI
+if (has.suspect) {
+	if (!moving0) {
+		set( game.control);			
+		start.cycling( a.suspect);
+		move.obj( a.suspect, 105, 117, 1, moved0);
+		move.obj( ego, 119, 115, 1, work.f);
+		moving0 = 1;
+		}
+	
+	if (moving0 == 2) {
+		move.obj( a.suspect, 105, 109, 1, moved0);
+		move.obj( ego, 116, 109, 1, work.f);
+		moving0 = 3;
+		}
+	
+	if (moving0 == 4) {
+		stop.cycling( a.suspect);
+		print( 4);				[ here stands bonds
+		print( 5);				[ what'd he do?
+		++moving0;
+		wait.1 = 15;
+		}
+		
+	if (moving0 == 5) {
+		if ((said( gun, rol) ||
+			said( car, theft, rol) ||
+			said( car, rol) ||
+			said( felony, rol) ||
+			said( drugs, rol))) {
+			print( 6);			[ fill out booking slip
+			print( 32);
+			print( 33);
+			print( 8);			[ you no this isn't his name
+			print( 9);			[ you hand booking slip
+			print( 10);			[ remove cuffs
+			wait.1 = 20;
+			++moving0;
+			}
+		else {
+			if (have.input && !have.match) {
+				print( 7);		[You can't book anybody on a %w1 fool
+				reset( have.input);
+				wait.1 = 10;
+				}
+			
+			if (wait.1 == 3) {
+				print( 3);		[ book this dude or not
+				--wait.1;
+				}
+			
+			if (wait.1 == 1) {
+				print( 15);		[ what for
+				wait.1 = 10;
+				}
+			}
+		}
+	
+	if (moving0 == 6) {
+		if ((said( remove, cuffs) ||
+			said( remove, cuffs, from, suspect) ||
+			said( remove, cuffs, from, man) ||
+			said( uncuff, man, rol) ||
+			said( uncuff, suspect, rol) ||
+			said( take, off, cuffs, rol) ||
+			said( take, cuffs, rol)))
+			{
+			set.view( a.suspect, v.taselli);
+			print( 1);			[ remove the cuffs
+			wait.1 = 20;
+			++moving0;
+			get( i.cuffs);
+			if (!hasTbooked)
+				{
+				set( hasTbooked);
+				score += 3;
+				}
+
+			if (!SxTgun) {
+				[reset( has.suspect);
+				moving0 = 100;
+				}
+			else {
+				if (!check.gun && has( i.loaded.gun))
+					{
+					drop( i.loaded.gun);
+					[reset( has.suspect);
+					moving0 = 100;
+					}
+				}
+			}
+		
+		if (wait.1 == 10) {
+			print( 2);			[ remove his cuffs or not!
+			wait.1 = 20;
+			}
+		}
+
+	
+	if (moving0 == 7 && wait.1 == 18) {
+		start.cycling( a.suspect);
+		move.obj( a.suspect, 105, 115, 1, moved0);
+		move.obj( ego, 115, 115, 1, work.f);
+		++moving0;
+		}
+	
+	if (moving0 == 9) {
+		print( 17);				[ penthouse awaits you Hoffman
+		print( 18);				[ Shove it PIG
+		move.obj( a.suspect, 58, 115, 1, moved0);
+		move.obj( ego, 67, 115, 1, work.f);
+		++moving0;
+		}
+	
+	if (moving0 == 11) {
+		start.update( a.cell.door);
+		move.obj( a.cell.door, 67, 104, 1, moved0);
+		++moving0;
+		}
+	
+	if (moving0 == 13) {
+		ignore.blocks( a.suspect);
+		move.obj( a.suspect, 58, 99, 1, moved0);
+		move.obj( ego, 67, 109, 1, work.f);
+		++moving0;
+		}
+	
+	if (moving0 == 15) {
+		set.loop( a.suspect, facing.front);
+		set.priority( a.suspect, 4);
+		observe.blocks( a.suspect);
+		set( moved0);
+		}
+	
+	if (moving0 == 16) {
+		stop.update( a.suspect);
+		move.obj( a.cell.door, 53, 104, 1, moved0);
+		++moving0;
+		}
+	
+	if (moving0 == 18) {
+		print( 11);				[ meter maids can't keep me in here
+		print( 12);				[ I'll be out of this tank before
+		stop.update( a.cell.door);
+		++moving0;
+		}
+	
+	if (moving0 == 19) {
+		reset( game.control);
+		set.priority( a.jack, 9);
+	  	draw( a.jack);
+		start.cycling( a.jack);
+		move.obj( a.jack, 115, 116, 1, moved1);
+		set( actor.using.door);
+		set( door.work);			[takes booking door from ego control
+		++moving1;
+		++moving0;
+		}
+	
+	if (moving1 == 2) {
+		set( door.work);
+		release.priority( a.jack);
+		move.obj( a.jack, 105, 116, 1, moved1);
+		++moving1;
+		}
+
+	if (moving1 == 4) {
+		stop.cycling( a.jack);
+		print( 16);				[ slimeball pusher booked
+		print( 19); 				[ the evidence booked. clean bust
+		++moving1;
+		}
+	
+	if (moving1 == 5 && nearJack) {
+		print( 14);				[ Dooley wants to see you
+		++moving1;
+		}
+	
+	if (moving1 == 6) {
+		set( game.control);
+		start.motion( ego);
+		start.cycling( a.jack);
+		set.priority( a.jack, 9);
+		move.obj( a.jack, 144, 116, 1, moved1);
+		set( door.work);			[takes booking door from ego control
+		++moving1;
+		}
+	
+	if (moving1 == 7 &&
+		posn( a.jack, 115, 116, 144, 116)) {
+		print( 13);				[ Shift is over, See ya at station
+		++moving1;
+		}
+	
+	if (moving1 == 9) {
+		erase( a.jack);
+		set( door.work);
+		reset( game.control);
+		reset( actor.using.door);	[releases booking door to ego control
+		reset( has.suspect);
+		jail.scene = 2;
+		++moving1;
+		}
+	}
+
+
+
+[ Rebook Hoffman as taselli
+
+if (jail.scene == 3) {
+	if (!moving0) {
+		move.obj( ego, 119, 115, 1, moved0);
+		set( game.control);
+		++moving0;
+		}
+	
+	if (moving0 == 2) {
+		reset( game.control);
+		++moving0;
+		}
+	
+	if (MiddleOfFrontRoom && !conver1) {
+		print( 21);				[ I've got something to tell you
+		set( conver1);
+		}
+	
+	if (nearJailer && conver1 && !conver2) {
+		print( 20);				[Hoffmans' lawyer, bailing his man out
+		set( conver2);
+		}
+
+	if ((said( give, warrant, rol) ||
+		said( get, warrant, rol) ||
+		said( show, warrant, rol) ||
+		said( warrant, rol) ||
+		said( warrant, rol) ||
+		said( warrant, rol) ||
+		said( give, jailer, warrant) ||
+		said( get, jailer, warrant) ||
+		said( show, jailer, warrant))) {
+		if (!nearJailer){
+			set( notCloseEnough);
+			}
+		else {
+			if (has( i.warrant)) {
+				set( game.control);
+				print( 22);		[ hand jailer no bail warrant
+				print( 23);		[ OH MAN! this is great Sonny
+				put( i.warrant, current.room);
+				
+				if (!hasRebooked) {
+					jail.scene = 4;[ setup colby simms "Taselli escapes"
+					set( hasRebooked);
+					score += 2;
+					}
+				set( conver3);
+				}
+			else {
+				if (conver3) {
+					print( 30);	[ already gave it
+					}
+				else {
+					print( 24);	[ Bet you wish had warrant
+					}
+				}
+			}
+		}
+	}
+
+if (jail.scene == 4) {
+	if (nearJailer && conver3 && !conver4) {
+		print( 25);				[ blow his attorneys mind
+		set( conver4);
+		}
+ 	
+	if (!moving1 && conver4) {
+		move.obj( a.jailer, 90, 82, 1, moved1);
+		wait.1 = 20;
+		++moving1;
+		}
+	
+	if (moving1 == 2 && wait.1 == 1) {
+		move.obj( a.jailer, 109, 82, 1, moved1);
+		++moving1;
+		}
+	
+	if (moving1 == 4) {
+		set.cel( a.jailer, 1);
+		set( moved1);
+		}
+	
+	if (moving1 == 5 && !conver5) {
+		reset( game.control);
+		print( 27);				[ Boy that made my day Sonny
+		print( 28);				[ He started ranting and raving
+		set( conver5);
+		}
+	}
+
+
+
+[ Dead Dude
+
+if (moving0 == 100) {
+	sound( mBadGuy, done);
+	set.loop( ego, 1);
+	set.loop( a.suspect, 0);
+	fix.loop( ego);
+	fix.loop( a.suspect);
+	set.view.f( a.suspect, current.suspect.draw);
+
+	move.obj( a.suspect, 100, 109, 1, moved0);
+	set( makeSuspectShoot);
+	++moving0;
+	}
+
+if (moving0 == 102) {
+	set( makeSuspectShoot);
+	scriptTimer = 4;
+	++moving0;
+	}
+
+if (!certainDeath && ego.shot.dead && scriptDone) {
+	stop.cycling( a.suspect);
+	if ( !SxTgun) {
+		print( 31);
+		}
+	else {
+		print( 29);					[ suspect takes your gun
+		}
+	set( certainDeath);
+	}
+
+
+[ talk suspect / man seperate
+if (nearSuspect) {
+	if ((said( talk, man, rol) ||
+		said( talk, suspect, rol) ||
+		said( talk, taselli))) {
+		print( 26);
+		}
+	}
+

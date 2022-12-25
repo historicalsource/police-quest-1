@@ -1,0 +1,35 @@
+[ POLICE QUEST 
+[ object.txt
+[ By:  Greg Rowland, Scott Murphy, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 6, 1987GR
+
+
+.numani	19						[ Animated objects 
+
+
+.obj	 1,	"Patrol Car Keys",		  6	[ Inventory objects 
+.obj	 2,	"Corvette Keys",		 47
+.obj	 3,	"Cadillac Keys",		 49
+.obj	 4,	"Radio Extender",		  6
+.obj	 5,	"Revolver",			 47
+.obj	 6,	"Ammunition",			 47
+.obj	 7,	"Briefcase",			 47
+.obj	 8,	"Note Book",			 38
+.obj	 9,	"Pen",				 38
+.obj	10,	"Ticket Book",			 38
+.obj	11,	"Lytton Tribune",		  4
+.obj	12,	"Wallet",				 94
+.obj	13,	"Nightstick",			 94
+.obj	14,	"Loaded Revolver",		  0
+.obj	15,	"Hoffman File",		110
+.obj	16,	"Wanted Poster",		 50
+.obj	17,	"White Suit",			 43
+.obj	18,	"Trick Cane",			 43
+.obj	19,	"Hair Bleach",			 43
+.obj	20,	"Marked Money",		 43
+.obj	21,	"Transmitter Pen",		 67
+.obj	22,	"Room Key",			 64
+.obj	23,	"No Bail Warrant",		 55
+.obj	24,	"Handcuffs",			 47
+

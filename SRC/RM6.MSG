@@ -1,0 +1,209 @@
+[ POLICE QUEST
+[ rm6.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 26, 1987GR
+
+[ station hallway
+
+
+%message	1
+"Around the hallway is a key board, a table holding radio extenders,
+ a photograph on the far wall, and a barred window to the evidence room."
+
+%message	2
+"The table holds hand-held radio extenders that work in conjunction with your
+ police car radio, when you are not near your patrol car." 
+
+%message	3
+"This key board holds the keys to the squad cars that are presently operable."
+
+%message	4
+"This the most recent photograph of Lytton's Chief of Police
+ Randolph \"Brown Nose\" Whipplestick.
+ Appointed to the department only ten years ago,
+ \"Ol' B. N.\" rapidly manipulated his way to the top."
+
+%message	5
+"On the far wall is a photograph of Chief Whipplestick.
+ On another wall, you see a key board."
+
+%message	6
+"Good cops don't take city property without permission.
+ Besides, what kind of nut would want the Chief's ugly face?"
+
+%message	7
+"That thing is screwed into the wall so tight,
+ it would take you half a shift to remove it!"
+
+%message	8
+"Come on. You only need one!"
+
+%message	9
+"You pick up a squelchy, noisy, but workable extender."
+
+%message	10
+"You look down and note a very clean, gray-tiled floor."
+
+%message	11
+"Whew! At least you have enough time to change clothes before briefing!"
+
+%message	12
+"Why would you need a radio extender when you're off duty?"
+
+%message	13
+"A radio extender is too bulky to carry on an undercover assignment."
+
+%message	14
+"You imagine that Russ must feel like a prisoner inside the tiny,
+ evidence lockup."
+
+%message	15
+"You return your radio extender to the recharge stand."
+
+%message	16
+"Fluorescent lights illuminate the hallway."
+
+%message	17
+"You can't drive two cars at once."
+
+%message	18
+"You take the patrol car's keys from the key board."
+
+%message	19
+"\"We lock it up, not give it out.\"" 
+
+%message	20
+"The evidence lockup is operated by officer \"Russ Dinkle.\""
+
+%message	21
+"You hang the keys on the key board."
+
+%message	22
+"\"Hi, Sonny,\" says Russ. \"What do you need?\""
+
+%message	23
+"\"Sonny,
+ you should have seen Sgt. Dooley when he first discovered that chicken!
+ He threw a screaming fit and wanted the Lieutenant to dust for prints.\""
+
+%message	24
+"\"If that 'Gremlin' keeps messing with me,\" says Sgt. Dooley,
+ \"I'm going to notify Internal Affairs to start an investigation!\""
+
+%message	25
+"\"When I find out who the little weasel is,\" says Sgt. Dooley,
+ \"you'd better believe that he or she will be walking a footbeat
+ from the river all the way to Joe's Junkyard!\""
+
+%message	26
+"Walking out on Sgt. Dooley's words of wisdom is unwise!
+ You are hereby found guilty of \"Contempt of Dooley.\""
+
+%message	27
+"It sure clears out quick around here."
+
+%message	28
+"\"Look at Dooley! The man has gone berserk!
+ I thought that new desk decoration was rather comical.\""
+
+%message	29
+"\"Hey, Sonny!
+ Dooley says he's gonna start a big Internal Affairs investigation
+ just because some fool put a stinkin', smelly bird on his desk.\""
+
+%message	30
+"\"Take a look in my office, Sonny.
+ Maybe you can shed some light as to how that
+ creature made his way to the top of my desk!\""
+
+%message	31
+"\"This door to remain open during business hours.\""
+
+%message	32
+"The locker room has a partition but no door!"
+
+%message	33
+"\"Why, Sonny!\" Russ says. \"You know I don't keep them here!\""
+
+%message	34
+"It is open."
+
+%message	35
+"The door is closed."
+
+%message	36
+"Russ says, \"What can I do for you, Fly Boy?\""
+
+%message	37
+"\"Now, Sonny, you know this is official evidence.
+ Don't go running off with it!\""
+
+%message	38
+"Russ, the keeper of the evidence lockup, says, \"Howdy, Sonny!
+ Haven't seen anything with your name on it come in lately.\""
+
+%message	39
+"Since you're not in uniform, you don't need keys to a patrol car."
+
+%message	40
+"You see Russ looking back at you."
+
+%message	41
+"Detective Laura Watts wanders into the room, giggles,
+ then compliments you on the handsome towel you're wearing.
+ \"Boy, are YOU out of uniform,\" she laughs!"
+
+%message	42
+"\"Hey, Sonny! You're off duty, aren't you?
+ Some of us are going by the Blue Room to throw Jack a little surprise party.
+ After you change clothes, why don't you stop by?\""
+
+%message	43
+"\"The dancer we hired for Jack's party is something else!\""
+
+%message	44
+"\"See you there!\""
+
+%message	45
+"\"Move outta the way!\""
+
+%message	46
+"You look under the table just to satisfy your curiosity.
+ You find nothing."
+
+%message	47
+"\"Another day, another dollar!
+ Write some tickets and Dooley won't holler!\""
+
+%message	48
+"\"How do you do, Officer?
+ Welcome to the Lytton PD Pharmaceutical and Weaponry Lockup.\""
+
+%message	49
+"\"I've got zip guns, shotguns, rockets and dope,\n\n
+smack and crack, knives and coke.\n\n
+A little of this and a lot of that.\n\n
+It's all locked up and that's a fact!\""
+
+%message	50
+"\"Detective Bonds, it appears you've been on a roll lately!\""
+
+%message	51
+"Dooley ain't fit to talk to now!"
+
+%message	52
+""
+
+%message	53
+""
+
+%message	54
+"You lost your radio extender and now you want another?"
+
+%message	55
+"Forget it!"
+
+%message	56
+"You lost those keys, remember?"
+

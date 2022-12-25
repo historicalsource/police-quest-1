@@ -1,0 +1,117 @@
+[ POLICE QUEST
+[ rm66.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 10, 1987al
+
+[	Messages for room 66 -- hotel hallway with elevator
+
+
+%message	1
+"You are already on that floor."
+
+%message	2
+"\"Hey, come on, Darlin',\" Sweet Cheeks whines.
+ \"I may do a lot of things, but stairs ain't one of them!
+ When you been walking streets as long as I have,
+ you'll use the elevator, too.\""
+
+%message	3
+"The front wall of the elevator has four buttons marked
+ \"One,\" \"Two,\" \"Three,\" and \"Four.\"
+ What could they possibly do?"
+
+%message	4
+"The door appears to be made of a heavy wood."
+
+%message	5
+"It looks like something from an old, French movie.
+ Don't you just love rococo ironwork?"
+
+%message	10
+"You do not have a key for this room."
+
+%message	11
+"Which floor number?"
+
+%message	12
+"It is already open."
+
+%message	13
+"It is already closed."
+
+%message	14
+"This door closes automatically."
+
+%message 15
+"%m18 second %m19 201 to 204 %m20"
+
+%message 16
+"%m18 third %m19 301 to 304 %m20"
+
+%message 17
+"%m18 fourth %m19 401 to 404 %m20"
+
+%message 18
+"You are standing on the"
+
+%message 19
+"floor of the Hotel Delphoria. Rooms"
+
+%message 20
+"can be found on this floor. The door on the
+ west wall opens to the stairway."
+
+%message 21
+"An interesting manuever on your part has separated you from your suspect.
+ Now what will you do?"
+
+%message 22
+"You try, but the door is locked."
+
+%message 23
+"You have no business here. Get back to the business of crime stopping."
+
+%message 24
+"With your knock, the sound of heavy moaning and slapping leather
+ fades into silence."
+
+
+%message 25
+"After a short pause, a voice bellows from the other side of the door.
+ \"Get out of here, you nosy PERVERT!\""
+
+%message 26
+"Your knock can't penetrate the loud music coming from within."
+
+%message 27
+"After you knock, you hear two people talking inside the room."
+
+%message 28
+"\"Henry, someone's at the door!
+ You didn't order another pepperoni pizza, did you?\""
+
+%message 29
+"\"Just forget the door, Donna!
+ Get over here and help me get my boots off!\""
+
+%message 30
+"Either your knock is being ignored, or nobody's there."
+
+%message 31
+"Your knocking brings no one to the door,
+ but the noise coming through the door alerts your curiosity."
+
+%message 32
+"After listening carefully, and trying to decipher the sound, you surmise...
+ someone in the room is trying to launch the hotel bed into a low orbit."
+
+%message 33
+"No one answers."
+
+%message	34
+"It's not locked."
+
+%message	35
+"You hear a hollow, ringing sound."
+

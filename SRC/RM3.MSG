@@ -1,0 +1,178 @@
+[ POLICE QUEST
+[ rm3.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 1/8/87
+[ Last Update September 20, 1987al
+
+[ lgc.tits
+
+
+%message	1
+"As you look into the car, you wonder, \"Can this be happening?\""
+
+%message	2
+"The young lady has a smile that could melt the polar icecaps,
+ beautiful flashing eyes, gorgeous hair,
+ and her unbuttoned blouse makes it obvious she has nothing to hide!"
+
+%message	3
+"In a soft, seductive voice she murmers,
+ \"Why, officer! I'm just sure I didn't do anything wrong.\""
+
+%message	4
+"\"I'm truly sorry, sir.
+ I honestly did not even see that red light.
+ Is there anything I can do to convince you to let me off?
+ And, I DO mean anything!\""
+
+%message	5						[	Also used in m46
+"You quickly trade your integrity for a shot at cheap thrills and
+ torrid sex!"
+
+%message	6
+"\"Who cares?!\""
+
+%message	7
+"\"My phone number is 555-4369,\" she says with a smile,
+ \"Give me a call some time.\""
+
+%message	8
+"Being the veteran you are, you overcome temptation and stare the young
+ lady straight in the eyes,
+ \"May I please see your driver's license, Ma'am?\""
+
+%message	9
+"\"Again??\""
+
+%message	10
+"She's hopping mad as she yells,
+ \"Oh, you cops are all alike!
+ All you care about is making your quotas!
+ Well, come on, snap it up.
+ I am in a hurry, Mr. Bigshot Traffic Cop!\""
+
+%message	11
+"\"Guys like you make me want a big dip of snuff!
+ You never give a decent girl a break!
+ You just hassle people!\""
+
+%message	12
+"You can't write a ticket without your pinch book."
+
+%message	13
+"What a pair of headlights!!"
+
+%message	14
+"She verbally pounds you again,
+ \"Officer, did your mother have any children that lived?\""
+
+%message	15
+"You must see the violator's driver's license in order to write a ticket."
+
+%message	16
+"She hands your ticket book back and suggests with a sarcastic smile,
+ \"Why don't you shove that pen where the sun don't shine, Officer?
+ 'Mommy and Daddy,' really!\""
+
+%message	17
+"She hasn't signed it, Sonny."
+
+%message	18
+"You're holding it."
+
+%message	19
+"As your eyes meet, you're momentarily stunned."
+
+%message	20
+"\"My name is Helen. Helen Hots,\"
+ she says as heat detectors go off for miles around.
+ \"What's yours, Handsome?\""
+
+%message	21
+"\"I'm truly sorry, sir.
+ Is there anything I can do to convince you to let me off?
+ And, I DO mean anything!\""
+
+%message	22
+"\"Why, I've never heard of anyone by that name, Officer!\""
+
+
+[			"12345678901234		is the max length for a license
+%message	23	"Helen Hots"
+%message	24	"Female 5'2 105"
+%message	25	"HAIR Black"
+%message	26	"EYES Blue"
+%message	27	"DOB 2/14/66"
+%message	28	"202 Gyrate Ct"
+%message	29	"Lytton, CA"
+%message	30	"RESTRICTIONS"
+%message	31	  "None."
+
+
+%message	32
+"Politely, you tell her, \"You ran a red light back there, Miss.\""
+
+%message	33
+"\"Thanks for not giving me a ticket, Officer!\""
+
+%message	34
+"\"What? And, as nice as I have been to you!
+ Why, I gave you my phone number and everything.
+ If you do anything to me, Turkey,
+ I'll file rape charges on you so fast it'll make your head swim!
+ Gawd, what a BUM!\""
+
+%message	35
+"Your briefcase is in the car."
+
+%message	36
+"\"Why, Officer!\" she smiles coyly. \"Please don't stare there!!\""
+
+%message	37
+"First, return her license."
+
+%message	38
+"What a face. What a pair of eyes!"
+
+%message	39
+"You hand her the ticket book and your pen.
+ \"Please sign at the 'X,' Ma'am,\" you politely instruct her."
+
+%message	40
+"You haven't written her up yet."
+
+%message	41
+"You can only write one ticket per violation, Sonny!"
+
+%message	42
+"You can't write a ticket without your pen."
+
+%message	43
+"\"Well, how rude,\" she says, attempting to be offended.
+ \"But, if that's what it takes, I suppose it's all right with me!\""
+
+%message	44
+"\"Why don't you look at my license?\" she asks."
+
+%message	45
+"\"Good day, Ma'am,\" you say, trying to keep your glance high.
+ \"I'm Officer Sonny Bonds.\""
+
+%message	46
+"Your heart slips up into your throat! %m5"
+
+%message	47
+"\"Short memory, Officer?\" she snickers."
+
+%message	48
+"\"What did I do wrong, Officer?\" she says, showing her best smile."
+
+%message	49
+"That is unnecessary for a simple traffic violation."
+
+%message	50
+"Nice try, but unfortunately, unnecessary in a traffic violation."
+
+%message	51
+"You carefully fill in all the necessary information on the citation."
+

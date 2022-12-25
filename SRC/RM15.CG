@@ -1,0 +1,286 @@
+[ POLICE QUEST
+[ rm15.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/11/86
+[ Last Update October 17, 1987GR
+
+[ rm.map15
+
+%include "gamedefs"
+%include "rm117.h"
+
+
+
+if (init.log) {
+
+	position( a.intersection, 17, 132);
+
+	draw( ego);
+	draw( a.intersection);
+
+	add.to.pic( vBuildings1, 2, 3, 033, 024, 0, 4);
+	add.to.pic( vBuildings1, 2, 3, 052, 024, 0, 4);
+	add.to.pic( vBuildings1, 2, 0, 100, 024, 0, 4);
+	add.to.pic( vBuildings1, 0, 4, 000, 167, 0, 4);
+	add.to.pic( vBuildings1, 1, 3, 000, 077, 0, 4);
+	add.to.pic( vBuildings1, 1, 5, 000, 115, 0, 4);
+	add.to.pic( vBuildings1, 2, 1, 031, 161, 0, 4);
+	add.to.pic( vBuildings1, 2, 1, 053, 161, 0, 4);
+	add.to.pic( vBuildings1, 2, 2, 087, 161, 0, 4);
+	add.to.pic( vBuildings1, 2, 2, 113, 161, 0, 4);
+	add.to.pic( vBuildings1, 0, 2, 144, 076, 0, 4);
+
+
+	add.to.pic( vBuildings1, 1, 0, 112, 113, 0, 4);	[	add August 13  
+	add.to.pic( vBuildings1, 0, 0, 029, 113, 0, 4);
+	add.to.pic( vBuildings1, 0, 1, 053, 113, 0, 4);
+
+
+	show.pic( );
+	return( );
+	}
+
+
+
+[ Logic 
+if (( ego.y < 33 ||
+	ego.y > 124)) {
+	streetScene = 80;
+	}
+else {
+	streetScene = 92;
+	}
+
+[ Lights
+
+if (posn( a.car1, 16, 110, 23, 115) &&
+	intersection != east.stop) { 
+  	observe.blocks( a.car1);
+	}
+else	{
+	ignore.blocks( a.car1);
+	}
+
+if (posn( a.car2, 27, 118, 31, 123) &&
+	intersection != north.stop)	{
+	observe.blocks( a.car2);
+	}
+else	{
+	ignore.blocks( a.car2);
+	}
+
+if (posn( a.car4, 23, 137, 27, 138) &&
+	intersection != east.stop) {
+	observe.blocks( a.car4);
+	}
+else	{
+	ignore.blocks( a.car4);
+	}
+
+[ Traffic logic 
+[ start.cars
+[car1
+if ( !stopCar1) {
+	if (!posn( ego, 0, 25, 17, 39)
+	&& !posn( a.suspect, 0, 25, 17, 39)) {
+		if (moving1 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car1, work);
+			position( a.car1, left.edge, t8y);
+			ignore.blocks( a.car1);
+			set.priority( a.car1, 5);
+			set( moved1);
+			}
+	  	if (moving1 == 1) {
+			move.obj( a.car1, t1x, t8y, 1, moved1);
+			draw( a.car1);		  
+			}
+		}
+	if (moving1 == 2) {
+		move.obj( a.car1, t1x, bottom.edge, 1, moved1);	 [ t9y
+		}
+	if (moving1 == 3) {
+		erase( a.car1);
+		moving1 = 0;
+[		move.obj( a.car1, t3x, t10y, 1, moved1);
+		}
+[	if (moving1 == 4) {
+[		move.obj( a.car1, t3x, bottom.edge, 1, moved1);
+[		}
+[	if (moving1 == 5) {
+[		erase( a.car1);
+[		moving1 = 0;
+[		}
+	}
+		
+[ car2
+if ( !stopCar2) {
+	if (!posn( ego, 143, 25, 159, 39)
+	&& !posn( a.suspect, 143, 25, 159, 39)) {
+		if (moving2 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car2, work);
+			position( a.car2, right.edge, t7y);
+			observe.objs( a.car2);
+			ignore.blocks( a.car2);
+			set.priority( a.car2, 5);
+			set( moved2);
+			}
+		if (moving2 == 1)
+			{
+			move.obj( a.car2, t6x, t7y, 1, moved2);
+			draw( a.car2);		  
+			}
+		}
+	if (moving2 == 2) {
+		move.obj( a.car2, t5x, t8y, 1, moved2);
+		}
+	if (moving2 == 3) {
+		move.obj( a.car2, t5x, t9y, 1, moved2);
+		}
+	if (moving2 == 4) {
+		move.obj( a.car2, left.edge, t9y, 1, moved2);
+		}
+	if( moving2 == 5) {
+		erase( a.car2);
+		moving2 = 0;
+		}
+	}
+
+[ car3
+if ( !stopCar3) {
+	if (!posn( ego, 143, 25, 159, 39)
+	&& !posn( a.suspect, 143, 25, 159, 39)) {
+		if (moving3 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car3, work);
+			position( a.car3, right.edge, t7y);
+			ignore.blocks( a.car3);
+			set.priority( a.car3, 5);
+			set( moved3);
+			}
+		if (moving3 == 1) {
+			move.obj( a.car3, t2x, t7y, 1, moved3);
+			draw( a.car3);		  
+			}
+		}
+
+	if (moving3 == 2) {
+		move.obj( a.car3, t2x, top.edge, 1, moved3);
+		}
+	if (moving3 == 3) {
+		erase( a.car3);			 
+		moving3 = 0;
+		}
+	}
+
+[ car4
+if ( !stopCar4) {
+	if (!posn( ego, 17, 131, 27, 167)
+	&& !posn( a.suspect, 17, 131, 27, 167)) {
+		if (moving4 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car4, work);
+			position( a.car4, t2x, bottom.edge);
+			ignore.blocks( a.car4);
+			set.priority( a.car4, 5);
+			set( moved4);
+			}
+		if (moving4 == 1) {
+			move.obj( a.car4, t2x, t10y, 1, moved4);
+			draw( a.car4);		  
+			}
+		}
+	if (moving4 == 2) {
+		move.obj( a.car4, t5x, t10y, 1, moved4);
+		}
+	if (moving4 == 3) {
+		move.obj( a.car4, t6x, t8y, 1, moved4);
+		}
+	if (moving4 == 4) {
+		move.obj( a.car4, right.edge, t8y, 1, moved4);
+		}
+	if (moving4 == 5) {
+		erase( a.car4);			 
+		moving4 = 0;
+		}
+	}
+
+distance( ego, a.suspect, suspect);
+if (suspect < 50 &&
+	!current.suspect &&
+	wreck.scene < 255) {
+
+	current.view( ego, view);
+	if ((view == 99 || view == 101)) {
+		current.loop( ego, loop);
+[ hit suspect car 
+		[ position( a.suspect, 75, 67);
+		if (loop > 1) {
+			if (posn( ego, 76, 64, 77, 69)) {		[ up down
+				crashing = 50;
+				}
+			}
+		else {
+			[ -03, -05, 0, +01
+			if (posn( ego, 76, 64, 77, 67)) {	[ left right
+				crashing = 50;						[ screw diag
+				}
+			}
+		if (wreck.scene > 190) {
+			position( a.back.up, 76, 47);
+			if (loop > 1) {
+				[ 0, -05, 0, +05
+				if (posn( ego, 76, 42, 76, 52)) {		[ up down
+					crashing = 50;
+					}
+				}
+			else {
+				[ -03, -05, 0, +01
+				if (posn( ego, 73, 42, 76, 48)) {	[ left right
+					crashing = 50;						[ screw diag
+					}
+				}
+			}
+		}
+	}
+
+[*****
+:exit
+[*****
+
+%message 1
+"This is a commercialized area of Lytton."
+		
+%message 2
+"In the battle of building vs vehicle, the vehicle has lost!"
+
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look, town)))	{
+	if (wreck.scene < 255 && rmsFirstRadioCall == 0) {
+		print( 2);
+		}
+	else {
+		print( 1);
+		}
+	}
+
+

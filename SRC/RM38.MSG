@@ -1,0 +1,64 @@
+[ POLICE QUEST
+[ rm38.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 8/2/86
+[ Last Update August 27, 1987al
+
+[ lgc.briefcase
+
+
+%message	1
+"You already are looking in the briefcase."
+
+%message	2
+"Your pinch book isn't here."
+
+%message	3
+"You take your pinch book from your briefcase."
+
+%message	4
+"Nothing else in the briefcase would be use to you."
+
+%message	5
+"You take the notebook from your briefcase."
+
+%message	6
+"The case is fresh out of books."
+
+%message	7
+"This pen was a high school graduation gift."
+
+%message	8
+"It IS in the briefcase."
+
+%message	9
+"You place your pinch book into your briefcase."
+
+%message	10
+"Which book?"
+
+%message	11
+"You place the notebook back in the briefcase."
+
+%message	12
+"You put your pen back into the briefcase."
+
+%message	13
+"There's nothing left of importance."
+
+%message	14
+"Your briefcase contains your pen, a notebook,
+ and your Official LPD ticket book."
+
+%message	15
+"Your notebook remains in your briefcase."
+
+%message	16
+"Your pen remains in your briefcase."
+
+%message	17
+"Your ticket book remains in your briefcase."
+
+%message	18
+"Where did you put it?"
+

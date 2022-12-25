@@ -1,0 +1,1407 @@
+[ POLICE QUEST
+[ rm68.cg
+[ By:  Greg Rowland, Scott Murphy and Jim Walls
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 8, 1987al
+
+[	hotel cocktail lounge
+
+
+%include "gamedefs"
+%include "rm68.msg"
+
+
+
+%define	btMoved			lf0
+%define	scMoved			lf1
+%define	guy1Moved			lf2
+%define	guy2Moved			lf3
+%define	atBar			lf4
+%define	doorDone			lf5
+%define	opening			lf6
+%define	nearTable			lf7
+%define	nearSCTable		lf8
+%define	orderWater		lf9
+%define	sitting			lf10
+%define	putEgoInChair		lf11
+%define	scSitting			lf12
+%define	makeDrink			lf13
+%define	payForDrink		lf14
+%define	dollarTip			lf15
+%define	thenItHappens		lf16
+%define	pay2hundred		lf17
+%define	btEscort			lf18
+%define	cantOpenDoor		lf19
+%define	nearPaddedDoor		work.f
+
+%define	hasDrink			tf15
+
+
+%define	btMoving			lcl0
+%define	btX				lcl1
+%define	btY				lcl2
+%define	scMoving			lcl3
+%define	scx				lcl4
+%define	scy				lcl5
+%define	guy1Moving		lcl6
+%define	guy2Moving		lcl7
+%define	doorStatus 		lcl8
+%define	makeChange		lcl9
+
+%define	btTimer			timer.1
+	%define	mixDrinkWait		7
+
+%define	scTimer			timer.2
+
+
+%object	door				1
+%object	bt				2
+%object	guy1				4
+%object	guy2				5
+
+
+
+if (init.log) {
+	set( NOcase);
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	load.view( v.tables68);
+	load.view( v.door68);
+	load.view( v.bartender);
+	load.view( v.jimmyScSitting);
+	load.view( v.barPatrons68);
+	load.view( v.chairs68);
+
+	load.logics( 73);				[scDyn
+
+	animate.obj( bt);
+	animate.obj( door);
+
+	set.view( bt, v.bartender);
+	set.view( door, v.door68);
+
+	ignore.blocks( bt);
+
+	position( door, 88, 84);
+
+	work = DOOR_CYCLE_TIME;
+	cycle.time( door, work);
+
+	ignore.objs( door);
+	set.priority( door, 4);
+
+
+	work = DOOR_CYCLE_TIME;
+	cycle.time( door, work);
+
+
+	draw( door);
+	
+	if (previous.room == 78) {
+		set.cel( door, 4);
+		position( ego, 93, 85);
+		reverse.loop( door, doorDone);
+		}
+	else	{
+		set.cel( door, 0);
+		stop.update( door);
+
+		if (previous.room == 64)	{
+			position( ego, 119, 83);
+			}
+		
+		if (previous.room == 69)	{
+			position( ego, 2, 148);
+			}
+		}
+
+	position( bt, 137, 140);
+
+	if (progress > 99 && progress < tippedBt)
+		{
+		load.view( v.sweet.cheeks);
+		animate.obj( aSweetCheeks);
+
+[		stop.cycling( aSweetCheeks);
+
+		if (progress < metSC)
+			{
+			load.view( v.darkGambler);
+			load.view( v.blondGambler);
+
+			animate.obj( guy1);
+			animate.obj( guy2);
+
+			set.view( aSweetCheeks, v.sweet.cheeks);
+			set.view( guy1, v.blondGambler);
+			set.view( guy2, v.darkGambler);
+
+			ignore.blocks( guy1);
+			ignore.blocks( guy2);
+
+			position( bt, 116, 152);
+			position( aSweetCheeks, 92, 152);
+			position( guy1, 124, 86);
+			position( guy2, 132, 78);
+
+			set.loop( aSweetCheeks, 0);
+			set.cel( aSweetCheeks, 0);
+			}
+		else {
+			set.view( aSweetCheeks, v.jimmyScSitting);
+			set.cel( aSweetCheeks, 1);
+
+			ignore.blocks( aSweetCheeks);
+			position( aSweetCheeks, 61, 112);
+
+			force.update( aSweetCheeks);
+			set( scSitting);
+			scMoving = 13;
+			}
+		draw( aSweetCheeks);
+		stop.update( aSweetCheeks);
+		add.to.pic( v.chairs68, 0, 0, 61, 112, 10, 1); 	[ empty chairs
+		add.to.pic( v.chairs68, 0, 1, 88, 114, 10, 1);
+		}
+	else	{
+		add.to.pic( v.barPatrons68, 1, 0, 60, 112, 10, 1);[ patrons
+		add.to.pic( v.barPatrons68, 1, 1, 85, 114, 10, 1);
+		}
+
+	set.loop( bt, 1);
+	draw( bt);
+	stop.cycling( bt);
+
+	add.to.pic( v.tables68, 0, 0, 33, 100, 9, 1);
+	add.to.pic( v.tables68, 0, 0, 66, 113, 10, 1);
+	add.to.pic( v.tables68, 0, 0, 23, 125, 11, 1);
+
+	add.to.pic( v.barPatrons68, 0, 2, 28, 98, 9, 1);
+	add.to.pic( v.barPatrons68, 0, 3, 51, 98, 9, 1);
+	add.to.pic( v.barPatrons68, 0, 0, 17, 124, 11, 1);
+	add.to.pic( v.barPatrons68, 0, 1, 40, 124, 11, 1);
+
+	draw( ego);
+
+	if (together) {
+		call( 73);				[scDyn
+		}
+
+	show.pic( );
+	return( );
+	}							[ end init
+
+
+
+if (posn( ego, 123, 74, 159, 89)) {
+	reset( btJimmyTogether);
+	new.room( 64);
+	}
+
+if (edge.ego.hit == left)
+	{
+	if (together)
+		{
+		print( 37);				[ you can if you want sc waits here
+		}
+	new.room( 69);
+	}
+
+
+
+reset( nearPaddedDoor);
+if (posn( ego, 85, 84, 100, 90)) {
+	set( nearPaddedDoor);
+	}
+
+reset( nearTable);
+if (posn( ego, 18, 116, 48, 130))
+	{
+	set( nearTable);
+	}
+
+reset( nearSCTable);
+if (posn( ego, 59, 107, 90, 117))
+	{
+	set( nearSCTable);
+	}
+
+distance( ego, bt, work);
+if (work < dist)
+	{
+	set( nearPerson);
+	}
+
+distance( ego, guy1, work);
+if (work < dist)
+	{
+	set( nearPerson);
+	}
+
+distance( ego, guy2, work);
+if (work < dist)
+	{
+	set( nearPerson);
+	}
+
+distance( ego, aSweetCheeks, work);
+if ((work < dist || scSitting)) {
+	set( nearPerson);
+	}
+
+if ((atBar ||						[ at tables
+	posn( ego, 27,  93, 36, 103) ||	[ 1
+	posn( ego, 50,  93, 59, 103) ||	[ 2
+	posn( ego, 17, 117, 25, 128) ||	[ 5
+	posn( ego, 40, 117, 49, 128)))	[ 6
+	{
+	set( nearPerson);
+	}
+
+
+[ @ Sweet Cheeks stop.updated 
+
+if (posn( ego, 87, 140, 159, 152)) {
+	set.priority( ego, 11);
+	}
+else {
+	release.priority( ego);
+	}
+
+
+[ ego At bar 
+
+if (!btJimmyTogether &&
+    (posn( ego,  86, 116, 112, 131) ||
+	posn( ego, 113, 116, 140, 130) ||
+	posn( ego,  86, 132, 120, 167)))
+	{
+	set( atBar);
+	}
+else {
+	reset( atBar);
+	if (btMoving == 1)
+		{
+		++btMoving;
+		}
+	
+	if (btMoving == 23)
+		{
+		btMoving = 0;
+		}
+	}
+
+
+if (btMoved) {
+	reset( btMoved);
+	++btMoving;
+	}
+
+if (scMoved) {
+	reset( scMoved);
+	++scMoving;
+	}
+
+if (aSecondPassed && !typing) {
+	--btTimer;
+	--scTimer;
+	}
+
+
+get.posn( bt, x, y);				[ Local Bartender peddling 
+if ((btX != x || btY != y))
+	{
+	start.cycling( bt);
+	btX = x;
+	btY = y;
+	}
+else {
+	stop.cycling( bt);
+	}
+
+
+[ bartender Serving counter 
+
+if (atBar &&
+   (!btMoving ||					[ go to ego
+	btMoving == 5 ||				[ return with drink
+	btMoving == 14))				[ return with change
+	{
+	start.update( bt);
+
+	if (ego.y < 119) {
+		if (ego.x < 116) {
+			ego.x = 116;
+			}
+		btY = 132;
+		move.obj.f( bt, ego.x, btY, one, btMoved);
+		loop = 3;
+		}
+	else {
+		if (ego.y < 136) {
+			move.obj( bt, 116, 132, 0, btMoved);
+			loop = 1;
+			}
+		else {
+			ego.y -= 4;
+			btX = 116;
+			move.obj.f( bt, btX, ego.y, one, btMoved);
+			loop = 1;
+			}
+		}
+	++btMoving;
+	}
+
+if (btMoving == 2) {
+	if (atBar && !btTimer) {
+		set.loop.f( bt, loop);
+		print( 1);				[ what'll it be
+		btTimer = 10;
+		}
+	else {
+		if (!atBar) {
+			print( 32);			[ "If you deside you like drink
+			btMoving = 20;
+			}
+		}
+	}
+
+
+if (btMoving == 3) {
+	set.loop( bt, 2);
+	++btMoving;
+	btTimer = mixDrinkWait;
+	if (progress == metSC) {
+		btMoving = 50;
+		}
+	}
+
+if (btMoving == 4 && !btTimer) {		[ return with drink
+	++btMoving;
+	}
+
+if (btMoving == 7) {
+	++btMoving;
+	accept.input();
+	reset( game.control);
+	set.loop.f( bt, loop);
+	
+	if (orderWater) {
+		print( 35); 				[ on the house
+		reset( orderWater);
+		btMoving = 20;
+		}
+	else {
+		if (!current.ego) {
+			print( 57);			[ Should Not Drink On Duty."
+			set( certainDeath);
+			stop.cycling( bt);
+			btMoving = 255;
+			}
+		else {
+			print( 13);			[ that'll be five dollars
+			}
+		}
+	}
+
+if (btMoving == 8 && !atBar) {
+	print( 58);					[ So you can't pay get lost
+	btMoving = 20;
+	}
+
+if (btMoving == 9) {
+	prevent.input();
+	set( game.control);
+	move.obj( bt, 134, 167, 0, btMoved);
+	btMoving = 11;
+	}
+
+if (btMoving == 12) {
+	btTimer = mixDrinkWait;
+	++btMoving;
+	}
+
+if (btMoving == 13 && !btTimer) {
+	++btMoving;
+	}
+
+if (btMoving == 16) {
+	set.loop.f( bt, loop);
+	print( 17);					[	"Here is your change sir."
+	
+	if (makeChange == 100) {
+		marked.cash += 9;
+		Mdollar += 5;
+		}
+
+	makeChange = 0;
+	btMoving = 20;
+	}
+
+if (btMoving == 20) {
+	btTimer = 0;
+	move.obj( bt, 139, 139, 0, btMoved);
+	++btMoving;
+	}
+
+if (btMoving == 22) {				[ bartender has landed
+	accept.input();
+	reset( game.control);
+	set.loop( bt, 1);
+	++btMoving;
+	btTimer = 0;
+	}
+
+
+[ Sweet Cheeks 
+
+if (progress == metSC && !scMoving) {
+	print( 10);[ "Whitey, is that YOU!.."
+	if (ego.y < 119)
+		{
+		start.update( aSweetCheeks);
+		move.obj( aSweetCheeks, 92, 118, 0, scMoved);
+		scMoving = 1;
+		}
+	else	{
+		get.posn( aSweetCheeks, x, y);
+		if (ego.y < y) {
+			ego.y += 1;
+			}
+		else {
+			ego.y -= 1;
+			}
+
+		tempX = 92;
+		start.update( aSweetCheeks);
+		move.obj.f( aSweetCheeks, tempX, ego.y, one, scMoved);
+		scMoving = 3;
+		}
+	}
+
+if (scMoving == 2)	{
+	get.posn( ego, ego.x, ego.y);
+	ego.x -= 8;
+	tempY = 118;
+	move.obj.f( aSweetCheeks, ego.x, tempY, one, scMoved);
+	++scMoving;
+	}
+
+if (scMoving == 4) {
+	print( 11);					[	"Oh Whitey I'm so happy.."
+	print( 12);					[	"Come on lets move to a table.."
+
+	move.obj( ego, 90, 115, 0, putEgoInChair);
+	move.obj( aSweetCheeks, 60, 115, 1, scMoved);
+	++scMoving;
+	}
+
+if (scMoving == 6) {
+	set.view( aSweetCheeks, v.jimmyScSitting);
+	set.cel( aSweetCheeks, 1);
+	ignore.blocks( aSweetCheeks);
+	reposition.to( aSweetCheeks, 61, 112);
+	stop.update( aSweetCheeks);
+	force.update( aSweetCheeks);
+	set( scSitting);
+	++scMoving;
+	btTimer = 10;
+	}
+
+if (scMoving == 7 && btTimer == 1) {
+	move.obj( bt, 87, 167, 0, btMoved);
+	btMoving = 50;
+	++scMoving;
+	}
+
+if ((btMoving == 51 || btMoving == 61)) {
+	move.obj( bt, 75, 119, 0, btMoved);
+	++btMoving;
+	}
+
+if (btMoving == 53) {
+	if (orderWater) {
+		print( 35); 				[ on the house
+		btMoving = 63;
+		}
+	else {
+		accept.input();
+		print( 13);				[	"Here you are sir, that will be
+		++btMoving;
+		}
+	}
+
+if (btMoving == 55) {
+	move.obj( bt, 87, 167, 0, btMoved);
+	++btMoving;
+	}
+
+if (btMoving == 57) {
+	move.obj( bt, 134, 167, 0, btMoved);
+	++btMoving;
+	}
+
+
+[ Dudes
+
+if (btMoving == 59) {
+	set.loop( bt, 2);
+
+	draw( guy1);
+	draw( guy2);
+	start.cycling( guy1);
+	start.cycling( guy2);
+	move.obj( guy1, 91, 119, 0, guy1Moved);
+	move.obj( guy2, 91, 119, 0, guy2Moved);
+
+	++btMoving;
+	}
+
+if (guy1Moved) {
+	reset( guy1Moved);
+	++guy1Moving;
+
+	if (guy1Moving == 1) {
+		move.obj( guy1, 91, 160, 0, guy1Moved);
+		}
+	
+	if (guy1Moving == 2) {
+		stop.cycling( guy1);
+		set.loop( guy1, 0);
+		set.loop( bt, 1);
+		}
+	
+	if (guy1Moving == 3) {
+		start.cycling( guy1);
+		move.obj( guy1, 0, 157, 0, guy1Moved);
+		}
+
+	if (guy1Moving == 4) {
+		erase( guy1);
+		}
+	}
+
+
+if (guy2Moved) {
+	reset( guy2Moved);
+	++guy2Moving;
+	
+	if (guy2Moving == 1) {
+		move.obj( guy2, 89, 141, 0, guy2Moved);
+		}
+
+	if (guy2Moving == 2) {
+		stop.cycling( guy2);
+		btTimer = 5;
+		set.loop( bt, 1);
+		}
+	
+	if (guy2Moving == 3) {
+		start.cycling( guy2);
+		set.loop( bt, 2);
+		move.obj( guy2, 0, 153, 0, guy2Moved);
+		}
+
+	if (guy2Moving == 4) {
+		erase( guy2);
+		}
+
+	}
+
+if (guy2Moving == 2 && btTimer == 1) {
+	set( guy1Moved);
+	set( guy2Moved);
+	--btTimer;
+	}
+
+if (guy1Moving == 4 && guy2Moving == 4) {
+	print( 16);					[	"You know Sonny, those.."
+	move.obj( bt, 87, 167, 0, btMoved);
+	guy1Moving = 255;
+	guy2Moving = 255;
+	}
+
+if (btMoving == 63)
+	{
+	stop.cycling( bt);
+	
+	if (!orderWater)
+		{
+		print( 17);				[	"Here is your change sir."
+		
+		if (makeChange == 100) {
+			marked.cash += 9;
+			Mdollar += 5;
+			makeChange = 0;
+			}
+		}
+
+	reset( orderWater);
+	print( 18);					[	"..going to introduce me.."
+	print( 20);					[	"Sweet Cheeks introduces you.."
+	print( 75);
+	prevent.input();
+	start.update( aSweetCheeks);
+	set.view( aSweetCheeks, v.sweet.cheeks);
+	reposition.to( aSweetCheeks, 60, 107);
+	move.obj( aSweetCheeks, 126, 88, 0, scMoved);
+	reset( scSitting);
+	scMoving = 8;
+	++btMoving;
+	}
+
+if (scMoving == 9) {
+	print( 21);					[	"The bartender then asks.."
+	print( 22);					[	"You tell the bartender.."
+	++scMoving;
+	scTimer = 5;
+	}
+
+if (scMoving == 10 && scTimer == 1) {
+	reposition.to( aSweetCheeks, 125, 78);
+	move.obj( aSweetCheeks, 60, 106, 0, scMoved);
+	--scTimer;
+	}
+
+if (scMoving == 11) {
+	set.view( aSweetCheeks, v.jimmyScSitting);
+	set.cel( aSweetCheeks, 1);
+	ignore.blocks( aSweetCheeks);
+	reposition.to( aSweetCheeks, 61, 112);
+	stop.cycling( aSweetCheeks);
+	set( scSitting);
+	++scMoving;
+	scTimer = 3;
+	}
+
+if (scMoving == 12 && scTimer == 1)	{
+	print( 23);					[	"Sweet Cheeks returns.."
+	print( 24);					[	"Sonny asks Sweet Cheeks.."
+	accept.input();
+	move.obj( bt, 87, 167, 0, btMoved);
+	++scMoving;
+	scTimer = 3;
+	}
+
+if (btMoving == 65) {
+	move.obj( bt, 134, 167, 0, btMoved);
+	++btMoving;
+	}
+
+if (btMoving == 67) {
+	btMoving = 20;
+	progress = metBartender;
+	}
+
+
+[ Invatation to play 
+
+if (btMoving == 200) {
+	start.cycling( bt);
+	move.obj( bt, 134, 167, 0, btMoved);
+	set( btJimmyTogether);
+	++btMoving;
+	}
+
+if (btMoving == 202) {
+	move.obj( bt, 87, 167, 0, btMoved);
+	++btMoving;
+	}
+
+if (btMoving == 204) {
+	move.obj( bt, 0, 155, 0, btMoved);
+	++btMoving;
+	}
+
+if (btMoving == 206) {
+	erase( bt);
+	++btMoving;
+	}
+
+
+[ Cheecks Moves Out 
+
+if (scMoving == 100) {
+	start.update( aSweetCheeks);
+	set.view( aSweetCheeks, v.sweet.cheeks);
+	reposition.to( aSweetCheeks, 60, 107);
+	observe.blocks( aSweetCheeks);
+	move.obj( aSweetCheeks, 96, 107, 0, scMoved);
+	start.cycling( aSweetCheeks);
+
+	progress = tippedBt;			
+	reset( scSitting);
+	set( together);
+	++scMoving;
+	}
+
+if (scMoving == 102) {
+	follow.ego( aSweetCheeks, 10, caughtEgo);
+	set( together);
+	++scMoving;
+	}
+	
+
+[ text 
+
+if ((said( buy, drink, rol) || 
+	said( buy, rol) || 
+	said( get, drink, rol) || 
+	said( drink, rol))) 
+	{
+	print( 1);					[ what will it be
+	}
+		
+if ((said( coke, rol)||					[	order drink 
+	said( buy, coke, rol) ||
+	said( buy, water, rol) ||
+	said( water, rol)))
+	{
+	if (!atBar) {
+		print( 49);				[ "No one hears you."
+		}
+	else {
+		if ((btMoving == 2 || btMoving == 23)) {
+			set( makeDrink);
+			set( orderWater);
+			}
+		else {
+			print( 39);			[ just one moment Sir.
+			}
+		}
+	}
+
+if ((said( rum, rol) ||
+	said( buy, rum, rol)))
+	{
+	if (!atBar) {
+		print( 49);				[ "No one hears you."
+		}
+	else {
+		if ((btMoving == 2 || btMoving == 23)) {
+			set( makeDrink);
+			}
+		else {
+			print( 39);			[ just one moment Sir.
+			}
+		}
+	}
+
+
+[ Order Nothing 
+if (btMoving == 2) {
+	if (said( nothing, rol)) {
+		print( 32);				[ "If you deside you like drink
+		btMoving = 20;
+		}
+	}
+
+
+
+[ Get Invetation to Play
+
+if ((said( pay) ||
+	said( give, man, money) ||
+	said( anyword, pay) ||
+	said( pay, anyword) ||
+	said( give, money) ||
+	said( pay, money)	||
+	said( give, money, rol) ||
+	said( pay, money, rol))) {
+
+	if ((btMoving == 8 || btMoving == 54)) {
+		set( payForDrink);
+		}
+	else {
+		if (!atBar) {
+			print( 49);			[ "No one hears you."
+			}
+		else {
+			if (progress < metBartender) {
+				set( dollarTip);
+				}
+			else {
+				if (progress == metBartender) {
+					set( thenItHappens);
+					}
+				else {
+					if (progress < game1Time) {
+						print( 64);[ come back after you dump brod
+						btMoving = 20;
+						}
+					else {
+						if ((progress == playingPoker1 ||
+							progress 	== game2Time)) {
+							set( btEscort);
+							print( 65);	[ that's ok your in now
+							}
+						else {
+							if (progress == wonPoker1) {
+								print( 50);	[ come back later
+								}
+							else {
+								set( pay2hundred);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+if ((said( tip) ||
+	said( give, tip, rol) ||
+	said( give, man, tip, rol) ||
+	said( tip, bartender, rol)))
+	{
+	if ((btMoving == 8 ||
+		btMoving == 54 ||
+	    !atBar))
+		{
+		set( dollarTip);
+		}
+	else
+		{
+		print( 49);				[ "No one hears you."
+		}
+	}
+
+if ((said( gamble) ||
+	said( play, poker) ||
+	said( talk, about, money) ||
+	said( talk, about, gambling) ||
+	said( show, money) ||
+	said( show, money, bartender) ||
+	said( show, bartender, money) ||
+	said( give, man, two, hundred, rol) ||
+	said( pay, man, two, hundred, rol) ||
+	said( give, two, hundred, rol) ||
+	said( pay, two, hundred, rol) ||
+	said( tip, man, two, hundred, rol) ||
+	said( tip, two, hundred, rol) ||
+	said( ask, bartender, gamble) ||
+	said( tip, bartender, gamble) ||
+	said( talk, bartender, gamble) ||
+	said( bartender, gamble, money) ||
+	said( give, bartender, money, gamble) ||
+	said( bribe, bartender, gamble)))
+	{
+	if (!atBar) {
+		print( 49);				[ "No one hears you."
+		}
+	else {
+		if (progress < metBartender) {
+			print( 61);			[ what your talking about
+			}
+		else {
+			if (progress == metBartender) {
+				set( thenItHappens);
+				}
+			else {
+				if (progress < game1Time) {
+					print( 64);	[ come back after you dump brod
+					btMoving = 20;
+					}
+				else {
+					if ((progress == playingPoker1 ||
+						progress 	== game2Time)) {
+						set( btEscort);
+						print( 65);	[ that's ok your in now
+						}
+					else {
+						if (progress == wonPoker1) {
+							print( 50);	[ come back later
+							}
+						else {
+							set( pay2hundred);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+[ Motivate bt to back room
+
+if (said( frank, sent, me)) {
+	if (btMoving > 199) {			[ escorting
+		print( 66);				[ come on Mr. Banksten let's go
+		}
+	else {
+		if (!atBar) {
+			print( 49);			[	"No one hears you."
+			}
+		else {
+			if (progress < playingPoker1) {
+				print( 61);		[ what your talking about
+				btMoving = 20;
+				}
+			else {
+				if (progress < game1Time) {
+					print( 64);	[ come back after you dump brod
+					btMoving = 20;
+					}
+				else	{
+					if ((progress == playingPoker1 ||
+						progress == game2Time)) {
+						set( btEscort);
+						print( 38);	[ "Nice to see you again, Mr. Bank
+						}
+					else {
+						print( 50);	[ come back later
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+[ Then It Happens 
+
+if (makeDrink) {
+	reset( makeDrink);
+	print( 2);					[ "Coming right up."
+
+	if (progress > 99 && progress < metSC) {
+		progress = metSC;
+		}
+	btMoving = 2
+	btTimer = mixDrinkWait;
+	prevent.input( );
+	set( game.control);
+	start.motion( ego);
+	move.obj( bt, 134, 167, 1, btMoved);
+	}
+
+
+if (payForDrink) {
+	reset( payForDrink);
+	++btMoving
+
+	if (Mdollar > 4) {
+		print( 59);				[ thank you
+		set( hasDrink);
+		Mdollar -= 5;
+		}
+	else {
+		if (marked.cash > 9) {
+			set( hasDrink);
+			print( 14);			[ You take a marked $100.00 bill.
+			print( 15);			[ right back with change
+			marked.cash -= 10;
+			makeChange = 100;
+			}
+		else {
+			if (cash > 5) {
+				print( 59);		[ thank you
+				cash -= 5;
+				set( hasDrink);
+				}
+			else {
+				print( 58);		[ So you can't pay get lost
+				if (btMoving == 55) {
+					print( 51);	[ Some People
+					move.obj( bt, 87, 167, 0, btMoved);
+					btMoving = 64;
+					}
+				else {
+					btMoving = 20;
+					}
+				}
+			}
+		}
+	}
+
+
+if (dollarTip) {
+	reset( dollarTip);
+
+	print( 31);					[ gee Thanx mac
+	if (Mdollar) {
+		Mdollar -= 1
+		}
+	else {
+		if (marked.cash) {
+			marked.cash -= 1;
+			Mdollar += 9;
+			}
+		else {
+			if (cash) {
+				cash -= 1;
+				}
+			else {
+				print( 60);		[ thanx for nothing
+				btMoving = 20;		[ sends him back to parked
+				}
+			}
+		}
+	}
+
+
+if (thenItHappens)
+	{
+	reset( thenItHappens);
+
+	if ((marked.cash > 1 || cash > 19)) {
+		if (marked.cash > 1) {
+			marked.cash -= 2;
+			}
+		else {
+			cash -= 20;
+			}
+
+		score += 3;
+
+		print( 26);				[	"You hand the bartender a twenty
+		print( 27);				[	"In a strangely quiet voice the
+		print( 28);				[	"You tell him that you like.."
+		print( 29);				[	"Woody tells you about the card
+		print( 30);				[	"Woody says that if you think yo
+
+		progress = tippedBt;
+		scMoving = 100;			[ She's Leaving
+		btMoving = 20;
+		}
+	else {
+		if (Mdollar) {
+			Mdollar -= 1;
+			}
+		else {
+			print( 31);			[ thanx mac
+			if (marked.cash){
+				marked.cash -= 1;
+				Mdollar += 9;
+				}
+			else {
+				if (cash) {
+					cash -= 1;
+					}
+				else {
+					print( 60);	[ thanx for nothing
+					btMoving = 20;	[ sends him back to parked
+					}
+				}
+			}
+		}
+	}
+
+
+if (pay2hundred) {
+	reset( pay2hundred);
+
+	if (marked.cash < 20) {
+		stop.cycling( bt);
+		print( 62);				[ hay buddy we don't chairity
+		print( 63);				[ I told you ya need two hundred min
+		set( certainDeath);
+		}
+	else {
+		set( btEscort);
+		score += 1;
+		marked.cash -= 20;
+		print( 36);				[	"So, you want to try your luck..
+		}
+	}
+
+
+if (btEscort) {
+	reset( btEscort);
+	btMoving = 200;
+	}
+
+
+[ Sit Shit 
+
+if ((said( sit) ||
+	said( park) ||
+	said( sit, down) ||
+	said( sit, chair) ||
+	said( use, chair) ||
+	said( get, chair) ||
+	said( rise) ||
+	said( rise, up) ||
+	said( use, chair) ||
+	said( get, out, chair) ||
+	said( get, up))) {
+   	set( func4);
+	}
+
+if (func4) {
+	reset( func4);
+	
+	if (!sitting) {
+		if (atBar) {
+			print( 43);			[ There are no stools at the bar.
+			}
+		else	{
+			if ((posn( ego, 84, 107, 95, 117) ||	[ my chair
+				posn( ego, 55, 105, 67, 116))) {	[ Cheeks chair
+				if (progress < 100 && progress > tippedBt) {
+					print( 45);	[ don't sit in my lap
+					print( 51);	[ some people
+					}
+				else {
+					print( 44);	[ Cheeks is nervously watching
+					}
+				}
+			else {
+				if ((posn( ego, 27,  93, 36, 103) ||	[ 1
+					posn( ego, 50,  93, 59, 103) ||	[ 2
+					posn( ego, 17, 117, 25, 128) ||	[ 5
+					posn( ego, 40, 117, 49, 128))) {	[ 6
+					print( 45);	[ don't sit in my lap
+					print( 51);	[ some people
+					}
+				else {
+					print( 46);	[ sit on floor
+					}
+				}
+			}
+		}
+	else {
+		if (progress == metBartender) {
+			print( 25);			[	"Just before leaving.."
+			reset( sitting);
+			start.update( ego);
+			observe.blocks( ego);
+			set.view( ego, v.disguised.sonny);
+			set.loop( ego, 1);
+			set.cel( ego, 0);
+			}
+		else {
+			print( 34);			[	"It would probably benefit you.."
+			}
+		}
+	}
+			
+if (putEgoInChair) {
+	reset( putEgoInChair);
+	set( sitting);
+	set( game.control);
+	ignore.blocks( ego);
+	reposition.to( ego, 86, 114);
+	set.view( ego, v.jimmyScSitting);
+	set.cel( ego, 0);
+	stop.update( ego);
+	force.update( ego):
+	}
+
+
+if (!together &&
+	progress > 99 &&
+	progress < tippedBt)
+	{
+	if (said( look, whore))
+		{
+		print( 5);				[	"Sweet Cheeks is an intensely sl
+		}
+	}
+
+if ((said( talk, man) ||
+	said( call, bartender))) {
+	if ((atBar ||
+		btMoving > 199 ||
+		btMoving > 49))
+		{
+		if (progress < metBartender) {
+			print( 67);			[ I'm here to push booze
+			}
+		else {
+			print( 68);			[ you must not be all bad
+			}
+		}
+	else {
+		print( 49);				[ "No one hears you."
+		}
+	}
+
+if ((said( nasty, rol) ||
+	said( anyword, tit, rol) ||
+	said( anyword, pussy, rol) ||
+	said( anyword, nasty, rol) ||
+	said( kiss, girl, rol) ||
+	said( anyword, anyword, nasty, rol)))
+	{
+	if ((together || scSitting)) {
+		print( 70);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if (said( talk, girl)) {
+	if ((together || scSitting)) {
+		random( 71, 73, work);
+		print.f( work);			[ small talk with cheeks
+		}
+	else {
+		if (nearPerson) {
+			random( 53, 55, work);
+			print.f( work);
+			}
+		else	{
+			print( 49);			[ "No one hears you."
+			}
+		}
+	}
+
+if ((said( drink) ||
+	said( drink, rol))) {
+	if (hasDrink) {
+		print( 19);				[	"You swig the rancid fluid.."
+		reset( hasDrink);
+		}
+	else	{
+		print( 48);				[	"By one First
+		}
+	}
+
+
+
+[ text
+
+if ( said( keep, change)) {
+	print( 41);
+	}
+
+
+if ((said( look, down) ||
+	said( look, floor) ||
+	said( look, carpet)))
+	{
+	print( 52);
+	}
+
+if ((said( look) ||
+	said( look, room))) {
+	print(6);
+	}
+
+if (said(look, crowd)) {
+	print( 69);
+	}
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look, lounge))) {
+	print( 6);					[	"You see three couples seated.."
+	}
+
+if (said( look, bar)) {
+	print( 7);					[	"The bar is a short, .."
+	}
+
+if (said( look, wall)) {
+	print( 8);					[	"The walls are adorned.."
+	}
+
+if (said( look, door)) {
+	print( 9);					[	"The only actual door.."
+	}
+
+if (said( look, bartender)) {
+	print( 3);					[	"The bartender looks like.."
+	}
+
+if (said( look, table)) {
+	print( 4);					[	"The tables are ordinary.."
+	}
+
+
+[
+:exit
+[
+
+if ((said( open, door) ||
+	said( close, door) ||
+	said( kick, door) ||
+	said( knock, door))) {
+	if ( nearPaddedDoor) {
+		if ( progress < 100) {
+			print( 74); 				[hum door locker
+			}
+		else {
+			if (together) {
+				print( 33);			[	"Sorry. The type of work.."
+				set( cantOpenDoor);
+				}
+			else {
+				print( 40);
+				}
+			}
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if (said( unlock, door)) {
+	if (nearPaddedDoor) {
+		if (progress < 100) {
+			print( 42);			[ private property
+			}
+		else {
+			if (together) {
+				print( 33);			[	"Sorry. The type of work.."
+				set( cantOpenDoor);
+				}
+			else {
+				print( 40);			[ push on it
+				}
+			}
+		}
+	}
+
+if (!opening &&
+    !cantOpenDoor &&
+	posn( ego, 88, 84, 95, 84))
+	{
+	if (progress < 100) {
+		print( 74); 				[hum door locker
+		set( cantOpenDoor);
+		}
+	else {
+		if (together) {
+			print( 33);			[	"Sorry. The type of work.."
+			set( cantOpenDoor);
+			}
+		else {
+			start.update( door);
+			end.of.loop( door, doorDone);
+			set( game.control);
+			stop.cycling( ego);
+			stop.motion( ego);
+			set( opening);
+			}
+		}
+	}
+
+if (doorDone) {
+	reset( doorDone);
+	if (opening) {
+		new.room( 78);
+		}
+	else {
+		stop.update( door);
+		}
+	}
+
+if (together) {
+	call( 73);					[scDyn
+	}
+
+[	%message 100
+[	"Mbt %v220|3 Msc %v223|3 Pr %v31|3"
+[		
+[	if (forceAtest) {
+[		display(22, 10, 100);
+[		}
+

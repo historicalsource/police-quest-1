@@ -1,0 +1,79 @@
+[ POLICE QUEST
+[ rm61.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 3/10/87
+[ Last Update October 10, 1987al
+
+[ lgc.colbysimms.jail
+
+
+%message	1
+"The jailer says,
+ \"This is certainly a fine-looking group ya got this time, Sonny!\""
+
+%message	2
+"You remove, inventory, and deliver the prisoner's personal property to the
+ jailer along with the booking slip."
+
+%message	3
+"You remove the 'cuffs and place them in your handcuff case."
+
+%message	4
+"\"Ok, %w1 it will be,\" the jailer says.
+ \"Fill out a booking slip and give me his property!\""
+
+%message	5
+"\"I think you boys know where to go!\" you tell them."
+
+%message	6
+"\"Up your's, Dick Tracy! You'll never make this stick!\""
+
+%message	7
+"The jailer says,
+ \"Ok, Sonny, remove their 'cuffs and put the little pushers into cell
+ number one.\""
+
+%message	8
+"\"What are you charging these dudes with?\" asks the jailer."
+
+%message	9
+"\"I'm gonna sue you for makin' them 'cuffs so tight, Flatfoot!\"
+ threatens your prisoner."
+
+%message	10
+"\"Come on, Bonds,\" says the jailer impatiently.
+ \"Take the 'cuffs off this pair!\""
+
+%message	11
+"\"I'm still waiting, Bonds,\" says the jailer.
+ \"What are you going to do with them?\""
+
+%message	12
+"\"Sonny,\" says Laura,
+ \"I'll wait here while you complete the booking.\""
+
+%message	13
+"\"Hey, Bonds,\" yells Laura. \"I'll wait for you in the car.\""
+
+%message	14
+"Move to the counter before making a case."
+
+%message	15
+"The jailer heard you the first time!"
+
+%message	16
+"The suspects should be booked first."
+
+%message	17
+"The cuffs are removed."
+
+%message	18
+"As you die...\n\n
+the last thing you hear...\n\n
+is the suspect mumbling something about...\n\n
+what he does to pigs..."
+
+%message 19
+"\"My Mommy's gonna be bummin' when she finds out where I am!\"
+ whines Victor Simms."
+

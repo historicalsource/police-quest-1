@@ -1,0 +1,38 @@
+[ POLICE QUEST
+[ rm107.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 8/25/87
+[ Last Update August 27, 1987al
+
+
+[ lgcScenes
+
+
+
+%message 1
+"Don't bother. You'd just be spinning your wheels!"
+
+%message 2
+"There is no answer."
+
+%message 3
+"The door is locked."
+
+%message 4
+"Much urine, from many dogs, has taken its toll on the paint."
+
+%message 5
+"You can't see it, but believe it or not,
+ there is a light at the top of the pole."
+
+%message 6
+"Someday you'd like to own a home in a neighboorhood like this."
+
+%message 7
+"It's just an old, abandoned disco, left over from another Sierra game."
+
+%message 8
+"Looking out over the ocean,
+ you see perfect ten- to twelve-foot \"peelers\" sliding out of mirror glass,
+ and realize this is a rotten day to be working."
+

@@ -1,0 +1,395 @@
+[ POLICE QUEST
+[ rm58.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 3/10/87
+[ Last Update September 26, 1987al
+
+[ lgc.drunk.jail
+
+
+%include "gamedefs"
+%include "rm40.h"
+%include "rm58.msg"
+
+
+
+if (init.log) {
+	load.view( v.drunk.ko);
+	load.view( v.drunk);
+	load.view( v.drunk.cuffed.b);	
+	load.view( v.laura);
+	load.view.f( current.Sdead);
+
+	animate.obj( a.laura);
+
+	set.view( a.suspect, v.drunk.cuffed.b);	
+	set.view( a.laura, v.laura);
+
+	position( a.suspect, 144, 118);
+	position( a.laura, 140, 119);
+
+	set.priority( a.laura, 9);
+
+	ignore.objs( a.suspect);
+
+	ignore.blocks( a.laura);
+
+	if (SxDUI) {
+		position( a.suspect, 57, 98);
+		set.loop( a.suspect, 2);
+		stop.cycling( a.suspect);
+		moving0 = 255;
+		}
+	
+	draw( a.suspect);
+	return( );
+	}
+
+
+
+distance( a.laura, ego, work);
+reset( nearLaura);
+if (work <dist) {
+	set( nearLaura);
+	}
+
+
+
+[ booking drunk
+
+if (has.suspect) {
+	if (moving0 == 0) {
+		set( game.control);
+		move.obj( a.suspect, 106, 116, 1, moved0);
+		move.obj( ego, 119, 115, 1, work.f);
+		++moving0;
+		}
+	
+	if (moving0 == 2) {
+		move.obj( a.suspect, 108, 108, 1, moved0);
+		move.obj( ego, 116, 109, 1, work.f);
+		++moving0;
+		}
+	
+	if (moving0 == 4) {
+		stop.cycling( a.suspect);
+		print( 7);				[ What can I do for you hot pencil
+		++moving0;
+		}
+
+
+	[ Timed Messages
+
+	if (moving0 == 5) {        		[ what can I do for you
+		if (wait.1 == 250) {
+			print( 17);			[ Don't you hear good boy
+			wait.1 = 255;
+			}
+		}
+	
+	if (moving0 == 6) {        		[ what can I do for you
+		if (wait.1 == 250) {
+			print( 18);			[ you going to book this dude or not
+			wait.1 = 255;
+			}
+		}
+
+	if (moving0 == 7) {
+		if (wait.1 == 248) {
+			print( 10);			[ remove his cuffs
+			--wait.1;
+			}
+		
+		if (wait.1 == 240) {
+			print( 16);			[ remove his cuffs or not
+			wait.1 = 255;
+			}
+		}
+
+	
+	[ Cuffs Off
+
+	if (moving0 == 20) {			[ cuff jump
+		start.cycling( a.suspect);
+		move.obj( a.suspect, 112, 125, 1, moved0);
+		move.obj( ego, 120, 124, 1, work.f);
+		++moving0;
+		}
+	
+	if (moving0 == 22) {
+		print( 15);				[ Those cuffs were so tight
+		move.obj( a.suspect, 83, 125, 1, moved0);
+		move.obj( ego, 89, 125, 1, work.f);
+		++moving0;
+		}
+	
+	if (moving0 == 24) {
+	 	print( 11);				[ If he throws up
+		stop.update( a.suspect);
+		start.update( a.cell.door);
+		move.obj( a.cell.door, 67, 104, 1, moved0);
+		++moving0;
+		}
+	
+	if (moving0 == 26) {
+		start.update( a.suspect);
+		move.obj( a.suspect, 55, 125, 1, moved0);
+		move.obj( ego, 61, 132, 1, work.f);
+		++moving0;
+		}
+	
+	if (moving0 == 28) {
+		move.obj( a.suspect, 57, 98, 1, moved0);
+		move.obj( ego, 53, 110, 1, work.f);
+		++moving0;
+		}
+	
+	if (moving0 == 30) {
+		set.priority( a.suspect, 4);
+		set.loop( a.suspect, 2);
+		observe.blocks( a.suspect);
+		set( moved0);
+		}
+
+	if (moving0 == 31) {
+		stop.update( a.suspect);
+		move.obj( a.cell.door, 53, 104, 1, moved0);
+		++moving0;
+		}
+	
+	if (moving0 == 33) {
+		print( 12);				[ Gee thanx alot ocifer
+		stop.update( a.cell.door);
+		reset( game.control);
+		moving0 = 40;
+		}
+
+
+	[ Enter laura
+
+	if (moving0 == 40 && MiddleOfFrontRoom) {
+	  	draw( a.laura);
+		move.obj( a.laura, 125, 116, 1, moved0);
+		set( actor.using.door);		[takes door from ego control
+		set( door.work);
+		++moving0;
+		}
+	
+	if (moving0 == 42) {
+		set( door.work);
+		release.priority( a.laura);
+		move.obj( a.laura, 115, 116, 1, moved0);
+		++moving0;
+		}
+	
+	if (moving0 == 44) {
+		prevent.input( );
+		print( 1);				[ I need to talk to you a second
+		stop.cycling( a.laura);
+		++moving0;
+		}
+	
+	if (moving0 == 45 && nearLaura) {
+		set( game.control);
+		start.motion( ego);
+		set.loop( ego, 0);
+		print( 2);				[ position opening up in narcotics
+		wait.1 = 5;
+		++moving0;
+		}
+	
+	if (moving0 == 46 && wait.1 == 3) {
+		print( 3);				[ interested, submit a memo
+		start.cycling( a.laura);
+		move.obj( a.laura, 125, 116, 1, moved0);
+		--wait.1;
+		++moving0;
+		}
+	
+	if (moving0 == 48) {
+		accept.input( );
+		reset( game.control);
+		move.obj( a.laura, 145, 116, 1, moved0);
+		set( door.work);
+		++moving0;
+		}
+	
+	if (moving0 == 50) {
+		erase( a.laura);
+		print( 13);				[ Just as Laura leaves
+		set( door.work);
+		wait.1 = 2;
+		++moving0;
+		}
+	
+	if (moving0 == 51 && wait.1 == 1) {
+		print( 4);				[ Hey hot pencil come over here
+		moving0 = 60;
+		--wait.1;
+		}
+
+
+	[ Speak to jailer
+	
+	if (moving0 == 60 && nearJailer) {
+		++moving0;
+		wait.1 = 10;
+		}
+	
+	if (moving0 == 61) {
+		if (wait.1 == 9) {
+			print( 5);			[ just hung up from talking to Dooley
+			--wait.1;
+			}
+		
+		if (wait.1 == 7) {
+			print( 6);			[ get back to the office on the double
+			jail.scene = 1;
+			chicken.scene = 1;
+			reset( actor.using.door); [	releases booking door to ego control
+			reset( has.suspect);
+			++moving0;
+			wait.1 = 0;
+			}
+		}
+	}
+
+
+
+[ Text
+
+if (!have.input) {
+	goto exit;
+	}
+
+if (has.suspect) {
+	if ((said( book, man) ||
+		said( put, man, jail) ||
+		said( put, suspect, jail) ||
+		said( book, suspect))) {
+		if (!nearJailer) {
+			print( 20);			[ dificulty hearing you
+			}
+		else {
+			if (moving0 < 7) {
+				print( 8);		[ What are you charging him with
+				moving0 = 6;
+				wait.1 = 255;
+				}
+			else {
+				print( 22);		[ Ok Boy! I heard you
+				}
+			}
+		}
+
+	if ((said( drunk, driving) ||
+		said( dui) ||
+		said( driving, under, influence) ||
+		said( anyword, dui) ||
+		said( anyword, anyword, dui) ||
+		said( anyword, anyword, drunk, driving) ||
+		said( anyword, drunk, driving))) {
+		if (!nearJailer) {
+			print( 20);			[ dificulty hearing you
+			}
+		else {
+			if (moving0 < 7) {
+		     	print( 9);		[ inventory prisoners property
+				moving0 = 7;
+				wait.1 = 250;
+				}
+			else {
+				print( 22);		[ Ok Boy! I heard you
+				}
+			}
+		}
+
+	if ((said( remove, cuffs, rol) ||
+		said( uncuff, rol) ||
+		said( take, off, cuffs, rol) ||
+		said( take, cuffs, rol)))
+		{
+		if (moving0 < 20)
+			{
+			get( i.cuffs);
+			if (!SxDUI)
+				{
+				set( SxDUI);
+				score += 2;
+				}
+
+			if (!check.gun &&
+			    (has( i.gun) ||
+				has( i.loaded.gun))) {
+				drop( i.gun);
+				drop( i.loaded.gun);
+				moving0 = 100;
+				}
+			else {
+				set.view( a.suspect, v.drunk);
+				print( 14);		[ You remove the cuffs
+				moving0 = 20;
+				wait.1 = 0;
+				}
+			}
+		else {
+			print( 23);			[ Cuffs, remove, right, got it
+			}
+		}
+	}
+
+if (moving0 > 50 && moving0 < 61 &&
+	said( open, door)) {
+	print( 19);					[ Listen big balls
+	}
+
+
+[
+:exit
+[
+
+[ Dead Dude
+if (moving0 == 100) {
+	sound( mBadGuy, done);
+	start.cycling( a.suspect);
+	set.loop( ego, 1);
+	set.loop( a.suspect, 0);
+	fix.loop( ego);
+	fix.loop( a.suspect);
+	set.view( a.suspect, v.drunk.ko);
+	move.obj( a.suspect, 109, 108, 1, moved0);
+	++moving0;
+	}
+
+if (moving0 == 102) {
+	set.cel( a.suspect, 0);
+	set( keepCyclingSuspect);
+	end.of.loop( a.suspect, moved0);
+	++moving0;
+	}
+
+if (moving0 == 104) {
+	set( keepCyclingSuspect);
+	reverse.loop( a.suspect, moved0);
+	++moving0;
+	}
+
+if (moving0 == 106) {
+	reset( keepCyclingSuspect);
+	set.view.f( ego, current.Sdead);
+	last.cel( ego, work);
+	set.cel.f( ego, work);
+	set( moved0);
+	scriptCycles = 10;
+	}
+
+if (moving0 == 107) {
+	if (scriptDone) {
+		reset( scriptDone);
+		print( 24);				[ suspect takes your gun
+		print( 25);				[ suspect takes your gun
+		set( certainDeath);
+		++moving0;
+		}
+	}
+

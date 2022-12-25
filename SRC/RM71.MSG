@@ -1,0 +1,129 @@
+[ POLICE QUEST
+[ rm71.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 19, 1987al
+
+[	Messages for room 71 - gambling room
+
+
+%message	1
+"Mr. Banksten"
+
+%message	2
+"It's already open."
+
+%message	3
+"Don't leave now!"
+
+%message	4
+"\"%m1, we've got a chair open for you.\""
+
+%message	5
+"\"Hello, %m1. Have a seat.
+ Welcome to our friendly little poker game.\""
+
+%message	6
+"If you sit here, you'll miss the chair and hit the floor."
+
+%message	7
+"Frank welcomes you back to the game..."
+
+%message	8
+"\"Hello again, %m1. I believe you know everyone here.\""
+
+%message	9
+"This time, you look carefully at Frank as he shuffles the cards.
+ Cold chills race down your spine and
+ a blast of adrenalin surges through your body as
+ you realize he exactly matches the description of Jessie Bains!"
+
+%message	10
+"\"The Death Angel!\""
+
+%message	11
+"You are "
+
+%message	12
+"%m11sitting."
+
+%message	13
+"%m11standing."
+
+%message	14
+"\"Well, %m1,\" says Frank.
+ \"You're a poker player after my own heart!\""
+
+%message	15
+"Frank then asks, \"Whitey (if I may call you that),
+ I understand you may be looking for work?\""
+
+%message	16
+"\"Very good! I like your style.\""
+
+%message	17
+"\"A simple 'yes' or 'no' would suffice, Whitey!\""
+
+%message	18
+"\"How would you like to join me in my suite for a drink, Whitey?\"
+ asks Frank. \"I've a business proposition to discuss with you.\""
+
+%message	19
+""
+
+%message	20
+"\"Well, %m1? "
+
+%message	21
+"\"Great! Follow me.\""
+
+%message	22
+"%m20Are you interested?\""
+
+%message	23
+"%m20What do ya say?\""
+
+%message	24
+"%m20Let's go, shall we?\""
+
+%message	25
+"Well, you blew that one!"
+
+%message	26
+"Your undercover assignment has quickly ended,
+ and now you're locked in a room with these guys!"
+
+%message	27
+"Better luck next time."
+
+%message	28
+"Three men are seated around a lone card table in the middle of the room."
+
+%message 29
+"A single, shaded light hangs over the table."
+
+%message	30
+"The floor is bare."
+
+%message 31	
+", %m1!\" says Frank.
+ \"Consider our relationship terminated.\""
+
+%message 32
+"\"Hello, Mr. Banksten. Come on over and have a seat.\""
+
+%message	33
+"You sneak a glance under the table, but see nothing unusual."
+
+%message	34
+"If you do that now, you may not remember anything for the rest of your life."
+
+%message	35
+"The game is over; greater things await you elsewhere."
+
+%message	36
+"\"I have no respect for someone who plays poker as badly as you%m31"
+
+%message	37
+"\"I have no respect for quiters%m31"
+

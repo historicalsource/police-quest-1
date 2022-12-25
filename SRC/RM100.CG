@@ -1,0 +1,63 @@
+[ POLICE QUEST 
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. July 8, 1987
+[ Last Update October 10, 1987al
+
+[logics for room 100 -- lgc.rm0.init.log
+
+%include	"gamedefs"
+
+
+set.text.attribute( TEXT_COLOR, BG_COLOR);
+if (!hercules)
+	{
+	clear.lines( 22, 22, 0);
+	clear.lines( 24, 24, 0);
+	}
+
+if (!forceAtest)
+	{
+	reset( debugging);
+	reset( enable.trace);
+	}		 
+
+if (demo)
+	{
+	prevent.input();
+	}
+
+animate.obj( ego);
+get.posn( ego, ego.x, ego.y);
+
+secondsInRoom = 0;
+passInRoom = 0;
+script = 0;
+scriptTimer = 0;
+scriptCycles = 0;
+reset( scriptDone);
+wait.1 = 0;						[	no global clocks
+wait.2 = 0;
+timer.1 = 0;
+timer.2 = 0;
+
+reset( refresh);
+reset( game.control);
+reset( preventSaveGame);
+reset( no.script);
+reset( NOcase);
+reset( keep.cycling);
+reset( no.cycling);
+reset( outOfMemory);
+reset( snd.done);
+reset( scriptDone);
+
+work = 255;
+:loop1
+reset.v( work);
+work @= 0;
+--work;
+if (work > 219)
+	{
+	goto loop1;
+	}
+

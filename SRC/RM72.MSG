@@ -1,0 +1,31 @@
+[ POLICE QUEST
+[ rm72.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. July 23, 1987
+[ Last Update September 25, 1987al
+
+[ rmRights
+
+
+%message	1
+"Carefully, you admonish your suspect of his \"Miranda\" rights."
+
+%message	2
+"\"You have the right to remain silent.\""
+
+%message	3
+"\"What you say may be used against you in a court of law.\""
+
+%message	4
+"\"You have the right to an attorney.\""
+
+%message	5
+"\"If you cannot afford an attorney,
+ one will be appointed to represent you before questioning, if you wish.\""
+
+%message	6
+"Due to your failure to admonish your suspect to his constitutional right
+ to remain silent, the information you just obtained will be inadmissible
+ as evidence, and will be drop-kicked by the Honorable Judge Palmer across
+ the Clearwater River."
+

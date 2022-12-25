@@ -1,0 +1,22 @@
+[ POLICE QUEST
+[ rm9.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update August 17, 1987al
+
+[	Car trunk
+
+
+%message	1
+"You open the trunk and discover a clear plastic bag containing a white
+ powdery substance resembling cocaine and another clear plastic bag
+ containing a green leafy substance resembling marijuana."
+
+%message	2
+"As you start to examine the evidence, you hear Jack's voice behind you,
+ \"Just leave that stuff in the trunk, Sonny.
+ I'll impound it along with the car.\""
+
+%message	3
+"\"Ok, Jack,\" you say, \"See you back at the station.\""
+

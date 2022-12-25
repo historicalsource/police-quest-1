@@ -1,0 +1,586 @@
+[ POKER QUEST 
+[ rm81.cg
+[ By:  Ken Williams, Greg Rowland, and Al Lowe
+[ For: Sierra On-Line Inc. 11/17/86
+[ Last Update September 24, 1987al
+
+%include	"rm75.h"
+%include	"rm75.msg"		[	This way every dynamic uses same text.
+
+
+[ poker subroutine collection -- the var "function" must be set to Ken's old
+[dynamic logic room number before calling this room.
+
+
+
+if (!function)
+	{
+	return( );
+	}
+
+
+if (function == test.already.dealt)	[	old rm.161
+	{
+	%define	card.to.test		work3
+	%define	my.work 			work4
+
+	card.to.test = first.card;
+	reset( already.dealt);
+
+	:test.loop
+
+	my.work =@ card.to.test;
+
+	if (work == my.work)
+		{
+		set( already.dealt);
+		goto exit161;
+		}
+
+	if (card.to.test != last.card)
+		{
+		++card.to.test;
+		goto test.loop;
+		}
+
+	:test.discards
+
+	if (number.discarded.cards == 0)
+		{
+		goto exit161;
+		}
+
+	card.to.test = discard.first.var.number;
+	work10 = number.discarded.cards;
+
+	:test.loop.2
+
+	my.work =@ card.to.test;
+
+	if (work == my.work)
+		{
+		set( already.dealt);
+		goto exit161;
+		}
+
+	--work10;
+	if (work10 != 0)
+		{
+		++card.to.test;
+		goto test.loop.2;
+		}
+
+	:exit161
+	}
+
+
+
+if (function == display.a.card)		[	Old rm.164
+	{
+[		ego.y = elapsed.seconds;			[	This 
+[		:looper;						[		builds
+[		if (elapsed.seconds == ego.y)		[			  in 
+[			{						[				a 1-second wait
+[			goto looper;				[	between
+[			}						[		   cards appearing.
+
+	rm81.work =@ current.card;
+
+	[what suit is it?
+
+	card.value = rm81.work;
+	if (rm81.work < 14)
+		{
+		current.suit = hearts;
+		}
+	else
+		{
+		if (rm81.work < 27)
+			{
+			current.suit = clubs;
+			card.value -= 13;
+			}
+		else
+			{
+			if (rm81.work < 40)
+				{
+				current.suit = spades;
+				card.value -= 26;
+				}
+			else
+				{
+				current.suit = diamonds;
+				card.value -= 39;
+				}
+			}
+		}
+
+	loop = 2;
+	cell = 0;
+	base = 4;
+	box = 4;
+
+	[*** first display the card
+
+	view = h.deck;
+	if (y > 147)					[if displaying a computer played hand
+		{
+		cell = 1;
+		}
+	else
+		{
+		if (hide.computer.cards)
+			{
+			cell = 0;
+			}
+		else
+			{
+			cell = 1;
+			}
+		}
+
+	add.to.pic.f( view, loop, cell, x, y, base, box);	[put up the card
+
+	if (cell == 0)					[don't put on its face
+		{
+		goto exit164;
+		}
+
+	if ((current.suit == hearts ||
+		current.suit == diamonds))
+		{
+		loop = 1;
+		}
+	else
+		{
+		loop = 0
+		current.suit -= 2;
+		}
+
+	view = h.deck;
+	cell = card.value;
+	ego.x = x;
+	ego.y = y;
+	ego.x += 2;
+	ego.y -= 14;
+	add.to.pic.f( view, loop, cell, ego.x, ego.y, base, box);
+
+	cell = current.suit;
+	ego.y += 11;
+	add.to.pic.f( view, loop, cell, ego.x, ego.y, base, box);
+
+	:exit164
+	}
+
+
+
+if (function == test.same.suit)		[	old rm.166
+	{
+	[test all cards same suit
+
+	reset( same.suit);
+	if  (suit1 == suit2 &&
+		suit2 == suit3 &&
+		suit3 == suit4 &&
+		suit4 == suit5)
+		{
+		set( same.suit);
+		}
+	}
+
+
+
+if (function == test.straight)		[	Old rm167
+	{
+	reset( is.straight);
+	work = card1;
+	if (card5 == ace &&
+		card1 == 1 &&
+		card2 == 2 &&
+		card3 == 3 &&
+		card4 == 4)
+		{
+		set( is.straight);
+		goto exit167;
+		}
+	++work;
+	if (work != card2)
+		{
+		goto exit167;
+		}
+	++work;
+	if (work != card3)
+		{
+		goto exit167;
+		}
+	++work;
+	if (work != card4)
+		{
+		goto exit167;
+		}
+	++work;
+	if (work != card5)
+		{
+		goto exit167;
+		}
+
+	set( is.straight);
+
+	:exit167
+	}
+
+
+
+if (function == count.most.of.one.type)	[	Old rm.168
+	{
+	[*** count the most of one type
+
+	count = 1;
+	card = 0;
+	reset( f.2pair);
+
+	work = card1.var.number;
+	work.count = 1;
+
+	:loopy1
+
+	work2 = work;
+	++work2;
+
+	work3 =@ work;
+	work4 =@ work2;
+	if (work3 == work4)
+		{
+		++work.count;
+		}
+	else
+		{
+		work.count = 1;
+		}
+	if (work.count > count)
+		{
+		count = work.count;
+		card = work4;
+	[	work.count = 1;
+		}
+	else
+		{
+		if (work.count == 2 && count == 2)
+			{
+			set( f.2pair);
+			}
+		}
+
+	++work;
+	if (work > card4.var.number)
+		{
+		goto exit168;
+		}
+	else
+		{
+		goto loopy1;
+		}
+
+	:exit168
+	}
+
+
+
+if (function == how.many.of.card)		[	Old rm.169
+	{
+	[test how many of one type
+	[input is in card - return count in count2
+
+	work = card1.var.number;
+	count2 = 0;
+
+	:loopy2
+
+	work2 =@ work;
+	if (work2 == card)
+		{
+		++count2;
+		}
+
+	++work;
+	if (work > card5.var.number)
+		{
+		goto exit169;
+		}
+
+	goto loopy2;
+
+	:exit169
+	}
+
+
+
+if (function == sort.cards)			[	old rm.170
+	{
+	[sort card1 through card5
+
+	work = card1.var.number;
+
+	:sort.loop
+
+	work2 = work;
+	++work2;
+
+	:inner.loop
+
+	work3 =@ work;
+	work4 =@ work2;
+	if (work4 < work3)				[if the card to the right is littler
+		{
+		work  @= work4;
+		work2 @= work3;
+		work5  = work;
+		work6  = work2;
+		work5 += 5;
+		work6 += 5;
+		work7 =@ work5;			[get the suit
+		work8 =@ work6;
+		work5 @= work8;
+		work6 @= work7;
+		}
+
+	++work2;
+	if (work2 > card5.var.number)
+		{
+		++work;
+		if (work > card4.var.number)
+			{
+			goto exit170;
+			}
+		goto sort.loop;
+		}
+
+	goto inner.loop;
+
+	:exit170
+	}
+
+
+
+if (function == split.card)			[	Old rm.172
+	{
+	[split card into suit and value
+	[what suit is it?
+
+	card.value = current.card;
+
+	if (card.value < 14)
+		{
+		current.suit = hearts;
+		}
+	else
+		{
+		if (card.value < 27)
+			{
+			current.suit = clubs;
+			card.value -= 13;
+			}
+		else
+			{
+			if (card.value < 40)
+				{
+				current.suit = spades;
+				card.value -= 26;
+				}
+			else
+				{
+				current.suit = diamonds;
+				card.value -= 39;
+				}
+			}
+		}
+	}
+
+
+
+if (function == declare.winner)		[	old rm.173
+	{
+	work = first.hand.var.number;
+	work5 = 0;
+	work6 = 0;
+
+	:loopy3
+
+	work3 =@ work;
+
+	if (work3 > work5)
+		{
+		work5 = work3;
+		}
+	++work;
+
+	if (work > last.hand.var.number)
+		{
+		goto test.kickers;
+		}
+
+	goto loopy3;
+
+	:test.kickers
+
+	work = first.hand.var.number;
+
+	:loopy4
+
+	work3 =@ work;
+
+	work2 = work;
+	work2 += 4;
+	work4 =@ work2;
+
+	[****** hand is in work3 kicker is in work4
+
+	if (work3 == work5)
+		{						[is this a possible winning hand
+		if (work4 > work6)
+			{
+			work6 = work4;
+			}
+		}
+
+	++work;
+	if (work > last.hand.var.number)
+		{
+		goto winner;
+		}
+
+	goto loopy4;
+
+
+	[ ******** winning hand is in work5 - winning kicker is in work6
+
+
+	:winner
+	work = first.hand.var.number;
+	[active.player = 0;
+	[x = 130;
+	y = 43;
+
+	:loopy5
+	work3 =@ work;
+	work2 = work;
+	work2 += 4;
+	work4 =@ work2;
+
+	[****** hand is in work3 kicker is in work4
+
+	if (work3 == work5)				[is this a possible winning hand
+		{
+		if (work4 == work6)
+			{
+			goto high.hand;
+			}
+		}
+	y += 35;
+
+	++work;
+	goto loopy5;
+
+	:high.hand
+	if (y == 43)
+		{
+		base = 5;
+		}
+	else
+		{
+		if (y == 78)
+			{
+			base = 9;
+			}
+		else
+			{
+			if (y == 113)
+				{
+				base = 13;
+				}
+			else
+				{
+				base = 17;
+				marked.cash += pot;
+				}
+			}
+		}
+
+	accept.input( );
+	clear.lines( 0, 0, 0);
+	box = 32;
+	view = 21;
+	display.f( base, box, view);
+	display( 1, 0, 5);				[You have; pot is
+	}
+
+
+
+if (function == delay.loop)			[hang out a random number of seconds 
+	{
+	random( 1, 3, timer.1);
+	timer.1 += animation.interval;
+	timer.2 = elapsed.seconds;
+
+	:loopy6;
+	if (elapsed.seconds != timer.2)
+		{
+		timer.2 = elapsed.seconds;
+		--timer.1;
+		if (!timer.1)
+			{
+			goto exit176;
+			}
+		}
+
+	goto loopy6;
+
+	:exit176;
+
+	sound( s.beep, work.f);
+	}
+
+
+
+if (function == throw.away)			[*** throw away the card in work
+	{
+	work2 = work;					[the card value
+	work2 += 5;					[the card suit
+
+	[*** first we have to do a reverse split to figure it out
+
+	card.value =@ work;
+	current.suit =@ work2;
+
+	[what suit is it?
+
+[	if (current.suit == hearts)		{card.value +=  0;}	[	Hearts OK!
+	if (current.suit == clubs)		{card.value += 13;}
+	if (current.suit == spades)		{card.value += 26;}
+	if (current.suit == diamonds)		{card.value += 39;}
+
+	work = first.card;
+[	if (active.player == 0) 			{work +=  0;}		[He's ok as is.
+	if (active.player == 1) 			{work +=  5;}
+	if (active.player == 2) 			{work += 10;}
+	if (active.player == 3) 			{work += 15;}
+
+
+	work6 = 1;
+	:loopy7
+	work2 =@ work;
+	if (card.value == work2)
+		{
+		work = work6;				[all we want is a relative position
+		goto exit180;
+		}
+
+	++work;
+	++work6;
+	goto loopy7;
+
+	:exit180;
+	}
+
+function = 0;
+

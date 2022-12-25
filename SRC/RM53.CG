@@ -1,0 +1,220 @@
+[ POLICE QUEST 
+[ rm53.cg 
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 12/12/86
+[ Last Update October 12, 1987GR
+
+[rm.court.front
+
+
+%include "gamedefs"
+%include "rm53.msg"
+%include "rm94.h"
+
+
+
+%define	doorDone			lf0
+%define	nearCar			lf1
+%define	nearDoor			lf2
+
+%object	aDoor			1
+%object	aDoorBackground	2
+
+
+
+if (init.log)
+	{
+	if (!SxFoundCourt)
+		{
+		set( SxFoundCourt);
+		score += 1;
+		}
+
+	if ( !in.car &&
+		(f.car.door ||
+		b.car.door)) {
+		carStolen = 4;
+		}
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+	
+	load.logics( 94);				[lgc.stopped.cars
+
+	load.sound( s.door.open);
+	load.sound( s.door.close);
+	
+	load.view( v.Cdoor);
+	load.view( v.court.sign);
+	load.view( v.patCar);
+	
+	animate.obj( aDoor);
+	animate.obj( aDoorBackground);
+
+	set.view( aDoor, v.Cdoor);
+	set.view( aDoorBackground, v.Cdoor);
+	
+	stop.cycling( aDoor);
+	stop.cycling( aDoorBackground);
+
+	set.loop( aDoor, 1);
+	set.loop( aDoorBackground, 2);
+	
+	ignore.blocks( aDoor);
+	ignore.blocks( aDoorBackground);
+
+	ignore.objs( aDoor);
+	ignore.objs( aDoorBackground);
+	
+	set.priority( aDoor, 8);
+	set.priority( aDoorBackground, 4);
+	
+	position( aDoor, 79, 85);
+	position( aDoorBackground, 80, 84);
+
+	add.to.pic( v.Cdoor, 0, 1, 66, 81, 4, 4);
+	add.to.pic( v.Cdoor, 0, 0, 65, 82, 8, 8);
+
+	add.to.pic( v.court.sign, 0, 0, 27, 12, 5, 5);
+	add.to.pic( v.court.sign, 0, 1, 69, 12, 5, 5);
+
+	set.cel( aDoor, 0);
+	set.cel( aDoorBackground, 0);
+
+	draw( aDoor);
+	draw( aDoorBackground);
+
+	stop.update( aDoor);
+	stop.update( aDoorBackground);
+
+	work = DOOR_CYCLE_TIME;
+	cycle.time( aDoor, work);
+	cycle.time( aDoorBackground, work);
+
+	if (priorX) {
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		}
+	else {
+		position( ego, 80, 84);
+		}
+
+	call( 94);					[lgc.stopped.cars
+
+	show.pic();
+	return();
+	}
+
+
+
+[ Logic 
+
+reset( nearDoor);
+if (posn( ego, 75, 84, 88, 88)) {
+	set( nearDoor);
+	}
+
+reset( nearCar);
+if (posn( ego, 1, 144, 159, 167)) {
+	set( nearCar);
+	}
+
+if (posn( ego, 1, 84, 159, 167)) {
+	set.priority( aDoor, 4);
+	}
+else {
+	set.priority( aDoor, 8);
+	}
+
+
+
+[ Text 
+
+if (!have.input) {
+	goto exit;
+	}
+
+if (!nearCar)
+	{
+	if (said( look, door))
+		{
+		print( 3);
+		}
+
+	if (said( open, door))
+		{
+		if (!nearDoor)
+			{
+			set( notCloseEnough);
+			}
+		else
+			{
+			start.update( aDoor);
+			start.update( aDoorBackground);
+	
+			end.of.loop( aDoor, doorDone);
+			end.of.loop( aDoorBackground, done);
+	
+			sound( s.door.open, snd.done);
+	
+			set( game.control);
+			stop.update( ego);
+			prevent.input();
+			}
+		}
+		
+	if (said( close, door))
+		{
+		print( 4);				[ it's closed
+		}
+	}
+
+
+if ((said( look) ||
+	said( look, room)))
+	{
+	print( 1);
+	}
+
+if ((said( look, window) ||
+	said( look$in, window)))
+	{
+	if (ego.y > 90)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 2);
+		}
+	}
+
+if ((said( look, down) ||
+	said( look, sidewalk)))
+	{
+	print( 5);
+	}
+
+if ((said( look, up) ||
+	said( look, sky)))
+	{
+	print( 6);
+	}
+
+
+
+[
+:exit
+[
+
+if (doorDone) {
+	reset( game.control);
+	accept.input();
+	start.update( ego);
+	new.room( 54);					[rm.court.hall
+	}
+
+call( 94);						[lgc.stopped.cars
+

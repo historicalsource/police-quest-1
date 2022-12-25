@@ -1,0 +1,77 @@
+[ POLICE QUEST
+[ rm62.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 3/10/87
+[ Last Update October 6, 1987GR
+
+[ lgc.cheeks.jail
+
+
+%message	1
+"\"Well, it's about time, Bonds!\" exclaims the jailer.
+ \"That gal in cell one has been whining like a lonely puppy for you!\""
+
+%message	2
+"\"Do your best to calm that girl down, will ya, Sonny?
+ I don't get paid enough to listen to that crap!\""
+
+%message	3
+"As you approach cell one, Sweet Cheeks spots you and says..."
+
+%message	4
+"\"Oh, Precious! I'm so happy to see you!\""
+
+%message	5
+"\"Please come here and talk to me! I need your help, Sonny.\""
+
+%message	6
+"\"I'm sorry, Sonny, but I got picked up by Operation Trick Trap.\""
+
+%message	7
+"\"I know you warned me,
+ but I thought the operation was over.\""
+
+%message	8
+"\"I'll do anything to get out!\""
+
+%message	9
+"\"Oh, Sonny! If only I had someone like you to call my own!\""
+
+%message	10
+"\"Wow, Sweet Lips!\" you exclaim. \"Was that hot, or what?!\""
+
+%message	11
+"\"I'm sorry, Precious. I just couldn't resist you!\""
+
+%message	12
+"\"Oh please, get me out of this place.\""
+
+%message	13
+"\"Oh, Sonny, I'll help you do anything.
+ Thank you so much!\""
+
+%message	14
+"\"Oh, please, tell me what to do.\""
+
+%message	15
+"Embarrassed, you feel as though all the blood in your body
+ has rushed to your face."
+
+%message	16
+"You explain the arrangements of Sweet Cheek's immediate release to her."
+
+%message	17
+"\"Sweet Cheeks, as soon as you're released,
+ I want you to go to the police station for a meeting with Lieutenant Morgan.\""
+
+%message	18
+"\"Hey, Sonny!\" says the jailer in a loud voice,
+ \"You been messing with my female prisoners or
+ did you just start wearing lipstick today?\""
+
+%message	19
+"\"Lt. Morgan just called. He's sending a car over for Sweet Cheeks.\""
+
+%message	20
+"She can't hear you from here."
+

@@ -1,0 +1,79 @@
+[ POLICE QUEST
+[ rm9.cg
+[ By:  Greg Rowland, Ed Anderson, and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 15, 1987GR
+
+[ rm.trunk
+
+
+%include "gamedefs"
+%include "rm9.msg"
+
+
+
+%define	printed2			lf0
+
+
+
+if (init.log) {
+	if (!SxTdope)
+		{
+		set( SxTdope);
+		score += 2;
+		}
+
+	set( NOcase);
+
+	load.view( v.dope);
+	load.pic( current.room);
+	draw.pic( current.room);
+
+	add.to.pic( v.dope, 0, 0, 52, 120, 4, 4);	[	pot
+	add.to.pic( v.dope, 0, 1, 66, 124, 4, 4);	[	coke
+
+	show.pic( );
+	status.line.off( );
+	reset( enable.menu);
+
+	return( );
+	}
+
+
+
+[ Text 
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look$in, trunk) ||
+	said( look, trunk, rol) ||
+	said( look, dope, rol)))
+	{
+	print( 1);
+	}
+
+if (said( get, rol))
+	{
+	print( 2);
+	set( printed2);
+	}
+
+if ((said( close, trunk, rol) ||
+	said( stop, looking, trunk, rol) ||
+	said( look, car) ||
+	said( look$in, car) ||
+	said( look, away)))
+	{
+	if (!printed2)
+		{
+		print( 2);
+		}
+	print( 3);
+	new.room.f( previous.room);
+	}
+
+
+[
+:exit
+[
+

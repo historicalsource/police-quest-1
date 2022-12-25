@@ -1,0 +1,291 @@
+[ POLICE QUEST
+[ rm27.cg
+[ By:  Greg Rowland Ed Anderson and Jim Walls
+[ For: Sierra On-Line Inc. 12/03/86
+[ Last Update October 4, 1987GR
+
+[ lgc.freeway1
+
+%include "gamedefs"
+%include "rm117.h"
+
+[ freeway1.src 1 of 2 generic traffic patterns w/ freeway
+[ runs in rm 22, 16
+
+[see rm117 for detailed programming of:
+[ ON RAMP / OVERPASS LOGIC
+[ CRASH LOGICS 
+[ STOP LIGHT LOGIC
+
+if (change.signal) {
+	draw( a.intersection);
+	reset( change.signal);
+	}
+
+[ Light logics ............................
+
+if (posn( a.car2, 70, 27, 71, 38)
+&& intersection != north.stop) {
+	observe.blocks( a.car2);
+	}
+else	{
+	ignore.blocks( a.car2);
+	}
+
+if (posn( a.car3, 85, 25, 90, 39) 
+&& intersection != north.stop) {
+	observe.blocks( a.car3);
+	}
+else	{
+	ignore.blocks( a.car3);
+	}
+
+if (posn( a.car1, 75, 39, 85, 50) 
+&& intersection != east.stop)	{
+	observe.blocks( a.car1);
+	}
+else	{
+	ignore.blocks( a.car1);
+	}
+
+[ start.cars
+[car1
+if ( !stopCar1) {
+	if (!posn( ego, 144, 117, 159, 131)
+	&& !posn( a.suspect, 144, 117, 159, 131)) {
+		if (moving1 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car1, work);
+			position( a.car1, right.edge, t9y);
+			ignore.objs( a.car1);
+			ignore.blocks( a.car1);
+			set.priority( a.car1, 5);
+			set( moved1);
+			}
+		if (moving1 == 1) {
+			move.obj( a.car1, t4x, t9y, 1, moved1);
+			draw( a.car1);		  
+			}
+		}
+	if (moving1 == 2) {
+		move.obj( a.car1, t4x, t8y, 1, moved1);
+		}
+	if (moving1 == 3) {
+		move.obj( a.car1, t2x, t7y, 1, moved1);
+		}
+	if (moving1 == 4) {
+		move.obj( a.car1, t2x, top.edge, 1, moved1);
+		}
+	if (moving1 == 5) {
+		erase( a.car1);
+		moving1 = 0;
+		}
+	}
+
+[ car2
+if ( !stopCar2) {
+	if (!posn( ego, 17, 0, 27, 25)
+	&& !posn( a.suspect, 17, 0, 27, 25)) {
+		if (moving2 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car2, work);
+			position( a.car2, t1x, 5);
+			ignore.objs( a.car2);
+			ignore.blocks( a.car2);
+			set.priority( a.car2, 5);
+			set( moved2);
+			}
+		if (moving2 == 1) {
+			move.obj( a.car2, t1x, t7y, 1, moved2);
+			draw( a.car2);		  
+			}
+		}
+	if (moving2 == 2) {
+		move.obj( a.car2, t3x, t8y, 1, moved2);
+		}
+	if (moving2 == 3) {
+		move.obj( a.car2, t3x, t9y, 1, moved2);
+		}
+	if (moving2 == 4) {
+		observe.objs( a.car2);
+		move.obj( a.car2, t4x, t10y, 1, moved2);
+		}
+	if (moving2 == 5) {
+		move.obj( a.car2, right.edge, t10y, 1, moved2);
+		}
+	if (moving2 == 6) {
+		erase( a.car2);
+		moving2 = 0;
+		}
+	}
+
+[ FREEWAY car3
+if ( !stopCar3) {
+	if (!posn( ego, 133, 0, 159, 40)
+	&& !posn( a.suspect, 133, 0, 159, 40)) {
+		if (moving3 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.view( a.car3, v.diag.cars);
+			set.loop( a.car3, 1);
+			set.cel.f( a.car3, work);
+			position( a.car3, 146, 6);
+			ignore.objs( a.car3);
+			ignore.blocks( a.car3);
+			set.priority( a.car3, 15);
+			move.obj( a.car3, 2, 150, 2, moved3);
+			draw( a.car3); 
+			++ moving3		  
+			}
+		}
+	if (moving3 == 2) {
+		erase( a.car3);
+		random( 0, 9, work);
+		if ( hercules && work < 4) {
+			++ work;
+			}
+
+		set.view( a.car3, v.diag.cars);
+		set.loop( a.car3, 1);
+		set.cel.f( a.car3, work);
+		set.loop( a.car3, 1);
+		position( a.car3, 146, 5);
+		set.priority( a.car3, 15);
+		move.obj( a.car3, 122, 29, 2, moved3);
+		draw( a.car3);	
+		++ moving3;	  
+		}
+	if (moving3 == 4) {
+		set.view( a.car3, v.cars);
+		set.loop( a.car3, 1);
+		move.obj( a.car3, 83, 29, 1, moved3);
+		}
+	if (moving3 == 5) {
+		move.obj( a.car3, 83, 1, 1, moved3);
+		}
+	if (moving3 == 6) {
+		erase( a.car3);
+		moving3 = 0;
+		}
+	}
+
+[ car4
+if ( !stopCar4) {
+	if (!posn( ego, 0, 146, 27, 167)
+	&& !posn( a.suspect, 0, 146, 27, 167)) {
+		if (moving4 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car4, work);
+			position( a.car4, 7, 166);
+			ignore.objs( a.car4);
+			ignore.blocks( a.car4);
+			set.priority( a.car4, 15);
+			set( moved4);
+			}
+		if (moving4 == 1) {
+			move.obj( a.car4, 157, 16, 2, moved4);
+			draw( a.car4);		  
+			}
+		}
+	if (moving4 == 2) {
+		erase( a.car4);
+		moving4 = 0;
+		}
+	}
+
+[ car5
+if ( !stopCar5) {
+	if (!posn( ego, 133, 0, 159, 40)
+	&& !posn( a.suspect, 133, 0, 159, 40)) {
+		if (moving5 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car5, work);
+			position( a.car5, 157, 3);
+			ignore.objs( a.car5);
+			ignore.blocks( a.car5);
+			set.priority( a.car5, 15);
+			set( moved5);
+			}
+		if (moving5 == 1) {
+			move.obj( a.car5, 1, 159, 2, moved5);
+			draw( a.car5);		  
+			}
+		}
+	if (moving5 == 2) {
+		erase( a.car5);
+		moving5 = 0;
+		}
+	}
+
+[ car6
+if ( !stopCar6) {
+	if (!posn( ego, 0, 140, 27, 167)
+	&& !posn( ego, 0, 140, 27, 167)) {
+		if (moving6 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car6, work);
+			position( a.car6, 14, 166);
+			ignore.objs( a.car6);
+			ignore.blocks( a.car6);
+			set.priority( a.car6, 15);
+			set( moved6);
+			}
+		if (moving6 == 1) {
+			move.obj( a.car6, 157, 23, 2, moved6);
+			draw( a.car6);		  
+			}
+		if (moving6 == 2) {
+			erase( a.car6);
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car6, work);
+			position( a.car6, 14, 166);
+			set.priority( a.car6, 15);
+			set( moved6);
+			}
+		if (moving6 == 3) {
+			move.obj( a.car6, 51, 129, 2, moved6);
+			draw( a.car6);		  
+			}
+		}
+	if (moving6 == 4) {
+		move.obj( a.car6, 72, 129, 1, moved6);
+		}
+	if (moving6 == 5 && moving2 != 4) {
+		observe.objs( a.car6);
+		move.obj( a.car6, 132, 129, 1, moved6);
+		}
+	if (moving6 == 6 && moving1 != 1) {
+		move.obj( a.car6, 141, 6, 1, moved6);
+		}
+	if (moving6 == 7) {
+		erase( a.car6);
+		moving6 = 0;
+		}
+	}

@@ -1,0 +1,98 @@
+[ POLICE QUEST
+[ rm45.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 7/28/86
+[ Last Update October 6, 1987al
+
+[ lgc.brief2
+
+
+%message 1          																				[Dooley
+"Sgt. Dooley says, \"Men, we've received information from the
+ Day Sergeant concerning a Missing Persons report filed earlier this morning."
+
+%message 2    																										[Dooley
+"\"It seems that a Mexican male (physical description of 5'8\", 145 lbs,
+ black hair, brown eyes) by the name of Jose Martinez, was last seen by
+ his wife two days ago, getting into a late-model light blue Cadillac.
+ No one has seen or heard from Martinez since."
+
+%message 3   																											[Dooley
+"\"This person has some previous arrests involving narcotics sales,\"
+ says Dooley, concluding the briefing.
+ \"Be advised that this black Cadillac may be one and the same
+ as the one involved in the recent murder of Lonny West.
+ We have a partial license plate number of 'L964.'\""
+
+%message 4
+"You check your pigeonhole and find a sealed envelope."
+
+%message 5
+"Ripping it open,
+ you read a message from an unknown informant,
+ advising you of illegal, high-stakes gambling
+ in the back room of the Hotel Delphoria Cocktail Lounge."
+
+%message 6
+"There are some messages, but they're not for you."
+
+%message 7
+"You vow to remember the information, and discard the envelope and message."
+
+%message 8
+"Your pigeonhole is empty."
+
+%message 9
+"Dooley then proceeds to give everyone their beat assignments for the day,
+ concluding with yours, \"Sonny Bonds, your call number will be 83-32.\""
+
+%message 10
+"\"Keep it safe out there, boys and girls!\""
+
+%message 11
+""
+
+%message 12
+""
+
+%message 13
+""
+
+%message 14
+"Sgt. Dooley cans your butt on the spot,
+ \"Bonds, you're FIRED for insubordination!\""
+
+%message  15   																									[dooley
+"In his firm voice, Dooley reminds you,
+ \"Being punctual to briefings might keep some of those corrective memos
+ out of your pigeonhole, Bonds!
+ Now, find your seat!\""
+
+%message  16       																					[steve
+"\"I heard about that Honey you stopped last night
+ who tried to negotiate her way out of a ticket
+ by exposing the upper parts of her anatomy.\""
+
+%message  17																												[Jack
+"\"I'm late for court, Sonny. Catch you later.\""
+
+%message  18   																									[jackson
+"\"You should buy a new watch, Sonny.
+ You might show up on time, for once!\""
+
+%message  19
+"\"Boy, Sonny! Sgt. Dooley is hotter than a pistol at you!\""
+
+%message  20   																									[Karen
+"\"Sonny, the next time you sign up for graveyard shift,
+ I'd just love to be your partner.\""
+
+%message  21   																									[Big Sam
+"\"The next time Dooley embarrasses you like that,
+ you oughta tell him to go eat hub caps in the parking lot.\""
+
+%message  22   																									[Bufford
+"\"Boy, Judge Palmer sure ticked me off this morning by finding that
+ sleazy dude not guilty.
+ What a judicial jerk-ette she is!\""
+

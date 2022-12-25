@@ -1,0 +1,1177 @@
+[ POLICE QUEST
+[ rm41.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/7/86
+[ Last Update October 12, 1987GR
+
+[jail.rm.outside
+
+
+%include "gamedefs"
+%include "rm41.msg"
+%include "rm94.h"
+
+
+
+%define	moved0			lf0
+%define	moved1			lf1
+%define	moved2			lf2
+%define	moved3			lf3		[used in stopped cars
+%define	moved4			lf4
+%define	cameraCycling		lf5
+%define	door.open			lf6
+%define	jailDoorDone		lf7
+%define	conver0			lf8
+%define	lockerDoorDone		lf9
+[%define	lf10
+[%define	lf11
+[%define	lf12
+[%define	lf13
+%define	leftOpen			lf14
+%define	nearCarDoor		lf15
+%define	nearLocker		lf16
+%define	businessInJail		lf17
+%define	nearDoor			lf18
+%define	nearBuzzer		lf19
+
+
+%define	moving0			lcl0
+%define	moving1			lcl1
+%define	moving2			lcl2
+%define	moving3			lcl3		[used in stopped cars
+%define	moving4			lcl4
+
+%define	cameraTimer		lcl6
+%define	simms			lcl7
+%define	laura			lcl8
+%define	suspect			lcl9
+%define	slam.dunk.donnie	lcl10
+
+%object	a.simms				1
+%object	a.laura				2
+%object	a.slam.dunk.donnie		3
+%object	a.gun.door			4
+%object	a.jail.door			5
+%object	a.camera				6
+
+
+if (init.log) {
+[		if (forceAtest) {
+[			set( in.car);
+[			set( LauraCar);
+[			set( check.gun);
+[			set( has.suspect);
+[			put(i.gun, current.room);
+[			put(i.loaded.gun, current.room);
+[			suspect.cop.car = incop.door.closed;
+[		
+[			current.suspect = drunk;
+[			jail.scene = 2;
+[			progress = has.brief2;
+[			current.suspect = taselli;
+[			current.suspect.draw = taselli.shooting;
+[			current.dead.suspect = taselli.dead;
+[			current.suspect.cuffed = taselli.cuffed;
+[			current.suspect.car = felony.car;
+[		
+[			park.bust = 220;
+[			jail.scene = 4;
+[			current.suspect = colby;
+[			}
+[		
+[ .... END TEST STUFF
+
+	set( NOcase);
+	if ( !in.car &&
+		(f.car.door ||
+		b.car.door)) {
+		carStolen = 4;
+		}
+
+	if (lockerDoorOpen) {
+		set( leftOpen);
+		}
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	load.view( v.sign.gun.locker);
+	load.view( v.slam.dunk.donnie);
+	load.view( v.jail.door);
+	load.view( v.camera);
+	load.view( v.patCar);
+
+	load.sound( s.buzzer);
+	load.sound( s.jail.door);
+	load.sound( s.door.open);
+	load.sound( s.door.close);
+
+	load.logics( 94);				[lgc.stopped.cars
+	load.logics( 108);
+
+	animate.obj( a.suspect);
+	animate.obj( a.slam.dunk.donnie);
+	animate.obj( a.gun.door);
+	animate.obj( a.jail.door);
+	animate.obj( a.camera);
+
+	set.priority( a.slam.dunk.donnie, 4);
+	set.priority( a.jail.door, 4);
+
+	set.view( a.slam.dunk.donnie, v.slam.dunk.donnie);
+	set.view( a.gun.door, v.sign.gun.locker);
+	set.view( a.jail.door, v.jail.door);
+	set.view( a.camera, v.camera);
+
+	ignore.blocks( a.suspect);
+	ignore.blocks( a.jail.door);
+	ignore.objs( a.jail.door);
+
+	set.loop( a.gun.door, 1);
+
+	set.cel( a.gun.door, 0);
+	set.cel( a.jail.door, 0);
+
+	stop.cycling( a.gun.door);
+	stop.cycling( a.jail.door);
+
+	position( a.slam.dunk.donnie, 112, 100);
+	position( a.gun.door, 75, 87);
+	position( a.jail.door, 87, 105);
+	position( a.camera, 113, 53);
+
+	if (current.suspect == drunk) {
+		load.view( v.drunk);
+		load.view( v.drunk.cuffed.b);
+		set.view( a.suspect, v.drunk.cuffed.b);
+		}
+	
+	if (current.suspect == taselli) {
+		load.view( v.taselli.cuffed);
+		set.view( a.suspect, v.taselli.cuffed);
+		}
+	
+	if (current.suspect == colby && has.suspect) {
+		load.view( v.laura);
+		load.view( v.colby.cuffed);
+		load.view( v.simms.cuffed);
+
+		animate.obj( a.laura);
+		animate.obj( a.simms);
+
+		set.view( a.laura, v.laura);
+		set.view( a.suspect,  v.simms.cuffed);
+		set.view( a.simms, v.colby.cuffed);	[ fool get out car code
+
+		position( a.laura, 118, 155);
+
+		position( a.suspect, 128, 161);
+		position( a.simms, 128, 155);
+
+		ignore.blocks( a.laura);
+		ignore.blocks( a.simms);
+
+		}
+	
+	add.to.pic( v.sign.gun.locker, 0, 2, 106, 89, 4, 4);	[buzzer
+	add.to.pic( v.sign.gun.locker, 0, 1,  13, 54, 6, 6);	[sign
+	add.to.pic( v.sign.gun.locker, 0, 0,  71, 97, 4, 4);	[gun.locker
+
+	if (previous.room == 40) {
+		position( ego, 91, 106);
+		start.motion( ego);
+		set.loop( ego, facing.front);
+		[set.cel( a.jail.door, 4);
+		[set( door.open);
+		move.obj( ego, 91, 110, 1, moved0);
+		draw( ego);
+		}
+	
+	if (!in.car && previous.room != 40) {
+		position( ego, 118, 163);
+		draw( ego);
+		}
+	
+	if (lockerDoorOpen) {
+		last.cel( a.gun.door, work);
+		set.cel.f( a.gun.door, work);
+		}
+	
+	if ((has.suspect ||				[ book clobySimms Drunk, Taselli
+		jail.scene == 3 ||			[ rebook taselli
+		jail.scene == 6)) {			[ Sweet Cheeks in jail
+		set( businessInJail);
+		}
+
+	cycle.time( a.camera, four);
+
+	work = DOOR_CYCLE_TIME;
+
+	cycle.time( a.gun.door, work);
+	cycle.time( a.jail.door, work);
+
+
+	draw( a.slam.dunk.donnie);
+	draw( a.gun.door);
+	draw( a.jail.door);
+	draw( a.camera);
+
+	stop.update( a.jail.door);
+	stop.update( a.gun.door);
+
+	cameraTimer = 2;
+
+	call( 94);					[lgc.stopped.cars
+	call( 108);
+
+	show.pic();
+	return();
+	}
+
+
+
+
+if (jail.scene == 7 &&
+	aSecondPassed &&
+	secondsInRoom == 5)
+	{
+	set( certainDeath);
+	print( 57);
+	}
+
+[ Logic
+if (posn( ego, 85, 102, 97, 104)) {
+	new.room( 40);					[rm.jail
+	}
+
+reset( nearCarDoor);
+if (posn( ego, 109, 160, 124, 164)) {
+	set( nearCarDoor);
+	}
+
+reset( nearLocker);
+if (posn( ego, 70, 106, 81, 109)) {
+	set( nearLocker);
+	}
+
+reset( nearDoor);
+if (posn( ego, 82, 106, 113, 109)) {
+	set( nearDoor);
+	}
+
+reset( nearBuzzer);
+if (posn( ego, 101, 106, 113, 109)) {
+	set( nearBuzzer);
+	}
+
+
+if (f.car.door &&
+	nearCarDoor &&
+    (said( go, rol) ||				[Logic below cleans up what we mean
+	said( sit) ||
+	said( sit, car) ||
+	said( stand) ||
+	said( leave, car) ||
+	said( climb, car)))
+	{
+	set( func4);
+	}
+
+
+if (in.car &&
+    (said( drive) ||
+	said( drive, car) ||
+	said( start, car, with, keys) ||
+	said( use, car, keys) ||
+	said( use, keys, start, car) ||
+	said( start, car) ||
+	said( start, motor) ||
+	said( turn, key) ||
+	said( drive, car))) {
+	if (f.car.door) {
+		print( 41);				[	close the door
+		}
+	else {
+		set( func4);
+		}
+	}
+
+
+if (func4) {
+	if  (has.suspect &&
+	    (!f.car.door || !in.car)) {
+		print( 36);				[ must finish delivery
+		reset( func4);
+		}
+	
+	if (park.bust == 221) {
+		if (!in.car) {
+			print( 37);			[ looks like you'll be good
+			}
+		else {
+			if (in.car && f.car.door)
+				{
+			  	print( 38);		[ let's get back to the office
+				}
+			}
+		}
+	}
+
+
+	
+[ ani timers
+if (moved0) {
+	reset( moved0);
+	++moving0;
+	}
+
+if (moved1) {
+	reset( moved1);
+	++moving1;
+	}
+
+if (moved2) {
+	reset( moved2);
+	++moving2;
+	}
+
+if (moved3) {
+	reset( moved3);
+	++moving3;
+	}
+
+if (moved4) {
+	reset( moved4);
+	++moving4;
+	}
+
+
+
+distance( ego, a.simms, simms);
+distance( ego, a.laura, laura);
+distance( ego, a.suspect, suspect);
+distance( ego, a.slam.dunk.donnie, slam.dunk.donnie);
+if ((simms < dist ||
+	laura < dist ||
+	suspect < dist ||
+	slam.dunk.donnie < dist)) {
+	set( nearPerson);
+	}
+
+
+
+[ Door Stuff
+
+if (door.open && nearLocker) {		[	Close door if he gets near locker
+	start.update( a.jail.door);
+	sound( s.jail.door, snd.done);
+	reverse.loop( a.jail.door, jailDoorDone);
+	reset( door.open);
+	}
+
+if (door.open) {
+	ignore.blocks( ego);
+	stop.update( a.jail.door);
+	}
+else {
+	observe.blocks( ego);
+	}
+
+if (jailDoorDone) {
+	reset( jailDoorDone);
+	stop.update( a.jail.door);
+	stop.update( a.gun.door);
+	}
+
+
+
+[ Gun locker
+
+if (lockerDoorDone)
+	{
+	reset( lockerDoorDone);
+	toggle( lockerDoorOpen);
+	accept.input();
+	stop.update( a.gun.door);
+	}
+
+
+
+[ Left gun locker open
+
+if (previous.room == 40 &&
+	!certainDeath &&
+    !nearDoor &&
+	check.gun &&
+	leftOpen) {
+	print( 40);					[	close the gun locker door
+	set( certainDeath);
+	}
+
+
+
+--cameraTimer;						[	Camera cycling
+if (cameraTimer == 1) {
+	random( 11, 33, cameraTimer);
+	toggle( cameraCycling);
+	if (cameraCycling) {
+		start.cycling( a.camera);
+		}
+	else	{
+		stop.cycling( a.camera);
+		}
+	}
+
+
+
+[ Slam.dunk.donnie
+
+if (moving4 == 0) {
+	start.cycling( a.slam.dunk.donnie);
+	move.obj( a.slam.dunk.donnie, 147, 100, 1, moved4);
+	moving4 = 1;
+	}
+
+if (moving4 == 2) {
+	move.obj( a.slam.dunk.donnie, 131, 119, 1, moved4);
+	moving4 = 3;
+	}
+
+if (moving4 == 4) {
+	move.obj( a.slam.dunk.donnie, 146, 134, 1, moved4);
+	moving4 = 5;
+	}
+
+if (moving4 == 6) {
+	move.obj( a.slam.dunk.donnie, 125, 100, 1, moved4);
+	moving4 = 7;	  				
+	}
+
+if (moving4 == 8) {
+	moving4 = 0;
+	}
+
+
+
+[ Stop Donnie
+
+if (moving4 == 250) {
+	stop.motion( a.slam.dunk.donnie);
+	set.loop( a.slam.dunk.donnie, 2);
+	set( moved4);
+	}
+
+if (moving4 == 251) {
+	stop.update( a.slam.dunk.donnie);
+	++moving4;
+	}
+
+
+[ Restart Donnie
+
+if (moving4 == 253) {
+	stop.update( a.slam.dunk.donnie);
+	moving4 = 0;
+	}
+
+
+
+[ Jail yard scenes
+
+if (!has.suspect &&
+    !chicken.scene &&
+    !conver0 &&
+	jail.scene == 1 &&
+	nearLocker)
+	{
+	print( 1);					[ what fire Dooleys' rockets
+	print( 2);					[ bare bosom filed a complaint
+	set( conver0);
+	}
+
+[ Booking drunk
+
+if (current.suspect == drunk && has.suspect) {
+	if (posn( a.suspect, 131, 161, 145, 167) && !moving1) {
+		getting.out = 0;
+		print( 3);				[ follow me without falling down
+		start.cycling( a.suspect);
+		move.obj( a.suspect, 57, 166, 1, moved1);
+		++ moving1;
+		}
+	
+	if (moving1 == 2) {
+		move.obj( a.suspect, 57, 122, 1, moved1);
+		print( 4);				[ I can't walk good
+		++ moving1;
+		}
+	
+	if (moving1 == 4) {
+		print( 18);				[ Watch your step Al
+		move.obj( a.suspect, 65, 121, 1, moved1);
+		++ moving1;
+		}
+	
+	if (moving1 == 6) {
+		move.obj( a.suspect, 65, 112, 1, moved1);
+		++ moving1;
+		}
+	
+	if (moving1 == 8) {
+		set.loop( a.suspect, 0);
+		fix.loop( a.suspect);
+		++ moving1;
+		}
+	
+	if (moving1 == 9) {
+		move.obj( a.suspect, 69, 112, 1, moved1);
+		++ moving1;
+		}
+	
+	if (moving1 == 11) {
+		move.obj( a.suspect, 67, 114, 1, moved1);
+		++ moving1;
+		}
+	
+	if (moving1 == 13) {
+		move.obj( a.suspect, 70, 107, 1, moved1);
+		++ moving1;
+		}
+	
+	if (moving1 == 15) {
+		move.obj( a.suspect, 69, 110, 1, moved1);
+		++ moving1;
+		}
+	
+	if (moving1 == 17) {
+		move.obj( a.suspect, 88, 107, 1, moved1);
+		++ moving1;
+		}
+	if (moving1 == 19) {
+		print( 19);				[ How about that ocifer
+		move.obj( a.suspect, 88, 106, 1, moved1);
+		++ moving1;
+		}
+	
+	if (moving1 == 20) {
+		set.loop( a.suspect, 3);
+		++ moving1;
+		}
+	}
+	
+
+
+[ Booking Hoffman (Taselli)
+
+if (current.suspect == taselli && has.suspect) {
+	if (posn( a.suspect, 131, 161, 145, 167) && !moving1) {
+		print( 25);				[ Move out Hoffman
+		start.cycling( a.suspect);
+		move.obj( a.suspect, 86, 165, 1, moved1);
+		getting.out = 0;
+		++moving1;
+		}
+	
+	if (moving1 == 2) {
+		print( 22);				[ world would better without you
+		print( 26);				[ keep moving Hoffman
+		++moving1;
+		move.obj( a.suspect, 56, 138, 1, moved1);
+		}
+	
+	if (moving1 == 4) {
+		move.obj( a.suspect, 57, 123, 1, moved1);
+		}
+	
+	if (moving1 == 5) {
+		move.obj( a.suspect, 72, 108, 1, moved1);
+		print( 23);				[ big bust for the day
+		print( 27);				[ natural high PUNK!
+		++moving1;
+		}
+	
+	if (moving1 == 7) {
+		move.obj( a.suspect, 87, 106, 1, moved1);
+		}
+	
+	if (moving1 == 8) {
+		++moving1;
+		stop.cycling( a.suspect);
+		print( 24);				[ big waste of your time
+		}
+	}
+
+
+
+[ Get Folks out of car
+if (current.suspect == colby && has.suspect)
+	{
+	if (!in.car && nearBdoor && !moving0) {
+		sound( s.car.open, snd.done);
+ 		set.loop( a.Fdoor, 0);
+		set.cel( a.Fdoor, 2);
+
+		if (!f.car.door) {
+			erase( a.Fdoor);
+			}
+
+		reset( LauraCar);
+
+		set.loop( a.laura, facing.right);
+		stop.cycling( a.laura);
+		draw( a.laura);
+
+		moving4 = 250;				[ stop donnie
+		++ moving0;
+		}
+
+	if (moving0 == 1 && b.car.door && suspect.cop.car == none.in.car) {
+		draw( a.simms);
+		move.obj( a.simms, 135, 154, 1, moved0);
+		move.obj( a.suspect,135, 162, 1, work.f);
+		getting.out = 0;
+		++moving0;
+		}
+
+	if (moving0 == 3) {
+		set.loop( a.simms, facing.left);
+		set.loop( a.suspect,facing.left);
+		++ moving0;
+		}
+	
+	if (moving0 == 4) {
+		set.loop( a.laura, facing.back);
+		move.obj( a.simms, 80, 140, 1, moved2);
+		move.obj( a.suspect, 70, 162, 1, moved3);
+		moving4 = 250; 			[stop.donnie
+		++moving0;
+		moving1 = 1;				[	Start moving Laura
+		}
+
+
+	[ Laura
+	
+	if (moving1 == 1) {
+		start.cycling( a.laura);
+		move.obj( a.laura, 80, 136, 1, moved1);
+		++moving1;
+		}
+	
+	if (moving1 == 3) {
+		stop.cycling( a.laura);
+		++moving1;
+		scriptTimer = 5;
+		}
+	
+	if (moving1 == 4 && scriptTimer == 1 && !door.open) {
+		print( 32);				[ Get the door Sonny.
+		scriptTimer = 15;
+		}
+
+	if (moving1 == 5) {
+		start.cycling( a.laura);
+		move.obj( a.laura, 51, 130, 1, moved1);
+		++moving1;
+		}
+	
+	if (moving1 == 7) {
+		move.obj( a.laura, 93, 106, 1, moved1);
+		}
+	
+	if (moving1 == 8) {
+[		set.priority( a.laura, 7);
+		move.obj( a.laura, 93, 103, 1, moved1);
+		}
+	
+	if (moving1 == 9) {
+		stop.cycling( a.laura);
+		new.room( 40);				[rm.jail
+		}
+	
+
+[ Colby	 be carefull quick fix colby simms
+	
+	if (moving2 == 1) {
+		move.obj( a.simms, 60, 138, 1, moved2);
+		}
+	
+	if (moving2 == 2) {
+		set.loop( a.simms, facing.back);
+		stop.cycling( a.simms);
+		moving1 = 1; 				[Start Laura
+		++moving2;
+		}
+	
+	if (moving2 == 4) {
+		start.cycling( a.simms);
+		move.obj( a.simms, 51, 130, 1, moved2);
+		++moving1;				[laura to steps
+		++moving2;
+		}
+	
+	if (moving2 == 6) {
+		move.obj( a.simms, 93, 106, 1, moved2);
+		}
+	
+	if (moving2 == 7) {
+		move.obj( a.simms, 95, 100, 1, moved2);
+		}
+	
+	if (moving2 == 8) {
+		stop.cycling( a.simms);
+		++moving2;
+		}
+	
+
+	[ Simms
+	
+	if (moving3 == 1) {
+		move.obj( a.suspect,51, 135, 1, moved3);
+		++moving3;
+		}
+
+	if (moving3 == 3 && door.open) {
+		++moving3;
+		}
+
+	if (moving3 == 4) {
+		move.obj( a.suspect,51, 130, 1, moved3);
+		}
+	
+	if (moving3 == 5) {
+		move.obj( a.suspect,90, 106, 1, moved3);
+		}
+	
+	if (moving3 == 6) {
+  		move.obj( a.suspect,88, 98, 1, moved3);
+		print( 30);				[ Hay baby! You boys play basketball
+		++moving2;				[ next.move colby
+		++moving3;
+		}
+	
+	if (moving3 == 8) {
+		set.priority( a.suspect, 4);
+		++moving3;
+		}
+	}
+	
+	
+
+
+[ Text
+
+if (!have.input) {
+	goto exit;
+	}
+
+if (ego.y < 140)
+	{
+	if (said( open, door))
+		{
+		if (nearDoor)
+			{
+			print( 12);
+			}
+		else
+			{
+			if (nearLocker)
+				{
+				goto patch1;
+				}
+			else
+				{
+				set( notCloseEnough);
+				}
+			}
+		}
+
+	if (said( close, door))
+		{
+		if (nearDoor)
+			{
+			print( 12);
+			}
+		else
+			{
+			if (nearLocker)
+				{
+				goto patch2;
+				}
+			else
+				{
+				set( notCloseEnough);
+				}
+			}
+		}
+	}
+
+if ((said( knock, jail, door) ||
+	said( open, jail, door) ||
+	said( knock, door)))
+	{
+	if (!nearDoor)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 12);				[ get the jailers attention for door
+		}
+	}
+
+if ((said( open, locker, rol) ||
+	said( unlock, locker, rol) ||
+	said( unlock, gun, locker, rol) ||
+	said( open, gun, locker, rol) ||
+	said( open, locker, door, rol)))
+	{
+	if (!nearLocker)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		:patch1;
+		if (lockerDoorOpen)
+			{
+			print( 5);			[ The gun locker door is open
+			}
+		else {
+			prevent.input();
+			start.update( a.gun.door);
+			sound( s.door.open, snd.done);
+			end.of.loop( a.gun.door, lockerDoorDone);
+			}
+		}
+	}
+
+
+if ((said( lock, door, rol) ||
+	said( close, gun, locker, rol) ||
+	said( lock, gun, locker, rol) ||
+	said( lock, locker, rol) ||
+	said( close, locker, rol))) {
+	{
+	if (!nearLocker)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		:patch2;
+		if (!lockerDoorOpen)
+			{
+			print( 6);			[ The gun locker door is closed
+			}
+		else {
+			prevent.input();
+			start.update( a.gun.door);
+			sound( s.door.close, snd.done);
+			reverse.loop( a.gun.door, lockerDoorDone);
+			}
+		}
+	}
+
+if ((said( put, nightstick, locker) ||
+	said( lock, nightstick, locker) ||
+	said( lock, nightstick, gun, locker) ||
+	said( put, nightstick, gun, locker)))
+	{
+	print( 55);
+	}
+
+if ((said( put, gun, rol) ||
+	said( put, gun, locker, rol) ||
+	said( put, gun, gun, locker, rol) ||
+	said( lock, gun, locker, rol) ||
+	said( lock, gun, gun, locker, rol) ||
+	said( check, gun, rol)))
+	{
+	if (!nearLocker)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (!lockerDoorOpen)
+			{
+			print( 20);			[ need to open the gun locker
+			}
+		else {
+			if (has( i.gun))
+				{
+				print( 7);		[ place gun into locker
+				put( i.gun, current.room);
+				set( check.gun);
+				if (!SxGunLocker)
+					{
+					set( SxGunLocker);
+					score += 2;
+					}
+				}
+			else
+				{
+				if (has( i.loaded.gun))
+					{
+					print( 7);	[ place gun into locker
+					put( i.loaded.gun, current.room);
+					set( check.gun);
+					if (!SxGunLocker)
+						{
+						set( SxGunLocker);
+						score += 2;
+						}
+					}
+				else
+					{
+					if (check.gun)
+						{
+						print( 33);[ it's in locker
+						}
+					else {
+						print( 34);[ you don't have
+						}
+					}
+				}
+			}
+		}
+	}
+
+if ((said( get, gun, rol) ||
+	said( remove, gun, rol) ||
+	said( take, gun, locker, rol) ||
+	said( get, gun, from, locker, rol)))
+	{
+	if (!nearLocker)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (!lockerDoorOpen) {
+			print( 54);			[ open locker first
+			}
+		else {
+			if ((has( i.loaded.gun) || has( i.gun))) {
+				print( 35);		[ wearing your gun
+				}
+			else {
+				if (check.gun)
+					{
+					print( 8); 	[ it's in locker
+					if (obj.in.room( i.gun, current.room))
+						{
+						get( i.gun);
+						}
+					if (obj.in.room( i.loaded.gun, current.room))
+						{
+						get( i.loaded.gun);
+						}
+					reset( check.gun);
+					}
+				else {
+					print( 34); 	[you don't have
+					}
+				}
+			}
+		}
+	}
+
+
+if ((said( push, buzzer) ||
+	said( call, jailer) ||
+	said( ring, door, bell) ||
+	said( ring, bell)))
+	{
+	if (!nearBuzzer) {
+		set( notCloseEnough);
+		}
+	else	{
+		if (!businessInJail) {
+			print( 49);
+			}
+		else {
+			if (has.suspect && suspect.cop.car != none.in.car) {
+				print( 39);		[ should get suspect first
+				}
+			else {
+				if (door.open) {
+					print( 10);	[ door is already open
+					}
+				else {
+					print( 11);	[ releases the electronic lock
+					start.update( a.jail.door);
+					sound( s.buzzer, snd.done);
+					end.of.loop( a.jail.door, door.open);
+					
+					if (has.suspect)
+						{
+						if (current.suspect != colby)
+							{
+							print( 53);
+							}
+						else
+							{
+							set( game.control);
+							start.motion( ego);
+							set.loop( ego, 1);
+							scriptTimer = 0;	[	Shut up Laura.
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+if (posn( ego, 82, 106, 159, 167))
+	{
+	if ((said( hello) ||
+		said( talk, man, inside, fence) ||
+		said( talk, prisoner, inside, fence) ||
+		said( talk, convict) ||
+		said( talk, man)))
+		{
+		random( 15, 17, work);
+		print.f( work);
+		}
+
+	if ((said( look, man) ||
+		said( look, anyword, man)))
+		{
+		print( 48);
+		}
+	}
+
+
+
+if ((said( look) ||
+	said( look, jail) ||
+	said( look, room)))	{
+	print( 13);					[ entrance to the jail
+	}
+
+if ((said( look, door) ||
+	said( look, jail, door))) {
+	if (nearDoor) {
+		print( 45);
+		}
+	else	{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( look, locker) ||
+	said( look, jail, gun, locker) ||
+	said( look, gun, locker) ||
+	said( look, jail, locker))) {
+	if (nearLocker) {
+		print( 46);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( look$in, locker) ||
+	said( look$in, jail, gun, locker) ||
+	said( look$in, gun, locker) ||
+	said( look$in, jail, locker))) {
+	if (!nearLocker) {
+		set( notCloseEnough);
+		}
+	else {
+		if (!lockerDoorOpen) {
+			print( 20);
+			}
+		else {
+			if (check.gun) {
+				print( 33);		[ it's in locker
+				}
+			else {
+				print( 47);
+				}
+			}
+		}
+	}
+
+if ((said( look, wall) ||
+	said( look, wall, jail) ||
+	said( look, jail, wall)))
+	{
+	print( 14);					[ locked steel plated jail door
+	}
+
+if (said( look, button))
+	{
+	if (nearBuzzer)
+		{
+		print( 43);
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( put, gun, car) ||
+	said( leave, gun, car) ||
+	said( put, belt, car) ||
+	said( leave, belt, car)))
+	{
+	print( 56);
+	}
+
+if ((said( look, camera) ||
+	said( look, tv, camera)))
+	{
+	print( 44);
+	}
+
+if (said( look, tower))
+	{
+	print( 50);
+	}
+
+if (has.suspect &&
+    (said( go, rol) ||
+	said( walk, car, rol) ||
+	said( walk, patrol, car, rol) ||
+	said( follow, me, rol) ||
+	said( move, rol) ||
+	said( get$in, car, rol) ||
+	said( get$in, patrol, car, rol) ||
+	said( come, with, me, rol)))
+	{
+	if ( nearBdoor && b.car.door) {
+		print( 51);
+		}
+	else {
+		reset( have.match);
+		}
+	}
+
+if (current.suspect == taselli &&
+	has.suspect &&
+    (said( search) ||				[ Search man
+	said( search, man) ||
+	said( search, suspect)))
+    	{
+	print( 52);
+	}
+
+[
+:exit
+[
+
+call( 94);						[lgc.stopped.cars
+call( 108);
+
+
+[%message 100
+[	"M0 %v220, M1 %v221, M2 %v222, M3 %v223"
+[		if (forceAtest) {
+[			display( 1, 0, 100);
+[			}
+

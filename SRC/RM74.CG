@@ -1,0 +1,115 @@
+[ POLICE QUEST
+[ rm74.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 6, 1987GR
+
+[logics for room74 -- hotelText dynamic
+
+
+#include "gamedefs"
+#include "rm74.msg"
+
+
+
+[*****
+[ SAID
+[*****
+
+
+if ((current.room == 64 ||			[	Rooms with elevators.
+	current.room == 66))
+	{
+	if ((said( look, down) ||
+		said( look, floor)))
+		{
+		print( 1);
+		}
+
+	if (said( look, elevator))		[	Handle here cause !inElevator
+		{
+		print( 15);
+		}
+	}
+
+
+if ((current.room == 76 ||			[	The stairwell.
+	current.room == 77 ||
+	current.room == 78))
+	{
+	if ((said( look, down) ||
+		said( look, floor)))
+		{
+		print( 1);
+		}
+
+	if  (has( i.transmitter) &&
+		bainsEgoTogether &&
+	    (said( transmit, location) ||
+		said( give, location) ||
+		said( give, room, number) ||
+		said( give, number) ||
+		said( talk, pen) ||
+		said( talk, transmitter, pen) ||
+		said( talk, transmitter) ||
+		said( use, pen) ||
+		said( use, transmitter, pen) ||
+		said( use, transmitter) ||
+		said( number) ||
+		said( room, number) ||
+		said( transmit, number) ||
+		said( transmit, room, number) ||
+		said( call)))
+		{
+		print( 17);
+		}
+
+	if (said( look, stairs))
+		{
+		random( 2, 5, work);
+		print.f( work);
+		}
+
+	if (said( look, under, stairs))
+		{
+		random( 6, 8, work);
+		print.f( work);
+		}
+
+	if ((said( jump) ||
+		said( jump, off) ||
+		said( jump, down)))
+		{
+		print( 9);
+		}
+
+	if (said( look, banister))
+		{
+		print( 10);
+		}
+
+	if ((said( look, carpet) ||
+		said( look, down) ||
+		said( look, floor)))
+		{
+		print( 11);
+		}
+
+	if ((said( slide, down, banister) ||
+		said( slide, banister)))
+		{
+		print( 12);
+		}
+
+	if (said( look, walls))
+		{
+		print( 13);
+		}
+
+	if ((said( look, up) ||
+		said( look, ceiling)))
+		{
+		print( 16);
+		}
+	}
+

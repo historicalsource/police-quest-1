@@ -1,0 +1,2403 @@
+[ POLICE QUEST
+[ rm0.cg 
+[ By:  Greg Rowland, Scott Murphy, Jim Walls, and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 16, 1987GR
+
+
+%include "gamedefs"
+%include "rm0.msg"
+
+
+if (error.number)
+	{
+	call( 98);					[	lgc.error
+	}
+
+if (restore.in.progress)
+	{
+	set( enable.menu);
+	set( refresh);
+	disable.item( c.dummy);
+	if ( !hercules)
+		{
+		clear.lines( 22, 22, 0);
+		clear.lines( 24, 24, 0);
+		}
+	}
+
+
+if (!current.room)
+	{
+[	set( debugging);				[	Delete to remove "debug" menu.
+	if (!restart.in.progress)
+		{
+		script.size( 250);
+
+		set.menu( 	110);			[	SIERRA
+		set.menu.item( 111, c.about);
+		set.menu.item( 112, c.help);
+
+		set.menu( 	114);			[	FILE
+		set.menu.item( 115, c.save);
+		set.menu.item( 116, c.restore);
+		set.menu.item( 117, c.dummy);		[	"--------
+		set.menu.item( 118, c.restart);
+		set.menu.item( 117, c.dummy);	 	[	"--------
+		set.menu.item( 119, c.quit);
+
+		set.menu( 	121);			[	ACTION
+		set.menu.item( 122, c.status);
+		set.menu.item( 123, c.show.obj);
+		set.menu.item( 124, c.radio);
+	
+		set.menu( 	126);			[	SPECIAL
+		set.menu.item( 127, c.sound.toggle);
+		if  (machine.type == PC &&
+			monitor.type != ega &&
+			monitor.type != mono)
+			{
+			set.menu.item( 128, c.rgb.toggle);
+			}
+		if (machine.type == ST)
+			{
+			set.menu.item( 129, c.init.joy);	[	"Joystick/Mouse"
+			}
+		else
+			{
+			set.menu.item( 130, c.init.joy);
+			}
+		set.menu.item( 131, c.pause);
+
+		if (machine.type != AMIGA)
+			{
+			set.menu( 	133);		[	SPEED
+			set.menu.item( 134, c.normal);
+			set.menu.item( 135, c.slow);
+			set.menu.item( 136, c.fast);
+			set.menu.item( 137, c.fastest);
+			set.menu.item( 138, c.dummy);
+			set.menu.item( 139, c.speed);
+			}
+
+[			if (debugging)
+[				{
+[				set.menu( 		141);		[	"Debug
+[				set.menu.item( 149, cLevel); 		[	"debug level
+[				set.menu.item( 142, c.show.ego); 	[	"Ego Info
+[				set.menu.item( 143, c.show.priority); [	"Priority Screen
+[				set.menu.item( 144, c.show.mem); 	[	"Memory Usage
+[				set.menu.item( 145, cObjInfo);	[	"Obj info
+[				set.menu.item( 146, c.QA); 		[	"X/Y Display
+[				set.menu.item( 147, cGimme);		[	"Get All Objects
+[				set.menu.item( 148, cInvNumbers);	[	"Object Numbers
+[				}
+
+		submit.menu( );
+		}
+
+	call( 101);					[	lgc.startup
+
+[		if (test.room)
+[			{
+[			new.room.f( test.room);
+[			}
+
+	if (restart.in.progress)
+		{
+		new.room( 6);				[	rm.hqhall1
+		}
+
+	new.room( 1);					[	rm.title
+	}
+
+
+
+if (init.log)
+	{
+	call( 100);					[	lgc.rm0.init.log
+
+	if (debugging)
+		{
+		load.logics( 99);			[	lgc.debug
+		load.logics( 105);			[	lgc.trace
+		set( enable.trace);
+		}
+
+	if  (!current.room < 10 &&
+		!current.room > 25)			[	On the map.
+		{
+		load.logics( 117);			[	lgc.car
+		call( 117);				[	lgc.car
+		}
+	else
+		{
+		load.view.f( current.sonny);
+		set.view.f( ego, current.sonny);
+		}
+
+	call.f( current.room);
+ 
+	}							[	END init.logs
+
+
+
+[*****
+[	FIRST, A LITTLE HOUSEKEEPING
+[*****
+
+get.posn( ego, ego.x, ego.y);
+reset( nearPerson);
+
+if (ignore.special)
+	{
+	reset( hit.special);
+	}
+
+
+[*****
+[	CONTROLLER STUFF
+[*****
+
+if ((controller( c.menu) ||
+	said( menu)))
+	{
+	menu.input( );
+	set( refresh);
+	}
+
+if (controller( c.rgb.toggle))
+	{
+	toggle.monitor( );
+	set( refresh);
+	}
+
+if (controller( c.cancel.line))
+	{
+	cancel.line( );
+	}
+
+if (controller( c.echo.line))
+	{
+	echo.line( );
+	}
+
+if (progress < 254)
+	{
+	if (controller( c.func4))			{set( func4);}
+	if (controller( c.func6))			{set( func6);}
+	if (controller( c.func8))			{set( func8);}
+	if (controller( c.func10))			{set( func10);}
+	}
+
+
+if ((controller( c.sound.toggle) || said( sound, rol)))
+	{
+	toggle( sound.on);
+	}
+
+if (machine.type == TANDY)
+	{
+	if (controller( cCrescendo))			{--attenuation;}
+	if (controller( cDecrescendo) &&
+		attenuation < 15)				{++attenuation;}
+	}
+
+
+if  (progress < 254 &&
+    (controller( c.radio) ||
+	said( call, partner) ||
+	said( call) ||
+	said( use, radio) ||
+	said( talk, radio) ||
+	said( call, backups) ||
+	said( request, backups) ||
+	said( talk, backups) ||
+	said( call, dispatch)))
+	{
+	set.string( 3, 13);				[ radio
+	parse( 3);
+	}
+
+if ((controller( c.pause) ||
+	said( pause) ||
+	said( pause, game)))
+	{
+	pause( );
+	set( refresh);
+	}
+
+if (controller( c.help))
+	{
+	if ((outOfMemory ||
+		game.control))
+		{
+		print( 78);
+		}
+	else
+		{
+		call( 102);					[	lgc.help
+		set( refresh);
+		}
+	}
+
+if ((controller( c.restore) ||
+	said( restore) ||
+	said( restore, game)))
+	{
+	stop.sound( );
+	restore.game( );
+	set( refresh);
+	}
+
+if (controller( c.version))
+	{
+	print( 1);
+	version();
+	set( refresh);
+	}
+
+if ((controller( c.restart) ||
+	said( restart) ||
+	said( start, over) ||
+	said( restart, game)))
+	{
+	restart.game( );
+	set( refresh);
+	}
+
+if ((controller( c.status) ||
+	said( inventory)))
+	{
+	status( );
+	set( refresh);
+	}
+
+if (controller( c.debug))
+	{
+	toggle( debugging);
+	if (!debugging)
+		{
+		reset( enable.trace);
+		}
+	else
+		{
+		load.logics( 99);			[	lgc.debug
+		load.logics( 105);			[	lgc.trace
+		set( enable.trace);
+		print( 1);				[ game version
+		version( );				[ interp ver
+		accept.input( );
+		accept.input();
+		normal.motion( ego);
+		reset( game.control);
+		set( refresh);
+		}
+	}
+
+if (controller( c.init.joy))
+	{
+	init.joy( )
+	set( refresh);
+	}
+
+if ((controller( c.quit) || said( quit)))
+	{
+	stop.sound();
+	if (debugging)
+		{
+		quit( 1);
+		}
+	else
+		{
+		quit( 0);
+		set( refresh);
+		}
+	}
+
+if ((controller( c.show.obj) || said( show, object)))
+	{
+	set( enable.obj.select);
+	status( );
+	if (selected.object &&
+		selected.object != error)
+		{
+		work = selected.object;
+		work += 40;
+		show.obj.v( work);
+		}
+	reset( enable.obj.select);
+	set( refresh);
+	}
+
+if (controller( c.about))
+	{
+	if (elapsed.days)
+		{
+		print( 107);
+		}
+	else
+		{
+		if (elapsed.hours)
+			{
+			print( 108);
+			}
+		else
+			{
+			print( 109);
+			}
+		}
+	set( refresh);
+	}
+
+reset( myHaveMatch);				[	speed stuff
+if ((controller( c.speed) ||
+	said( slower)))
+	{
+	set( myHaveMatch);
+	++animation.interval;
+	if (animation.interval > 3)
+		{
+		animation.interval = FASTEST;
+		}
+	}
+
+if (said( faster))
+	{
+	set( myHaveMatch);
+	if (animation.interval)
+		{
+		--animation.interval;
+		}
+	else
+		{
+		animation.interval = SLOW;
+		}
+	}
+
+if ((controller( c.slow) || said( slow)))
+	{
+	set( myHaveMatch);
+	animation.interval = SLOW;
+	}
+
+if ((controller( c.normal) || said( normal)))
+	{
+	set( myHaveMatch);
+	animation.interval = NORMAL;
+	}
+
+if ((controller( c.fast) || said( fast)))
+	{
+	set( myHaveMatch);
+	animation.interval = FAST;
+	}
+
+if ((controller( c.fastest) || said( fastest)))
+	{
+	set( myHaveMatch);
+	animation.interval = 0;
+	}
+
+if (myHaveMatch)
+	{
+	reset( myHaveMatch);
+	if (!hercules)
+		{
+		message = 81;
+		message += animation.interval;
+		clear.text.rect( 24, 0, 24, 15, 0);
+		y = 24;
+		x = 0;
+		display.f( y, x, message);
+		clearStatusSeconds = 6;
+		}
+	}
+
+
+
+[*****
+[	DEAD EGO
+[*****
+
+if (certainDeath)
+	{
+	reset( certainDeath);
+	progress = 255;
+	load.sound( mDeath);
+	stop.cycling( ego);
+	stop.motion( ego);
+	program.control();
+	accept.input();
+	disable.item( c.save);
+	deathTimer = 44;
+	}
+
+if (progress == 255)
+	{
+	--deathTimer;
+	if (deathTimer == 1)
+		{
+		reset( snd.done);
+		sound( mDeath, done);
+		print( 45);
+		}
+
+	if (have.input && !have.match)
+		{
+		print( 46);
+		}
+
+	if  (!current.room < 10 &&
+		!current.room > 25)			[	On the map.
+		{
+		call( 117);				[	Cars still happen after death.
+		call.f( current.room);
+		}
+
+	if (debugging)
+		{
+		call( 99);				[	lgc.debug
+		}
+
+	return( );
+	}
+
+
+if ((controller( c.save) ||
+	requestedASaveGame ||
+	said( save, game) ||
+	said( save)))
+	{
+	if (preventSaveGame)
+		{
+		if (!requestedASaveGame)
+			{
+			set( requestedASaveGame);
+			print( 63);
+			set( refresh);
+			}
+		}
+	else
+		{
+		reset( requestedASaveGame);
+		save.game( );
+		set( refresh);
+		}
+	}
+
+
+
+[*****
+[	EGO CYCLING
+[*****
+
+if (ego.shot.dead)
+	{
+	reset( keep.cycling);
+	}
+
+if (ego.dir == old.ego.dir &&
+	ego.x == old.ego.x &&
+	ego.y == old.ego.y)
+	{
+	stop.cycling( ego);
+	}
+else
+	{
+	start.cycling( ego);
+	}
+
+if ((!ego.dir || no.cycling))
+	{
+	stop.cycling( ego);
+	}
+
+if (keep.cycling)
+	{
+	start.cycling( ego);
+	}
+
+
+
+[*****
+[	TIMERS
+[*****
+
+if (last.char != old.last.char)
+	{
+	set( typing);
+	secondsSinceKeystroke = 0;
+	old.last.char = last.char;
+	}
+
+if (last.char == 13)
+	{
+	reset( typing);
+	}
+
+--scriptCycles;
+if (scriptCycles == 1)
+	{
+	set( scriptDone);
+	}
+
+if (elapsed.seconds != oldSeconds)
+	{
+	oldSeconds = elapsed.seconds;
+	set( aSecondPassed);			[	inform all logics
+
+	--clearStatusSeconds;
+	++secondsInRoom;
+
+	if (clearStatusSeconds == 1)		[	Can't be, if MONO.
+		{
+		clear.text.rect( 24, 0, 24, 15, 0);
+		}
+
+	if (typing)
+		{
+		++secondsSinceKeystroke;
+		if (secondsSinceKeystroke > 1)
+			{
+			reset( typing);
+			}
+		}
+
+	if (!typing)
+		{
+		--scriptTimer;
+		}
+
+	if (scriptTimer == 1)
+		{
+		set( scriptDone);
+		}
+	}
+
+
+
+
+[****************************************************************************]
+[********************	PREPARE TO CALL LOCAL ROOMS	**********************]
+[****************************************************************************]
+
+
+if (!init.log)
+	{
+	if  (!current.room < 10 &&
+		!current.room > 25)			[	On the map.
+		{
+		call( 117);				[	lgc.car
+		}
+
+	call.f( current.room);
+ 	}
+
+if (debugging)
+	{
+	call( 99);					[	lgc.debug
+	}
+
+
+[****************************************************************************]
+[********************	AFTER CALLING LOCAL ROOMS	**********************]
+[****************************************************************************]
+
+[*****
+[	NO INPUT
+[*****
+
+if (current.room == 75)				[	rm.poker.game
+	{
+	goto exit;
+	}
+
+if (notCloseEnough)
+	{
+	reset( notCloseEnough);
+	set( refresh);
+	print( 36);
+	}
+
+if (alreadyGotIt)
+	{
+	reset( alreadyGotIt);
+	set( refresh);
+	print( 37);
+	}
+
+if (dontHaveIt)
+	{
+	reset( dontHaveIt);
+	set( refresh);
+	print( 38);
+	}
+
+if (dontHaveThem)
+	{
+	reset( dontHaveThem);
+	set( refresh);
+	print( 80);
+	}
+
+if (OK)
+	{
+	reset( OK);
+	set( refresh);
+	print( 39);
+	}
+
+
+[*****
+[	HANDLE UNUSED FUNCTION KEYS
+[*****
+
+if (func4)
+	{
+	reset( func4);
+	set( refresh);
+	print( 64);
+	}
+
+if (func6)
+	{
+	reset( func6);
+	set( refresh);
+	print( 65);
+	}
+
+if (func8)
+	{
+	reset( func8);
+	set( refresh);
+	print( 66);
+	}
+
+if (func10)
+	{
+	reset( func10);
+	set( refresh);
+	print( 67);
+	}
+
+
+
+[*****
+[	HANDLE PREVIOUSLY UNHANDLED INPUT
+[*****
+
+if ((have.match || !have.input))
+	{
+	goto exit;
+	}
+
+set( refresh);
+
+if (!unknown.word && logging)
+	{
+	log( 41);
+	}
+
+if (said( who, wrote, game))
+	{
+	print( 106);
+	}
+
+if (said( find, beat, rol))
+	{
+	print( 69);
+	}
+
+if ((said( hello) ||
+	said( hello, anyword)))
+	{
+	print( 29);
+	}
+
+if ((said( bye, rol) ||
+	said( anyword, bye, rol)))
+	{
+	print( 47);
+	}
+
+if (said( thanks, rol))
+	{
+	print( 48);
+	}
+
+if ((said( look, clothes) ||
+	said( look$in, clothes) ||
+	said( search, clothes)))
+	{
+	print( 40);
+	}
+
+if (said( call))
+	{
+	if (has( i.transmitter))
+		{
+		print( 101);				[ big brother
+		}
+	else
+		{
+		if (!in.car && !has( i.extnd))
+			{
+			print( 99);			[ if had radio could
+			}
+		else
+			{
+			if (in.car && current.sonny == 17)	[ civilian
+				{
+				print( 102);		[ vett no radio
+				}
+			else
+				{
+				print( 43);		[ shut up!
+				}
+			}
+		}
+	}
+
+
+[*****
+[	HANDLE INVENTORY THINGS
+[*****
+
+if ((said( give, uniform, rol) ||
+	said( remove, uniform, rol) ||
+	said( take, off, uniform, rol) ||
+	said( take, uniform, off, rol) ||
+	said( drop, uniform, rol)))
+	{
+	if (!in.car && !game.control)
+		{
+		load.view( v.egoNude);
+		set.view( ego, v.egoNude);
+		if ((current.ego == disguised.sonny ||
+			current.ego == in.towel.light))
+			{
+			work = 1;
+			}
+		else
+			{
+			work = 0;
+			}
+		set.cel.f( ego, work);
+		force.update( ego);
+		}
+[	unanimate.all();
+	set( certainDeath);
+	load.sound( s.dropClothes);
+	sound( s.dropClothes, snd.done);
+	print( 98);
+	}
+
+if (said( drop, keys, rol))
+	{
+	if (has( i.PCkey))
+		{
+		print( 35);
+		}
+	else
+		{
+		if (has( i.corvkey))
+			{
+			print( 35);
+			}
+		else
+			{
+			if (has( i.cadkey))
+				{
+				print( 35);
+				}
+			else
+				{
+				set( dontHaveIt);
+				}
+			}
+		}
+	}
+
+if ((said( use, keys) ||
+	said( take, keys)))
+	{
+	if (has( i.PCkey))
+		{
+		print( 5);
+		}
+	else
+		{
+		if (has( i.corvkey))
+			{
+			print( 5);
+			}
+		else
+			{
+			if (has( i.cadkey))
+				{
+				print( 5);
+				}
+			else
+				{
+				set( dontHaveIt);
+				}
+			}
+		}
+	}
+
+if (said( show, keys))
+	{
+	if (has( i.PCkey))
+		{
+		show.obj( iv.PCkey);
+		}
+	else
+		{
+		if (has( i.corvkey))
+			{
+			show.obj( iv.corvkey);
+			}
+		else
+			{
+			if (has( i.cadkey))
+				{
+				show.obj( iv.cadkey);
+				}
+			else
+				{
+				set( dontHaveIt);
+				}
+			}
+		}
+	}
+
+
+if ((said( give, keys, rol) ||
+	said( give, anyword, keys, rol)))
+	{
+	if (!nearPerson)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (has( i.PCkey))
+			{
+			print( 27);
+			print( 28);
+			drop( i.PCkey);
+			}
+		else
+			{
+			if (has( i.cadkey))
+				{
+				print( 27);
+				print( 28);
+				drop( i.cadkey);
+				}
+			else
+				{
+				if (has( i.corvkey))
+					{
+					print( 27);
+					print( 28);
+					drop( i.corvkey);
+					}
+				else
+					{
+					set( dontHaveIt);
+					}
+				}
+			}
+		}
+	}
+
+
+if ((in.car ||
+	has( i.extnd)) &&
+    (said( turn, extender, rol) ||
+	said( turn, on, extender, rol) ||
+	said( turn, off, extender, rol)))
+	{
+	set( OK);
+	}
+
+if (has( i.extnd) &&
+	said( drop, radio$extender, rol))
+	{
+	print( 35);
+	}
+
+["use extender" handled at top of rm0
+
+if (said( show, radio$extender))
+	{
+	if (has( i.extnd))
+		{
+		show.obj( iv.extnd);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if ((said( give, radio$extender, rol) ||
+	said( give, anyword, radio$extender, rol)))
+	{
+	if ((!nearPerson || !has( i.extnd)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.extnd);
+		}
+	}
+
+
+
+
+if ((said( load, gun) ||
+	said( put, ammo, gun) ||
+	said( load, gun, with, ammo)))
+	{
+	if (has( i.loaded.gun))
+		{
+		print( 91);				[	it IS loaded
+		}
+	else
+		{
+		if (!has( i.gun))
+			{
+			print( 92);			[	ain't got no gun
+			}
+		else
+			{
+			if (!has( i.ammo))
+				{
+				print( 96);		[	no ammo
+				}
+			else
+				{
+				if (in.car)
+					{
+					print( 100);	[	while driving?
+					}
+				else
+					{
+					drop( i.ammo);
+					drop( i.gun);
+					get( i.loaded.gun);
+					print( 90);	[	you load it
+					shots.left = 6;
+					if (!SxLoadingGun)
+						{
+						set( SxLoadingGun);
+						score += 4;
+						}
+					}
+				}
+			}
+		}
+	}
+
+if ((said( unload, gun) ||
+	said( take, ammo, from, gun) ||
+	said( remove, ammo) ||
+	said( remove, ammo, gun)))
+	{
+	print( 19);
+	}
+
+if ((said( draw, gun) ||
+	said( return, gun, holster) ||
+	said( put, gun, away) ||
+	said( stop, using, gun) ||
+	said( aim, gun, rol) ||
+	said( remove, gun, holster)))
+	{
+	if  (!has( i.gun) &&
+		!has( i.loaded.gun))
+		{
+		print( 93);
+		}
+	else
+		{
+		if (in.car)
+			{
+			print( 23);			[	blow out car window 
+			}
+		else
+			{
+			print( 22);			[	If got to here, it's wrong!
+			}
+		}
+	}
+
+
+if ((said( use, gun, rol) ||
+	said( fire, gun, rol) ||
+	said( shoot, gun, rol) ||
+	said( fire) ||
+	said( shoot) ||
+	said( fire, man) ||
+	said( fire, suspect) ||
+	said( shoot, man) ||
+	said( shoot, suspect) ||
+	said( fire, on, man) ||
+	said( fire, on, suspect)))
+	{
+	if (has( i.gun))
+		{
+		print( 94);			 	[	Firing empty gun?
+		}
+	else
+		{
+		if (!has( i.loaded.gun))
+			{
+			set( dontHaveIt);
+			}
+		else
+			{
+			if (in.car)
+				{
+				print( 23);		[	blow out car window 
+				}
+			else
+				{
+				if (preventEgoFire)
+					{
+					print( 87);
+					}
+				else
+					{
+					erase( ego);		[	You blow off your foot!
+					print( 88);
+					set( certainDeath);
+					}
+				}
+			}
+		}
+	}
+
+
+if ((said( show, belt) ||
+	said( show, gun)))				[	Funny, you don't look Oriental!
+	{
+	if (has( i.gun))
+		{
+		show.obj( iv.gun);
+		}
+	else
+		{
+		if (has( i.loaded.gun))
+			{
+			show.obj( iv.loaded.gun);
+			}
+		else
+			{
+			set( dontHaveIt);
+			}
+		}
+	}
+
+if ((said( give, gun, rol) ||
+	said( give, anyword, gun, rol)))
+	{
+	if (!nearPerson)
+		{
+		print( 5);
+		}
+	else
+		{
+		if (!has( i.gun) && !has( i.loaded.gun))
+			{
+			set( dontHaveIt);
+			}
+		else
+			{
+			print( 27);
+			print( 28);
+			drop( i.gun);
+			drop( i.loaded.gun);
+			print( 71);
+			print( 72);
+			set( certainDeath);
+			}
+		}
+	}
+
+if ((said( take, off, gunbelt) ||
+	said( drop, gunbelt) ||
+	said( remove, gunbelt)))
+	{
+	if (!has( i.gun) && !has( i.loaded.gun))
+		{
+		set( dontHaveIt);
+		}
+	else
+		{
+		print( 97);
+		}
+	}
+
+
+if (said( drop, gun, rol))
+	{
+	if (!has( i.gun) && !has( i.loaded.gun))
+		{
+		set( dontHaveIt);
+		}
+	else
+		{
+		drop( i.gun);
+		drop( i.loaded.gun);
+		print( 72);
+		set( certainDeath);
+		}
+	}
+
+
+if (said( drop, ammo, rol))
+	{
+	if (has( i.ammo))
+		{
+		drop( i.ammo);
+		print( 73);
+		set( certainDeath);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+[	"use, ammo" handled by "load, gun"
+
+if (said( show, ammo))
+	{
+	if (has( i.loaded.gun))
+		{
+		show.obj( iv.loaded.gun);
+		}
+	else
+		{
+		if (has( i.ammo))
+			{
+			show.obj( iv.ammo);
+			}
+		else
+			{
+			set( dontHaveIt);
+			}
+		}
+	}
+
+
+if ((said( give, ammo, rol) ||
+	said( give, anyword, ammo, rol)))
+	{
+	if ((!nearPerson || !has( i.ammo)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.ammo);
+		print( 73):
+		set( certainDeath);
+		}
+	}
+
+
+
+if (said( drop, briefcase, rol))
+	{
+	if (has( i.case))
+		{
+		print( 35);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if ((said( use, briefcase) ||
+	said( take, briefcase)))
+	{
+	if (has( i.case))
+		{
+		print( 5);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( show, briefcase))
+	{
+	if (has( i.case))
+		{
+		show.obj( iv.case);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( close, briefcase))
+	{
+	if (!has( i.case))
+		{
+		set( dontHaveIt);
+		}
+	else
+		{
+		print( 70);				[ case closed
+		}
+	}
+
+if ((said( open, briefcase) ||
+	said( look$in, briefcase)))
+	{
+	if (!has( i.case))
+		{
+		set( dontHaveIt);
+		}
+	else
+		{
+		if ((NOcase || game.control))
+			{
+			print( 87);
+			}
+		else
+			{
+			get.posn( ego, priorX, priorY);
+			current.loop( ego, loop);
+			new.room( 38);			[	lgc.briefcase
+			}
+		}
+	}
+
+if ((said( give, briefcase, rol) ||
+	said( give, anyword, briefcase, rol)))
+	{
+	if ((!nearPerson || !has( i.case)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.case);
+		}
+	}
+
+
+if (said( drop, notebook, rol))
+	{
+	if (has( i.NB))
+		{
+		print( 35);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if ((said( use, notes) ||
+	said( take, notes) ||
+	said( write, notes)))	
+	{
+	if (!has( i.NB))
+		{
+		print( 2);
+		}
+	else
+		{
+		if (!has( i.pen))
+			{
+			if (has( i.transmitter))
+				{
+				print( 3);
+				}
+			else
+				{
+				print( 6);
+				}
+			}
+		else
+			{
+			if (!wroteAnote)
+				{
+				set( wroteAnote);
+				score += 1;
+				}
+
+			prevent.input();
+			set.string( 10, 14);	[	" " default blank string;
+			set.string( 11, 14);
+			set.string( 12, 14);
+
+			if (!hercules)
+				{
+				clear.lines( 23, 23, 0);
+				}
+			get.string( 10, 15, 23, 0, 30);
+
+			if (!hercules)
+				{
+				clear.lines( 23, 23, 0);
+				}
+			get.string( 11, 15, 23, 0, 30);
+			if (!hercules)
+				{
+				clear.lines( 23, 23, 0);
+				}
+			get.string( 12, 15, 23, 0, 30);
+			accept.input();
+			}
+		}
+	}
+
+if ((said( read, notes) ||
+	said( open, notes) ||
+	said( show, notes)))
+	{
+	if (has( i.NB))
+		{
+		show.obj( iv.NB);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if ((said( give, notes, rol) ||
+	said( give, anyword, notes, rol)))
+	{
+	if ((!nearPerson || !has( i.NB)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.NB);
+		}
+	}
+
+
+if (said( drop, pen, rol))
+	{
+	if (has( i.pen))
+		{
+		print( 35);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( use, pen))
+	{
+	if (has( i.pen))
+		{
+		print( 5);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( show, pen))
+	{
+	if (has( i.pen))
+		{
+		show.obj( iv.pen);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if ((said( give, pen, rol) ||
+	said( give, anyword, pen, rol)))
+	{
+	if ((!nearPerson || !has( i.pen)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.pen);
+		}
+	}
+
+
+if (said( drop, ticket$book, rol))
+	{
+	if (has( i.TB))
+		{
+		print( 35);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if ((said( use, ticket$book) ||
+	said( write, ticket$book) ||
+	said( write, ticket)))
+	{
+	if (has( i.TB))
+		{
+		print( 5);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( show, ticket$book))
+	{
+	if (has( i.TB))
+		{
+		show.obj( iv.TB);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if ((said( give, ticket$book, rol) ||
+	said( give, anyword, ticket$book, rol)))
+	{
+	if ((!nearPerson || !has( i.TB)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.TB);
+		}
+	}
+
+
+if (said( drop, newspaper, rol))
+	{
+	if (has( i.paper))
+		{
+		print( 35);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( use, newspaper))
+	{
+	if (has( i.paper))
+		{
+		print( 5);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( show, newspaper))
+	{
+	if (has( i.paper))
+		{
+		show.obj( iv.paper);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if ((said( give, newspaper, rol) ||
+	said( give, anyword, newspaper, rol)))
+	{
+	if ((!nearPerson || !has( i.paper)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.paper);
+		}
+	}
+
+							  
+if (said( drop, wallet, rol))
+	{
+	if (has( i.wallet))
+		{
+		print( 35);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if ((said( use, wallet) ||
+	said( take, wallet)))
+	{
+	if (has( i.wallet))
+		{
+		print( 5);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if ((said( show, wallet) ||
+	said( count, my, money) ||
+	said( look$in, wallet)))
+	{
+	if (has( i.wallet))
+		{
+		show.obj( iv.wallet);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if (said( count, money))
+	{
+	if (has( i.Mmoney))
+		{
+		show.obj( iv.Mmoney);
+		}
+	else
+		{
+		if (has( i.wallet))
+			{
+			show.obj( iv.wallet);
+			}
+		else
+			{
+			set( dontHaveIt);
+			}
+		}
+	}
+
+
+if ((said( give, wallet, rol) ||
+	said( give, anyword, wallet, rol)))
+	{
+	if ((!nearPerson || !has( i.wallet)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.wallet);
+		cash = 0;
+		oldCash = 0;
+		}
+	}
+
+
+if (said( get, pr24))
+	{
+	print( 20);
+	}
+
+if (said( drop, nightstick, rol))
+	{
+	if (has( i.pr24))
+		{
+		print( 35);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if ((said( use, nightstick) ||
+	said( take, nightstick)))
+	{
+	if (has( i.pr24))
+		{
+		print( 5);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( show, nightstick))
+	{
+	if (has( i.pr24))
+		{
+		show.obj( iv.pr24);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if ((said( give, nightstick, rol) ||
+	said( give, anyword, nightstick, rol)))
+	{
+	if ((!nearPerson || !has( i.pr24)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.pr24);
+		}
+	}
+
+
+if (said( drop, hoffman, file, rol))
+	{
+	if (has( i.Hfile))
+		{
+		print( 35);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if ((said( use, hoffman, file) ||
+	said( take, hoffman, file)))
+	{
+	if (has( i.Hfile))
+		{
+		print( 5);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( show, hoffman, file))
+	{
+	if (has( i.Hfile))
+		{
+		show.obj( iv.Hfile);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if ((said( give, hoffman, file, rol) ||
+	said( give, anyword, hoffman, file, rol)))
+	{
+	if ((!nearPerson || !has( i.Hfile)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.Hfile);
+		}
+	}
+
+
+if (said( drop, poster, rol))
+	{
+	if (has( i.Wposter))
+		{
+		print( 35);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if ((said( use, poster) ||
+	said( take, poster)))
+	{
+	if (has( i.Wposter))
+		{
+		print( 5);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( show, poster))
+	{
+	if (has( i.Wposter))
+		{
+		show.obj( iv.Wposter);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if ((said( give, poster, rol) ||
+	said( give, anyword, poster, rol)))
+	{
+	if ((!nearPerson || !has( i.Wposter)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.Wposter);
+		}
+	}
+
+
+[Handled by the "drop, pants" code above.
+[
+[	if (said( drop, white$suit, rol))
+[		{
+[		if (has( i.suit))
+[			{
+[			print( 35);
+[			}
+[		else
+[			{
+[			set( dontHaveIt);
+[			}
+[		}
+
+if ((said( use, white$suit) ||
+	said( take, white$suit)))
+	{
+	if (has( i.suit))
+		{
+		print( 5);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( show, white$suit))
+	{
+	if (has( i.suit))
+		{
+		show.obj( iv.suit);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+[Handled by the "drop, pants" code above.
+[
+[	if ((said( give, white$suit, rol) ||
+[		said( give, anyword, white$suit, rol)))
+[		{
+[		if ((!nearPerson || !has( i.suit)))
+[			{
+[			print( 5);
+[			}
+[		else
+[			{
+[			print( 27);
+[			print( 28);
+[			drop( i.suit);
+[			set( certainDeath);
+[			}
+[		}						 
+
+
+if (said( drop, cane, rol))
+	{
+	if (has( i.cane))
+		{
+		print( 18);
+		set( certainDeath);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if ((said( use, cane) ||
+	said( take, cane)))
+	{
+	if (has( i.cane))
+		{
+		print( 5);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( show, cane))
+	{
+	if (has( i.cane))
+		{
+		show.obj( iv.cane);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if ((said( give, cane, rol) ||
+	said( give, anyword, cane, rol)))
+	{
+	if ((!nearPerson || !has( i.cane)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.cane);
+		set( certainDeath);
+		}
+	}
+
+
+if (said( drop, bleach, rol))
+	{
+	if (has( i.bleach))
+		{
+		print( 18);
+		set( certainDeath);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if ((said( use, bleach) ||
+	said( take, bleach)))
+	{
+	if (has( i.bleach))
+		{
+		print( 5);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( show, bleach))
+	{
+	if (has( i.bleach))
+		{
+		show.obj( iv.bleach);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if ((said( give, bleach, rol) ||
+	said( give, anyword, bleach, rol)))
+	{
+	if ((!nearPerson || !has( i.bleach)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.bleach);
+		}
+	}
+
+
+if (said( drop, money, rol))
+	{
+	if (has( i.Mmoney))
+		{
+		print( 35);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if ((said( use, money) ||
+	said( take, money)))
+	{
+	if (has( i.Mmoney))
+		{
+		print( 5);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if ((said( show, money) ||
+	said( show, marked, money) ||
+	said( count, marked, money)))
+	{
+	if (has( i.Mmoney))
+		{
+		show.obj( iv.Mmoney);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if ((said( give, money, rol) ||
+	said( give, marked, money, rol) ||
+	said( give, anyword, marked, money, rol) ||
+	said( give, anyword, money, rol)))
+	{
+	if ((!nearPerson || !has( i.Mmoney)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.Mmoney);
+		marked.cash = 0;
+		Mdollar = 0;
+		}
+	}
+
+
+if (said( drop, transmitter, rol))
+	{
+	if (has( i.transmitter))
+		{
+		print( 35);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( take, transmitter))
+	{
+	if (has( i.transmitter))
+		{
+		print( 5);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( show, transmitter))
+	{
+	if (has( i.transmitter))
+		{
+		show.obj( iv.transmitter);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if ((said( give, transmitter, rol) ||
+	said( give, anyword, transmitter, rol)))
+	{
+	if ((!nearPerson || !has( i.transmitter)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.transmitter);
+		}
+	}
+
+
+if (said( drop, room$key, rol))
+	{
+	if (has( i.roomKey))
+		{
+		print( 35);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if ((said( use, room$key) ||
+	said( take, room$key)))
+	{
+	if (has( i.roomKey))
+		{
+		print( 5);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( show, room$key))
+	{
+	if (has( i.roomKey))
+		{
+		show.obj( iv.roomKey);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if ((said( give, room$key, rol) ||
+	said( give, anyword, room$key, rol)))
+	{
+	if ((!nearPerson || !has( i.roomKey)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.roomKey);
+		}
+	}
+
+
+if (said( drop, warrant, rol))
+	{
+	if (has( i.warrant))
+		{
+		print( 35);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if ((said( use, warrant) ||
+	said( take, warrant)))
+	{
+	if (has( i.warrant))
+		{
+		print( 5);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( show, warrant))
+	{
+	if (has( i.warrant))
+		{
+		show.obj( iv.warrant);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if ((said( give, warrant, rol) ||
+	said( give, anyword, warrant, rol)))
+	{
+	if ((!nearPerson || !has( i.warrant)))
+		{
+		print( 5);
+		}
+	else
+		{
+		print( 27);
+		print( 28);
+		drop( i.warrant);
+		}
+	}
+
+
+if (said( drop, cuffs, rol))
+	{
+	if (has( i.cuffs))
+		{
+		print( 35);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+if (said( show, cuffs))
+	{
+	if (has( i.cuffs))
+		{
+		show.obj( iv.cuffs);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+if ((said( give, cuffs, rol) ||
+	said( give, anyword, cuffs, rol)))
+	{
+	if ((!nearPerson || !has( i.cuffs)))
+		{
+		print( 5);
+		}
+	else
+		{
+		drop( i.cuffs);
+		print( 151);
+		print( 152);
+		set( certainDeath);
+		}
+	}
+
+if ((said( anyword, cuffs, rol) ||
+	said( cuff, rol)))
+	{
+	if (has( i.cuffs))
+		{
+		print( 79);
+		}
+	else
+		{
+		set( dontHaveIt);
+		}
+	}
+
+
+
+[*****
+[	HANDLE WHATEVER'S LEFT
+[*****
+
+if (!have.match && have.input &&		[	First, discard unknown words.
+	unknown.word)
+	{
+	set( have.match);
+	work = unknown.word;
+	work += 50;
+	print.f( work);				[	prints messages #51 - 58
+	if (logging)
+		{
+		if (unknown.word == 1)		{log( 51);}
+		if (unknown.word == 2)		{log( 52);}
+		if (unknown.word == 3)		{log( 53);}
+		if (unknown.word == 4)		{log( 54);}
+		if (unknown.word == 5)		{log( 55);}
+		if (unknown.word == 6)		{log( 56);}
+		if (unknown.word == 7)		{log( 57);}
+		if (unknown.word == 8)		{log( 58);}
+		}
+	}
+
+
+if (said( piss, on, rol))			
+	{						
+	print( 75);				
+	}
+
+if (said( shit, on, rol))
+	{
+	print( 76);
+	}
+
+if ((said( nasty, rol) ||
+	said( anyword, nasty, rol)))
+	{
+	print( 24);
+	}
+
+if (said( go))
+	{
+	print( 89);
+	}
+
+if (said( put, rol))
+	{
+	print( 95);					[ the best ever
+	}
+
+if ((said( talk, rol) ||
+	said( anyword, talk, rol)))
+	{
+	if (!nearPerson)
+		{
+		print( 31);
+		}
+	else
+		{
+		print( 29);				[	Hi.
+		}
+	}
+
+if (said( anyword, lights, rol))
+	{
+	print( 59);
+	}
+
+if (said( anyword, floor, rol))
+	{
+	print( 60);
+	}
+
+if (said( anyword, ceiling, rol))
+	{
+	print( 61);
+	}
+
+if (said( anyword, wall, rol))
+	{
+	print( 74);
+	}
+
+if (said( look, uniform))
+	{
+	print( 34);
+	}
+
+
+if ((said( look, rol) ||
+	said( look$in, rol)))
+	{
+	print( 4);
+	}
+
+if (said( get, rol))				{print( 7);}
+if (said( go, rol)) 				{print( 9);}
+if (said( use, rol)) 				{print( 10);}
+if (said( eat, rol)) 				{print( 16);}
+if (said( close, rol))				{print( 21);}
+if (said( open, rol))				{print( 25);}
+if (said( climb, rol))				{print( 26);}
+if (said( move, rol))				{print( 30);}
+if (said( write, rol))				{print( 33);}
+if (said( knock, rol))				{print( 49);}
+if (said( arrest, rol))				{print( 32);}
+if (said( sit, rol))				{print( 77);}
+
+
+if (have.input && !have.match)
+	{
+	print( 5);
+	if (logging)
+		{
+		log( 42);
+		}
+	}
+
+
+
+[*****
+:exit
+[*****
+
+get.posn( ego, old.ego.x, old.ego.y);
+old.ego.dir = ego.dir;
+reset( aSecondPassed);
+++passInRoom;
+
+if (game.control)
+	{
+	program.control( );
+	}
+else
+	{
+	player.control( );
+	}
+
+if (controller( c.menu))
+	{
+	set( refresh);
+	}
+

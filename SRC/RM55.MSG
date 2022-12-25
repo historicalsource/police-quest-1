@@ -1,0 +1,140 @@
+[ POLICE QUEST
+[ rm55.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/7/86
+[ Last Update October 3, 1987GR
+
+[ rm.court
+
+
+%message	1
+"Judge Kim Palmer addresses her courtroom..."
+
+%message	2
+"\"Silence in the court!\""
+
+%message	3
+"In a firm voice the bailiff speaks to you,
+ \"Well? The judge is waiting for you.\""
+
+%message	4
+"\"Mr. Bonds, who, or what, is this warrant for?\" says the judge."
+
+%message	5
+"\"And,
+ what information do you have to substantiate the validity of a warrant?\""
+
+%message	6
+"You hand the evidence to the bailiff."
+
+%message	7
+"Judge Palmer reviews the FBI flyer and the file.
+ To your great relief, she issues a No Bail Warrant for
+ Mr. Jason Taselli, alias Marvin Hoffman!"
+
+%message	8
+"\"Here you are, Mr. Bonds.
+ I hope you are not too late.
+ Taselli's attorney is at the jail at this very moment,
+ attempting his release.\""
+
+%message	9
+"This court is in session. The bailiff proceeds toward you."
+
+%message	10
+"\"For your information, Sir, this court is in session!\""
+
+%message	11
+"\"You are most fortunate that I do not hold you in contempt!\""
+
+%message	12
+"\"Bailiff! Show this gentleman out of my courtroom!\""
+
+%message	13
+"As you are launched from Judge Palmer's court,
+ the bailiff bids you farewell, \"Boy, is your face red!\""
+
+%message	14
+""
+
+%message	15
+"Judge Palmer strikes the gavel,
+ \"Silence. I will consider Mr. Bonds' request.\""
+
+%message	16
+"\"Mr. Bonds, you may approach the bench.\""
+
+%message	17
+"Who is that?"
+
+%message	18
+"\"All right. Do you have any other information?\""
+
+%message	19
+"\"For attempting to present evidence you do not have,\"
+ Judge Palmer says,
+ \"I hereby find you in comtempt of court!\""
+
+%message	20
+"\"Mr. Bonds, I've a good mind to let you cool your heels in the City Jail
+ for the next three days!
+ But, since this court tries to go out of its way to help the Department,
+ I'll suspend sentence.
+ Just be sure you never interrupt my court without evidence again!\""
+
+%message	21
+"\"The FBI wanted poster does arouse suspicion%m35"
+
+%message	22
+"\"I remind you, Mr. Bonds, I have reviewed the file%m35"
+
+%message	23
+"\"Mr. Bonds, you are keeping this entire courtroom waiting,
+ while you attempt to establish your case!\""
+
+%message	24
+"Judge Palmer motions the bailiff to retrieve the evidence."
+
+%message	25
+"Your heart races as Judge Palmer evaluates your evidence.
+ You think to yourself, \"This punk can not go free!\""
+
+%message	26
+"Judge Palmer scans the items presented and questions,
+ \"What makes you think these two men are the same person, Mr. Bonds?\""
+
+%message	27
+"The bailiff and court reporter squirm and choke,
+ trying to conceal their laughter,
+ while you quietly tell the judge your tale of tattoos and nipples!"
+
+%message	28
+"The Judge attempts to stifle her giggles, but fails."
+
+%message	29
+"Judge Palmer whispers softly to you, \"Well, Mr. Bonds,
+ it appears your friend 'has his tit caught in the wringer!'\""
+
+%message	30
+"Stifling her laughter, Judge Palmer says,
+ \"Congratulations, Mr. Bonds! Your request is granted!\""
+
+%message	31
+"\"Here is a No Bail Warrant,
+ issued in the name of Jason Taselli, alias Marvin Hoffman.\""
+
+%message	32
+"\"Bailiff, deliver this to Mr. Bonds, and escort him out.\""
+
+%message	33
+"Judge Palmer announces,
+ \"Mr. Bonds, I will review these documents today
+ and return them to your department this afternoon.\""
+
+%message	34
+"\"Well?\""
+
+%message	35						[	Used in messages #21-22
+",\" says Judge Palmer.
+ \"However, by itself, it is not sufficient evidence to detain Mr. Hoffman.\""
+

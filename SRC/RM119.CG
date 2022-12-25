@@ -1,0 +1,1438 @@
+[ POLICE QUEST
+[ rm119.cg
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. 11/25/86
+[ Last Update October 17, 1987GR
+
+[ lgc.suspect.vehicle
+
+%include "gamedefs"
+%include "rm117.h"
+%include "rm119.msg"
+
+[suspect states moving0
+[%define		not.drawn			0
+[%define		traveling			1
+[%define		off.screen		2
+[%define		counting.next room	3
+[%define		counting.last.room	4
+[%define		test.reapper.xy	5
+[%define		draw from last room	6
+
+
+[ Room setup ............................
+
+if (init.log) {
+	reset( suspect.moving);
+
+[ Who's current suspect ....................
+	if (wreck.scene < 255) {			[wreck
+		if (previous.room == 26) {
+			rmsNextRadioCall = 1;			[ !done prompt after 1 room
+			rmsFirstRadioCall = 0;
+			}
+		else {
+			if (wreck.scene == 200) {	[ cancel last suspect 
+				wreck.scene = 255;
+				rmsNextRadioCall = 0;			[ ok he's done setup next
+				random( radioWaitShort, radioWaitLong, rmsFirstRadioCall); 	[ disp coffee scene
+				reset( suspect.present);
+				}
+			}
+		
+		current.suspect = 0;
+		current.suspect.car = 4;
+		suspect.speed = 0;
+		}
+	else {
+		if (coffee.scene < 4) {		[Coffee scene
+			if (previous.room == 35 && current.suspect == 1) {
+				rmsNextRadioCall = 2;
+				rmsFirstRadioCall = 0;
+				}
+			else {
+				if (coffee.scene == 3) {
+					coffee.scene = 4;		[all done
+					reset( suspect.present);
+					rmsNextRadioCall = 0;
+					random( radioWaitShort, radioWaitLong, rmsFirstRadioCall);	[dispatch timeout
+					}
+				}
+			current.suspect = 1;
+			suspect.speed = 0;
+			}
+		else {
+			if (foxScene < 255) {
+				if (previous.room == 30) {
+					foxScene = 200;
+					rmsNextRadioCall = 2;
+					rmsFirstRadioCall = 0;
+					}
+				else {
+					if (foxScene == 200) {
+						rmsNextRadioCall = 0;		[he's done setup next
+						random( radioWaitShort, radioWaitLong, rmsFirstRadioCall);	[ dispatch timeout
+						next.suspect.room = 0;
+						reset( suspect.present);
+						foxScene = 255;
+						}
+					}
+				
+				current.suspect = 3;		[tit.fox
+				current.suspect.car = tit.mobile.car;
+				suspect.speed = cruising;
+				}
+			else {
+				if (biker.scene < 4) {
+[					if (previous.room == 35) {
+[						rmsNextRadioCall = 2;
+[						rmsFirstRadioCall = 0;
+[						}
+					biker.scene = 1;
+					current.suspect = 4 [bikers;
+					suspect.speed = 0;
+					}
+				else {
+					if (!SxDUI) {
+						current.suspect = drunk;
+						current.suspect.draw = drunk.cuffed.f;
+						current.dead.suspect = drunk.cuffed.b;
+						current.suspect.cuffed = drunk.cuffed.f;
+						current.suspect.car = drunk.car;
+						suspect.speed = cruising;
+						}
+					else {
+						if (!park.bust &&
+							!hasRebooked) {			[ taselli booked
+							if ( hasTbooked) {
+								rmsFirstRadioCall = 10;	[nul
+								rmsNextRadioCall = 10;
+								}
+
+							current.suspect = taselli;
+							current.suspect.draw = taselli.shooting;
+							current.dead.suspect = taselli.dead;
+							current.suspect.cuffed = taselli.cuffed;
+							current.suspect.car = felony.car;
+							suspect.speed = cruising;
+							}
+						else {
+							if (park.bust < 255) {
+								current.suspect = colby;
+								current.suspect.draw = colby.draw;
+								current.dead.suspect = colby.dead;
+								}
+							else {
+								current.suspect = 255;
+								rmsFirstRadioCall = 10;	[nul
+								rmsNextRadioCall = 10;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	
+	set.view( a.suspect, v.misc.cars);
+	set.cel.f( a.suspect, current.suspect.car);
+[	ignore.objs( a.suspect);					[2/05  	
+  	ignore.blocks( a.suspect);
+  	set.priority( a.suspect, 5);
+
+	if (suspect.present && next.suspect.room == 250) {
+		next.suspect.room = 0;
+		moving0 = 4;		[from previous.room
+		}
+
+[ Felony .....................
+	if (previous.room == 32) {				[ rm.felony
+		if (has.suspect) {			[setup backup car
+			set.view.f( a.back.up, current.car);
+			set.loop.f( a.back.up, car.loop);
+			set.cel( a.back.up, 0);
+			backup.x = car.x;
+			backup.y = car.y;
+	
+			if (car.x == parkedSuspectX) {
+				if (car.y > parkedSuspectY) {
+					backup.y += 7;
+					}
+				else {
+					backup.y -= 7;
+					}
+				}
+			if (car.y == parkedSuspectY) {
+				if (car.x > parkedSuspectX) {
+					}
+					backup.x += 4;
+				else {
+					backup.x -= 4;
+					}
+				}
+			position.f( a.back.up, backup.x, backup.y);
+			draw( a.back.up);
+			backup.x = car.x			[ move to loc
+			backup.y = car.y;
+			}
+		}
+	}	
+[ end inits ............
+
+[ No suspect .......................
+if (rmsFirstRadioCall && !suspect.present) {
+	goto exit;
+	}
+
+[ Prompt suspect .....................
+if (!init.log
+&& !gotcha
+&& !rmsNextRadioCall
+&& posn( ego, 17, 25, 143, 131)) {
+	random( reCallShort, reCallLong, rmsNextRadioCall);	[ redispatch
+
+	if (current.suspect == 0) {			[ wreck
+		print( 6);
+		}
+	else {
+		if (current.suspect == 1) {		[ steveCoffee
+			print( 7);
+			}
+		if (current.suspect == 3 && !suspect.present) {
+			print( 8);				[ aching to write ticket
+			}
+		if (current.suspect == 4) {
+			rmsFirstRadioCall = rmsNextRadioCall;
+			print( 9);				[ respond to complaint
+			}
+		if (suspect.present) {
+			if (current.suspect == drunk) {
+				print( 1);
+				}
+			if (current.suspect == taselli) {
+				print( 2);
+				print( 3);
+				print( 4);
+				}
+			}
+		}
+	}
+		
+[ Start suspects .......................
+[ Static suspects ......................
+if (!moving0) {
+
+[ wreck .......................
+	if (!current.suspect && !rmsFirstRadioCall) {
+		if (current.room == 15) {	[ Start Wreck 
+			set.view( a.suspect, v.diag.misc.cars);
+			set.loop( a.suspect, 1);
+			position( a.suspect, 75, 67);
+			draw( a.suspect);
+			}
+		set( suspect.present);
+		moving0 = 255;
+		}
+
+[ SteveCoffee .....................
+	if (current.suspect == 1) {
+		if (current.room == 12) {	[ Start steve
+			set.view( a.suspect, v.patrol.car);
+			set.loop( a.suspect, 1);
+			set.cel( a.suspect, 0);
+			position( a.suspect, 43, 115);
+			draw( a.suspect);
+			}
+		set( suspect.present);
+		moving0 = 255;
+		}
+
+[ Bikers .............
+
+	if (current.suspect == 4) {
+		if (current.room == 12 && biker.scene < 4) {	[ Bikers
+			set.view( a.suspect, v.misc.cars);
+			set.loop( a.suspect, 0);
+			set.cel( a.suspect, 7);
+			position( a.suspect, 43, 115);
+			draw( a.suspect);
+			}
+		set( suspect.present);
+		moving0 = 255;
+		}
+	if (current.suspect == 38 && previous.room == 32) {
+		set.view( a.suspect, v.misc.cars);
+		set.loop.f( a.suspect, car.loop);
+		set.cel( a.suspect, 6);
+		position.f( a.suspect, parkedSuspectX, parkedSuspectY);
+		draw( a.suspect);
+		suspect.speed = 0;
+		set( suspect.present);
+		moving0 = 255;
+		}
+	}
+	
+[ all others ..................................
+if (rmsFirstRadioCall == 0
+&& moving0 == 0 
+&& !certainDeath
+&& current.car == patrol.car
+&& next.suspect.room != current.room
+&& !has.suspect
+&& !suspect.present
+&& !gotcha) {
+	reset( suspect.moving);		[ intersection decision flag
+
+[ Drunk .........................
+	if (current.suspect == drunk && rmsNextRadioCall) {
+		goto exit;
+		}
+
+[ Helen runs light ....................
+
+	if (current.suspect == tit.fox) {
+		if (foxScene < 199) {
+[			suspect.speed = cruising;	[suspect step.size to be conditional
+[B
+			if (intersection == north.stop &&
+				(current.room == 16 ||
+				current.room == 18 ||
+				current.room == 19 ||
+				current.room == 20 ||
+				current.room == 22 ||
+				current.room == 24)) {
+				work = 3;
+				}
+			else {
+[D
+				if (intersection == east.stop &&
+					(current.room == 15 ||
+					current.room == 17)) {		
+					work = 10;
+					}
+				else {
+[E
+					if (intersection == north.stop &&
+						(current.room == 11 ||
+						current.room == 21)) {	
+[						street.timer = 245;
+[						intersection = north.yellow;
+[						set.cel.f( a.intersection, intersection);
+[						set( change.signal);
+						work = 4;
+						}
+					else {			[fox is not present
+						goto exit;	[do not start fox here
+						}
+					}
+				}
+			goto skip.start;	[start.fox as prescribed
+			}
+		else {
+			random( radioWaitShort, radioWaitLong, rmsFirstRadioCall);
+			goto exit;
+			}
+		}
+		
+:start.loop					[normal start loop
+random( 1, 10, work);				[ startpoint a map
+
+:skip.start
+[s1.track			[forced start loop
+
+	if (work == 1) {
+		if ((current.room == 10 ||
+			current.room == 11 ||
+			current.room == 12 ||
+			current.room == 13)) {		
+			goto start.loop;
+			}
+		else {
+			x = s1x; y = top.edge;
+			suspect.x = s1x; suspect.y = bottom.edge; 
+			}
+		}
+[s2.track
+	if (work == 2) {
+		if ((current.room == 22 ||
+			current.room == 23 ||
+			current.room == 24 ||
+			current.room == 25)) {
+			goto start.loop;
+			}
+		else {
+			x = s2x; y = bottom.edge;
+			suspect.x = s2x; suspect.y = top.edge; 
+			}
+		}
+[s3.track
+	if (work == 3) {
+		if ((current.room == 10 ||
+			current.room == 11 ||
+			current.room == 12 ||
+			current.room == 13)) {
+			goto start.loop;
+			}
+		else {
+			x = s3x; y = top.edge;
+			suspect.x = s3x; suspect.y = bottom.edge; 
+			}
+		}
+[s4.track
+	if (work == 4) {
+		if ((current.room == 22 ||
+			current.room == 23 ||
+			current.room == 24 ||
+			current.room == 25)) {
+			goto start.loop;
+			}
+		else {
+			x = s4x; y = bottom.edge;
+			suspect.x = s4x; suspect.y = top.edge; 
+			}
+		}
+[s5.track
+	if (work == 5) {
+		if ((current.room == 10 ||
+			current.room == 11 ||
+			current.room == 12 ||
+			current.room == 13)) {
+			goto start.loop;
+			}
+		else {
+			x = s5x; y = top.edge;
+			suspect.x = s5x; suspect.y = bottom.edge; 
+			}
+		}
+[s6.track
+	if (work == 6) {
+		if ((current.room == 22 ||
+			current.room == 23 ||
+			current.room == 24 ||
+			current.room == 25)) {
+			goto start.loop;
+			}
+		else {
+			x = s6x; y = bottom.edge;
+			suspect.x = s6x; suspect.y = top.edge; 
+			}
+		}
+[s7.track
+	if (work == 7) {
+		if ((current.room == 13 ||
+			current.room == 17 ||
+			current.room == 21 ||
+			current.room == 25 ||
+			current.room == 22 ||
+			current.room == 19 ||
+			current.room == 16)) {
+			goto start.loop;
+			}
+		else {
+			x = right.edge; y = s7y;
+			suspect.x = left.edge; suspect.y = s7y; 
+			}
+		}
+[s8.track
+	if (work == 8) {
+		if ((current.room == 10 ||
+			current.room == 14 ||
+			current.room == 18 ||
+			current.room == 22 ||
+			current.room == 23 ||
+			current.room == 20 ||
+			current.room == 17)) {
+			goto start.loop;
+			}
+		else {
+			x = left.edge; y = s8y;
+			suspect.x = right.edge; suspect.y = s8y; 
+			}
+		}
+[s9.track
+	if (work == 9) {
+		if ((current.room == 13 ||
+			current.room == 17 ||
+			current.room == 21 ||
+			current.room == 25 ||
+			current.room == 15 ||
+			current.room == 12)) {
+			goto start.loop;
+			}
+		else {
+			x = right.edge; y = s9y;
+			suspect.x = left.edge; suspect.y = s9y; 
+			}
+		}
+[s10.track
+	if (work == 10) {
+		if ((current.room == 10 ||
+			current.room == 14 ||
+			current.room == 18 ||
+			current.room == 22 ||
+			current.room == 19 ||
+			current.room == 16 ||
+			current.room == 13)) {
+			goto start.loop;
+			}
+		else {
+			x = left.edge; y = s10y;
+			suspect.x = right.edge; suspect.y = s10y; 
+			}
+		}
+
+	position.f( a.suspect, x, y);
+	move.obj.f( a.suspect, suspect.x, suspect.y, suspect.speed, moved0);
+  	draw( a.suspect);		  
+[	set( suspect.moving);
+	set( suspect.present);
+	reset( suspect.mess);
+	moving0 = 1;
+	}
+
+[ Next.suspect.room Start Supect ......................
+
+if (moving0 == 0 
+&& suspect.present
+&& current.room == next.suspect.room) {
+	next.suspect.room = 0;
+	if (suspect.dir == ego.up) {
+		x = suspect.x; 
+		y = suspect.y;
+		suspect.y = top.edge;
+		}
+	if (suspect.dir == ego.down) {
+		x = suspect.x; 
+		y = suspect.y;
+		suspect.y = bottom.edge;
+		}
+	if (suspect.dir == ego.left) {
+		x = suspect.x; 
+		y = suspect.y;
+		suspect.x = left.edge;
+		}
+	if (suspect.dir == ego.right) {
+		x = suspect.x; 
+		y = suspect.y;
+		suspect.x = right.edge;
+		}
+	position.f( a.suspect, x, y);
+	move.obj.f( a.suspect, suspect.x, suspect.y, suspect.speed, moved0);
+  	draw( a.suspect);		  
+	moving0 = 1;
+	}
+
+[ Next.suspect.room Calcs ....................
+
+if (moving0 == 2) {
+	next.suspect.room = current.room;
+
+	if (suspect.dir == ego.up) {
+		car.y = 166;
+		suspect.y = bottom.edge;
+		next.suspect.room -= 4;
+		}
+	if (suspect.dir == ego.down) {
+		car.y = 5;
+		suspect.y = top.edge;
+		next.suspect.room += 4;
+		}
+	if (suspect.dir == ego.right) {
+		car.x = 0;
+		suspect.x = left.edge;
+		next.suspect.room += 1;
+		}
+	if (suspect.dir == ego.left) {
+		car.x = 156;
+		suspect.x = right.edge;
+		next.suspect.room -= 1;
+		}
+
+	distance( ego, a.suspect, suspect);
+
+	moving0 = 3;
+	erase( a.suspect);
+
+	if (ego.dir == suspect.dir &&
+		suspect < 30 &&
+		!crashed &&
+		priority == 5) {	[ Vert, Horiz, New Room
+		if (suspect.y == bottom.edge) {
+			suspect.y -= suspect;
+			}
+		if (suspect.y == top.edge) {
+			suspect.y += suspect;
+			}
+		if (suspect.x == left.edge) {
+			suspect.x += suspect;
+			}
+		if (suspect.x == right.edge) {
+			suspect.x -= suspect;
+			}
+		new.room.f( next.suspect.room);
+		}
+	}
+
+[ Time out suspect position in next room .............
+
+if (!gotcha && (moving0 == 3 || moving0 == 0)) {
+	set( suspect.moving);
+	if (suspect.dir == ego.up) {
+		suspect.y -= suspect.speed;
+		if (suspect.y < 20) {
+			next.suspect.room = 0;
+			moving0 = 0;
+			reset( suspect.present);
+			}
+		}
+	if (suspect.dir == ego.down) {
+		suspect.y += suspect.speed;
+		if (suspect.y > 125) {
+			next.suspect.room = 0;
+			moving0 = 0;
+			reset( suspect.present);
+			}
+		}
+	if (suspect.dir == ego.left) {
+		suspect.x -= suspect.speed;
+		if (suspect.x < 32) {
+			next.suspect.room = 0;
+			moving0 = 0;
+			reset( suspect.present);
+			}
+		}
+	if (suspect.dir == ego.right) {
+		suspect.x += suspect.speed;
+		if (suspect.x > 138) {
+			next.suspect.room = 0;
+			moving0 = 0;
+			reset( suspect.present);
+			}
+		}
+	}
+
+[ Time out suspect reappear from last room ......................
+
+if (!gotcha && moving0 == 4 && suspect.present) {
+	if (suspect.dir == ego.up) {
+		if (suspect.y < 3) {
+			x = suspect.x;
+			y = 166;
+			moving0 = 5;
+			}
+		else {
+			suspect.y -= suspect.speed;
+			}
+		}
+	if (suspect.dir == ego.down) {
+		if (suspect.y > 166) {
+			x = suspect.x;
+			y = 6;
+			moving0 = 5;
+			}
+		else {
+			suspect.y += suspect.speed;
+			}
+		}
+	if (suspect.dir == ego.left) {
+		if (suspect.x < 3) {
+			x = 156;
+			y = suspect.y;
+			moving0 = 5;
+			}
+		else {
+			suspect.x -= suspect.speed;
+			}
+		}
+	if (suspect.dir == ego.right) {
+		if (suspect.x > 158) {
+			x = 1;
+			y = suspect.y;
+			moving0 = 5;
+			}
+		else {
+			suspect.x += suspect.speed;
+			}
+		}
+	}
+
+[ Test valid reappear loction .....................
+
+if (moving0 == 5) {			[all x's OK
+	moving0 = 6;
+	if (y == s7y) {
+		if ((current.room == 16 ||
+			current.room == 19 ||
+			current.room == 22)) {
+			reset( suspect.present);
+			moving0 = 0;
+			}
+		}
+	else {
+		if (y == s8y) {
+			if ((current.room == 17 ||
+				current.room == 20 ||
+				current.room == 23)) {
+				reset( suspect.present);
+				moving0 = 0;
+				}
+			}
+		else {
+			if (y == s9y) {
+				if ((current.room == 12 ||
+					current.room == 15 ||
+					current.room == 18)) {
+					reset( suspect.present);
+					moving0 = 0;
+					}
+				}
+			else {
+				if (y == s10y) {
+					if ((current.room == 13 ||
+						current.room == 16 ||
+						current.room == 19)) {
+						reset( suspect.present);
+						moving0 = 0;
+						}
+					}
+				}
+			}
+		}
+	}
+			
+		
+if (moving0 == 6) {
+ 	position.f( a.suspect, x, y);
+	move.obj.f( a.suspect, suspect.x, suspect.y, suspect.speed, moved0);
+  	draw( a.suspect);		  
+	next.suspect.room = 0;
+	moving0 = 1;
+	}
+
+
+
+[ Reset intersection clear .....................
+[A, B, C, D, E, F
+[verify all agianst trsffic stopped at intersection
+
+if (moving0 == 1) {
+	if (intersection.clear) {
+		if ( !posn( a.suspect, c1x, c7y, c2x, c8y) &&
+			!posn( a.suspect, c3x, c7y, c4x, c8y) &&
+			!posn( a.suspect, c5x, c7y, c6x, c8y) &&
+			!posn( a.suspect, c1x, c9y, c2x, c10y) &&
+			!posn( a.suspect, c3x, c9y, c4x, c10y) &&
+			!posn( a.suspect, c5x, c9y, c6x, c10y)) {
+[			start.update( a.suspect);
+			reset( intersection.clear);
+			reset( suspect.moving);
+			}
+		}
+		
+[ Test intersection clear ahead ......................
+[check for correspondance with reset above
+[A
+	if (posn( a.suspect, c1x, c7y, c2x, c8y) &&
+		!intersection.clear) {
+		if ((posn( a.car1, c1x, c7y, c2x, c8y) ||
+			posn( a.car2, c1x, c7y, c2x, c8y) ||
+			posn( a.car3, c1x, c7y, c2x, c8y) ||
+			posn( a.car4, c1x, c7y, c2x, c8y) ||
+			posn( a.back.up, c1x, c7y, c2x, c8y) ||
+			posn( a.car6, c1x, c7y, c2x, c8y))) {
+			stop.update( a.suspect);
+			}
+		else {
+			start.update( a.suspect);
+			set( intersection.clear);
+			}
+		}
+[B
+	if (posn( a.suspect, c3x, c7y, c4x, c8y) &&
+		!intersection.clear) {
+		if ((posn( a.car1, c3x, c7y, c4x, c8y) ||
+			posn( a.car2, c3x, c7y, c4x, c8y) ||
+			posn( a.car3, c3x, c7y, c4x, c8y) ||
+			posn( a.car4, c3x, c7y, c4x, c8y) ||
+			posn( a.back.up, c3x, c7y, c4x, c8y) ||
+			posn( a.car6, c3x, c7y, c4x, c8y))) {
+			stop.update( a.suspect);
+			}
+		else {
+			start.update( a.suspect);
+			set( intersection.clear);
+			}
+		}
+	
+[C
+	if (posn( a.suspect, c5x, c7y, c6x, c8y) &&
+		!intersection.clear) {
+		if ((posn( a.car1, c5x, c7y, c6x, c8y) ||
+			posn( a.car2, c5x, c7y, c6x, c8y) ||
+			posn( a.car3, c5x, c7y, c6x, c8y) ||
+			posn( a.car4, c5x, c7y, c6x, c8y) ||
+			posn( a.back.up, c5x, c7y, c6x, c8y) ||
+			posn( a.car6, c5x, c7y, c6x, c8y))) {
+			stop.update( a.suspect);
+			}
+		else {
+			start.update( a.suspect);
+			set( intersection.clear);
+			}
+		}
+	
+[D
+	if (posn( a.suspect, c1x, c9y, c2x, c10y) &&
+		!intersection.clear) {
+		if ((posn( a.car1, c1x, c9y, c2x, c10y) ||
+			posn( a.car2, c1x, c9y, c2x, c10y) ||
+			posn( a.car3, c1x, c9y, c2x, c10y) ||
+			posn( a.car4, c1x, c9y, c2x, c10y) ||
+			posn( a.back.up, c1x, c9y, c2x, c10y) ||
+			posn( a.car6, c1x, c9y, c2x, c10y))) {
+			stop.update( a.suspect);
+			}
+		else {
+			start.update( a.suspect);
+			set( intersection.clear);
+			}
+		}
+	
+[E
+	if (posn( a.suspect, c3x, c9y, c4x, c10y) &&
+		!intersection.clear) {
+		if ((posn( a.car1, c3x, c9y, c4x, c10y) ||
+			posn( a.car2, c3x, c9y, c4x, c10y) ||
+			posn( a.car3, c3x, c9y, c4x, c10y) ||
+			posn( a.car4, c3x, c9y, c4x, c10y) ||
+			posn( a.back.up, c3x, c9y, c4x, c10y) ||
+			posn( a.car6, c3x, c9y, c4x, c10y))) {
+			stop.update( a.suspect);
+			}
+		else {
+			start.update( a.suspect);
+			set( intersection.clear);
+			}
+		}
+	
+[F
+	if (posn( a.suspect, c5x, c9y, c6x, c10y) &&
+		!intersection.clear) {
+		if ((posn( a.car1, c5x, c9y, c6x, c10y) ||
+			posn( a.car2, c5x, c9y, c6x, c10y) ||
+			posn( a.car3, c5x, c9y, c6x, c10y) ||
+			posn( a.car4, c5x, c9y, c6x, c10y) ||
+			posn( a.back.up, c5x, c9y, c6x, c10y) ||
+			posn( a.car6, c5x, c9y, c6x, c10y))) {
+			stop.update( a.suspect);
+			}
+		else {
+			start.update( a.suspect);
+			set( intersection.clear);
+			}
+		}
+	}
+	
+[ Evasive action @ intersections ..................
+
+if (moving0 == 1 && !gotcha) {
+	get.dir( a.suspect, suspect.dir);
+
+[ Running traffic signals .......................
+
+	if (current.suspect == tit.fox &&
+		!redLight) {
+		
+	
+	[B
+		if (posn( a.suspect, 75, 25, 85, 39) &&
+			(current.room == 13 ||
+			current.room == 16 ||
+			current.room == 18 ||
+			current.room == 19 ||
+			current.room == 20 ||
+			current.room == 22 ||
+			current.room == 24)) {
+			if (intersection != north.stop &&
+				(suspect.dir == ego.left ||
+				suspect.dir == ego.right)) {
+				set( redLight);
+				}
+			if (intersection != east.stop &&
+				(suspect.dir == ego.up ||
+				suspect.dir == ego.down)) {
+				set( redLight);
+				}
+			}
+	[D
+		if (posn( a.suspect, 17, 117, 27, 131) &&
+			(current.room == 15 ||
+			current.room == 17)) {
+			if (intersection != north.stop &&
+				(suspect.dir == ego.left ||
+				suspect.dir == ego.right)) {
+				set( redLight);
+				}
+			if (intersection != east.stop &&
+				(suspect.dir == ego.up ||
+				suspect.dir == ego.down)) {
+				set( redLight);
+				}
+			}
+	
+	[E
+		if (posn( a.suspect, 75, 117, 85, 131) &&
+			(current.room == 11 ||
+			current.room == 21)) {
+			if (intersection != north.stop &&
+				(suspect.dir == ego.left ||
+				suspect.dir == ego.right)) {
+				set( redLight);
+				}
+			if (intersection != east.stop &&
+				(suspect.dir == ego.up ||
+				suspect.dir == ego.down)) {
+				set( redLight);
+				}
+			}
+		}
+[ Reset her light ok ---- B, D, E.
+	if (redLight &&
+		!posn( a.suspect, 75, 25, 85, 39) &&
+		!posn( a.suspect, 17, 117, 27, 131) &&
+		!posn( a.suspect, 75, 117, 85, 131)) {
+		if (wait.1 == 10 && previous.room != 30) {
+			print( 5);
+			wait.1 = 0;
+			reset( redLight);
+			}
+		else {
+			++ wait.1;
+			}
+		}
+	
+	
+[ Drunk weaves .....................
+	if (current.suspect == drunk &&
+		!gotcha &&
+		posn( a.suspect, 8, 8, 150, 160) &&	[near edge
+		!posn( a.suspect, 13, 21, 31, 43) &&	[intersections
+		!posn( a.suspect, 71, 21, 89, 43) &&
+		!posn( a.suspect, 129, 21, 147, 43) &&
+		!posn( a.suspect, 13, 113, 31, 135) &&
+		!posn( a.suspect, 71, 113, 89, 135) &&
+		!posn( a.suspect, 129, 113, 147, 135)) {
+		set( weaving);
+		random( 0, 100, wait.1);
+	
+		if (wait.1 < 10) {
+			if (suspect.dir == ego.up) {
+				if ((suspect.x == s2x ||
+					suspect.x == s4x ||
+					suspect.x == s6x)) { 
+					suspect.x -= 1;
+					}
+				else {
+					suspect.x += 1;
+					}
+				}
+			if (suspect.dir == ego.down) {
+				if ((suspect.x == s1x ||
+					suspect.x == s3x ||
+					suspect.x == s5x)) { 
+					suspect.x += 1;
+					}
+				else {
+					suspect.x -= 1;
+					}
+				}
+			if (suspect.dir == ego.right) {
+				if ((suspect.y == s8y ||
+					suspect.y == s10y)) { 
+					suspect.y -= 1;
+					}
+				else {
+					suspect.y += 1;
+					}
+				}
+			if (suspect.dir == ego.left) {
+				if ((suspect.y == s7y ||
+					suspect.y == s9y)) { 
+					suspect.y += 1;
+					}
+				else {
+					suspect.y -= 1;
+					}
+				}
+			fix.loop( a.suspect);
+			start.update( a.suspect);
+			move.obj.f( a.suspect, suspect.x, suspect.y, suspect.speed, moved0);
+			}
+		}
+	else {
+		reset( weaving);
+		}
+	
+	
+[ Evasive action @ intersections ...........................
+
+[A
+	if (posn( a.suspect, e1x, e7y, e2x, e8y) &&
+		!suspect.moving &&
+		intersection.clear) {
+		:evade.loopa
+		random( 1, 4, work1);
+[up == 1
+		if (work1 == 1) {
+			if ((suspect.dir == ego.down ||
+				current.room == 10 ||
+				current.room == 11 ||
+				current.room == 12 ||
+				current.room == 13)) {
+				goto evade.loopa;
+				}
+			else {
+				suspect.x = s2x; suspect.y = top.edge;
+				}
+			}
+[down == 2
+		if (work1 == 2) {
+			if ((suspect.dir == ego.up ||
+				current.room == 22)) {
+				goto evade.loopa;
+				}
+			else {
+				suspect.x = s1x; suspect.y = bottom.edge;
+				}
+			}
+[left == 3
+		if (work1 == 3) {
+			if ((suspect.dir == ego.right ||
+				current.room == 10 ||
+				current.room == 14 ||
+				current.room == 17 ||
+				current.room == 18 ||
+				current.room == 20 ||
+				current.room == 22 ||
+				current.room == 23)) {
+				goto evade.loopa;
+				}
+			else {
+				suspect.x = left.edge; suspect.y = s7y;
+				}
+			}
+[right == 4
+		if (work1 == 4) {
+			if (suspect.dir == ego.left) {
+				goto evade.loopa;
+				}
+			else {
+				suspect.x = right.edge; suspect.y = s8y;
+				}
+			}
+		set( suspect.moving);
+		}
+	
+[B
+	if (posn( a.suspect, e3x, e7y, e4x, e8y) &&
+		!suspect.moving &&
+		intersection.clear) {
+		:evade.loopb
+		random( 1, 4, work1);
+[up == 1
+		if (work1 == 1) {
+			if ((suspect.dir == ego.down ||
+				current.room == 10 ||
+				current.room == 11 ||
+				current.room == 12 ||
+				current.room == 13)) {
+				goto evade.loopb;
+				}
+			else {
+				suspect.x = s4x; suspect.y = top.edge;
+				}
+			}
+[down == 2
+		if (work1 == 2) {
+			if (suspect.dir == ego.up) {
+				goto evade.loopb;
+				}
+			else {
+				suspect.x = s3x; suspect.y = bottom.edge;
+				}
+			}
+[left == 3
+		if (work1 == 3) {
+			if (suspect.dir == ego.right) {
+				goto evade.loopb;
+				}
+			else {
+				suspect.x = left.edge; suspect.y = s7y;
+				}
+			}
+[right == 4
+		if (work1 == 4) {
+			if ((suspect.dir == ego.left ||
+				current.room == 13 ||
+				current.room == 16 ||
+				current.room == 19 ||
+				current.room == 22)) {
+				goto evade.loopb;
+				}
+			else {
+				suspect.x = right.edge; suspect.y = s8y;
+				}
+			}
+		set( suspect.moving);
+		}
+	
+[C
+	if (posn( a.suspect, e5x, e7y, e6x, e8y) &&
+		!suspect.moving &&
+		intersection.clear) {
+		:evade.loopc
+ 		random( 1, 4, work1);
+
+[up == 1
+		if (work1 == 1) {
+			if ((suspect.dir == ego.down ||
+				current.room == 10 ||
+				current.room == 11 ||
+				current.room == 12 ||
+				current.room == 13 ||
+				current.room == 17)) {
+				goto evade.loopc;
+				}
+[under freeway
+			else {
+				if ((current.room == 13 ||
+					current.room == 16 ||
+					current.room == 19 ||
+					current.room == 22)) {
+					set( suspect.moving);
+					goto exit;
+					}
+				else {
+					suspect.x = s6x; suspect.y = top.edge;
+					}
+				}
+			}
+[down == 2
+		if (work1 == 2) {
+			if (suspect.dir == ego.up) {
+				goto evade.loopc;
+				}
+[under freeway
+			else {
+				if ((current.room == 13 ||
+					current.room == 16 ||
+					current.room == 19 ||
+					current.room == 22)) {
+					set( suspect.moving);
+					goto exit;
+					}
+				else {
+					suspect.x = s5x; suspect.y = bottom.edge;
+					}
+				}
+			}
+[left == 3
+		if (work1 == 3) {
+			if (suspect.dir == ego.right) {
+				goto evade.loopc;
+				}
+[under freeway
+			else {
+				if ((current.room == 13 ||
+					current.room == 16 ||
+					current.room == 19 ||
+					current.room == 22)) {
+					set( suspect.moving);
+					goto exit;
+					}
+				else {
+					 suspect.x = left.edge; suspect.y = s7y;
+					}
+				}
+			}
+[right == 4
+		if (work1 == 4) {
+			if ((suspect.dir == ego.left ||
+				current.room == 15 ||
+				current.room == 17 ||
+				current.room == 18 ||
+				current.room == 21 ||
+				current.room == 25)) {
+				goto evade.loopc;
+				}
+[under freeway
+			else {
+				if ((current.room == 13 ||
+					current.room == 16 ||
+					current.room == 19 ||
+					current.room == 22)) {
+					set( suspect.moving);
+					goto exit;
+					}
+				else {
+					suspect.x = right.edge; suspect.y = s8y;
+					}
+				}
+			}
+		set( suspect.moving);
+		}
+	
+[D
+	if (posn( a.suspect, e1x, e9y, e2x, e10y) &&
+		!suspect.moving &&
+		intersection.clear) {
+		:evade.loopd
+		random( 1, 4, work1);
+[up == 1
+		if (work1 == 1) {
+			if (suspect.dir == ego.down) {
+				goto evade.loopd;
+				}
+[under freeway
+			else {
+				if ((current.room == 13 ||
+					current.room == 16 ||
+					current.room == 19 ||
+					current.room == 22)) {
+					set( suspect.moving);
+					goto exit;
+					}
+				else {
+					suspect.x = s2x; suspect.y = top.edge;
+					}
+				}
+			}
+[down == 2
+		if (work1 == 2) {
+			if ((suspect.dir == ego.up ||
+				current.room == 14 ||
+				current.room == 18 ||
+				current.room == 23 ||
+				current.room == 24 ||
+				current.room == 25)) {
+				goto evade.loopd;
+				}
+[under freeway
+			else {
+				if ((current.room == 13 ||
+					current.room == 16 ||
+					current.room == 19 ||
+					current.room == 22)) {
+					set( suspect.moving);
+					goto exit;
+					}
+				else {
+					suspect.x = s1x; suspect.y = bottom.edge;
+					}
+				}
+			}
+[left == 3
+		if (work1 == 3) {
+			if ((suspect.dir == ego.right ||
+				current.room == 10 ||
+				current.room == 14 ||
+				current.room == 17 ||
+				current.room == 18 ||
+				current.room == 20)) {
+				goto evade.loopd;
+				}
+[under freeway
+			else {
+				if ((current.room == 13 ||
+					current.room == 16 ||
+					current.room == 19 ||
+					current.room == 22)) {
+					set( suspect.moving);
+					goto exit;
+					}
+				else {
+					suspect.x = left.edge; suspect.y = s9y;
+					}
+				}
+			}
+[right == 4
+		if (work1 == 4) {
+			if (suspect.dir == ego.left) {
+				goto evade.loopd;
+				}
+[under freeway
+			else {
+				if ((current.room == 13 ||
+					current.room == 16 ||
+					current.room == 19 ||
+					current.room == 22)) {
+					set( suspect.moving);
+					goto exit;
+					}
+				else {
+					suspect.x = right.edge; suspect.y = s10y;
+					}
+				}
+			}
+		set( suspect.moving);
+		}
+	
+[E
+	if (posn( a.suspect, e3x, e9y, e4x, e10y) &&
+		!suspect.moving &&
+		intersection.clear) {
+		:evade.loope
+		random( 1, 4, work1);
+[up == 1
+		if (work1 == 1) {
+			if (suspect.dir == ego.down) {
+				goto evade.loope;
+				}
+			else {
+				suspect.x = s4x; suspect.y = top.edge;
+				}
+			}
+	
+[down == 2
+		if (work1 == 2) {
+			if ((suspect.dir == ego.up ||
+				current.room == 22 ||
+				current.room == 23 ||
+				current.room == 24 ||
+				current.room == 25)) {
+				goto evade.loope;
+				}
+			else {
+				suspect.x = s3x; suspect.y = bottom.edge;
+				}
+			}
+[left == 3
+		if (work1 == 3) {
+			if ((suspect.dir == ego.right ||
+				current.room == 13 ||
+				current.room == 16 ||
+				current.room == 19 ||
+				current.room == 22)) {
+				goto evade.loope;
+				}
+			else {
+				suspect.x = left.edge; suspect.y = s9y;
+				}
+			}
+[right == 4
+		if (work1 == 4) {
+			if (suspect.dir == ego.left) {
+				goto evade.loope;
+				}
+			else {
+				suspect.x = right.edge; suspect.y = s10y;
+				}
+			}
+		set( suspect.moving);
+		}
+	
+[F
+	if (posn( a.suspect, e5x, e9y, e6x, e10y) &&
+		!suspect.moving &&
+		intersection.clear) {
+		:evade.loopf
+		random( 1, 4, work1);
+[up == 1
+		if (work1 == 1) {
+			if ((suspect.dir == ego.down ||
+				current.room == 13)) {
+				goto evade.loopf;
+				}
+			else {
+				suspect.x = s6x; suspect.y = top.edge;
+				}
+			}
+[down == 2
+		if (work1 == 2) {
+			if ((suspect.dir == ego.up ||
+				current.room == 22 ||
+				current.room == 23 ||
+				current.room == 24 ||
+				current.room == 25)) {
+				goto evade.loopf;
+				}
+			else {
+				suspect.x = s5x; suspect.y = bottom.edge;
+				}
+			}
+[left == 3
+		if (work1 == 3) {
+			if (suspect.dir == ego.right) {
+				goto evade.loopf;
+				}
+			else {
+				suspect.x = left.edge; suspect.y = s9y;
+				}
+			}
+[right == 4
+		if (work1 == 4) {
+			if ((suspect.dir == ego.left ||
+				current.room == 12 ||
+				current.room == 13 ||
+				current.room == 15 ||
+				current.room == 17 ||
+				current.room == 18 ||
+				current.room == 21 ||
+				current.room == 25)) {
+				goto evade.loopf;
+				}
+			else {
+				suspect.x = right.edge; suspect.y = s10y;
+				}
+			}
+		set( suspect.moving);
+		}
+	
+	if (suspect.moving && intersection.clear) {
+		start.update( a.suspect);		[in atemp to force glich
+		move.obj.f( a.suspect, suspect.x, suspect.y, suspect.speed, moved0);
+		}
+	}
+
+[ Set suspects loop per dir .......................
+
+if (suspect.dir != last.suspect.dir && moving0 == 1 && !weaving) {
+
+	if ((suspect.dir == ego.up.right ||
+		suspect.dir == ego.down.left)) {
+		set.view( a.suspect, v.diag.misc.cars);
+		release.loop( a.suspect);	
+		set.loop( a.suspect, 1);
+		fix.loop( a.suspect);
+		}
+	if ((suspect.dir == ego.down.right ||
+		suspect.dir == ego.up.left)) {
+		set.view( a.suspect, v.diag.misc.cars);
+		release.loop( a.suspect);	
+		set.loop( a.suspect, 0);
+		fix.loop( a.suspect);
+		}
+	if ((suspect.dir == ego.up ||
+		suspect.dir == ego.down ||
+		suspect.dir == ego.left ||
+		suspect.dir == ego.right)) {
+		release.loop( a.suspect);	
+		set.view( a.suspect, v.misc.cars);
+		}
+	start.update( a.suspect);		[atempt to force glich 2
+	move.obj.f( a.suspect, suspect.x, suspect.y, suspect.speed, moved0);
+	last.suspect.dir = suspect.dir;
+	}
+
+[.....
+:exit
+[.....
+if (moving0 == 255) {
+	stop.update( a.suspect);
+	}
+
+[%message 100
+["X %v144, Y %v145"
+[
+[display( 22, 00, 100);
+[

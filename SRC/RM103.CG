@@ -1,0 +1,457 @@
+[ POLICE QUEST 
+[ rm103.cg 
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. July 27, 1987
+[ Last Update September 26, 1987al
+
+[	logics for room 103 -- rmWinner1
+
+
+%include "rm103.msg"
+%include "gamedefs"
+
+
+#define	pic.black				75
+#define	DELAY				11	[	later, make bigger
+
+#define	L_GAVEL				0	[	judge loops
+#define	L_PAPERS				1
+#define	L_TURNED				2
+
+#define	picture				lcl0
+
+#object	aBailiff				1
+#object	aJudge				2
+#object	aReporter				3
+#object	aBains				4
+#object	aSonny				5
+
+
+
+if (init.log)
+	{
+	set(NOcase);
+	set.horizon( 1);
+	prevent.input();
+	status.line.off();
+	reset( enable.menu);
+	set( game.control);
+
+	load.view( v.judge);
+	load.view( v.bailiff);
+	load.view( v.Creporter);
+	load.view( v.Cgate);
+	load.view( v.jury);
+	load.view( vBainsAndSonnyRm104);
+	load.sound( mCourtroom);
+	load.sound( mBadGuy);
+
+	picture = 55;					[	rm.court.room
+	load.pic( picture);
+
+	load.pic( current.room);
+	draw.pic( current.room);
+
+
+	animate.obj( aBailiff);
+	ignore.blocks( aBailiff);
+	set.view( aBailiff, v.bailiff);
+	position( aBailiff, 41, 105);
+	set.loop( aBailiff, facing.front);
+	set.cel( aBailiff, 0);
+					 
+	animate.obj( aJudge);
+	set.view( aJudge, v.judge);
+	set.priority( aJudge, 10);
+	ignore.objs( aJudge);
+	position( aJudge, 74, 80);
+	set.loop( aJudge, L_GAVEL);
+	set.cel( aJudge, 0);
+	cycle.time( aJudge, three);
+
+	animate.obj( aReporter);
+	set.view( aReporter, v.Creporter);
+	position( aReporter, 99, 113);
+	cycle.time( aReporter, three);
+
+	animate.obj( aBains);
+	position( aBains, 46, 138);
+	set.priority( aBains, 13);
+	set.view( aBains, vBainsAndSonnyRm104);
+	set.loop( aBains, 0);
+	set.cel( aBains, 0);
+	stop.cycling( aBains);
+
+	animate.obj( aSonny);
+	position( aSonny, 98, 138);
+	set.priority( aSonny, 13);
+	set.view( aSonny, vBainsAndSonnyRm104);
+	set.loop( aSonny, 1);
+	set.cel( aSonny, 0);
+	stop.cycling( aSonny);
+
+	animation.interval = NORMAL;
+	scriptCycles = DELAY;
+	y = 20;
+	x = 8;
+
+	show.pic( );
+
+	return( );
+	}
+
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+	set.text.attribute( TEXT_COLOR, BG_COLOR);
+
+
+	if (script == 1)
+		{
+		--y;
+		if (y < 7)
+			{
+			scriptTimer = 4;
+			}
+		else
+			{
+			--script;
+			scriptCycles = DELAY;
+			message = 1;
+			work = y;
+			display.f( work, x, message);
+			if (y < 19)			[	message 2
+				{
+				++work;
+				++message;
+				display.f( work, x, message);
+				}
+			if (y < 18)			[	message 3
+				{
+				++work;
+				++message;
+				display.f( work, x, message);
+				}
+			if (y < 17)			[	mess 4
+				{
+				++work;
+				++message;
+				display.f( work, x, message);
+				}
+			if (y < 16)			[	mess 5
+				{
+				++work;
+				++message;
+				display.f( work, x, message);
+				}
+			if (y < 15)			[	mess 6
+				{
+				++work;
+				++message;
+				display.f( work, x, message);
+				}
+			if (y < 14)			[	mess 7
+				{
+				++work;
+				++message;
+				display.f( work, x, message);
+				}
+			if (y < 13)			[	mess 8
+				{
+				++work;
+				++message;
+				display.f( work, x, message);
+				}
+			} 
+		}
+
+
+	if (script == 2)
+		{
+		show.pic();
+		sound( mCourtroom, done);
+		display( 2, 10, 28);		[	Charge:
+		display( 3,  8,  9);
+		scriptTimer = 4;
+		}
+
+	if (script == 3)
+		{
+		print( 10);
+		display( 2, 8, 8);
+		display( 3, 8, 8);
+		scriptTimer = 4;
+		}
+
+	if (script == 4)
+		{
+		sound( mCourtroom, done);
+		display( 2, 10, 28);		[	Charge:
+		display( 3,  8, 11);
+		scriptTimer = 4;
+		}
+
+	if (script == 5)
+		{
+		print( 12);
+		display( 2, 8, 8);
+		display( 3, 8, 8);
+		scriptTimer = 4;
+		}
+
+	if (script == 6)
+		{
+		sound( mCourtroom, done);
+		display( 2, 10, 28);		[	Charge:
+		display( 3,  8, 13);
+		scriptTimer = 4;
+		}
+
+	if (script == 7)
+		{
+		print( 14);
+		display( 2, 8, 8);
+		display( 3, 8, 8);
+		scriptTimer = 4;
+		}
+
+	if (script == 8)
+		{
+		sound( mCourtroom, done);
+		display( 2, 10, 28);		[	Charge:
+		display( 3,  8, 15);
+		scriptTimer = 4;
+		}
+
+	if (script == 9)
+		{
+		print( 16);
+		display( 2, 8, 8);
+		display( 3, 8, 8);
+		scriptTimer = 4;
+		}
+
+	if (script == 10)
+		{
+		script = 11;				[	cheap patch!
+		}
+
+	if (script == 11)
+		{
+		print( 17);
+		scriptTimer = 4;
+		}
+
+	if (script == 12)
+		{
+		picture = 55;				[	rm.court.room;
+		draw.pic( picture);
+
+		draw( aBailiff);
+		stop.update( aBailiff);
+
+		draw( aJudge);
+		start.cycling( aJudge);
+
+		draw( aReporter);
+
+		draw( aBains);
+		stop.update( aBains);
+
+		draw( aSonny);
+		stop.update( aSonny);
+
+		add.to.pic(  v.jury, 0, 0,  5, 125, 11,  4);	[ jury
+	 	add.to.pic( v.Cgate, 0, 0, 73, 155, 13,  4);	[ gate
+
+		show.pic();
+		status.line.on();
+		set( enable.menu);
+
+		scriptTimer = 4;
+		}
+
+	if (script == 13)
+		{
+		stop.update( aJudge);
+		set.cel( aJudge, 0);
+		force.update( aJudge);
+
+		print( 18);
+		scriptTimer = 4;
+		}
+
+	if (script == 14)
+		{
+		print( 19);
+		scriptTimer = 4;
+		}
+
+	if (script == 15)
+		{
+		print( 30);
+		scriptCycles = 14;
+		}
+
+	if (script == 16)
+		{
+		start.update( aBailiff);
+		move.obj( aBailiff, 31, 115, 1, scriptDone);
+		}
+
+	if (script == 17)
+		{
+		stop.cycling( aBailiff);
+		scriptCycles = 15;
+		}
+
+	if (script == 18)
+		{
+		start.cycling( aBailiff);
+		move.obj( aBailiff, 114, 115, 1, scriptDone);
+		}
+
+	if (script == 19)
+		{
+		move.obj( aBailiff, 114, 101, 1, scriptDone);
+		}
+
+	if (script == 20)
+		{
+		move.obj( aBailiff, 95, 101, 1, scriptDone);
+		}
+
+	if (script == 21)
+		{
+		move.obj( aBailiff, 93, 99, 1, scriptDone);
+		}
+
+	if (script == 22)
+		{
+		move.obj( aBailiff, 87, 99, 1, scriptDone);
+		}
+
+	if (script == 23)
+		{
+		stop.update( aBailiff);
+
+		set.loop( aJudge, L_TURNED);
+		set.cel( aJudge, 0);
+		stop.cycling( aJudge);
+		start.update( aJudge);
+		
+		scriptCycles = 12;
+		}
+
+	if (script == 24)
+		{
+		set.cel( aJudge, 1);
+		scriptCycles = 12;
+		}
+
+	if (script == 25)
+		{
+		set.loop( aJudge, L_PAPERS);
+		set.cel( aJudge, 1);
+		scriptTimer = 3;
+		}
+
+	if (script == 26)
+		{
+		set.loop( aJudge, L_GAVEL);
+		set.cel( aJudge, 0);
+		stop.update( aJudge);
+		force.update( aJudge);
+
+		print( 29);
+		set.loop( aBailiff, facing.front);
+		force.update( aBailiff);
+
+		scriptTimer = 4;
+		}
+
+	if (script == 27)
+		{
+		print( 31);
+		scriptTimer = 4;
+		}
+
+	if (script == 28)
+		{
+		print( 32);
+		scriptTimer = 4;
+		}
+
+	if (script == 29)
+		{
+		print( 33);
+		scriptTimer = 4;
+		}
+
+	if (script == 30)
+		{
+		print( 34);
+		scriptTimer = 4;
+		}
+
+	if (script == 31)
+		{
+		print( 21);
+		set.cel( aBains, 1);
+		set.cel( aSonny, 1);
+		force.update( aBains);
+		force.update( aSonny);
+		scriptTimer = 4;
+		}
+
+	if (script == 32)
+		{
+		sound( mBadGuy, done);
+		print( 22);
+		scriptTimer = 4;
+		start.cycling( aJudge);
+		start.update( aJudge);
+		}
+
+	if (script == 33)
+		{
+		stop.cycling( aJudge);
+		set.cel( aJudge, 0);
+		print( 23);
+		scriptTimer = 4;
+		}
+
+	if (script == 34)
+		{
+		set.cel( aSonny, 0);
+		force.update( aSonny);
+		print( 24);
+		scriptTimer = 8;
+		}
+
+	if (script == 35)
+		{
+		unanimate.all();
+		draw.pic( current.room);
+		show.pic();
+		status.line.off();
+		reset( enable.menu);
+
+		scriptTimer = 4;
+		}
+
+	if (script == 36)
+		{
+		print( 25);
+		score += 4;
+		new.room( 104);			[	rmWinner2);
+		}
+	}
+
+
+[*****
+:exit
+[*****

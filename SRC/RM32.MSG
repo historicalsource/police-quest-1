@@ -1,0 +1,276 @@
+[ POLICE QUEST
+[ rm32.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 1/27/87
+[ Last Update October 15, 1987GR
+
+[ rm.felony
+
+
+%message	1
+"Dispatch responds,
+ \"Be advised, 83-31 is responding Code-3 to your location.\""
+
+%message	2
+"Review the \"Levels of Force\" section of your
+ \"LPD Policeman's Indoctrination Guide.\""
+
+%message	3
+"The license plate is \"UL6942.\"
+ Hmmm.
+ You remember the partial plate seen by the witness to the Lonnie West murder
+ was \"L964.\"
+ You may have found your man."
+
+%message	4
+"Officer Jack Cobb arrives on the scene.
+ Cobb radios Dispatch, %m5"
+
+%message	5
+"\"Dispatch, be advised.
+ Hold all radio traffic until Code-4 confirmed.\""
+
+%message	6
+"Dispatch responds, \"Affirmative.\""
+
+%message	7
+"\"83-32, this is 83-31.
+ Sonny! I'll cover you from the passenger side of your patrol car while you
+ make contact with the suspect.\""
+
+%message	8
+"\"83-31, out.\""
+
+%message	9
+"Well, that's certainly one way to save the taxpayers' money:
+ mow 'em down instead of taking 'em to court."
+
+%message	10
+"While some may applaud your exercise in street justice,
+ democratic societies have no place for \"trigger happy\" cops.
+ Sorry, Sonny."
+
+%message	11
+"Be careful! This dude's dangerous."
+
+%message	12
+"The suspect falters for a moment, then slowly raises his hands.
+ He realizes he does not have a chance and follows your order."
+
+%message	13
+"\"Ok, ok. I'm lying down!\""
+
+%message	14
+"Your partner just punched that punk's ticket."
+
+%message	15
+"But, a little too late for you, pal.
+ Remember, proper procedure promotes police preservation."
+
+%message	16
+"Cranking off a few live rounds at this particular time is not recommended."
+
+%message	17
+"Jack says, \"I've got him covered, Sonny. Go ahead and 'cuff him.\""
+
+%message	18
+"You apprehensively approach the suspect, sensing his desperation."
+
+%message	19
+"Attempting to handcuff the suspect while holding your weapon
+ could be hazardous to your health!"
+
+%message	20
+"You feel relief as you close the handcuffs around his wrists."
+
+%message	21
+"Stand him up, first."
+
+%message	22
+"You order the suspect into your patrol car.
+ He submits with a sarcastic, \"All right, &!#$%&.\""
+
+%message	23
+"\"Good job, Sonny!\" says Jack.
+ \"I'll call Dispatch and put out a Code-4.\""
+
+%message	24
+"You must be in your car or have a radio extender."
+
+%message	25
+"You'd better handcuff him first!"
+
+%message	26
+"This guy may be armed!"
+
+%message	27
+"Place him in physical custody before entering his car."
+
+%message	28
+"You do not need anything from the trunk."
+
+%message	29
+"You're not close enough to Jack to obtain the gun."
+
+%message	30
+"This vehicle almost matches the description of the vehicle mentioned by
+ the witness to the fatal car crash."
+
+%message	31
+"You can't see it from here."
+
+%message	32
+"Your radio crackles to life with a message from Dispatch,
+ \"83-32, license plate 'UL6942' not listed as stolen.
+ Registered to a '79 Cadillac junked in 1983.\""
+
+%message	33
+"You think,
+ \"The odds of finding a legit registration for this car are slim to none.\""
+
+%message	34
+"This door is locked."
+
+%message	35
+"It IS open."
+
+%message	36
+"It IS closed."
+
+%message	37
+"Something about the interior of this car just doesn't feel right."
+
+%message	38
+"You look at the floorboard, the seats, and even under the seats,
+ but you find nothing."
+
+%message	39
+"The door IS closed."
+
+%message	40
+"There's nothing special about the door."
+
+%message	41
+"Say! The doorjamb of the suspect's vehicle is black instead of light blue!"
+
+%message	42
+"A closer examination of the doorjamb reveals the vehicle's VIN plate.
+ A quick rub with your thumb uncovers its number: C03456218!"
+
+%message	43
+"You must first locate its VIN."
+
+%message	44
+"\"Dispatch, this is 83-32,\" you radio.
+ \"Run VIN C03456218 through the computer.\""
+
+%message	45
+"Shortly, Dispatch returns with..."
+
+%message	46
+"\"Suspect vehicle is confirmed 10851!
+ Lytton PD holds a signed stolen report on this vehicle.\""
+
+%message	47
+"\"Vehicle information, 1983 black Cadillac deVille.\""
+
+%message	48
+"\"Registered owner, Malcolm Washington, 234 W Center St, Lytton, CA.\""
+
+%message	49
+"You search the suspect and find only pocket change."
+
+%message	50
+"The suspect is already in the car. You'd better take him to jail!"
+
+%message	51
+"The suspect cuts you off short as he says,
+ \"I know my rights, you jackass!\""
+
+%message	52
+"\"This is harassment. You'll hear from my attorney!\""
+
+%message	53
+"\"You wanna get out of the way??\""
+
+%message	54
+"What are you talking about?"
+
+%message	55
+"You radio, \"Dispatch, this is 83-32.
+ Request wants on license plate 'UL6942.'\""
+
+%message	56
+"You don't know the license plate number yet."
+
+%message	57
+"To be safe, you read his rights to him anyway."
+
+%message	58
+"Then, you remember the glove compartment."
+
+%message	59
+"Plus, a loaded, Smith & Weston .45-caliber, semi-automatic handgun."
+
+%message	60
+"The suspect pipes up,
+ \"Honest, Officer. I only carry that for self-defense on the freeways!!\""
+
+%message	61
+"\"Quiet down,\" you order him.
+ \"Hey, Jack,\" you yell to your backup,
+ \"how's about booking this evidence?\""
+
+%message	62
+"\"Ok,\" Jack replies."
+
+%message	63
+"Attempting to apprehend the suspect single-handedly was brave but fatal.
+ Review the \"Felony Stop Procedures\" section of your
+ \"LPD Policeman's Indoctrination Guide.\""
+
+%message	64
+"You'd better get him in the car, first."
+
+%message	65
+"You carefully handle the gun so as not to smudge any possible fingerprints."
+
+%message	66
+"You key your radio, \"83-32, backup has arrived.\""
+
+%message	67
+"He can't hear you when you're inside your car."
+
+%message	68
+"He IS!"
+
+%message	69
+"He's still inside his car."
+
+%message	70
+"He doesn't have his hands raised yet!"
+
+%message	71
+"You'd better get him under your control, first!"
+
+%message	72
+"If it's a tie, you lose!"
+
+%message	73
+"\"Oops, I must have forgotten it!\" says the suspect."
+
+%message	74
+"Jack took it with him."
+
+%message	75
+"\"I place you under arrest!\""
+
+%message	76
+"Once is enough."
+
+%message	77
+"You nervously key your radio,
+ \"Dispatch, this is 83-32. Request backup Code-3!\""
+
+%message	78
+"\"Shove it, Pig!\""

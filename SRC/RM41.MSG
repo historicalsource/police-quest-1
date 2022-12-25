@@ -1,0 +1,196 @@
+[ POLICE QUEST
+[ rm41.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 9/18/86
+[ Last Update October 10, 1987al
+
+[ jail.rm.outside
+
+
+%message	1
+"You wonder, \"What did I do to fire Dooley's rockets?\""
+
+%message	2
+"\"I wonder if little Miss Bare Bosoms filed a complaint?\""
+
+%message	3
+"\"See if you can walk up those stairs without falling down!\"
+ you order the drunk."
+
+%message	4
+"\"Hic! Whacha mean, Ociffer?\" he replies.
+ \"I walk like this even when I'm sober!!\""
+
+%message	5
+"The gun locker is open."
+
+%message	6
+"The gun locker is closed."
+
+%message	7
+"You place your revolver in the locker."
+
+%message	8
+"You remove and holster your weapon."
+
+%message	9
+"You can't reach the gun locker from there."
+
+%message	10
+"You can push the buzzer, but the door is already open."
+
+%message	11
+"You push the buzzer. The jailer releases the electronic lock."
+
+%message	 12
+"Only the jailer can open and close this door."
+
+%message	 13
+"This is the officer's booking entrance to the Lytton City Jail.
+ In the exercise yard, a prisoner dribbles continuously.
+ (He also bounces his basketball!)"
+
+%message	14
+"There are gun lockers at the top of the stairs, a heavy, steel-plated door,
+ and a pushbutton.
+ A video surveillance camera slowly sweeps the area."
+
+%message	15
+"%m42What are you looking at, Porky Pig?\""
+
+%message	16
+"%m42A dude like you put me here and I'm going to sue your whole
+ department for false arrest!\""
+
+%message	17
+"%m42Why don't you people go out and bust some real criminals,
+ instead of messin' around with innocent folks like me?
+ All I did was borrow somebody's car for a while!\""
+
+%message	18
+"\"Watch your step, Art!
+ We don't want you falling down the stairs.\""
+
+%message	19
+"\"Hic!\" says Art."
+
+%message	20
+"You must open the gun locker before you can put your weapon inside."
+
+%message	21
+"The buzzer is out of reach."
+
+%message	22
+"\"The world would be a lot better off without cops like you!\""
+
+%message	23
+"\"I guess this is your big bust for the day, huh, Pig?\""
+
+%message	24
+"\"You're going to find out this was a big waste of your time, and mine!\""
+
+%message	25
+"\"Get up those stairs, Dog Meat!\""
+
+%message	26
+"\"Shut up and keep moving!\""
+
+%message	27
+"\"Seeing you in 'cuffs gives me a natural high, Punk!\""
+
+%message	28
+"The door IS open."
+
+%message	29
+"The door IS closed."
+
+%message	30
+"%m42Hey, baby! You boys play basketball?\""
+
+%message	31
+"If you close the door on this guy, he will doubtlessly sue!"
+
+%message	32
+"Laura says, \"Get the door, Sonny. I'll keep an eye on these boys.\""
+
+%message	33
+"Your service revolver is in the locker."
+
+%message	34
+"You don't have a gun!"
+
+%message	35
+"Your weapon is in your holster."
+
+%message	36
+"You won't be going anywhere until you finish booking."
+
+%message	37
+"\"Looks like you'll be a valued addition to narcotics, Bonds,\" says Laura."
+
+%message	38
+"\"Let's get back to the office. I've got work to do.\""
+
+%message	39
+"Perhaps you should remove your prisoner from the car first."
+
+%message	40
+"Around here, failure to secure the gun locker door can be hazardous
+ to your health!"
+
+%message	41
+"First, close the door."
+
+%message	42
+"Slam Dunk Donny yells through the fence, \""
+
+%message	43																													[	look wall
+"There is a pushbutton on the wall beside the jail door."
+
+%message	44
+"Smile pretty."
+
+%message	45
+"The steel-plated door is bulletproof and as solid as a brick shipyard."
+
+%message	46
+"These lockers are used to store officers' weapons while they're inside
+ the jail on business."
+
+%message	47
+"The locker is empty."
+
+%message	48
+"He seems to be tireless! His stamina is only equaled by his sentence.
+ From past encounters, you know his nickname is \"Slam Dunk Donnie.\""
+
+%message	49
+"You have no business in the jail at this time.
+ The jailer knows it, and he won't let you in."
+
+%message	50
+"So many prisoners escape from this jail,
+ you wonder if anyone is ever assigned to that tower."
+
+%message	51
+"\"Ok, ok! I'm comin'!\""
+
+%message	52
+"You should have thought of that when you had him on his belly!"
+
+%message	53
+"\"Follow me,\" you order your prisoner."
+
+%message	54
+"You must open the gun locker before you can retrieve your weapon."
+
+%message	55
+"It belongs in your car."
+
+%message	56
+"Put your gun in the gun locker."
+
+%message	57
+"You were sent here to enlist Sweet Cheeks,
+ and you leave after just a kiss?!"
+

@@ -1,0 +1,425 @@
+[ POLICE QUEST
+[ rm45.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 7/28/86
+[ Last Update October 15, 1987GR
+
+[ lgc.brief2
+
+
+%include "gamedefs"
+%include "rm45.msg"
+%include "rm4.h"
+
+
+
+if (init.log)
+	{
+  	add.to.pic( v.chalk, 0, 1, 52, 66, 4, 4);	[	Drug traffic must stop
+
+	if (!hasBrief2)
+	    	{
+		wait.1 = 237;
+
+	 	load.view( v.dooley);
+	 	load.view( v.karen);
+	 	load.view( v.steve);
+	 	load.view( v.jack);
+
+		animate.obj( a.cop1);
+		animate.obj( a.cop2);
+		animate.obj( a.cop3);
+		animate.obj( a.cop4);
+		animate.obj( a.cop5);
+		animate.obj( a.cop6);
+		animate.obj( a.cop7);
+
+		set.view( a.cop1, v.steve);
+		set.view( a.cop2, v.jack);
+		set.view( a.cop3, v.jack);
+		set.view( a.cop4, v.karen);
+		set.view( a.cop5, v.steve);
+		set.view( a.cop6, v.jack);
+		set.view( a.cop7, v.dooley);
+
+		set.loop( a.cop1, 3);
+		set.loop( a.cop2, 3);
+		set.loop( a.cop3, 3);
+		set.loop( a.cop4, 3);
+	 	set.loop( a.cop5, 3);
+	 	set.loop( a.cop6, 3);
+		set.loop( a.cop7, 2);
+
+		position( a.cop1, 106, 128);
+		position( a.cop2, 113, 155);
+		position( a.cop3, 96, 155);
+		position( a.cop4, 61, 128);
+		position( a.cop5, 48, 128);
+		position( a.cop6, 40, 155);
+		position( a.cop7, 76, 95);
+
+		draw( a.cop1);
+		draw( a.cop2);
+		draw( a.cop3);
+		draw( a.cop4);
+		draw( a.cop5);
+		draw( a.cop6);
+		draw( a.cop7);
+			
+		stop.update( a.cop1);
+		stop.update( a.cop2);
+		stop.update( a.cop3);
+		stop.update( a.cop4);
+		stop.update( a.cop5);
+		stop.update( a.cop6);
+		stop.update( a.cop7);
+		}
+
+	return( );
+	}
+
+
+
+[ Position responses; Interaction with characters before briefing.
+
+
+if (wait.1 == 235 && !nearSeat)
+	{
+	if (Strikes == 3)
+		{
+		print( 14);
+		set( certainDeath);
+		}
+	else {
+		print( 15);
+		wait.1 = 245;
+		++Strikes;
+		}
+	}
+
+if (!conver7 &&
+    (cop1 < 10 ||
+	cop2 < 10 ||
+	cop3 < 10 ||
+	cop4 < 10 ||
+	cop5 < 10 ||
+	cop6 < 10))
+	{
+	set( conver7);
+	print( 16);
+	}
+
+
+
+[ after briefing
+
+if (progress == has.brief2) {
+	if (cop1 < 10 && !conver0) {
+	 	print( 17);
+	 	set( conver0);
+		}
+	if (cop2 < 10 && !conver1) {
+		print( 18);
+		set( conver1);
+		}
+	if (cop3 < 10 && !conver2) {
+		print( 19);
+		set( conver2);
+		}
+	if (cop4 < 10 && !conver3) {
+		print( 20);
+		set( conver3);
+		}
+	if (cop5 < 10 && !conver4) {
+		print( 21);
+		set( conver4);
+		}
+	if (cop6 < 10 && !conver5) {
+		print( 22);
+		set( conver5);
+		}
+	}
+		
+
+
+[ The briefing
+
+current.loop( ego, loop);
+if (nearSeat &&
+	loop == facing.back &&
+	wait.1 > 200) {
+	set( game.control);
+	start.motion( ego);
+	prevent.input( );
+ 	print( 1);
+	wait.1 = 200;
+	}
+
+if (wait.1 == 196) {
+	print( 2);
+	--wait.1;
+	}
+
+if (wait.1 == 192) {
+	print( 3);
+	--wait.1;
+	}
+
+if (wait.1 == 188) {
+	print( 9);
+	--wait.1;
+	}
+
+if (wait.1 == 184) {
+	wait.1 = 0;
+	set( conver7);
+	print( 10);
+	reset( game.control);
+	accept.input();
+	if (progress < has.brief2) {
+		progress = has.brief2;
+		set( hasBrief2);
+		score += 1;
+		}
+	}
+
+
+
+[ move em out 
+
+if (progress == has.brief2) {
+
+	[exit cop7
+
+	if (moving0 == 0) {
+		start.update( a.cop7);
+		move.obj( a.cop7, 66, 95, 1, moved0);
+		}
+	
+	if (moving0 == 1) {
+		move.obj( a.cop7, 52, 109, 1, moved0);
+		}
+	
+	if (moving0 == 2) {
+		move.obj( a.cop7, 18, 109, 1, moved0);
+		}
+	
+	if (moving0 == 3) {
+		erase( a.cop7);
+		reset( moved0);
+		++moving0;
+		}
+
+	
+	[exit cop2
+
+	if (moving0 > 2) {
+		if (moving1 == 0) {
+			start.update( a.cop2);
+			move.obj( a.cop2, 124, 155, 1, moved1);
+			}
+		
+		if (moving1 == 1) {
+			move.obj( a.cop2, 124, 124, 1, moved1);
+			}
+		
+		if (moving1 == 2) {
+			move.obj( a.cop2, 111, 111, 1, moved1);
+			}
+		
+		if (moving1 == 3) {
+			move.obj( a.cop2, 18, 111, 1, moved1);
+			}
+		
+		if (moving1 == 4) {
+			erase( a.cop2)
+			reset( moved1);
+			++moving1;
+			}
+		}
+
+	
+	[ exit cop1
+
+	if (moving1 > 1) {
+		if (moving2 == 0) {
+			start.update( a.cop1);
+			move.obj( a.cop1, 116, 128, 1, moved2)
+			}
+		
+		if (moving2 == 1) {
+			move.obj( a.cop1, 116, 115, 1, moved2)
+			}
+		
+		if (moving2 == 2) {
+			move.obj( a.cop1, 18, 115, 1, moved2)
+			}
+		
+		if (moving2 == 3) {
+			erase( a.cop1)
+			reset( moved2);
+			++moving2;
+			}
+		}
+
+	
+	[exit cop6
+
+	if (moving2 > 2) {
+		if (moving3 == 0) {
+			start.update( a.cop6);
+			move.obj( a.cop6, 27, 155, 1, moved3);
+			}
+		
+		if (moving3 == 1) {
+			move.obj( a.cop6, 27, 116, 1, moved3);
+			}
+		
+		if (moving3 == 2) {
+			move.obj( a.cop6, 18, 116, 1, moved3);
+			}
+		
+		if (moving3 == 3) {
+			erase( a.cop6)
+			reset( moved3);
+			++moving3;
+			}
+		}
+
+
+	[exit cop5
+
+	if( moving3 > 2) {
+		if (moving4 == 0) {
+			start.update( a.cop5);
+			move.obj( a.cop5, 36, 128, 1, moved4);
+			}
+		
+		if (moving4 == 1) {
+			move.obj( a.cop5, 24, 116, 1, moved4);
+			}
+		
+		if (moving4 == 2) {
+			move.obj( a.cop5, 18, 116, 1, moved4);
+			}
+		
+		if (moving4 == 3) {
+			erase( a.cop5)
+			reset( moved4);
+			++moving4;
+			}
+		}
+
+	
+	[exit cop4
+
+	if (moving4 > 1) {
+		if (moved5) {
+			reset( moved5)
+			++moving5;
+			}
+		
+		if (moving5 == 0) {
+			start.update( a.cop4);
+			move.obj( a.cop4, 75, 128, 1, moved5);
+			}
+		
+		if (moving5 == 1) {
+			move.obj( a.cop4, 75, 117, 1, moved5);
+			}
+		
+		if (moving5 == 2) {
+			move.obj( a.cop4, 18, 117, 1, moved5);
+			}
+		
+		if (moving5 == 3) {
+			erase( a.cop4)
+			reset( moved5);
+			++moving5;
+			}
+		}
+
+
+	[exit cop3
+
+	if (moving5 > 1) {
+		if (moving6 == 0) {
+			start.update( a.cop3);
+			move.obj( a.cop3, 85, 155, 1, moved6);
+			}
+		
+		if (moving6 == 1) {
+			move.obj( a.cop3, 73, 136, 1, moved6);
+			}
+		
+		if (moving6 == 2) {
+			move.obj( a.cop3, 43, 136, 1, moved6);
+			}
+		
+		if (moving6 == 3) {
+			move.obj( a.cop3, 17, 110, 1, moved6);
+			}
+		
+		if (moving6 == 4) {
+			erase( a.cop3)
+			reset( moved6);
+			reset( NOcase);
+			++moving6;
+			}
+		}
+	}
+					
+
+
+[	handle input
+
+if (lookInMyBox)
+	{
+	reset( lookInMyBox);			[	Assume he's close enough.
+
+	if (nearHole1) {
+		print( 6);
+		}
+	else {
+		if (nearHole2) {
+		 	print( 6);
+		 	}
+		else {
+			if (nearHole3)
+				{
+				if (!SxHDNote)
+					{
+					set( SxHDNote);
+					score += 3;
+					print( 4);
+					print( 5);
+					print( 7);
+					}
+				else
+					{
+					print( 8);
+					}
+			 	}
+			else {
+				if (nearHole4) {
+					print( 6);
+					}
+				else {
+					set( lookInMyBox);	[	He wasn't. Give it back to 4
+					}
+				}
+			}
+		}
+
+	if (!lookInMyBox && !lookedInHisBox)
+		{
+		set( lookedInHisBox);
+		score += 1;
+		}
+	}
+
+	
+[
+:exit
+[
+

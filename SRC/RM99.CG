@@ -1,0 +1,280 @@
+[ POLICE QUEST
+[ rm99.cg
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 12, 1987GR
+
+[	lgc.debug
+
+
+%include	"gamedefs"
+
+
+
+%message	1	"New room:"
+%message	2	"X coordinate:"
+%message	3	"Y coordinate:"
+%message	4	"Object number:"
+%message	5	"Flag number:"
+%message	6	"New value:"
+%message	7	"Current room = %v0"
+%message	8	"Variable number:"
+%message	9	"Variable %v164 = %v165"
+%message	10	"Flag %v164 set"
+%message	11	"Flag %v164 not set"
+%message	12	"You gottum, Sonny!"
+%message	13	"Object %v165 is in room %v164."
+%message	14	"%v164|3/%v165|3"
+%message	15	"Rm %v0"
+%message	16	"%v164|2  %o164"
+%message	17	"Number  Name of Object"
+%message	18	"%v8/4K memory left."
+%message	19	""
+%message	23	"New priority:"
+%message	24	""
+%message	25	"H"
+%message	26	" "					[	must remain just 1 space!
+
+
+
+if (init.log)
+	{
+	set( enable.trace);
+	if (logging && checkMemory)
+		{
+		log( 18);
+		}
+	}
+
+if (init.log && QA && !hercules)
+	{
+	clear.lines( 24, 24, 0);
+	set.text.attribute( 6, 0);
+	display( 24, 30, 15);
+	set.text.attribute( TEXT_COLOR, BG_COLOR);
+	}
+
+[if (controller( cLevel))
+[	{
+[	new.room( 106);
+[	}
+
+if (!hercules)
+	{
+	if (game.control)
+		{
+		display( 23, 38, 25);
+		}
+	else
+		{
+		display( 23, 38, 26);
+		}
+	}
+
+
+if ((controller( cInvNumbers) ||
+	said( object, number)))
+	{
+	last.char = 0;
+	set.text.attribute( 4, 15);
+	text.screen( );
+	display( 0, 6, 17);
+	debug.0 = 1;					[	Object number counter.
+	x = 10;
+	y = 2;
+	message = 16;
+
+	:mrLooper2;
+	display.f( y, x, message);
+	++debug.0;
+	++y;
+	if (!debug.0 > SIZE_OF_INVENTORY)
+		{
+		goto mrLooper2;
+		}
+
+	:checkKb2;
+	if (!have.key( ))
+		{
+		goto	checkKb2;
+		}
+	set.text.attribute( TEXT_COLOR, BG_COLOR);
+	graphics( );
+	}
+
+
+if (said( object, room))
+	{
+	get.num( 4, debug.1);
+	get.room.f( debug.1, debug.0);
+	print( 13);
+	}
+
+if (controller( c.show.ego))
+	{
+	debug.0 = 0;
+	obj.status.f( debug.0);
+	set( refresh);
+	}
+
+if (!hercules &&
+    (controller( c.QA) ||
+	said( show, position) ||
+	said( room, number) ||
+	said( room)))
+	{
+	toggle( QA);
+	clear.lines( 24, 24, BG_COLOR);
+	if (QA)
+		{
+		set.text.attribute( 6, 0);
+		display( 24, 30, 15);
+		set.text.attribute( TEXT_COLOR, BG_COLOR);
+		}
+	}
+
+if (controller( c.show.mem))
+	{
+	show.mem( );
+	set( refresh);
+	toggle( checkMemory);
+	if (logging)
+		{
+		log( 18);
+		}
+	}
+
+if ((controller( c.show.priority) || said( show, priority)))
+	{
+	show.pri.screen( );
+	}
+
+if (said( set, priority))
+	{
+	get.num( 23, debug.1);
+	set.priority.f( ego, debug.1);
+	set( refresh);
+	}
+
+if (said( release, priority))
+	{
+	release.priority( ego);
+	set( refresh);
+	}
+
+if (said1(tp))
+	{
+	get.num( 1, debug.0);
+	new.room.f( debug.0);
+	}
+
+if (said1(position))
+	{
+	get.num( 2, debug.0);
+	get.num( 3, debug.1);
+	erase( ego);
+	position.f( ego, debug.0, debug.1);
+	draw( ego);
+	}
+
+if (said( object))
+	{
+	get.num( 4, debug.0);
+	obj.status.f( debug.0);
+	set( refresh);
+	}
+
+if (said( get, object))
+	{
+	get.num( 4, debug.0);
+	get.f( debug.0);
+	}
+
+if ((said( show, flag) ||
+	said( flag)))
+	{
+	get.num( 5, debug.0);
+	set( refresh);
+	if (isset.v( debug.0))
+		{
+		print( 10);
+		}
+	else
+		{
+		print( 11);
+		}
+	}
+
+if (said( set, flag))
+	{
+	get.num( 5, debug.0);
+	set.v( debug.0);
+	}
+
+if (said( reset, flag))
+	{
+	get.num( 5, debug.0);
+	reset.v( debug.0);
+	}
+
+if ((said( show, var) ||
+	said( var)))
+	{
+	get.num( 8, debug.0);
+	debug.1 =@ debug.0;
+	print( 9);
+	}
+
+if (said( set, var))
+	{
+	get.num( 8, debug.0);
+	get.num( 6, debug.1);
+	debug.0 @= debug.1;
+	}
+
+if (said( room))
+	{
+	print( 7);
+	set( refresh);
+	}
+
+if (!hercules && QA)
+	{
+	debug.0 = ego.x;
+	debug.1 = ego.y;
+	set.text.attribute( 6, 0);
+	display( 24, 21, 14);
+	set.text.attribute( TEXT_COLOR, BG_COLOR);
+	}
+
+if ((said( gimme, gimme) ||
+	controller( cGimme)))
+	{
+	display( 0, 0, 12);
+	debug.0 = 0;
+	debug.1 = inventory;
+	
+	:mrLooper3;
+	++debug.0;
+	if (!debug.0 > SIZE_OF_INVENTORY)
+		{
+		put.f( debug.0, debug.1);
+		goto mrLooper3;
+		}
+	}
+
+if (controller( cObjInfo))
+	{
+	get.num( 4, debug.0);
+	if (debug.0 > 21)
+		{
+		debug.0 = 15;
+		}
+	obj.status.f( debug.0);
+	}
+
+
+[
+:exit
+[
+

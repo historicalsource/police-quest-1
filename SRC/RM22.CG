@@ -1,0 +1,43 @@
+[ POLICE QUEST
+[ rm22.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/11/86
+[ Last Update September 24, 1987GR
+
+[ rm.map22 w/ freeway
+
+%include "gamedefs"
+%include "rm117.h"
+
+
+
+if (init.log) {
+	load.logics( 27);		[lgc.freeway1
+	position( a.intersection, 75, 40);
+	draw( ego);
+	draw( a.intersection);
+	show.pic( );
+	return( );
+	}
+
+
+if (	posn( ego, 85, 124, 113, 131)) {
+	streetScene = 93;
+	}
+else {
+	streetScene = 80;
+	}
+
+
+call( 27);		[lgc.freeway1
+
+%message 1
+"The freeway stretches out above this quiet neighborhood."
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look, town)))	{
+	print( 1);
+	}
+
+

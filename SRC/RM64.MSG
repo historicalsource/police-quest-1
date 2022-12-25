@@ -1,0 +1,124 @@
+[ POLICE QUEST
+[ rm64.msg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 7, 1987al
+
+[ Lobby -- desk clerk
+
+
+%message	1
+"\"Good day, Sir!\" says the desk clerk in his best, plastic voice.
+ \"How may I help you?\""
+
+%message	2
+"\"I hope you get your money's worth, Buddy!\" says the desk clerk.
+ \"Hey, Sweet Cheeks!
+ Remember: no more jello in the bathtub, okay?\""
+
+%message	3
+"\"Thank you very much, sir.
+ Here are your keys. I hope you enjoy your stay!\""
+
+%message	4
+"After you fill out the register, the desk clerk says,
+ \"Just take the elevator to the second floor. Your room is to the right.\""
+
+%message	5
+"This is the lobby of the Hotel Delphoria.
+ It is decorated in the style of the era in which it was constructed,
+ its prime days long gone.
+ There is a desk to the east and an elevator to the north."
+
+%message	6
+"The marble desk top is empty except for a bell.
+ Behind the desk are the hotel's mailboxes."
+
+%message	7
+"The mailboxes are used by hotel personnel only."
+
+%message	8
+"The desk clerk appears to be a neat and clean-looking gent."
+
+%message	9
+"It's not yours. Leave it alone."
+
+%message	10
+"You are already on that floor."
+
+%message	11
+"You have no business here. Get back to the business of crime stopping."
+
+%message	12
+"\"I'm sorry, sir, but we have no vacancies at this time,\" says the
+ desk clerk. \"Please check back with us tomorrow.\""
+
+%message	13
+"Don't get impatient!"
+
+%message	14
+"Embarrassed, you admit to the desk clerk,
+ \"Uh, it appears you've caught me a little short.\""
+
+%message	15
+"You hand the clerk $100.00.
+ He asks you to fill out the registration card.
+ You do, under the name of %s3"
+
+%message	16
+"The bell is metal and small.
+ The button on top, when pressed, causes it to ring."
+
+%message	17
+"\"We have a vacancy in Room 204, on the second floor.
+ All our rooms are very clean and nicely furnished,
+ with telephones and queen-sized beds,\" says the desk clerk.
+ \"That will be $100.00, please.\""
+
+%message	18
+"\"I'm sorry, Sir,\" responds the desk clerk,
+ \"but you'll have to use the telephone in your room.\""
+
+%message	19
+"No one heard you."
+
+%message	20
+"\"I'll BET you're a little short,\" snaps the clerk,
+ \"and not just in the wallet!\""
+
+%message	21
+"Leaving the hotel, you drop the room key at the desk."
+
+%message	22
+"\"Just ring if I may be of assistance. Goodbye.\""
+
+%message	23
+"That's a pretty general statement."
+
+%message	24
+"Jimmy Lee Banksten."
+
+%message	25
+"Jonathan Doe."
+
+%message	26
+"\"Hey, Baby! Let's go up to the room! Come on!!\""
+
+%message	27
+"The front wall of the elevator has four buttons marked
+ \"One,\" \"Two,\" \"Three,\" and \"Four.\"
+ What could they possibly do?"
+
+%message	28
+"\"D\""
+
+%message	29
+"Majestic, isn't it!"
+
+%message	30
+"Which floor number?"
+
+%message	31
+"Your mission is in the Hotel Delphoria.
+ Nothing elsewhere will help you in your capture of the Death Angel!"
+

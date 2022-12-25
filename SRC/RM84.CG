@@ -1,0 +1,28 @@
+[ POKER QUEST
+[ rm84.cg
+[ By:  Ken Williams, Greg Rowland, and Al Lowe
+[ For: Sierra On-Line Inc. 11/17/86
+[ Last Update August 14, 1987al
+
+%include "rm75.h"
+
+
+[ handle.player -- display one player's cards at x, y
+
+
+
+work = 0;
+
+:card.loop
+function = display.a.card;
+call( poker.subs);
+++work;
+if (work <  5)
+	{
+	x += 17;						[card coord
+	++current.card;
+	goto card.loop;
+	}
+
+++active.player;
+

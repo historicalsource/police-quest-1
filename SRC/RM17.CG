@@ -1,0 +1,212 @@
+[ POLICE QUEST
+[ rm17.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/11/86
+[ Last Update October 12, 1987GR
+
+[ rm.map17
+
+%include "gamedefs"
+%include "rm117.h"
+
+
+
+if (init.log) {
+	position( a.intersection, 17, 131);
+
+	draw( ego);
+	draw( a.intersection);
+
+	add.to.pic( vBuildings1, 1, 0, 052, 112, 0, 4);
+	add.to.pic( vBuildings1, 0, 1, 087, 112, 0, 4);
+	add.to.pic( vBuildings1, 1, 2, 001, 036, 0, 4);
+	add.to.pic( vBuildings1, 1, 3, 001, 073, 0, 4);
+	add.to.pic( vBuildings1, 1, 5, 000, 107, 0, 4);
+	add.to.pic( vBuildings1, 0, 4, 116, 112, 0, 4);
+	add.to.pic( vBuildings1, 1, 3, 116, 080, 0, 4);
+	add.to.pic( vBuildings1, 2, 0, 110, 024, 0, 4);
+	add.to.pic( vBuildings1, 2, 0, 088, 024, 0, 4);
+	add.to.pic( vBuildings1, 2, 3, 031, 024, 0, 4);
+	add.to.pic( vBuildings1, 2, 3, 053, 024, 0, 4);
+	add.to.pic( vBuildings1, 2, 2, 032, 162, 0, 4);
+	add.to.pic( vBuildings1, 2, 2, 052, 162, 0, 4);
+	add.to.pic( vBuildings1, 2, 1, 089, 161, 0, 4);
+	add.to.pic( vBuildings1, 2, 1, 111, 161, 0, 4);
+
+	show.pic( );
+	return( );
+	}
+
+
+[ Logic
+if ( ego.x > 138) {
+	streetScene = 93;
+	}
+else {
+	if ((ego.y < 33 ||
+		ego.y > 124)) {
+		streetScene = 80;
+		}
+	else {
+		streetScene = 92;
+		}
+	}
+
+[ Light logics
+
+if (posn( a.car1, 16, 110, 23, 115) 
+&& intersection == north.stop) { 
+  	observe.blocks( a.car1);
+	}
+else	{
+	ignore.blocks( a.car1);
+	}
+
+
+if (posn( a.car3, 17, 137, 27, 138) 
+&& intersection == north.stop)	{
+	observe.blocks( a.car3);
+	}
+else	{
+	ignore.blocks( a.car3);
+	}
+
+[ Traffic logic 
+[ start.cars
+[car1
+if ( !stopCar1) {
+	if (!posn( ego, 17, 0, 27, 25)
+	&& !posn( a.suspect, 17, 0, 27, 25)) {
+		if (moving1 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car1, work);
+			position( a.car1, t1x, top.edge);
+			ignore.blocks( a.car1);
+			set.priority( a.car1, 5);
+			set( moved1);
+			}
+		}
+	if (moving1 == 1) {
+		move.obj( a.car1, t1x, t9y, 1, moved1);
+		draw( a.car1);
+		}
+	if (moving1 == 2) {
+		move.obj( a.car1, left.edge, t9y, 1, moved1);
+		}
+	if (moving1 == 3) {
+		erase( a.car1);
+		moving1 = 0);
+		}
+	}
+		  
+[car2
+if ( !stopCar2) {
+	if (!posn( ego, 75, 0, 85, 25)
+	&& !posn( a.suspect, 75, 0, 85, 25)) {
+		if (moving2 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car2, work);
+			position( a.car2, t3x, top.edge);
+			ignore.blocks( a.car2);
+			set.priority( a.car2, 5);
+			set( moved2);
+			}
+		}
+	if (moving2 == 1) {
+		move.obj( a.car2, t3x, t7y, 1, moved2);
+		draw( a.car2);
+		}
+	if (moving2 == 2) {
+		move.obj( a.car2, t5x, t8y, 1, moved2);
+		}
+	if (moving2 == 3) {
+		move.obj( a.car2, t5x, bottom.edge, 1, moved2);
+		}
+	if (moving2 == 4) {
+		erase( a.car2);
+		moving2 = 0);
+		}
+	}
+		 
+[car3
+if ( !stopCar3) {
+	if (!posn( ego, 17, 131, 27, 167)
+	&& !posn( a.suspect, 17, 131, 27, 167)) {
+		if (moving3 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car3, work);
+			position( a.car3, t2x, bottom.edge);
+			ignore.blocks( a.car3);
+			set.priority( a.car3, 5);
+			set( moved3);
+			}
+		}
+	if (moving3 == 1) {
+		move.obj( a.car3, t2x, t10y, 1, moved3);
+		draw( a.car3);
+		}
+	if (moving3 == 2) {
+		move.obj( a.car3, t3x, t10y, 1, moved3);
+		}
+	if (moving3 == 3) {
+		move.obj( a.car3, t3x, bottom.edge, 1, moved3);
+		}
+	if (moving3 == 4) {
+		erase( a.car3);
+		moving3 = 0);
+		}
+	}
+
+[car4
+if ( !stopCar4) {
+	if (!posn( ego, 133, 131, 143, 167)
+	&& !posn( a.suspect, 133, 131, 143, 167)) {
+		if (moving4 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car4, work);
+			position( a.car4, t6x, bottom.edge);
+			ignore.blocks( a.car4);
+			set.priority( a.car4, 5);
+			set( moved4);
+			}
+		}
+	if (moving4 == 1) {
+		move.obj( a.car4, t6x, top.edge, 1, moved4);
+		draw( a.car4);
+		}
+	if (moving4 == 2) {
+		erase( a.car4);
+		moving4 = 0);
+		}
+	}
+			
+[*****
+:exit
+[*****
+
+%message 1
+"The Blue Room is in this part of town."
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look, town)))	{
+	print( 1);
+	}
+
+

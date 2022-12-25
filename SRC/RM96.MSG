@@ -1,0 +1,290 @@
+[ POLICE QUEST
+[ rm96.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/87
+[ Last Update October 12, 1987GR
+
+[ lgc.carRadio
+	  
+
+%message	1
+"\"%m6. Go ahead.\""
+
+%message	2
+"You are on a difficult mission.
+ You must save the City of Lytton from the \"Death Angel.\""
+
+%message	3
+"You have no time for sightseeing now!"
+
+%message	4
+"Your radio crackles, \""
+
+%message	5
+"You key your radio, \""
+
+%message	6
+"83-32,"
+
+%message	7
+"The officers standing by at Cotton Cove request, \"Respond Code-2.\""
+
+%message	8
+"%m4%m68 respond to Cotton Cove.
+ Officers on scene need ID of 187 victim.\""
+
+%message	9
+"%m4%m68, the Coroner has been dispatched.\""
+
+%message	10
+"parked"
+
+%message	11
+"%m19north"
+
+%message	12
+"%m19northeast"
+
+%message	13
+"%m19east"
+
+%message	14
+"%m19southeast"
+
+%message	15
+"%m19south"
+
+%message	16
+"%m19southwest"
+
+%message	17
+"%m19west"
+
+%message	18
+"%m19northwest"
+
+%message	19
+"traveling "
+
+%message	20
+"%m6,"
+
+%message	21
+"Parkway Drive"
+
+%message	22
+"1st Street"
+
+%message	23
+"2nd Street"
+
+%message	24
+"3rd Street"
+
+%message	25
+"4th Street"
+
+%message	26
+"5th Street"
+
+%message	27
+"6th Street"
+
+%message	28
+"7th Street"
+
+%message	29
+"8th Street"
+
+%message	30
+"9th Street"
+
+%message	31
+"10th Street"
+
+%message	32
+"Clearwater Drive"
+
+%message	33
+"Palm"
+
+%message	34
+"Oak"
+
+%message	35
+"Fig"
+
+%message	36
+"Peach"
+
+%message	37
+"Rose"
+
+%message	38
+"Lilly"
+
+%message	39
+"Poppy"
+
+%message	40
+"River Road"
+
+%message	41
+"%m5%s2 %s3 on Freeway 41.\""
+
+%message	42
+"%m5%s2 %s3 under Freeway 41.\""
+
+%message	43
+"%m5%s2 %s3 on %s4.\""
+
+%message	44
+"%m5%s2 %s3 on %s5.\""
+
+%message	45
+"%m5%s2 %s3 at intersection of %s4 and %s5.\""
+
+%message	46
+"%m5%s2 %m53 traffic accident."
+
+%message	47
+"%m5%s2 %m51\"OHMYMG.\""
+
+%message	48
+"%m5%s2 %m52\"OHMYMG.\""
+
+%message	49
+"%m4Currently registered, no wants.\""
+
+%message	50
+"%m4%s2 dispatch copies 10-97.\""
+
+%message	51
+"run vehicle, check on license "
+
+%message	52
+"suspect license "
+
+%message	53
+"at scene of"
+
+%message	54
+"%m5%s2 %m51\"UL6942.\""
+
+%message	55
+"%m4%s2 %m52\"UL6942.\""
+
+%message	56
+"%m4Registered to 1979 Cadillac, junked in 1983.\""
+
+%message	57
+"\"%s2 approach with caution.\""
+
+%message	58
+"%m5%s2 %m51\"PRGRMR1.\""
+
+%message	59
+"%s2 %m52\"PRGRMR1.\""
+
+%message	60
+"Your radio crackles,
+ \"83-32, repeating 10-20 of 11-83 is southwest corner of Fig and 4th.\""
+
+%message	61
+"%m4%s2 personalized plate 'PRGRMR1' appears to be currently registered.\""
+
+%message	62
+"%m5%s2 one%m64"
+
+%message	63
+"%m5%m68 two%m64"
+
+%message	64
+" in custody, en route to jail.\""
+
+%message	65
+"\"%s2 request subject check on Don Colby,
+ Charles, Ocean, Lincoln, Boy, Yellow.\""
+
+%message	66
+"call"
+
+%message	67
+"%m70%s2, possible hit, Paul D. Colby, DOB 12/8/61, 5'8\", 155 pounds.
+ Served 18 months State Penitentiary '85-'87 for assault on a police officer
+ and possession and sale of a controlled substance.
+ Three year probation, still active.\""
+
+%message	68
+"83-Nora-10,"
+
+%message	69
+"Your 'Vette doesn't have a police radio."
+
+%message	70
+"Dispatch responds, \""
+
+%message	71
+"%m5%s2 10-20 at %s3.\""
+
+%message	72
+"Hotel Delphoria"
+
+%message	73
+"Carol's Caffeine Castle"
+
+%message	74
+"Lytton City Park"
+
+%message	75
+"Blue Room"
+
+%message	76
+"LPD Headquarters"
+
+%message	77
+"Cotton Cove Picnic Area"
+
+%message	78
+"Lytton Municipal Court Building"
+
+%message	79
+"Lytton City Jail"
+
+%message	80
+"in pursuit of"
+
+%message	81
+"%m5%s2%m80 attempting to overtake light blue Cadillac, suspect vehicle."
+
+%message	82
+"%m5%s2%m80  attempting to overtake and stop light
+ colored sedan, possible DUI.\""
+
+%message	83
+"%m5%s2%m80 bright red sports car."
+
+%message	84
+"That would be unsafe while driving!"
+
+%message	85
+"%m5%s2 Dispatch, %s2 is 10-98 from the scene.\""
+
+%message	86
+"\"10-19 the office, per Lieutenant Morgan.\""
+
+%message 87
+"Dispatch copies your car-to-car radio traffic,
+ \"%s2 be advised that 83-31 is off the air at Carol's.\""
+
+%message 88
+"%m5%s2 Dispatch, 83-32 en route to traffic collision.\""
+
+%message 89
+"You need to observe a violation first."
+
+%message 90
+"Get closer to the suspect vehicle."
+
+%message 91
+"%m5%s2 responding to Carol's Caffeine Castle.\""

@@ -1,0 +1,66 @@
+[ POLICE QUEST
+[ rm74.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 25, 1987al
+
+[	Message for room 74 - hotelText dynamic
+
+
+#message	1
+"You admire the plush carpet."
+
+%message	2
+"Is this an endless flight of stairs?"
+
+%message	3
+"People who enjoy aerobic activity use the stairs."
+
+%message	4
+"It's just a flight of stairs. Most buildings over one story tall have them."
+
+%message	5
+"You know quite well you can accomplish two goals by using these stairs.
+ You can get to the top and increase your heart rate at the same time."
+
+%message	6
+"You look under the stairs and see cobwebs and dust.
+ You think someone should discuss with the janitor about cleaning this area."
+
+%message	7
+"You carefully look under the stairs and find nothing!"
+
+%message	8
+"You look under the stairs and find that you have wasted your time."
+
+%message	9
+"You can't! (It just looks like you could.)"
+
+%message	10
+"It's an steel banister welded at the joints."
+
+%message	11
+"This is heavy-duty, royal blue, short-pile, all-nylon, commercial-type
+ carpet."
+
+%message	12
+"Sonny! Are you a cop or a kid?
+ If you're looking for a thrill ride, seek out your nearest amusement park!"
+
+%message	13
+"They ARE boring, aren't they!?"
+
+%message	14
+"And you thought there were no stairways in Lytton!"
+
+#message	15
+"It looks like something from an old French movie.
+ Don't you just love rococo ironwork?"
+
+%message	16
+"You see ceiling."
+
+%message	17
+"In a soft voice, you whisper into your \"pen,\"
+ \"be advised, in stairwell with Bains.\""
+

@@ -1,0 +1,404 @@
+[ POLICE QUEST
+[ rm39.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 7/30/86
+[ Last Update September 18, 1987GR
+
+[ lgc.lockerm1
+
+
+%include "gamedefs"
+%include "rm39.msg"
+%include "rm5.h"
+
+
+
+if (init.log)
+	{
+	animate.obj( a.shower);
+	set.view( a.shower, v.shower);
+	set.loop( a.shower, 0);
+	position( a.shower, 58, 84);
+	set.priority( a.shower, 4);
+	draw( a.shower);
+
+	animate.obj( a.fudley);
+	ignore.objs( a.fudley);
+	set.view( a.fudley, v.in.towel.light);
+	set.loop( a.fudley, 2);
+	position( a.fudley, 59, 95);		[in shower
+	draw( a.fudley);
+	stop.update( a.fudley);
+
+	animate.obj( a.cop1);
+	animate.obj( a.cop2);
+	animate.obj( a.cop3);
+
+	set.view( a.cop1, v.steve);
+	set.view( a.cop3, v.jack);
+
+	if (!locker.scene)
+		{
+		set.view( a.cop2, v.buford);
+		}
+	else
+		{
+		set.view( a.cop2, v.jackson);
+		}
+
+	set.loop( a.cop1, 1);
+	set.loop( a.cop2, 1);
+	set.loop( a.cop3, 0);
+
+	position( a.cop1, 68, 114);		[ top left
+	position( a.cop2, 67, 144);		[ bott left
+	position( a.cop3, 81, 114);		[ cop3
+
+	if (!shower.talk0)
+		{
+		draw( a.cop1);
+		stop.update( a.cop1);
+		}
+	
+	if (!shower.talk1)
+		{
+		draw( a.cop2);
+		stop.update( a.cop2);
+		}
+	
+	if (!shower.talk2)
+		{
+		draw( a.cop3);
+		stop.update( a.cop3);
+		}
+	
+	return( );
+	}
+
+
+
+[ Conversations 
+
+distance( ego, a.cop1, cop1);
+distance( ego, a.cop2, cop2);
+distance( ego, a.cop3, cop3);
+distance( ego, a.fudley, fudley);
+if ((cop1 < dist ||
+	cop2 < dist ||
+	cop3 < dist ||
+	fudley < dist))
+	{
+	set( nearPerson);
+	}
+
+reset( inShowerWithFudley);
+if (fudley && posn( ego, 56, 94, 68, 95))
+	{
+	set( inShowerWithFudley);
+	fudley = 222;
+	}
+
+
+if (cop1 < 10 && !shower.talk0)
+	{
+	set( shower.talk0);
+	++moving0;
+	}
+
+if (cop2 < 10 && !shower.talk1)
+	{
+	set( shower.talk1);
+	++moving1;
+	}
+
+if (cop3 < 10 && !shower.talk2)
+	{
+	set( shower.talk2);
+	++moving2;
+	}
+
+if (inShowerWithFudley)
+	{
+	if (!conver5)
+		{
+		print( 19);
+		set( conver5);
+		}
+
+	if ((said( look) ||
+		said( look, man)))
+		{
+		print( 19);
+		}
+
+	if ((said( talk) ||
+		said( talk, man)))
+		{
+		print( 20);
+		}
+	}
+
+
+if (!inShowerWithFudley)
+	{
+	if (fudley < 10 && !conver0)
+		{
+		set( conver0);
+		if (!locker.scene)
+			{
+			print( 6);
+			print( 7);
+			print( 8);
+			}
+		else
+			{
+			print( 17);			[ bitch about water
+			}
+		}
+
+	if  (fudley < 10 &&
+	    !conver1 &&
+		shower.talk0 &&
+		shower.talk1 &&
+		shower.talk2)
+		{
+		set( conver1);
+		if (!locker.scene)
+			{
+			print( 9);
+			locker.scene = janitor1;		[first janitor
+			}
+		else
+			{
+			print( 18);			[ waste time
+			}
+		}
+	}
+
+
+if (fudley < 20 &&
+	said( look, man))
+	{
+	print( 19);
+	}
+
+if (said( look, man, shower))
+	{
+	print( 21);
+	}
+
+
+
+[ Move em out 
+
+if (shower.talk0 && moving0)
+	{
+	get.posn( a.cop1, x, y);
+	if ((work1 != x || work2 != y))
+		{
+		work1 = x; work2 = y;
+		start.cycling( a.cop1);
+		}
+	else
+		{
+		stop.cycling( a.cop1);
+		}
+	
+	if (moving0 == 1)
+		{
+		start.update( a.cop1);
+		set( moved0);
+		}
+	
+	if (moving0 == 2)
+		{
+		++moving0
+		if (!locker.scene)
+			{
+			print( 1);
+			print( 2);
+			print( 3);
+			}
+		else
+			{
+			print( 12);			[ heard rumor
+			print( 13);
+			}
+		}
+	
+	if (moving0 == 3)
+		{
+		move.obj( a.cop1, 67, 106, 1, moved0)
+		}
+	
+	if (moving0 == 4)
+		{
+		move.obj( a.cop1, 53, 106, 1, moved0)
+		}
+	
+	if (moving0 == 5)
+		{
+		move.obj( a.cop1, 30, 129, 1, moved0)
+		}
+	
+	if (moving0 == 6)
+		{
+		move.obj( a.cop1, 10, 129, 1, moved0)
+		}
+	
+	if (moving0 == 7)
+		{
+		erase( a.cop1);
+		moving0 = 0;
+		}
+	}
+
+
+
+if (shower.talk1 && moving1)
+	{
+	get.posn( a.cop2, x, y);
+	
+	if ((work3 != x || work4 != y))
+		{
+		work3 = x; work4 = y;
+		start.cycling( a.cop2);
+		}
+	else
+		{
+		stop.cycling( a.cop2);
+		}
+	
+	if (moving1 == 1)
+		{
+		start.update( a.cop2);
+		set( moved1);
+		}
+	
+	if (moving1 == 2)
+		{
+		++moving1;
+		if (!locker.scene)
+			{
+			print( 4);
+			}
+		else
+			{
+			print( 16);			[ hid all the soap
+			}
+		}
+	
+	if (moving1 == 3)
+		{
+		move.obj( a.cop2, 67, 150, 1, moved1)
+		}
+	
+	if (moving1 == 4)
+		{
+		move.obj( a.cop2, 46, 150, 1, moved1)
+		}
+	
+	if (moving1 == 5)
+		{
+		move.obj( a.cop2, 25, 130, 1, moved1)
+		}
+	
+	if (moving1 == 6)
+		{
+		move.obj( a.cop2, 10, 130, 1, moved1)
+		}
+	
+	if (moving1 == 7)
+		{
+		erase( a.cop2);
+		moving1 = 0;
+		}
+	}
+
+
+
+if (shower.talk2 && moving2)
+	{
+	get.posn( a.cop3, x, y);
+	
+	if ((work5 != x || work6 != y))
+		{
+		work5 = x; work6 = y;
+		start.cycling( a.cop3);
+		}
+	else
+		{
+		stop.cycling( a.cop3);
+		}
+	
+	if (moving2 == 1)
+		{
+		start.update( a.cop3);
+		set( moved2);
+		}
+	
+	if (moving2 == 2)
+		{
+		++moving2;
+		if (!locker.scene)
+			{
+			print( 5);
+			}
+		else
+			{
+			print( 14);			[ full moon
+			print( 15);			[ dude so wired
+			}
+		}
+	
+	if (moving2 == 3)
+		{
+		move.obj( a.cop3, 82, 105, 1, moved2)
+		}
+	
+	if (moving2 == 4)
+		{
+		move.obj( a.cop3, 56, 105, 1, moved2)
+		}
+	
+	if (moving2 == 5)
+		{
+		move.obj( a.cop3, 33, 128, 1, moved2)
+		}
+	
+	if (moving2 == 6)
+		{
+		move.obj( a.cop3, 10, 128, 1, moved2)
+		}
+	
+	if (moving2 == 7)
+		{
+		erase( a.cop3);
+		moving2 = 0;
+		}
+	}
+			
+
+
+[ Text responce 
+
+if (!have.input)
+	{
+	goto exit;
+	}
+
+if (said( look))
+	{			
+	print( 10);
+	}
+
+if (nearPerson && said( nasty))
+	{
+	print( 11);
+	}
+
+		
+[
+:exit
+[
+

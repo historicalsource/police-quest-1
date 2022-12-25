@@ -1,0 +1,219 @@
+[ POKER QUEST
+[ rm88.cg
+[ By:  Ken Williams, Greg Rowland, and Al Lowe
+[ For: Sierra On-Line Inc. 11/17/86
+[ Last Update October 8, 1987al
+
+%include "rm75.h"
+%include "rm75.msg"
+
+
+[ betting.round -- controls the betting rounds
+
+[ has the current player folded
+
+work = bet.first.var.number;
+work += active.player;
+work2 =@ work;
+if (work2 == 255)
+	{
+	goto next.player;			[if folded, no decision to make
+	}
+
+
+reset( all.bets.in);		[	First, figure out who opens the bidding
+
+
+if (active.player == 0)		{set.string( 2, 1);} [	Get bettor's name.
+if (active.player == 1)		{set.string( 2, 2);}
+if (active.player == 2)		{set.string( 2, 3);}
+if (active.player == 3)		{set.string( 2, 4);}
+
+work = first.hand.var.number;
+work += active.player;				[	last bettor is from 0 to 3
+work2 = work;						[	we want to get hand and kicker
+work2 += 4;
+current.kicker =@ work2;
+current.hand =@ work;
+
+
+[	Now compute how much we would need to call.
+[First, find the guy with the most in the pot.
+
+work = bet.first.var.number;
+work2 = 0;
+
+:loopy
+work3 =@ work;
+if  (work3 > work2 &&
+	work3 != 255)
+	{
+	work2 = work3;					[	when done work2 will be biggest
+	}
+++work;
+if (!work > bet.last.var.number)
+	{
+	goto loopy;
+	}
+
+display( 1, 0, 5);					[	You have; pot is
+work2 -= bet.so.far;
+amount.to.call = work2;
+
+if (active.player != sonny)
+	{
+	call( computer.bet);
+	goto sort.it.out;
+	}
+
+work = 3;
+work += amount.to.call;
+
+:loopy3
+if (!hercules)
+	{
+	clear.lines( 23, 23, 0);
+	}
+else
+	{
+	set( refresh);
+	}
+
+get.num( 32, current.bet);
+
+if (current.bet > work)				[	work contains maximum bet
+	{
+	sound( sWrong, done);
+	goto loopy3;
+	}
+if (current.bet != 0 && current.bet < amount.to.call)
+	{
+	sound( sWrong, done);
+	goto loopy3;
+	}
+if (current.bet != 0)
+	{
+	raise.amount = current.bet;
+	raise.amount -= amount.to.call;
+	}
+
+:sort.it.out
+clear.lines( 0, 0, 0);
+if (!hercules)
+	{
+	clear.lines( 23, 23, 0);
+	}
+if (current.bet == 0)
+	{
+	if (bet.status == no.bet)
+		{
+		display( 0, 0, 28);			[Passes
+		}
+	else
+		{
+		display( 0, 0, 33);			[	folds
+		work = bet.first.var.number;
+		work += active.player;
+		work @= 255;				[show he folded
+		if (active.player == 0)		{display(  5, 32, 22);}	[	"folds"
+		if (active.player == 1)		{display(  9, 32, 22);}
+		if (active.player == 2) 		{display( 13, 32, 22);}
+		if (active.player == 3) 		{display( 17, 32, 22);}
+		++three.folded;
+		}
+	goto next.player;
+	}	
+
+pot += current.bet;
+
+work = bet.first.var.number;
+work += active.player;
+work2 =@ work;
+work2 += current.bet;
+work @= work2;
+
+if (active.player == sonny)
+	{
+	marked.cash -= current.bet;
+	}
+
+display( 1, 0, 5);					[	You have; pot is
+
+if (raise.amount != 0)
+	{
+	clear.lines( 0, 0, 0);
+  	display( 0, 0, 29);				[	"____ raises"
+	bet.status = someone.raised;
+	goto next.player;
+	}
+
+if (bet.status == no.bet)			[	opening bet
+	{			
+	clear.lines( 0, 0, 0);
+	display( 0, 0, 27);
+	if (bet.status != someone.raised)
+		{
+		bet.status = normal.bet;
+		}
+	}
+else
+	{
+	clear.lines( 0, 0, 0);
+	display( 0, 0, 26);				[	just calling a prior bet
+	}
+
+
+
+[*****
+:next.player
+[*****
+
+++active.player;
+if (active.player == 4)
+	{
+	active.player = 0;
+	}
+
+
+if (active.player == last.dealer &&
+	bet.status == no.bet)
+	{
+	set( all.bets.in);				[	show all done
+	goto exit;
+	}
+
+if (bet.status != no.bet)
+	{
+	work = bet.first.var.number;
+	work2 = 255;
+
+	:loopy2
+	work3 =@ work;					[	get this guys bet
+	if (work3 != 255)				[	did he fold?
+		{
+		if (work3 != work2)			[	Ah, ha!  Don't continue looking.
+			{
+			if (work2 == 255)
+				{
+				work2 = work3;
+				}
+			else
+				{
+				goto exit;		[time to keep betting going
+				}
+			}
+		}
+	++work;
+	if (work > bet.last.var.number)
+		{
+		set( all.bets.in);
+		goto exit;				[all bets are equal
+		}
+
+	goto loopy2;
+	}
+
+[*****
+:exit
+[*****
+

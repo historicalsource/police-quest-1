@@ -1,0 +1,266 @@
+[ POKER QUEST
+[ rm89.cg
+[ By:  Ken Williams, Greg Rowland, and Al Lowe
+[ For: Sierra On-Line Inc. 11/17/86
+[ Last Update October 8, 1987al
+
+%include	"rm75.h"
+%include	"rm75.msg"		[	This way every dynamic uses same text.
+
+
+[ draw.cards -- controlling logics for drawing cards
+
+
+
+throwaway.1 = 0;					[	start with nothing thrown away
+throwaway.2 = 0;
+throwaway.3 = 0;
+
+if (active.player == 0)		{y = 43;}		[	figure out who draws first
+if (active.player == 1)		{y = 78;}
+if (active.player == 2)		{y = 113;}
+if (active.player == 3)		{y = 148;}
+
+if (active.player == 0)		{set.string( 2, 1);} [	get the bettor's name
+if (active.player == 1)		{set.string( 2, 2);}
+if (active.player == 2)		{set.string( 2, 3);}
+if (active.player == 3)		{set.string( 2, 4);}
+
+work = first.hand.var.number;
+work += active.player;				[	last drawee is from 0 to 3
+work2 = work;						[we want to get hand and kicker
+work2 += 4;
+current.kicker =@ work2;
+current.hand =@ work;
+
+if (active.player != sonny)
+	{
+	call( computer.draw);
+
+	work6 = 0;
+	if (throwaway.1)		{++work6;}
+	if (throwaway.2)		{++work6;}
+	if (throwaway.3)		{++work6;} [	work6 now contains # discarded
+
+	clear.lines( 0, 0, 0);
+	if (work6 == 0)
+		{
+		display( 0, 0, 30);			[	stands
+		}
+	else
+		{
+		display( 0, 0, 35);			[	takes
+		}
+	
+	if  (!throwaway.1 &&
+		!throwaway.2 &&
+		!throwaway.3)
+		{
+		goto next.player;
+		}
+	else
+		{
+		goto discard.cards;
+		}
+	}
+
+
+
+[*****
+[	Only Sonny passes through this section.
+[*****
+
+:loopy3							[	How many cards, Sonny?
+if (!hercules)
+	{
+	clear.lines( 23, 23, 0);
+	}
+else
+	{
+	set( refresh);
+	}
+
+get.num( 36, number.of.cards);		[	how many does he want
+if (number.of.cards > 3)				[	validate > than maximum bet
+	{
+	sound( sWrong, done);
+	goto loopy3;
+	}
+
+
+:loopy4			[	what cards do you want to throw away, Sonny Boy?
+if (!hercules)
+	{
+	clear.lines( 23, 23, 0);
+	}
+else
+	{
+	set( refresh);
+	}
+
+if (number.of.cards == 0)
+	{
+	goto next.player;
+	}
+
+if (number.of.cards == 1)
+	{
+	get.num( 37, work);
+	}
+else
+	{
+	get.num( 38, work);
+	}
+
+if ((work > 5 || work < 1))
+	{
+	sound( sWrong, done);
+	goto loopy4;
+	}
+
+throwaway.1 = work;
+if (number.of.cards == 1)
+	{
+	goto discard.cards;
+	}
+
+
+:loopy5
+if (!hercules)
+	{
+	clear.lines( 23, 23, 0);
+	}
+else
+	{
+	set( refresh);
+	}
+
+get.num( 39, work);
+if ((work > 5 ||
+	work < 1 ||
+	work == throwaway.1))
+	{
+	sound( sWrong, done);
+	goto loopy5;
+	}
+
+throwaway.2 = work;
+if (number.of.cards == 2)
+	{
+	goto discard.cards;
+	}
+
+
+:loopy6
+if (!hercules)
+	{
+	clear.lines( 23, 23, 0);
+	}
+else
+	{
+	set( refresh);
+	}
+
+get.num( 40, work);
+if ((work > 5 ||
+	work < 1 ||
+	work == throwaway.1 ||
+	work == throwaway.2))
+	{
+	sound( sWrong, done);
+	goto loopy6;
+	}
+throwaway.3 = work;
+
+
+
+[*****
+:discard.cards
+[*****
+
+[	Everybody passes through this section (if they're throwing cards away).
+
+if (!hercules)
+	{
+	clear.lines( 23, 23, 0);
+	}
+
+ view =  h.deck;
+ loop =  2;
+ cell =  2;
+    x = 40;
+ base =  4;
+  box =  4;
+work2 =  1;
+
+
+:loopy7
+if ((work2 == throwaway.1 ||
+	work2 == throwaway.2 ||
+	work2 == throwaway.3))
+	{
+	add.to.pic.f( view, loop, cell, x, y, base, box);
+	}
+x += 17;
+++work2;
+if (work2 < 6)
+	{
+	goto loopy7;
+	}
+
+
+
+[	Convert active.player into an index into the unsorted cards.
+
+work7 = discard.first.var.number;
+
+work = first.card;
+[if(active.player == 0)			{work +=  0;}	[	Yep, it's already OK.
+if (active.player == 1)			{work +=  5;}
+if (active.player == 2)			{work += 10;}
+if (active.player == 3)			{work += 15;}
+
+work6 = work;						[work6 points at the players 1st card
+if (throwaway.1 != 0)
+	{
+	--throwaway.1;
+	work6 += throwaway.1;
+	work8 = work7;					[point at beginning of discard list
+	work8 += number.discarded.cards;
+	work9 =@ work6;				[get value of discarded card
+	work8 @= work9;				[stick into discard list
+	++number.discarded.cards;
+	work6 @= 0;
+	}
+
+work6 = work;						[work6 points at the players 1st card
+if (throwaway.2 != 0)
+	{
+	--throwaway.2;
+	work6 += throwaway.2;
+	work8 = work7;					[point at beginning of discard list
+	work8 += number.discarded.cards;
+	work9 =@ work6;				[get value of discarded card
+	work8 @= work9;				[stick into discard list
+	++number.discarded.cards;
+	work6 @= 0;
+	}
+
+work6 = work;						[work6 points at the players 1st card
+if (throwaway.3 != 0)
+	{
+	--throwaway.3;
+	work6 += throwaway.3;
+	work8 = work7;					[point at beginning of discard list
+	work8 += number.discarded.cards;
+	work9 =@ work6;				[get value of discarded card
+	work8 @= work9;				[stick into discard list
+	++number.discarded.cards;
+	work6 @= 0;
+	}
+
+[*****
+:next.player
+:exit
+[*****
+

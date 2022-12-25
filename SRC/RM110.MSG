@@ -1,0 +1,399 @@
+[ POLICE QUEST
+[ rm110.msg
+[ By:  Greg Rowland, Jim Walls, and Al Lowe
+[ For: Sierra On-Line Inc. 9/2/86
+[ Last Update October 16, 1987GR
+
+[ lgc.filedrawer
+
+
+
+[	Unusual spacing below graphically depicts the screen layout,
+[and also corresponds with the layout of the .cg file.
+
+
+
+[			"123456789012345678901		max length of line
+
+%message	70	"NAME"
+%message	19   "Marvin Hoffman"
+
+[%message	69	"ALIAS"
+[%message	155	"Leroy Pierson"
+
+%message	20	"PHYSICAL"
+%message	26   "5'11 195' black/brown"
+%message	25	"Caucasian"
+
+
+
+
+
+
+%message	27	"IDENTIFYING MARKS,"
+%message	28	"SCARS, TATTOOS, ETC"
+%message	30	"Tattoo small flower"
+%message	31	"above left nipple"
+
+%message	24	"DOB 3/1/49"
+
+%message	21	"LAST KNOWN ADDRESS"
+%message	22	"31 W 104th St"
+%message	23	"Chicago, IL"
+
+
+%message	41	"BAIL $500,000.00"
+%message	33	"DATE OF ARREST 9/7/83"
+%message	32	"TIME OF ARREST  15:45"
+
+
+
+
+
+%message	34	"CHARGES"
+%message	35	"Suspicion of murder,"
+%message	36	"auto theft,"
+%message	37	"narcotics possession,"
+%message	38	"evading arrest,"
+%message	39	"concealed weapon"
+%message	40	"reckless driving"
+
+
+%message	43	"Expired ILL. driver's"
+%message	42	"License #A472457, in"
+%message	44	"name of \"M. Hoffman\""
+
+
+%message	66	"Temporary CA driver's"
+%message	45	"License #C84776356,"
+%message	46	"name of \"L. Pierson\""
+
+
+
+
+
+%message	2	"ARREST SUMMARY"
+
+%message	3	"1 Observed w/o front"
+%message	4	"  license plate"
+%message	5	"2 Rear plate near"
+%message	6	"  match w/suspicious"
+%message	7	"  187vc vehicle"
+%message	8    "3 Suspect attempted"
+%message	9	"  to evade arrest"
+%message	10	"4 Initiated pursuit"
+%message	11	"5 Felony stop"
+%message	12	"6 Suspect in custody"
+%message	13	"7 Narcotics seized"
+%message	14	"8 Stolen vehicle"
+%message	15	"  recovered"
+%message	16	"9 Veh. turned over to"
+%message	17	"  narcotics division"
+
+
+
+
+
+%message	47	"EVIDENCE FORM"
+
+%message	48	"5 lbs. marijuana,"
+%message	49	"est. value, $4,000.00"
+
+%message	50	"1 lb. cocaine, est."
+%message	51	"value, $250,000.00"
+
+%message	52	"1 S&W .45 automatic"
+%message	53	"handgun SN SW9764912"
+
+%message	54	"1 black notebook"
+
+
+
+
+
+%message	55	"VEHICLE INFORMATION"
+
+%message	56	"'83 Cadillac deVille,"
+%message	57	"blue (orig. blue)"
+
+%message	60	"LICENSE #LOP1238"
+
+%message	61	"VIN C03456218"
+
+%message	58	"Stolen from"
+%message	59	"Lytton, CA"
+
+%message	62	"Registered to:"
+%message	63	"Malcolm Washington"
+%message	64	"234 W Center St"
+%message	65	"Lytton, CA"
+
+
+
+
+
+
+
+
+
+
+
+[			"12345678901234		is the max length for a license
+%message	146	"Marvin Hoffman"
+%message	147	"Male 6'0 194'"
+%message	148	"HAIR Black"
+%message	149	"EYES Blue"
+%message	150	"DOB 6/2/56"
+%message	151	"31 W 104th St"
+%message	152	"Chicago, IL"
+%message	153	"RESTRICTIONS"
+%message	154	"None."
+
+%message	155	"Leroy Pierson"
+%message	156	"Male 5'11 197'"
+%message	157	"HAIR Black"
+%message	158	"EYES Blue"
+%message	159	"DOB 4/28/55"
+%message	160	"1134 Beach St"
+%message	161	"Newport, CA"
+[%message	153	"RESTRICTIONS"
+[%message	154	"None."
+
+
+
+
+
+
+
+
+
+
+[%message	70	"NAME"
+%message	1	"Fred Justinfletch"
+
+%message	69	"ALIAS"
+%message	67	"\"Freddie the Freak\""
+
+[%message	20	"PHYSICAL"
+%message	71	"5'3 219' black/green"
+[%message	25	"Caucasian"
+
+
+
+
+
+%message	72	"WANTS"
+%message	73 	"purse snatching"
+%message	74	"assault and battery"
+%message	95	"narcotics violations"
+
+
+%message	75	"METHOD OF OPERATION"
+%message	76	"grabs victim, bites"
+%message	77	"neck, snatches"
+%message	78	"purse, runs away"
+
+
+
+
+
+%message	105	"UPDATE"
+%message	106	"Last seen by several"
+%message	107	"witnesses early Wed."
+%message	108	"morning. Statements"
+%message	109	"indicate Freddie"
+%message	110	"Justinfletch was at"
+%message	111	"intersection of"
+%message	112	"Center and 3rd Sts"
+%message	113	"directing traffic"
+%message	114	"while totally nude."
+%message	115	"When officers arrived"
+%message	116	"\"the Freak\" could"
+%message	117	"not be found."
+
+
+
+
+
+
+
+
+
+
+[%message	70	"NAME"
+%message	79	"James Jenkins"
+
+[%message	69	"ALIAS"
+%message	80	"\"Jimmy the Junky\""
+
+[%message	20	"PHYSICAL"
+%message	82	"6'4 160' black/brown"
+%message	68	"Negro"
+
+
+
+
+
+[%message	72	"WANTS"
+
+%message	83	"Illegal flight to"
+%message	84	"avoid prosecution on"
+%message	85	"narcotic violations."
+
+%message	86	"Last seen heading"
+%message	87	"south like an out-of-"
+%message	88	"control rocket."
+
+
+
+
+
+%message	122	"ADDITIONAL"
+%message	118	"Jenkins also wanted"
+%message	119	"for questioning in"
+%message	120	"several West Side"
+%message	121	"daylight burglaries."
+%message	123	"If arrested, notify"
+%message	124	"Officer James Lucas,"
+%message	125	"Lytton Probation"
+%message	81	"Department."
+
+
+
+
+
+
+
+
+
+
+[%message	70	"NAME"
+%message	89	"Francis Malone"
+
+[%message	69	"ALIAS"
+%message	92	"\"Short Fat Fanny\""
+
+[%message	20	"PHYSICAL"
+%message	90	"4'9 160' black/blue"
+[%message	25	"Caucasian"
+
+
+
+
+[%message	72	"WANTS"
+%message	91	"Warrant #Q372"
+%message	29	"petty theft"
+
+
+[%message	75	"METHOD OF OPERATION"
+%message	93	"steals anything she"
+%message	94	"can fit on her body"
+
+
+%message	126	"UNUSUAL TRAITS"
+%message	127	"Halitosis to the"
+%message	128	"magnitude equal to"
+%message	129	"the breath of"
+%message	18	"eight mules!"
+
+
+
+
+
+%message	130	"APPROACH WITH CAUTION"
+%message	131	"will not hesitate to"
+%message	132	"knock you down and"
+%message	133	"spit in your eyes"
+%message	134	"while she breaths"
+%message	135	"heavily into your"
+%message	136	"your face, thereby"
+%message	143	"nauseating you to"
+%message	144	"the point of"
+%message	145	"unconsciousness."
+
+
+
+
+
+
+
+
+
+
+
+[%message	70	"NAME"
+%message	96	"Winford W. Watson"
+
+[%message	69	"ALIAS"
+%message	97	"\"Winnie the Weasel\""
+
+[%message	20	"PHYSICAL"
+%message	98	"5'8 180' bald/brown"
+%message	99	"numerous tattoos"
+
+
+
+
+
+[%message	72	"WANTS"
+%message	100	"narcotics, weapons,"
+%message	101	"and armed robbery"
+%message	102	"violations"
+
+
+%message	103	"LOCATION OF SUBJECT"
+%message	104	"has been seen with a"
+%message	137	"junkie hooker known"
+%message	138	"as \"Big Bonnie\""
+
+
+%message	139	"NOTE"
+%message	140	"has large red & blue"
+%message	141	"tattoo of sinking"
+%message	142	"ship on top of head"
+
+
+
+[SPARES:
+%message	162	""
+%message	163	""
+%message	164	""
+%message	165	""
+%message	166	""
+%message	167	""
+%message	168	""
+%message	169	""
+
+
+
+%message	170
+"You may also use the cursor keys to turn the pages."
+
+%message	171
+"Which file?"
+
+%message	172
+"You can only read one file at a time."
+
+%message	173
+"You're not looking at a folder."
+
+%message	174
+"The file drawer contains five folders,
+ each labeled with the name of the case."
+
+%message	175
+"You remove the Hoffman file from the drawer."
+
+%message	176
+"Good thinking; maybe this will be of use."
+
+%message	177
+"You return the folder to the file drawer."
+
+%message	178
+"You ARE looking at a file!"
+
+[%message	179
+["Perhaps you should read the Hoffman file first."
+

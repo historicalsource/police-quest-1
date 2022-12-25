@@ -1,0 +1,74 @@
+[ POLICE QUEST
+[ rm54.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 12/12/86
+[ Last Update September 25, 1987al
+
+[court clerk.msg
+
+
+%message	1
+"\"How do you do, Sir. May I help you?\""
+
+%message	2
+"\"I'm sorry, but Judge Kim Palmer's court is presently in session.\""
+
+%message	3
+"\"I can only interrupt a court in session for an extreme emergency!\""
+
+%message	4
+"\"Please wait a moment. I'll send a message with the bailiff.\""
+
+%message	5
+""
+
+%message	6
+"For emergencies, dial \"911.\""
+
+%message	7
+"\"The bailiff says Judge Palmer will see you, if you can make it quick!
+ Go on into the courtroom.\""
+
+%message	8
+"This door doesn't open."
+
+%message	9
+"The door IS open."
+
+%message	10
+"\"Good day, Sir.
+ How may I help you?\""
+
+%message	11
+"The door IS closed."
+
+%message	12
+"This is the outer reception room of the courthouse.
+ The Court Clerk's office is behind the glass window to the right.
+ The courtroom is through the double doors."
+
+%message	13
+"\"It seems obvious you have no business here, Sir.
+ You're just wasting my time!\""
+
+%message	14
+"You can't enter while court is in session. See the Court Clerk first!"
+
+%message	15
+"The Court Clerk asks, \"Did you get what you needed?\""
+
+%message	16
+"The Court Clerk responds, \"Very good, Officer. Go get 'em.\""
+
+%message	17
+"There's nothing of interest, 
+ except that statue of Justice
+ above the double doors leading to the courtroom."
+
+%message	18
+"These doors lead to Judge Kim Palmer's courtroom."
+
+%message	19
+"\"That's very nice, sir,\" responds the Clerk,
+ \"but I have no authority in matters such as this.\""
+

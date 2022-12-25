@@ -1,0 +1,175 @@
+[ POLICE QUEST
+[ rm31.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 1/21/87
+[ Last Update October 10, 1987al
+
+[ rm.drunkstop
+
+
+%message	1
+"The gentleman responds to your request, \"Da, yas ssshir.\""
+
+%message	2
+"The drunk reminds you, \"Es-cuse me, butt cher bloc'in' da door, Ociffer.\""
+
+%message	3
+"Proper police procedure indicates the suspect should do that!"
+
+%message	4
+"You're not in the car."
+
+%message	5						[if said give f.s.t., test etc.
+"You can't do that with the suspect inside his car."
+
+%message	6
+"You correctly administer the Field Sobriety Test,
+ and are amused as your subject gives his best
+ imitation of a young swan attempting its first takeoff."
+
+%message	7
+"There's no need to question him; his problem is obvious!"
+
+%message	8
+"The man fumbles with his wallet,
+ \"My license? Uh, yeah, uh, it's, uh, it's right... Here it is!\""
+
+%message	9
+"Reluctantly he says, \"Uh, ok, wh-where we goin'?\""
+
+%message	10
+"So as not to excite him, you say,
+ \"Oh, we're just going to take a little ride to see some friends of yours.
+ It's ok, buddy. Come on.\""
+
+%message	11
+"\"I am!\""
+
+%message	12
+"You're not close enough."
+
+%message	13
+"The drunk begs you,
+ \"Could ja 'cuff me in front, please?
+ I'm not feelin' sssho goods.\""
+
+%message	14
+"You think, \"He doesn't look dangerous. Sure, why not?\""
+
+%message	15
+"Not wanting to take a chance, you explain,
+ \"I'm sorry, sir, but
+ Departmental Policy dictates all custody arrests shall be restrained
+ by proper handcuffing procedure, and that means 'behind your back.'\""
+
+%message	16
+"You just fell victim to an old trick.
+ There are two rules to remember:
+ always follow procedures, and never trust a drunk!"
+
+%message	17
+"You look into the glassy, watery eyes of a middle-aged man.
+ He is certainly feeling no pain!"
+
+%message	18
+"You hear a voice that sounds like Tiny Tim singing through a
+ mouthful of crackers..."
+
+%message	19
+"...\"I didn't do nossshin' wrong, Ociffer.\""
+
+%message	20
+"You take a whiff and detect a strong odor of an alcoholic beverage."
+
+%message	21
+"You place your subject under arrest for the violation of Lytton City
+ Vehicle Code VC23502, \"driving while under the influence.\""
+
+%message	22
+"You cautiously approach the vehicle and observe one male seated behind
+ the wheel.
+ Rolling down his window appears to be quite a challenge to him!"
+
+%message	23
+"It's in your car."
+
+
+[			"12345678901234		is the max length for a license
+%message	24	"Art Serabian"
+%message	25	"Male 5'8\" 199'"
+%message	26	"HAIR None"
+%message	27	"EYES Blue"
+%message	28	"DOB 12/14/47"
+%message	29	"2 MacIntosh St"
+%message	30	"Lytton, CA"
+%message	31	"RESTRICTIONS:"
+%message	32	"Programmer"
+
+
+%message	33
+"He can't hear you from this distance."
+
+%message	34
+"The fresh air smells good!"
+
+%message	35
+"It looks like a possible DUI."
+
+%message	36
+"Since the information on the driver's license matches the subject,
+ you return his license to him."
+
+%message	37
+"You radio Dispatch, \"Run check on personalized license plate 'PRGRMR1.'
+ It appears to be currently registered.\""
+
+%message	38
+"Dispatch returns with,
+ \"'PRGRMR1' is clear,
+ with valid, local registration in the name of Art Serabian.\""
+
+%message	39
+"\"Record check shows two prior DUI convictions.\""
+
+%message	40
+"\"Why, Occifer!\" lisps the drunk, \"I'm as ssssober assss a judge!
+ HIC!\""
+
+%message 41
+"You pat down the gentleman, and find no weapons."
+
+%message 42
+"The car belongs to the driver."
+
+%message 43
+"You key the radio, \"Dispatch, this is 83-32.
+ Request one 11-85 at my 10-20.\""
+
+%message 44
+"83-32, 10-4.
+ One tow truck in route."
+
+%message 45
+"This vehicle has personalized plates, \"PRGRMR1.\""
+
+%message 46
+"He is handcuffed!"
+
+%message 47
+"call"
+
+%message	48
+"Just put him in the car."
+
+%message 49
+"That is unnecessary."
+
+%message 50
+"You'd better do more than just write this one a ticket."
+
+%message 51
+"Sonny! How could you?"
+
+%message	52
+"It's too late to do that now."
+

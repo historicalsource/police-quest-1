@@ -1,0 +1,40 @@
+[ POLICE QUEST
+[ rm33.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 9/18/86
+[ Last Update August 25, 1987al
+
+[ bar3.room - street scene blue.room
+
+
+%message	1
+"The door swings; just push on it."
+
+%message	2																														[	"look door
+"It's a real swinger."
+
+%message	3
+"You look at the patrol car, and wish that it ran as well as your 'Vette."
+
+%message	4
+"You love your cherry 'Vette."
+
+%message	5
+"This Caddie is just not your style."
+
+%message	6
+"\"The Blue Room\" is the local, police officers' watering hole.
+ It is owned and operated by retired traffic officer, \"Big Bobby\" Lopez."
+
+%message	7
+"Whew. Have you had some good times here over the years!"
+
+%message	8																													[	Look sign
+"\"Bud\" who?"
+
+%message	9
+"You peer through the department store window, but see nothing of interest."
+
+%message	10
+"The mini-blinds prevent you from seeing inside."
+

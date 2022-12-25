@@ -1,0 +1,85 @@
+[ POLICE QUEST
+[ rm30.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 9/18/86
+[ Last Update October 6, 1987GR
+
+[fox.room
+
+
+%message	1
+"Look: her license plate says \"OHMYMG.\" Isn't that cute!"
+
+%message	2
+"Dispatch returns with the information you requested,
+ \"'OHMYMG' is currently registered to Helen Hots. No wants.\""
+
+%message	3
+"She's inside her car; you can see her, but not very well."
+
+%message	4
+"Cautiously, you approach the vehicle.
+ The driver appears to be a female in her early twenties.
+ Very female!"
+
+%message	5
+"%m3 Try moving closer to her door."
+
+%message	6
+"She looks deep into your eyes, and says,
+ \"What may I do for you, Officer?\""
+
+%message	7
+"She replies in a heated voice,
+ \"Just remember, Fish Breath: I'm gonna file a complaint on you!
+ I'll cheat, lie, and do anything possible to get your little fuzz butt
+ in trouble! YOU HEAR ME?\""
+
+%message	8
+"\"Dispatch, this is 83-32. Run wants%m14"
+
+%message	9
+"Your briefcase is in the car."
+
+%message	10
+"\"Dispatch, this is 83-32. Check registration%m14\""
+
+%message	11
+"\"The car is registered to Helen Hots.\""
+
+%message	12
+"Well, well.
+ Just what every poor, little, rich girl needs;
+ a little red sports car."
+
+%message	13
+"You can't see the %w2 from here."
+
+%message	14
+" on Ocean, Henry, Mary, Yellow, Mary, George.\""
+
+%message	15
+"There is no reason to do so."
+
+%message	16
+"\"Get lost, jerk!\""
+
+%message	17
+"She sounds very grateful as she says,
+ \"Thank you, Officer! Please call me, and soon!\""
+
+%message	18
+"call"
+
+%message	19
+"Dispatch responds, \"83-32, 10-4.
+ You must have been away from your radio.
+ Repeating, 'OHMYMG' is currently registered to Helen Hots.
+ No wants.\""
+
+%message	20
+"\"Thanks for not giving me a ticket, Officer!\""
+
+%message	21
+"You should look at her before you talk to her."
+

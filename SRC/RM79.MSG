@@ -1,0 +1,66 @@
+[ POLICE QUEST
+[ rm79.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 20, 1987al
+
+[ Messages for room 79 -- Bains' room
+
+
+%message	1
+"Just then, the telephone rings in the next room."
+
+%message	2
+"Bains draws his gun, and aims it directly at you!
+ \"Hold it right there, PIG!\" he shouts.
+ \"It seems one of our card-playing comrades recognizes your ugly mug from a
+ minor misunderstanding he had with the heat a while back.
+ You're about to find out just how much I hate cops!\""
+
+%message	3
+"Just then, a knock on the door diverts Bains' attention!"
+
+%message	4
+"You dive to the floor and struggle to remove the derringer from your cane.
+ A loud \"CRASH\" and the door flies open. Your backups have arrived!"
+
+%message	5
+"Bains is taken down in the barrage of gunfire."
+
+%message	6
+"In the twinkling of an eye, the shootout is over.
+ Sprawled unconcious on the carpet with a near-fatal belly wound,
+ lies Jessie Bains, \"the Death Angel!\""
+
+%message	7
+"You step up to the bar and peruse the selection of beverages."
+
+%message	8
+"Unfortunately, you transmitted your location to your backups
+ a few seconds too late.
+ Bains has been stopped, but you died in the line of duty."
+
+%message	9
+"\"Well, Mr. Banksten,\" says Bains,
+ \"I have a little proposition for you that I know you'll love.\""
+
+%message	10
+"\"I'm interested,\" you reply."
+
+%message	11
+"\"Fix yourself a drink while I answer the phone,\" says Bains."
+
+%message	12
+"You whisper a soft \"Room 404\" into your \"pen,\"
+ to tip your backups of your location."
+
+%message	13
+"You hope they have time to respond."
+
+%message	14
+"You whisper a soft \"Room 404\" into your empty shirt pocket."
+
+%message	15
+"Unfortunately, your failure to transmit your location has resulted in your
+ untimely demise."
+

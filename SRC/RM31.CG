@@ -1,0 +1,912 @@
+[ POLICE QUEST 
+[ rm31.cg 
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 1/21/87
+[ Last Update October 19, 1987GR
+
+[ rm.drunkstop
+
+
+%include "gamedefs"
+%include "rm31.msg"
+%include "rm94.h"
+
+
+
+%define	incar.door.closed	0		[	Suspect.in.car defines
+%define	incar.door.open 	1
+%define	out.door.open 		2
+%define	out.door.closed	3
+%define	suspect.walken		4
+%define	suspect.stagger	5
+%define	suspect.swinging	6
+%define	raising.hands		7
+%define	hands.up			8
+%define	laying.down		9
+%define	face.down			10
+%define	cuffed			11
+
+
+%define	moved1			lf1
+
+%define	conver0			lf4
+%define	conver1			lf5
+%define	conver2			lf6
+%define	conver3			lf7
+%define	conver4			lf8
+%define	conver5			lf9
+%define	waitingForResponse	lf10
+
+%define	has.license		lf13
+%define	drunkInPCar		lf14
+
+
+%define	moving1			lcl1
+%define	nearDrunk			lcl2
+%define	nearDoor			lcl3
+
+
+
+
+[%var	suspect.in.car			86
+[	%define	incar.door.closed	0
+[	%define	incar.door.open 	1
+[	%define	out.door.open 		2
+[	%define	out.door.closed	3
+[	%define	suspect.walken		4
+[	%define	suspect.stagger	5
+[	%define	suspect.swinging	6
+[
+[%var	suspect.cop.car		87
+[	%define	incop.door.closed	0
+[	%define	incop.door.open	1
+[	%define	cop.door.open		2
+[	%define	cop.door.closed	3
+[	%define	none.in.car		4
+
+
+
+if (init.log)
+	{
+	set( NOcase);
+[	reset( has.suspect);
+
+	if (!SxStoppedDrunk)
+		{
+		set( SxStoppedDrunk);
+		score += 3;
+		}
+
+	load.pic( streetScene);
+	draw.pic( streetScene);
+
+	[no discard.pic allowed here!
+
+	load.logics.f( streetScene);
+	load.logics( 94);				[lgc.stopped.cars
+	load.logics( 108);
+
+	load.view.f( current.Sdead);
+	load.view( v.patCar);
+	load.view( v.drunkCar);
+	load.view( v.DrunkDoor);
+	load.view( v.drunk);
+	load.view( v.drunk.cuffed.f);
+	load.view( v.drunk.cuffed.b);
+	load.view( v.drunk.ko);
+	load.view( vTnA);
+	load.sound( mBadGuy);
+
+	animate.obj( a.suspect);
+
+	set.view( a.suspect, v.drunk);
+	position( a.suspect, 32, 159);
+	stop.cycling( a.suspect);
+
+	animate.obj( a.SuspDoor);
+	set.view( a.SuspDoor, v.DrunkDoor);
+	position( a.SuspDoor, 28, 157);
+	stop.cycling( a.SuspDoor);
+	set.priority( a.SuspDoor, 14);
+
+	add.to.pic( v.drunkCar, 0, 0, 11, 158, 14, 0);	[ Drunk
+
+	if (!suspect.in.car)
+		{
+		set.cel( a.SuspDoor, 0);
+	 	draw( a.SuspDoor);
+		reset( Sdoor);
+		}
+	else {
+		if (Sdoor)
+			{
+			set.cel( a.SuspDoor, 2);
+		 	draw( a.SuspDoor);
+			}
+		}
+
+	call( 94);					[lgc.stopped.cars
+	call( 108);
+
+	show.pic();
+	return();
+	}
+
+
+
+[ Logic
+distance( ego, a.suspect, nearDrunk);
+distance( ego, a.SuspDoor, nearDoor);
+
+if (nearDrunk < dist) {
+	set( nearPerson);
+	}
+
+if (suspect.in.car == incar.door.closed && nearDoor < dist) {
+	set( nearPerson);
+	}
+if (ego.y < 156) {
+	reset( nearPerson);
+	reset( nearSdoor);
+	}
+
+
+[ General timers 
+
+if (getting.out) {
+	++getting.out;
+	if (getting.out == 255) {
+		getting.out = 1;
+		}
+	}
+
+
+
+[ Approach 
+
+if (!conver5 &&
+	posn( ego, 80, 1, 81, 167)) {
+	print( 22);					[ cautiously approach
+	set( conver5);
+	}
+
+[ timers 
+
+if (moved1) {
+	reset( moved1);
+	++moving1;
+	}
+
+
+[ Show license 
+
+if (has.license && refresh)
+	{
+	reset( refresh);
+	clear.text.rect( 2, 12, 10, 31, 15);
+
+	if ( hercules) {
+		add.to.pic( vTnA, 0, 1, 50, 55, 15, 15);
+		}
+	else {
+		add.to.pic( vTnA, 0, 1, 50, 45, 15, 15);
+		}
+
+	set.text.attribute( BG_COLOR, TEXT_COLOR);
+	display(  2, 18, 24);
+	display(  3, 18, 25);
+	display(  4, 18, 26);
+	display(  5, 18, 27);
+	display(  6, 18, 28);
+	display(  7, 18, 29);
+	display(  8, 18, 30);
+	display(  9, 18, 31);
+	display( 10, 18, 32);
+	set.text.attribute( TEXT_COLOR, BG_COLOR);
+	}
+
+
+if (suspect.cop.car == incop.door.open)
+	{
+	set( drunkInPCar);
+	}
+
+[ Get out car 
+
+if (!has.suspect) {
+	if  (getting.out &&
+		suspect.in.car == incar.door.closed &&
+		posn( ego, 22, 158, 46, 164))	{
+
+		getting.out = 1;
+		if (scriptTimer == 1) {
+			print( 2);			[ ya bloking the door
+			set( refresh);
+			scriptTimer = 11;
+			}
+		}
+	else {
+		if ( getting.out) {
+			set( game.control);
+			stop.motion( ego);
+			if ( ego.y > 164) {
+				set.loop( ego, facing.back);
+				}
+			else {
+				if ( ego.x < 33) {
+					set.loop( ego, facing.right);
+					}
+				else {
+					set.loop( ego, facing.left);
+					}
+				}
+			}
+		}
+
+	
+	if (getting.out == 20) {
+		++getting.out;
+		set.cel( a.SuspDoor, incar.door.open);
+		sound( s.car.open, snd.done);
+		}
+	
+	if (getting.out == 40) {
+		++getting.out;
+		set.cel( a.SuspDoor, out.door.open);
+		stop.cycling( a.SuspDoor);
+		draw( a.suspect);
+		}
+	
+	if (getting.out == 60) {
+		erase( a.SuspDoor);
+		sound( s.car.close, snd.done);
+		suspect.in.car = suspect.stagger;
+		reset( game.control);
+		start.motion( ego);
+		getting.out = 0;
+		scriptTimer = 10;
+		}
+	}
+	
+
+
+[stagger
+if (suspect.in.car == suspect.stagger && !conver4)
+	{
+	if (scriptTimer == 6)
+		{
+		set.cel( a.suspect, 6);
+		}
+	
+	if (scriptTimer == 3)
+		{
+		set.cel( a.suspect, 7);
+		scriptTimer = 10;
+		}
+	}
+
+
+get.posn( a.suspect, x.suspect, y.suspect);
+if (x.suspect < ego.x)
+	{
+	set.loop( a.suspect, facing.right);
+	}
+else {
+	set.loop( a.suspect, facing.left);
+	}
+
+
+
+[ To patrol car 
+
+if (moving1 == 1)
+	{
+	move.obj( a.suspect, 50, 162, 1, moved1);
+	moving1 = 2;
+	}
+
+if (moving1 == 3)
+	{
+	set( has.suspect);
+	score += 3;
+	move.obj( a.suspect, 135, 162, 1, moved1);
+	++moving1;
+	}
+
+if (b.car.door && moving1 == 5)
+	{
+	if (suspect.cuffed == in.back)
+		{
+	 	stop.cycling( a.suspect);
+		suspect.in.car = suspect.stagger;
+		}
+	else {
+		set( game.control);
+		start.motion( ego);
+		ignore.objs( a.suspect);
+		set.loop( a.suspect, facing.left);
+		fix.loop( a.suspect);
+		suspect.in.car = suspect.swinging;
+		set.view( a.suspect, v.drunk.ko);
+		
+		get.posn( ego, tempX, tempY);
+		tempX += 6;
+		tempY += 1;
+		work = 1;
+		move.obj.f( a.suspect, tempX, tempY, work, moved1);
+		moving1 = 100;
+		}
+	}
+
+
+
+[ Death by blow to head 
+
+if (moving1 == 101) {
+	sound( mBadGuy, done);
+	set.cel( a.suspect, 0);
+	set( keepCyclingSuspect);
+	end.of.loop( a.suspect, moved1);
+	++moving1;
+	}
+
+if (moving1 == 103) {
+	if (suspect.cuffed == in.front) {
+		drop( i.cuffs);
+		set.view( a.suspect, v.drunk.cuffed.f);
+		}
+	else {
+		set.view( a.suspect, v.drunk);
+		suspect.in.car = suspect.stagger;
+		}
+	reset( keepCyclingSuspect);
+	set.view.f( ego, current.Sdead);
+	set.loop( ego, facing.right);
+	set( moved1);
+	}
+
+if (moving1 == 104)
+	{
+	++moving1;
+	print( 16);					[ wopped up side head
+	set( certainDeath);
+	}
+
+
+if (has.license && have.key()) {
+	reset( has.license);
+
+	draw.pic( streetScene);
+ 	add.to.pic( v.patCar, 0, 0, 90, 160, 14, 0);
+	add.to.pic( v.drunkCar, 0, 0, 11, 158, 14, 0);
+	show.pic( );
+	print( 36);					[ return license
+	}
+
+if ((said( give, license) ||
+	said( put, license)))
+	{
+	if (nearPerson)
+		{
+		print(36);				[existing msg
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+
+[ Text
+
+if (!have.input) {
+	goto exit;
+	}
+
+if ((said( lay, down) ||
+	said( raise, hands) ||
+	said( open, trunk) ||
+	said( search, car) ||
+	said( ask, man, raise, hands) ||
+	said( put, hands, on, car) ||
+	said( put, hands, on, car, please) ||
+	said( use, nightstick) ||
+	said( ask, him, lay, rol) ||
+	said( show, me, registration) ||
+	said( give, me, registration) ||
+	said( look, in, glove, compartment) ||
+	said( open, glove, compartment)))
+	{
+	if  ((nearScar || nearPerson))
+		{
+		print( 49);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( give, ticket) ||
+	said( write, ticket)))
+	{
+	if  ((nearScar || nearPerson))
+		{
+		print( 50);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( hit, man) ||
+	said( kill, man) ||
+	said( hit, drunk) ||
+	said( kill, drunk) ||
+	said( hit, suspect) ||
+	said( kill, suspect)))
+	{
+	if  ((nearScar || nearPerson))
+		{
+		print( 51);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+
+if  (nearScar &&
+    (said( open, door) ||
+	said( close, door)))
+	{
+	print( 3);					[ car is private
+	}
+
+if (ego.x < 80 &&
+    !has.suspect &&
+    (said( go, out) ||
+	said( stand) ||
+	said( leave, car) ||
+	said( man, get$out, car) ||
+	said( out, car) ||
+	said( get$out, rol) ||
+	said( get, suspect, out, car) ||
+	said( man, get$out, car) ||
+	said( get, man, out, car) ||
+	said( get$out, car)))
+	{
+	if (suspect.in.car != incar.door.closed)
+		{
+		if (!conver2)
+			{
+			print( 40);
+			}
+		else {
+			if (!conver3)
+				{
+				print( 11);
+				}
+			else {
+				print( 9);		[ Uh ok weer we go'n
+				print( 10);		[ Just to see some friends
+				start.cycling( a.suspect);
+				suspect.in.car = suspect.walken;
+				set( conver3);
+				moving1 = 1;
+				}
+			}
+		}
+	else
+		{
+		if (nearScar)
+			{
+			print( 1);			[ Da yas ssir's
+			getting.out = 1;
+			scriptTimer = 4;
+			set( conver0);
+			}
+		else {
+			if (!in.car)
+				{
+				print( 33);		[ having difficulty hearing
+				}
+			else {
+				set( notCloseEnough);
+				}
+			}
+		}
+	}
+		
+if ((said( give, fst) ||
+	said( give, check) ||
+	said( test, sobriety) ||
+	said( give, sobriety, test) ||
+	said( give, field, sobriety, test) ||
+	said( give, man, fst) ||
+	said( give, man, check) ||
+	said( give, man, field, sobriety, test) ||
+	said( give, drunk, fst) ||
+	said( give, drunk, check) ||
+	said( give, drunk, field, sobriety, test) ||
+	said( give, suspect, fst) ||
+	said( give, suspect, check) ||
+	said( give, suspect, field, sobriety, test))) {
+	if (!nearPerson) {
+		print( 33);				[ having difficulty hearing
+		}
+	else {
+		if (suspect.in.car != suspect.stagger) {
+			print( 5);			[ get out of his car first
+			}
+		else {
+			print( 6);			[ administer fst
+			set( conver2);
+			if (!SxFST)
+				{
+				set( SxFST);
+				score += 3;
+				}
+			}
+		}
+	}
+
+if (!suspect.cuffed &&
+	waitingForResponse)
+	{
+	if ((said( yes, rol) ||			[	answer to "cuff in front?"
+		said( anyword, yes, rol) ||
+		said( cuff, man) ||
+		said( cuff, drunk) ||
+		said( cuff, suspect)))
+		{
+		if (!nearPerson)
+			{
+			print( 33);			[ difficulty hearing
+			}
+		else
+			{
+			if (!has( i.cuffs))
+				{
+				set( dontHaveThem);
+				}
+			else
+				{
+				drop( i.cuffs);
+				print( 14);			[ why not
+				print( 21);			[ subject under arrest
+				set.view( a.suspect, v.drunk.cuffed.f);
+				suspect.cuffed = in.front;
+				reset( waitingForResponse);
+				set( conver4);
+				}
+			}
+		}
+	
+	if ((said( no, rol) ||
+		said( back, rol) ||
+		said( hands, back, rol) ||
+		said( cuff, back, rol) ||
+		said( anyword, no, rol) ||
+		said( cuff, man, back, rol) ||
+		said( cuff, man, back, rol) ||
+		said( cuff, man, with, hands, behind, back, rol) ||
+		said( cuff, drunk, back, rol) ||
+		said( cuff, drunk, back, rol) ||
+		said( cuff, drunk, with, hands, behind, back, rol) ||
+		said( cuff, suspect, back, rol) ||
+		said( cuff, suspect, back, rol) ||
+		said( cuff, suspect, with, hands, behind, back, rol) ||
+		said( put, your, hands, behind, rol)))
+		{
+		if (!nearPerson)
+			{
+			print( 33);			[ difficulty hearing
+			}
+		else
+			{
+			if (!has( i.cuffs))
+				{
+				set( dontHaveThem);
+				}
+			else
+				{
+				drop( i.cuffs);
+				print( 15);			[ cuffing procedures behind
+				print( 21);			[ subject under arrest
+				set.view( a.suspect, v.drunk.cuffed.b);
+				suspect.cuffed = in.back;
+				reset( waitingForResponse);
+				set( conver4);
+				}
+			}
+		}
+	}
+
+
+if ((said( cuff) ||
+	said( cuff, hands) ||
+	said( use, cuff, rol) ||
+	said( put, cuff, rol) ||
+	said( put, on, cuff, rol) ||
+	said( cuff, back, rol) ||
+	said( cuff, man) ||
+	said( cuff, man, back, rol) ||
+	said( use, cuff, on, man) ||
+	said( cuff, drunk) ||
+	said( cuff, drunk, back, rol) ||
+	said( use, cuff, on, drunk) ||
+	said( cuff, suspect) ||
+	said( cuff, suspect, back, rol) ||
+	said( use, cuff, on, suspect)))
+	{
+	if (!nearPerson)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (!conver2)
+			{
+			print( 40);
+			}
+		else
+			{
+			if (!suspect.cuffed)
+				{
+				print( 13);				[ cuff me in front please
+				set( waitingForResponse);
+				set( conver3);
+				}
+			else {
+				print( 46);
+				}
+			}
+		}
+	}
+
+if ((said( look, license, rol) ||
+	said( look, drive, license) ||
+	said( look, me, license, rol) ||
+	said( ask, license) ||
+	said( get, license, rol) ||
+	said( give, me, license, rol) ||
+	said( give, me, drive, license, rol) ||
+	said( get, drive, license) ||
+	said( see, drive, license) ||
+	said( me, license, rol) ||
+	said( me, look, license, rol))) {
+
+	if ( !nearPerson) {
+		print( 33);				[ difficulty hearing
+		}
+	else {
+		if (!has.license) {
+			print( 8);			[ Shure my license
+			set( refresh);
+			set( has.license);
+			}
+		}
+	}
+
+if ( ego.x < 80 &&
+	(said( go) ||
+	said( come) ||
+	said( come, with, me) ||
+	said( follow, me) ||
+	said( get$in, car) ||
+	said( put, man, car) ||
+	said( take, man, car) ||
+	said( follow, me) ||
+	said( come, on) ||
+	said( go, with, me) ||
+	said( arrest, man, rol) ||
+	said( arrest, suspect, rol) ||
+	said( arrest, drunk, rol) ||
+	said( put, man, in, back, seat) ||
+	said( put, drunk, in, back, seat) ||
+	said( put, suspect, in, back, seat) ||
+	said( take, man, car) ||
+	said( man, follow, me) ||
+	said( ask, man, to, follow) ||
+	said( take, drunk, car) ||
+	said( drunk, follow, me) ||
+	said( ask, drunk, to, follow) ||
+	said( take, suspect, car) ||
+	said( suspect, follow, me) ||
+	said( ask, suspect, to, follow))) {
+	if (!nearPerson) {
+		print( 33);				[ difficulty hearing
+		}
+	else {
+		if ( !conver2) {
+			print( 40);
+			}
+		else {
+			if ( moving1) {
+				print( 48);
+				}
+			else {
+				print( 9);				[ Uh ok weer we go'n
+				print( 10);				[ Just to see some friends
+				start.cycling( a.suspect);
+				suspect.in.car = suspect.walken;
+				set( conver3);
+				moving1 = 1;
+				}
+			}
+		}
+	}
+
+	
+if ((said( name, rol) ||
+	said( anyword, name, rol) ||
+	said( talk, man, rol) ||
+	said( talk, drunk, rol) ||
+	said( talk, suspect, rol) ||
+	said( hello, rol)))
+	{
+	if (!nearPerson) {
+		print( 33);				[ difficulty hearing
+		}
+	else {
+		print( 18);				[ a voice that sounds
+		print( 19);				[ Whats problem
+		}
+	}
+
+if ((said( smell, rol) ||
+	said( anyword, smell, rol))) {
+	if (!nearPerson) {
+		print( 34);				[ pretty fresh smell'n air
+		}
+	else {
+		print( 20);				[ odor of an alchoholic
+		}
+	}
+
+if ((said( look) ||
+	said( look, man) ||
+	said( look, drunk) ||
+	said( look, drive) ||
+	said( look, suspect) ||
+	said( look$in, car) ||
+	said( look, car))) {
+	if (!nearPerson) {
+		print( 35);				[ Looks like a possible D.U.I.
+		}
+	else {
+		print( 17);				[ glassy, watery eyes
+		}
+	}
+
+if ((said( read, rights, rol) ||
+	said( read, anyword, rights, rol) ||
+	said( give, rights, rol) ||
+	said( give, anyword, rights, rol) ||
+	said( rights, rol) ||
+	said( anyword, rights, rol)))
+	{
+	if (drunkInPCar)
+		{
+		print( 52);
+		}
+	else
+		{
+		if (!nearPerson)
+			{
+			print( 33);				[ having difficulty hearing
+			}
+		else {
+			call( 72);				[ rmRights
+			}
+		}
+	}
+
+if ((said( question, man) ||
+	said( question,suspect) ||
+	said( question, drunk)))
+	{
+	if (drunkInPCar)
+		{
+		print( 52);
+		}
+	else
+		{
+		if (nearPerson)
+			{
+			print( 7);		[existing msg
+			}
+		else {
+			print( 33);				[ difficulty hearing
+			}
+		}
+	}
+
+if ((said( search, man) ||
+	said( search, suspect) ||
+	said( search, drunk)))
+	{
+	if (drunkInPCar)
+		{
+		print( 52);
+		}
+	else
+		{
+		if (nearPerson)
+			{
+			print( 41);		[existing msg
+			}
+		else {
+			set( notCloseEnough);
+			}
+		}
+	}
+
+if (said( check, registration))
+	{
+	if (nearPerson)
+		{
+		print( 42);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((in.car || has( i.extnd))) {
+	if ((said( call, tow$truck) ||
+		said( store, car))) {
+		print( 43);
+		print( 44);
+		}
+	}
+
+if (!in.car &&
+	said( anyword, case)) {
+	print( 23);					[ To bad it's in your car
+	}
+
+if ((said( call) ||
+	said( run, license) ||
+	said( radio, drivers, license) ||
+	said( run, license, number) ||
+	said( check, plate) ||
+	said( run, wants) ||
+	said( radio, plate) ||
+	said( run, make))) {
+	if ((in.car || has( i.extnd))) {
+		print( 37);
+		if (!SxDrunkPlate)
+			{
+			set( SxDrunkPlate);
+			score += 1;
+			}
+		print( 38);
+		print( 39);
+		}
+	else {
+		set.string( 3, 48);				[ radio
+		parse( 3);
+		}
+	}
+	
+if ((said( look, plate) ||
+	said( look, license, plate))) {
+	if ((posn( ego, 54, 1, 159, 167) ||[	behind car
+		posn( ego, 0, 1, 4, 167)))	[	in front of car
+		{
+		print( 45);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+
+[
+:exit
+[
+
+call( 94);						[lgc.stopped.cars
+call( 108);
+call.f( streetScene);
+

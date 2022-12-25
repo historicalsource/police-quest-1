@@ -1,0 +1,52 @@
+[ POKER QUEST
+[ rm83.cg
+[ By:  Ken Williams, Greg Rowland, and Al Lowe
+[ For: Sierra On-Line Inc. 11/17/86
+[ Last Update August 14, 1987al
+
+%include "rm75.h"
+
+
+[ display.cards
+
+
+
+if (p1.bet != 255)
+	{
+	active.player = 0;
+	x = 40;
+	y = 43;
+	current.card = first.card;
+	call( handle.player);
+	}
+
+if (p2.bet != 255)
+	{
+	active.player = 1;
+	current.card = first.card;
+	current.card += 5;
+	x = 40;
+	y = 78;
+	call( handle.player);
+	}
+
+if (p3.bet != 255)
+	{
+	active.player = 2;
+	current.card = first.card;
+	current.card += 10;
+	x = 40;
+	y = 113;
+	call( handle.player);
+	}
+
+if (p4.bet != 255)
+	{
+	active.player = 3;
+	current.card = first.card;
+	current.card += 15;
+	x = 40;
+	y = 148;
+	call( handle.player);
+	}
+

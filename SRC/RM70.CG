@@ -1,0 +1,891 @@
+[ POLICE QUEST
+[ rm70.cg
+[ By:  Greg Rowland, Scott Murphy, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 4, 1987GR
+
+[ rm.casino
+
+
+%include "gamedefs"
+%include "rm70.msg"
+
+
+
+[	%var		progress					31
+[		%define	playingPoker1		160	[ set after intros;
+[		%define	lostPoker1		165	[ set in rm75
+[		%define	wonPoker1			170	[ set in rm70
+[		%define	playingPoker2		180	[ set in rm71 after intros
+[		%define	lostPoker2		185	[ set in rm75
+[		%define	wonPoker2			200	[ set in rm75
+
+
+%define	BAINS_ENTRANCE		10
+
+
+%define	doorDone			lf0
+%define	sitting			lf1
+%define	nearTable1		lf2
+%define	nearTable2		lf3
+%define	nearTable3		lf4
+%define	nearTable4		lf5
+%define	nearDoor			lf6
+%define	fromGame			lf7
+%define	nearBainsChair		lf8
+%define	nearSonnyChair		lf9
+%define	BainsAtTable		lf10
+
+
+%define	bainsDistance		lcl0
+%define	bartenderDistance	lcl1
+%define	closeWait			lcl2
+%define	table1Cycles 		lcl3
+%define	table2Cycles 		lcl4
+%define	doorStatus		lcl5
+	%define	closed		0
+	%define	opening		1
+	%define	open			2
+						
+						
+%object	aBains			1
+%object	aBartender		2		
+%object	aDoor			3
+%object	aTable1			4
+%object	aTable2			5
+%object	aTable3			6
+
+
+
+if (init.log) {
+	if (debugging && !marked.cash)
+		{
+		marked.cash = 100;
+		}
+
+	set.horizon( 99);
+	reset( func4);
+
+	load.view( v.bains);
+	load.view( v.cardPlayers);
+	load.view( v.door70);
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	animate.obj( aDoor);
+	ignore.blocks( aDoor);
+	ignore.horizon( aDoor);
+	set.view( aDoor, v.door70);
+	set.cel( aDoor, 0);
+	position( aDoor, 74, 101);
+	draw( aDoor);
+	stop.update( aDoor);
+	work = DOOR_CYCLE_TIME;
+	cycle.time( aDoor, work);
+
+	animate.obj( aTable1);
+	ignore.objs( aTable1);
+	ignore.blocks( aTable1);
+	set.view( aTable1, v.cardPlayers);
+	set.loop( aTable1, 0)
+	set.priority( aTable1, 13);
+	position( aTable1, 25, 146);
+	draw( aTable1);
+	stop.cycling( aTable1);
+	table1Cycles = 2;
+
+	animate.obj( aTable2);
+	ignore.objs( aTable2);
+	ignore.blocks( aTable2);
+	set.view( aTable2, v.cardPlayers);
+	set.loop( aTable2, 1);
+	set.priority( aTable2, 12);
+	position( aTable2, 84, 123);
+	draw( aTable2);
+	stop.cycling( aTable2);
+	table2Cycles = 12;
+
+	animate.obj( aTable3);
+	ignore.blocks( aTable3);
+	set.view( aTable3, v.cardPlayers);
+	set.loop( aTable3, 2);
+	set.cel( aTable3, 0);
+	position( aTable3, 34, 127);
+	stop.cycling( aTable3);
+
+
+
+	if (previous.room == 75)			[	Comin' back from poker game.
+		{
+		set( fromGame);
+		set( BainsAtTable);
+		set.cel( aTable3, 1);
+		draw( aTable3);
+		stop.update( aTable3);
+
+		set.view.f( ego, current.sonny);
+		set.loop( ego, 1);
+		position( ego, 67, 120);
+		release.priority( ego);
+  		observe.blocks( ego);
+		start.motion( ego);
+
+		reset( game.control);
+		reset( no.cycling);
+		reset( keep.cycling);
+		accept.input();
+		}
+	else
+		{
+		if (progress > wonPoker1)	[ time for second game
+			{
+			prevent.input( );
+			set( game.control);
+			add.to.pic( v.cardPlayers, 1, 0, 36, 127, 11, 11);  [	aTable3
+			
+			load.view( v.bartender);
+
+			animate.obj( aBartender);
+			set.view( aBartender, v.bartender);
+			set.loop( aBartender, 3)
+			ignore.blocks( aBartender);
+			ignore.objs( aBartender);
+			ignore.horizon( aBartender);
+			position( aBartender, 69, 164);
+			draw( aBartender);
+			erase( aTable1);
+			erase( aTable2);
+			add.to.pic( v.cardPlayers, 0, 0, 25, 146, 13, 4);[ table1
+			add.to.pic( v.cardPlayers, 1, 3, 84, 123, 12, 4);[ table2
+
+
+
+			position( ego, 82, 167);
+
+			move.obj( ego, 82, 134, 1, scriptDone);	[ Ego gets there 1st.
+			move.obj( aBartender, 69, 127, 1, scriptDone);
+
+			script = 200;
+			}
+		else						[	He's comin' in to play poker1.
+			{
+			position( ego, 76, 167);
+			reset( game.control);
+			accept.input();
+
+			if (progress < playingPoker1)	[	It's his first game.
+				{
+				animate.obj( aBains);
+				set.view( aBains, v.bains);
+				set.loop( aBains, 2)
+				ignore.blocks( aBains);
+				ignore.objs( aBains);
+				ignore.horizon( aBains);
+				position( aBains, 86, 99);
+				set.priority( aBains, 5);
+
+				[script = 0;
+				}
+			else					[	He's been here before. 
+				{				[	Everybody's still waiting.
+				set( BainsAtTable);
+				set.cel( aTable3, 1);
+				}
+
+			draw( aTable3);
+			stop.update( aTable3);
+			}
+		}
+	add.to.pic( v.cardPlayers, 3, 0, 101, 154, 13, 1);	[ table #4
+	add.to.pic( v.cardPlayers, 4, 0, 25, 157, 13, 4);		[ tableBase1
+	add.to.pic( v.cardPlayers, 4, 1, 84, 134, 12, 4);		[ tableBase2
+
+
+	draw( ego);
+	ignore.objs( ego);
+
+	show.pic( );
+
+	if (fromGame)
+		{
+		set( enable.menu);
+		status.line.on();
+		}
+
+	return( );
+
+	}							[***		End Inits		***
+
+
+
+if (nearDoor && doorStatus == open) {
+	ignore.blocks( ego);
+	}
+else {
+	observe.blocks( ego);
+	}
+
+
+--closeWait;
+if (closeWait == 1) {
+	start.update( aDoor);
+	reverse.loop( aDoor, doorDone);
+	}
+
+
+
+--table1Cycles;					[	Tables alternate now.
+if (table1Cycles == 9) {
+	set.cel( aTable1, 0);
+	}
+
+if (table1Cycles == 1) {
+	random( 1, 4, work);
+	set.cel.f( aTable1, work);
+	random( 11, 22, table1Cycles);
+	}
+
+
+--table2Cycles;
+if (table2Cycles == 9) {
+	set.cel( aTable2, 0);
+	}
+
+if (table2Cycles == 1) {
+	random( 1, 4, work);
+	set.cel.f( aTable2, work);
+	random( 11, 22, table2Cycles);
+	}							[***	End table stuff 	***
+
+
+
+if (posn( ego, 01, 146, 61, 167)) {	[ Priority forces
+	set.priority( ego, 14);
+	}
+else {
+	if (posn( ego, 01, 124, 61, 145)) {	[ Priority forces
+		set.priority( ego, 12);
+		}
+	else {
+		if (posn( ego, 75, 123, 125, 135)) {
+			set.priority( ego, 13);
+			}
+		else {
+			release.priority( ego);
+			}
+		}
+	}
+
+
+
+reset( nearBainsChair);
+if (posn( ego, 44, 108, 58, 115)) {
+	set( nearBainsChair);
+	}
+
+reset( nearSonnyChair);
+if (posn( ego, 60, 111, 73, 125)) {
+	set( nearSonnyChair);
+	}
+
+reset( nearDoor);
+if (posn( ego, 73, 100, 80, 106)) {
+	set( nearDoor);
+	}
+
+reset( nearTable1);
+if (posn( ego, 23, 141, 68, 158)) {
+	set( nearTable1);
+	}
+
+reset( nearTable2);
+if (posn( ego, 83, 116, 120, 132)) {
+	set( nearTable2);
+	}
+
+reset( nearTable3);
+if (posn( ego, 37, 109, 74, 127)) {
+	set( nearTable3);
+	}
+
+reset( nearTable4);
+if (posn( ego, 93, 143, 130, 160)) {
+	set( nearTable4);
+	}
+
+
+distance( ego, aBains, bainsDistance);
+distance( ego, aBartender, bartenderDistance);
+
+if ((nearTable1 ||
+	nearTable2 ||
+	nearTable3 ||
+	bainsDistance < dist ||
+	bartenderDistance < dist)) {
+	set( nearPerson);
+	}
+
+
+
+if (doorDone) {
+	reset( doorDone);
+	stop.update( aDoor);
+	if (doorStatus == open) {
+		doorStatus = closed;
+		}
+	else {
+		if (doorStatus == opening) {
+			}
+		else {
+			doorStatus = open;
+			}
+		}
+	}
+
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+	if (script == 1)				[	He's back for another go...
+		{
+		print( 46);
+		scriptTimer = 3;
+		}
+
+	if (script == 2)
+		{
+		ignore.blocks( ego);
+		set.view( ego, v.cardPlayers);
+		set.loop( ego, 3);
+		set.cel( ego, 1);
+		reposition.to( ego, 64, 119);
+		start.motion( ego);
+		stop.cycling( ego);
+		set( game.control);
+		set( no.cycling);
+		scriptTimer = 3;
+		}
+
+	if (script == 3)
+		{
+		print( 40);
+		new.room( 75);				[ poker
+		}
+
+
+
+
+	if (script == 101)
+		{
+		pokerGameMin = marked.cash;
+		if (marked.cash > POKER_MIN)
+			{
+			pokerGameMin -= POKER_MIN;
+			}
+
+		pokerGameMax = marked.cash;
+		pokerGameMax += POKER_MAX;
+		hands.played = 0;
+		
+		prevent.input();
+		stop.motion( ego);
+		set( game.control);
+		print( 14);				[ introduce your self and sit
+		scriptTimer = 4;
+		}
+
+	if (script == 102)
+		{
+		print( 41);
+		scriptTimer = 3;
+		}
+
+	if (script == 103)
+		{
+		ignore.blocks( ego);
+		set.view( ego, v.cardPlayers);
+		set.loop( ego, 3);
+		set.cel( ego, 1);
+		reposition.to( ego, 64, 119);
+		start.motion( ego);
+		stop.cycling( ego);
+		set( game.control);
+		set( no.cycling);
+		set( sitting);
+		accept.input();
+
+		scriptTimer = 4;
+		}
+
+	if (script == 104)
+		{
+		print( 43);
+		scriptTimer = 4;
+		}
+
+	if (script == 105)
+		{
+		print( 16);
+		scriptTimer = BAINS_ENTRANCE;
+		}
+
+	if (script == 106)				[	Here comes Jessie Baines.		{
+		{
+		start.update( aDoor);
+		end.of.loop( aDoor, scriptDone);
+		}
+
+	if (script == 107)
+		{
+		draw( aBains);
+		move.obj( aBains, 77, 99, 1, scriptDone);
+		}
+
+	if (script == 108)
+		{
+		move.obj( aBains, 77, 104, 1, scriptDone);
+		}
+
+	if (script == 109)
+		{
+		set.loop( aBains, 1);
+		set.priority( aBains, 10);
+		stop.update( aBains);
+		start.update( aDoor);
+		reverse.loop( aDoor, scriptDone);
+		}
+
+	if (script == 110)
+		{
+		start.update( aBains);
+		ignore.blocks( aBains);
+		move.obj( aBains, 52, 114, 1, scriptDone);
+		}
+
+	if (script == 111)
+		{
+		start.update( aTable3);
+		set.cel( aTable3, 1);
+		erase( aBains);
+		print( 42);
+		scriptTimer = 4;
+		}
+
+	if (script == 112)
+		{
+		print( 44);
+		print( 17);
+		scriptCycles = 9;
+		}
+
+	if (script == 113)
+		{
+		new.room( 75);				[ poker
+		}
+
+
+
+	if (script == 201)				[	Woody escorts Whitey to game room
+		{
+		move.obj( ego, 77, 129, 1, scriptDone);
+		}
+	
+	if (script == 202)
+		{
+		move.obj( ego, 77, 105, 1, scriptDone);
+		move.obj( aBartender, 75, 121, 1, scriptDone);
+		}
+	
+	if (script == 203)
+		{
+		move.obj( aBartender, 75, 103, 1, scriptDone);
+		}
+	
+	if (script == 204)
+		{
+		set.cel( aBartender, 2);		[	This cel has 2 complete legs.
+		stop.cycling( aBartender);
+		}
+	
+	if (script == 205)
+		{
+		start.motion( ego);
+		stop.cycling( ego);
+		reset( keep.cycling);
+
+		print( 24);				[ woody raps on the door
+		scriptTimer = 4;
+		}
+	
+	if (script == 206)
+		{
+		start.update( aDoor);
+		end.of.loop( aDoor, scriptDone);
+		}
+
+	if (script == 207)
+		{
+		doorStatus = open;
+		stop.update( aDoor);
+		start.cycling( aBartender);
+		move.obj( aBartender, 68, 103, 1, scriptDone);
+		}
+	
+	if (script == 208)
+		{
+		set.loop( aBartender, facing.right);
+		stop.cycling( aBartender);
+		scriptTimer = 3;
+		}
+	
+	if (script == 209)
+		{
+		print( 25);				[ door opens, invited in
+		start.cycling( ego);
+		ignore.blocks( ego);
+		ignore.objs( ego);
+		move.obj( ego, 77, 100, 1, scriptDone);
+		}
+	
+	if (script == 210)
+		{
+		reset( btJimmyTogether);
+		new.room( 71);
+		}
+	}
+
+
+
+
+if  (fromGame &&					[ After first card game
+	secondsInRoom == 5)
+	{
+	reset( fromGame);
+	if (progress == lostPoker1)
+		{
+		print( 36);
+		print( 37);
+		set( certainDeath);
+		}
+	else
+		{
+		if (progress == wonPoker1)
+			{
+			score += 3;
+
+			print( 21);			[ Seems you're my kind of player
+			print( 22);			[ come back tonight.
+			print( 23);			[ say sent me
+			print( 35);			[ talk afterwards
+			}
+		else
+			{
+			print( 38);			[	taking a little rest, eh?
+			}
+		}
+	}
+
+
+
+[*****
+[ SAID
+[*****
+
+if ((said( sit) ||					[	also covers "sit down"
+	said( sit, table) ||
+	said( sit, chair)))
+	{
+	set( func4);
+	}
+
+
+if (func4)						[ Sitting stuff
+	{
+	reset( func4);
+
+	if (nearTable4)
+		{
+		print( 5)					[ no chairs
+		}
+	else
+		{
+		if (nearBainsChair)
+			{
+			print( 9);			[ someone's sitting there
+			}
+		else
+			{
+			if (!nearSonnyChair)
+				{
+				if ((nearTable1 ||
+					nearTable2 ||
+					nearTable3))
+					{
+					random( 6, 8, work);
+					print.f( work);		[ chair occupied
+					}
+				else
+					{
+					random( 10, 11, work);
+					print.f( work);		[ don't sit on floor
+					}
+				}
+			else
+				{
+				if (sitting)
+					{
+					if (script)
+						{
+						print( 20); 			[	don't leave now
+						}
+					else
+						{
+						set.view.f( ego, current.sonny);
+						set.loop( ego, 1);
+						reposition.to( ego, 67, 120);
+						release.priority( ego);
+				  		observe.blocks( ego);
+						reset( game.control);
+						reset( no.cycling);
+						reset( sitting);
+						}
+					}
+				else
+					{
+					if (!progress < wonPoker1)
+						{
+						print( 4);
+						print( 39);
+						}
+					else
+						{
+						set( sitting);
+						if (!BainsAtTable)
+							{
+							progress = 160;
+							set( scriptDone);
+							script = 100;		[	Bring Bains in.
+							}
+						else
+							{
+							set( scriptDone);
+							script = 0;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+if ((said( look) ||
+	said( look, room)))	{
+	print( 1);
+	}
+
+if ((said( look, up) ||
+	said(look, ceiling))) {
+	print( 26);
+	}
+
+if ((said( look, down) ||
+	said( look, floor))) {
+	print( 27);
+	}
+
+if (said( look, table)) {
+	print( 28);
+	}
+
+if (said( look, under, table))
+	{
+	if ((nearTable2 ||
+		nearTable1 ||
+		nearTable3))
+		{
+		print( 29);
+		}
+	else
+		{
+		if (nearTable4)
+			{
+			print( 30);
+			}
+		else
+			{
+			set( notCloseEnough);
+			}
+		}
+	}
+
+if ((said( arrest, man, rol) ||
+	said( arrest, suspect, rol) ||
+	said( arrest, bains, rol))) {
+	print( 31);
+	}
+
+if ((said( hello, man) ||
+	said( talk, man)))
+	{
+	if (sitting)
+		{
+		print( 45);
+		print( 13);
+		}
+	else
+		{
+		if (nearTable3)
+			{
+			if ( previous.room == 75) {
+				set( nearPerson);
+				reset( have.match);
+				}
+			else {
+		 		print( 34);
+				}
+			}
+		else
+			{
+			if (nearTable1)
+				{
+				print( 7);
+				}
+			else
+				{
+				if (nearTable2)
+					{
+					print( 33);
+					}
+				else
+					{
+					print( 32);
+					}
+				}
+			}
+		}
+	}
+
+if ((said( play, rol) ||
+	said( deal, rol)))
+	{
+	if (nearTable4)
+		{
+		print( 18)				[ play with self
+		}
+	else
+		{
+		if ((nearTable1 || nearTable2))
+			{
+			random( 6, 8, work);
+			print.f( work);		[ We're busy
+			}
+		else
+			{
+			if (nearTable3 && sitting)
+				{
+				if (script < 100)
+					{
+					new.room( 75);
+					}
+				else
+					{
+					print( 13);	[ when player returns
+					}
+				}
+			else
+				{
+				print( 19);		[ find an open spot
+				}
+			}
+		}
+	}
+	
+
+
+[ General
+
+if (said( open, door))
+	{
+	if (!nearDoor)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (progress < 200)
+			{
+			print( 3);			[ "door locked
+			}
+		else
+			{
+			if (doorStatus == open)
+				{
+				print( 2);		[	"It is already open."
+				}
+			else
+				{
+				start.update( aDoor);
+				end.of.loop( aDoor, doorDone);
+				doorStatus = opening;
+				set( game.control);
+				}
+			}
+		}
+	}
+
+if (said( close, door))
+	{
+	if (!nearDoor)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (doorStatus != open)
+			{
+			print( 3);			[ door locked
+			}
+		else
+			{
+			start.update( aDoor);
+			reverse.loop( aDoor, doorDone);
+			}
+		}
+	}
+
+if ((said( knock, on, door) ||
+	said( knock, door)))
+	{
+	if (!nearDoor)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (doorStatus != open)
+			{
+			print( 3);
+			}
+		else
+			{
+			print( 2);
+			}
+		}
+	}
+
+
+
+[*****
+[ EXIT
+[*****
+
+if (edge.ego.hit == bottom) {
+	new.room( 69);
+	}
+

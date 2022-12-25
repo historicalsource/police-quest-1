@@ -1,0 +1,243 @@
+[ POLICE QUEST
+[ rm49.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 21, 1987GR
+
+[ narcoff.room
+
+
+%message	1
+"The bulletin board is filled with terminally boring stuff!"
+
+%message	2
+"Narcotics Detective Laura Watts says,
+ \"Sonny, you'd better not let Lieutenant Morgan or Sergeant Dooley
+ catch you killing time in here!\""
+
+%message	3
+"\"Are you lost Sonny?\" Detective Laura Watts asks.
+ \"The patrol cars are out in the yard.\""
+
+%message	4
+"\"Shouldn't you be out on patrol?\" Laura asks."
+
+%message	5
+"The Department manuals won't help you."
+
+%message	6
+"\"Welcome to the Narcotics Division, Sonny,\" says Laura.
+ \"I'm pleased you were selected for the position.\""
+
+%message	7
+"\"Allow me to show you around.\""
+
+%message	8
+"\"This file cabinet contains all our active narcotic cases,
+ including Hoffman's file.\""
+
+%message	9
+"\"Walk this way.\""
+
+%message	10
+"\"This key board contains keys to the unmarked cars that are assigned to
+ the Narcotics Division.
+ I've been meaning to update that clipboard hanging there.\""
+
+%message	11
+"\"By the way, our radio call number is 83-Nora-10.\""
+
+%message	12
+"\"This will be your desk,\" Laura continues.
+ \"Since you have your own desk now,
+ your pigeonhole will be assigned to someone else.\""
+
+%message	13
+"\"Sonny,\" Laura says earnestly,
+ \"I attended Hoffman's arraignment early this morning.
+ He's being represented by some out-of-town, hotshot lawyer.\""
+
+%message	14
+"\"The jerk has convinced Judge Palmer that Hoffman is who he says he is.
+ And, that's not the worst of it...\""
+
+%message	15
+"\"Judge Palmer set Hoffman's bail at only $500,000.00!\" Laura exclaims.
+ \"We've got to show cause to justify a No Bail Warrant.
+ If Hoffman gets out on bail, we'll never see his ugly face again!\""
+
+%message	16
+"\"Sonny, I have a meeting right now, and can't stay.
+ Hoffman's your baby now and time is running out!
+ I hope you can discover some information that will convince Judge Palmer
+ to hold him without bail!\""
+
+%message	17
+"This file cabinet contains the files on the current Lytton PD
+ active narcotics cases."
+
+%message	18
+"Ah, hah! A note from Laura."
+
+%message	19
+"\"Bonds,\n\n
+We just received a fax from Chicago PD Detective Joe Taber.
+ He says our man Jason Taselli, (alias Hoffman, alias Pierson),
+ is linked to a big time drug dealer by the name of Jessie Bains.
+ Taber included a mug shot of Bains,
+ a high stakes gambler who recently
+ dropped out of sight in the Chicago area.\""
+
+%message	20
+"You study the mug shot of Bains, and vow to remember it."
+
+%message	21
+"You remember the anonymous letter about big-stakes gambling
+ at the Hotel Delphoria and realize you are onto something hot."
+
+%message	22
+"\"And,\" concludes the note,
+ our Lab has matched the fingerprints on the .45-caliber automatic
+ found in the stolen Cadillac to Taselli's prints.\n\n
+Laura\""
+
+%message	23
+"You have no business in the Narcotics Division files."
+
+%message	24
+"The desk on the right has \"In\" and \"Out\" baskets,
+ a telephone, but no nameplate."
+
+%message	25
+"\"Sonny,\" says Laura,
+ \"Just after you left, a hooker by the name of Sweet Cheeks Marie
+ (who called you 'Precious'),
+ called from the jail and said she needs to see you as soon as possible.\""
+
+%message	26
+"\"But, before you go to the jail, Morgan wants to see you.\""
+
+%message	27						[	Used in message 50
+"You'd better change and get over there."
+
+%message	28
+"\"Sonny, I just got a call from the jail.
+ Hoffman's attorney is on his way over there with a half-million dollars
+ to bail him out.\""
+
+%message	 29
+"\"If you've found anything at all that we can use to hold this sucker,
+ now is the time to use it.\""
+
+%message	30
+"\"Take whatever you have, get over to the courthouse and see if you can
+ get a No Bail Warrant out of Judge Palmer.\""
+
+%message	31
+"\"Please feel free to research any and all files,\" Laura concludes."
+
+%message	32
+"You take the keys to the undercover car."
+
+%message	33
+"Narcotics Detective Laura Watts is a veteran narcotics cop
+ and all business."
+
+%message	34
+"What keys?"
+
+%message	35
+"You hang the keys on the key board."
+
+%message	36
+"Not here, please! The keys belong on the key board."
+
+%message	37
+"The message is important, but not the paper!"
+
+%message	38
+"Nothing in Laura's basket pertains to you."
+
+%message	39						[	Used in message 50
+"You'd better get over there!"
+
+%message	40
+"The keys hanging on the key board are for the Narcotics Department's
+ unmarked cars. Below the key board hangs a clipboard."
+
+%message	41
+"The desk on the left has \"In\" and \"Out\" baskets,
+ and a nameplate that says \"Laura Watts, Narcotics Detective.\""
+
+%message	42
+"There's no need to open the desk."
+
+%message	43
+"You see blue sky and green bushes."
+
+%message	44
+"The bookcase contains Official Departmental Manuals."
+
+%message	45
+"Reading a Departmental Manual is about as much fun as reading the
+ fine print on a life insurance policy.
+ You'd rather read the back of a cereal box!"
+
+%message	46
+"This is a map of the City of Lytton."
+
+%message	47
+"Hey! It's empty!"
+
+%message	48
+"Someday (if you ever move up to Narcotics)
+ you may need keys to an unmarked car.
+ But today is not that day."
+
+%message	49
+"Don't interrupt Laura when she's speaking."
+
+%message	50						[	Uses message 27 & 39
+"\"Hello, Sonny!\" Laura Watts greets you.
+ \"Lieutenant Morgan is waiting for you. %s9\""
+
+%message	51
+"\"Hey, Sonny,\" Laura Watts says,
+ \"Sergeant Dooley is expecting you in his office, pronto!\""
+
+%message	52
+"\"Sonny! Are you going to be late for briefing again?\""
+
+%message	53
+"That's an entertaining idea, but you have work to do!"
+
+%message	54
+"Ah, the Narcotics Office -- where undercover cops roam!"
+
+%message	55
+"What? And spoil this wonderful air-conditioning?"
+
+%message	56
+"It's a genuine, LT&T black telephone."
+
+%message	57
+"Yes, there is a phone in the room."
+
+%message	58
+"There are two desks, a filing cabinet against the rear wall,
+ and a bookcase in the far right corner."
+
+%message	59
+"The left wall holds a key board and a clipboard.
+ On the rear wall is a bulletin board.
+ A bookcase and large map of the City of Lytton are on the right wall."
+
+%message	60
+"\"How's it hangin', Big Boy?\" cracks Laura."
+
+%message	61
+"\"Hey! I thought you were supposed to go to the Hotel Delphoria!\""
+
+%message	62
+"Good idea!"
+

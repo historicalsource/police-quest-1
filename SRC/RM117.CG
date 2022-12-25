@@ -1,0 +1,1274 @@
+[ POLICE QUEST
+[ rm117.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/21/86
+[ Last Update October 17, 1987GR
+
+
+[ lgc.car
+
+%include "gamedefs"
+%include "rm117.h"
+%include "rm117.msg"
+
+
+
+[ Room setup 
+
+
+if (	machine.type != AMIGA &&
+	!hercules &&
+	(refresh ||
+	init.log ||
+	controller( c.sound.toggle)))
+	{
+	reset(refresh);
+	set.text.attribute( BG_COLOR, TEXT_COLOR);
+	y = 0;
+	x = 20;
+	work = 20;
+	work += current.room;
+	display.f( y, x, work);
+	set.text.attribute( TEXT_COLOR, BG_COLOR);
+	}
+
+
+if (init.log) {
+	functionKeys = MAP;
+ 	reset( ignore.special);
+	reset( func4);
+	reset( func6);
+	reset( func8);
+	reset( func10);
+
+	good.dir = 0;
+	moving2 = 50;
+	moving3 = 50;
+	moving4 = 50;
+	moving5 = 50;
+ 	moving6 = 50;
+
+	traffic.timer = 255;
+
+	street.timer = 255;		[ traffic signal
+	random( 1, 4, work);	[ it's changing who get the green
+	if (work < 3) {
+		intersection = all.stop1;
+		}
+	else {
+		intersection = all.stop2;
+		}
+
+	set.horizon( 1);
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	load.view( v.crash);
+	load.view( v.crash.scene);
+
+	load.view( vBuildings1);
+	load.view( vBuildings2);
+
+	load.sound( s.crash);
+	load.sound( s.siren);
+	load.sound( mKeystone);
+
+	work = 98;
+	:loop1
+
+	if (work < 105) {					[ load Cars
+		load.view.f( work);
+		++work;
+		goto loop1;
+		}
+	if ((current.room == 10 ||
+		current.room == 14 ||
+		current.room == 21 ||
+		current.room == 23 ||
+		current.room == 24 ||
+		current.room == 25)) {
+		load.view( vBuildings0);
+		}
+	if ((current.room == 11 ||
+		current.room == 12 ||
+		current.room == 15 ||
+		current.room == 17 ||
+		current.room == 19 ||
+		current.room == 20)) {
+		load.view( vBuildings1);
+		}
+	if ((current.room == 13 ||
+		current.room == 16)) {
+		load.view( vBuildings2);
+		}
+
+	animate.obj( a.suspect);
+	animate.obj( a.car1);
+	animate.obj( a.car2);
+	animate.obj( a.car3);
+	animate.obj( a.car4);
+	animate.obj( a.car5);
+	animate.obj( a.car6);
+	animate.obj( a.intersection);
+	animate.obj( a.crash);
+	animate.obj( a.back.up);
+	animate.obj( a.back.up);
+
+	set.view( a.car1, v.cars);
+	set.view( a.car2, v.cars);
+	set.view( a.car3, v.diag.cars);
+	set.view( a.car4, v.diag.cars);
+	set.view( a.car5, v.diag.cars);
+	set.view( a.car6, v.diag.cars);
+	set.view( a.back.up, v.patrol.car);
+
+  	set.view( a.intersection, v.intersection);
+	set.view( a.crash, v.crash);
+
+	set.cel.f( a.intersection, intersection);
+
+[	if  ( hercules)			[ Flash on Herc Machines
+[		{
+[		start.cycling( a.suspect);
+[		}
+[	else {
+	stop.cycling( a.suspect);
+[		}
+
+
+	stop.cycling( ego);
+	stop.cycling( a.car1);
+	stop.cycling( a.car2);
+	stop.cycling( a.car3);
+	stop.cycling( a.car4);
+	stop.cycling( a.car5);
+	stop.cycling( a.car6);
+	stop.cycling( a.back.up);
+	stop.cycling( a.intersection);
+
+	ignore.blocks( ego);
+	ignore.blocks( a.intersection);
+	ignore.blocks( a.crash);
+
+	set.priority( a.intersection, 4);
+	set.priority( a.crash, 15);
+	set.priority( a.back.up, 5);
+
+	ignore.objs( a.suspect);
+	ignore.objs( a.car1);
+	ignore.objs( a.car2);
+	ignore.objs( a.car3);
+	ignore.objs( a.car4);
+	ignore.objs( a.car5);
+	ignore.objs( a.car6);
+	ignore.objs( a.intersection);
+	ignore.objs( a.crash);
+
+
+
+	[PROTECTION
+	position( a.car1, 0, 0);
+	position( a.car2, 0, 0);
+	position( a.car3, 0, 0);
+	position( a.car4, 0, 0);
+	position( a.car5, 0, 0);
+	position( a.car6, 0, 0);
+	position( a.suspect, 0, 0);
+	position( a.back.up, 0, 0);
+	position( a.crash, 0, 0);
+	[END PROTECTION
+
+
+
+	load.logics( 115);
+
+	if (current.suspect < 255) {
+		load.logics( 95);					[ lgc.traffic.stop
+		load.logics( 96);					[ lgc.carRadio
+		load.logics( 119);					[ lgc.suspect.vehicle
+		call( 95);					[ lgc.traffic.stop
+		call( 96);					[ lgc.carRadio
+		call( 119);					[ lgc.suspect.vehicle
+		}
+	else {
+		load.logics( 96);					[ lgc.carRadio
+		call( 96);					[ lgc.carRadio
+		}
+
+	if (current.room == car.location) {
+		start.motion( ego);
+		priority = 5;
+		}
+	if (current.car == patrol.car) {
+		set.view.f( ego, current.car);
+	 	set.cel( ego, 0);
+
+		if (code == 3) {
+			set( siren);
+			set( snd.done);
+			reset( no.cycling);
+			set( keep.cycling);
+			}
+		else {
+			set( no.cycling);
+			reset( keep.cycling);
+			}
+		}
+	else {
+		set.view( ego, v.misc.cars);
+	 	set.cel.f( ego, current.car);
+		set( no.cycling);
+		reset( keep.cycling);
+		}
+	set.loop.f( ego, car.loop);
+	set.priority.f( ego, priority);
+	position.f( ego, car.x, car.y);
+
+	step.size( ego, code);
+	return( );
+	}
+
+
+
+[ Logic 
+
+if (!init.log)	{
+	get.posn( ego, car.x, car.y);
+	current.view( ego, current.ego);
+	current.loop( ego, loop);
+	current.cel( ego, cell);
+	}
+
+
+
+[ New Room 
+
+if (!crashed) {
+	if (edge.ego.hit && priority == 5) {	[ Vert, Horiz, New Room
+		street.address = nowhere;
+		car.location = nowhere;
+		work = current.room;
+		car.loop = loop;
+	
+		if (edge.ego.hit == top) {
+			car.y = 166;
+			work -= 4;
+			}
+		if (edge.ego.hit == right) {
+			car.x = 0;
+			work += 1;
+			}
+		if (edge.ego.hit == bottom) {
+			car.y = 5;
+			work += 4;
+			}
+		if (edge.ego.hit == left) {
+			car.x = 156;
+			work -= 1;
+			}
+		if (moving0 == 1		  				[setup for suspect to
+		&& suspect.present) {					[reappear next.room
+			if (suspect.dir == good.dir) {		[see rm119 for suspect movs
+				get.posn( a.suspect, suspect.x, suspect.y);
+				next.suspect.room = 250;
+				}
+			else {
+				reset( suspect.present);
+				}
+			}
+		new.room.f( work);
+		}
+	else {			[ Diag New Room 
+		if (priority == 14) {
+			work = current.room;
+			if ((posn( ego, 146, 1, 159, 6) 		[ upper right
+			|| posn( ego, 156, 7, 159, 30))) {
+				if (work > 13) {
+					x = car.x;
+					y = car.y;
+					++y;
+					--x;
+					car.x = y;
+					car.y = x;
+					work -= 3;
+					new.room.f( work);
+					}
+				else {
+					erase( ego);
+					random( 17, 19, work);
+					print.f( work);
+					car.x = 150;
+					car.y = 6;
+					position.f( ego, car.x, car.y);
+					start.motion( ego);
+					ego.dir = 6;
+					draw( ego);
+					}
+				}
+			else {
+				if ((posn( ego, 1, 146, 5, 164) 		[ lower left
+				|| posn( ego, 1, 165, 18, 167))) {
+					if (work < 22) {
+						x = car.x;
+						y = car.y;
+						if (y < 165) {
+							x += 8;
+							y -= 8;
+							}
+						else {
+							[ driving wrong way freeway temp death ?
+							x += 11;
+							y -= 12;
+							}
+						car.x = y;
+						car.y = x;
+						work += 3;
+						new.room.f( work);
+						}
+					else {
+						erase( ego);
+						random( 17, 19, work);
+						print.f( work);
+						car.x = 14;
+						car.y = 162;
+						position.f( ego, car.x, car.y);
+						start.motion( ego);
+						ego.dir = 2;
+						draw( ego);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+[ ani timers 
+if (moved0) {
+	++moving0;
+	reset( moved0);
+	}
+if (moved1) {
+	++moving1;
+	reset( moved1);
+	}
+if (moved2) {
+	++moving2;
+	reset( moved2);
+	}
+if (moved3) {
+	++moving3;
+	reset( moved3);
+	}
+if (moved4) {
+	++moving4;
+	reset( moved4);
+	}
+if (moved5) {
+	++moving5;
+	reset( moved5);
+	}
+if (moved6) {
+	++moving6;
+	reset( moved6);
+	}
+
+[ Start Traffic 
+
+if (traffic.timer) {
+	--traffic.timer;
+
+	if (traffic.timer == 240) {
+		moving2 = 0;
+		}
+	if (traffic.timer == 200) {
+		moving3 = 0;
+		}
+	if (traffic.timer == 170) {
+		moving4 = 0;
+		}
+	if (traffic.timer == 130) {
+		moving5 = 0;
+		}
+	if (traffic.timer == 100) {
+		moving6 = 0;
+		}
+	}
+
+
+
+[ On Location 
+
+[ NOTE: this module catches radio stuff and func4 when I don't what
+[ this room to be catching it. move this call at your won risk. GR
+
+call( 96);						[ lgc.carRadio
+
+if (func4 && !gotcha) {
+	reset( func4);
+	work = 3;
+	street.address = nowhere;
+
+	if (current.room == 11) {
+		if (posn( ego, 32, 66, 38, 87)) {			[ Hotel
+			street.address = 63;
+			work = 9;
+			}
+		else {
+			if (posn( ego, 17, 55, 31, 98)) {		[ Near Hotel
+				work = 48;
+				}
+			}
+		}
+
+	if (current.room == 12) {
+			if (posn( ego, 37, 113, 65, 117)) {	[ Caffiene Castle
+		 	street.address = 35;
+			work = 10;
+			}
+		else {
+			if (posn( ego, 30, 118, 70, 131)) {	[ Near Caffiene Castle
+				work = 49;
+				}
+			}
+		}
+	if (current.room == 14) {
+		if (posn( ego, 8, 60, 15, 95)) {			[ Park Entrance
+			street.address = 56;
+			work = 11;					  	
+			}
+		else {
+			if (posn( ego, 8, 26, 26, 133)) {		[ Near Park Entrance
+				work = 50;
+				}
+			}
+		}
+	if (current.room == 17) {
+		if (posn( ego, 27, 58, 30, 93)) {			[ Blue Enter
+			street.address = 33;
+			work = 12;
+			}
+		else {
+			if (posn( ego, 17, 50, 26, 100)) {		[ Near Blue Enter
+				work = 51;
+				}
+			}
+		}
+	if (current.room == 20 ) {
+		if (posn( ego, 27, 39, 39, 63)) {			[ Station Yard
+			street.address = 7;
+			work = 13;
+			}
+		else {
+			if (posn( ego, 17, 25, 40, 65)) {		[ Near Station Yard
+				work = 52;
+				}
+			}
+		}
+	if (current.room == 24) {
+		if (posn( ego, 72, 62, 75, 92)) {			[ Court House
+			street.address = 53;
+			work = 14;
+			}
+		if (posn( ego, 76, 60, 85, 93)) {			[ Near Court House
+			work = 53;
+			}
+		}
+[ jail 
+	if (current.room == 24) {
+		if (posn( ego, 85, 91, 105, 107)) {		[ Jail Yard
+			street.address = 41;
+			}
+		else {
+			if (posn( ego, 75, 93, 84, 110)) {		[ Near Jail Yard
+				work = 54;
+				}
+			}
+		}
+	if (current.room == 25) {
+		if (posn( ego, 130, 131, 149, 150)) {		[ Cotton Cove
+			street.address = 60;
+			work = 15;
+			}
+		else {
+			if (posn( ego, 133, 117, 159, 167)) {	[ Near Cotton Cove
+				work = 55;
+				}
+			}
+		}
+
+	if (park.bust == 221 && street.address != 7) {
+		print( 16);		[ let's get back to the office
+		}
+	else {
+		if (!has.suspect &&
+			park.bust &&
+			park.bust < 220 &&
+			work != 50 &&
+			LauraCar &&
+			street.address != 56) {		[rm.park.enteracne
+			print( 5);		[ let's get to the park
+			}	
+		else {
+			if (has.suspect && street.address != 41) {		[rm.jail.yard
+				if (current.suspect == colby.simms) {
+				 	print( 6);	[ let's go to jail
+					}
+				else {
+					print( 9);	[ not here you don't
+					}
+				}
+			else {
+				if (street.address) {
+					car.x = car.x;
+					car.y = car.y;
+					car.loop = loop;
+					car.location = current.room;
+					new.room.f( street.address);
+					}
+				else {
+					if (wreck.scene == 199) {
+						print( 8);
+						}
+					else {
+						random( 1, 4, work);
+						print.f( work);		[ not a place to stop
+						}
+					}
+				}
+			}
+		}
+	}
+		
+
+[ Sonny's car 
+
+if (!game.control) {
+	if (good.dir != ego.dir) {
+		if ((ego.dir == ego.up.right ||
+			ego.dir == ego.down.left))	{
+			if (current.car == patrol.car) {
+				set.view.f( ego, current.diag.car);
+				}
+			else {
+				set.view( ego, v.diag.misc.cars);
+				set.cel.f( ego, current.car);
+				}
+			set.loop( ego, 1);
+			fix.loop( ego);
+			}
+		if ((ego.dir == ego.down.right ||
+			ego.dir == ego.up.left)) {
+			if (current.car == patrol.car) {
+				set.view.f( ego, current.diag.car);
+				}
+			else {
+				set.view( ego, v.diag.misc.cars);
+				set.cel.f( ego, current.car);
+				}
+			set.loop( ego, 0);
+			fix.loop( ego);
+			}
+		if ((ego.dir == ego.up ||
+			ego.dir == ego.down ||
+			ego.dir == ego.right ||
+			ego.dir == ego.left))	{
+			release.loop( ego);
+
+			if (current.car == patrol.car) {
+				set.view.f( ego, current.car);
+				set.cel( ego, 0);
+				}
+			else {
+				set.view( ego, v.misc.cars);
+				set.cel.f( ego, current.car);
+				}
+			}
+		if (ego.dir == ego.stopped) {
+			if (!gotcha) {
+				impact = 1;		[ collision range
+				}
+			else {
+				impact = 0;
+				}
+			}
+		else {
+			impact = 2;
+			}
+		good.dir = ego.dir;
+		}
+	}
+
+
+[ Speed control 
+
+[ On ramp / overpass logic Ego @ overpass 14 
+
+if ((current.room == 13 ||
+	current.room == 16 ||
+	current.room == 19 ||
+	current.room == 22)) {
+	[ A, B, C.
+	if (crashing < curbCrash) {
+		if ((posn( ego, 17, 118, 27, 167) ||
+			posn( ego, 76, 60, 84, 111) ||
+			posn( ego, 133, 3, 143, 53))) {
+			if (priority == 14) {
+				if (hit.special) {
+					crashing = droveOffOverPass;
+					}
+				}
+			else {
+				crashing = 0;
+				observe.blocks( ego);
+				set( ignore.special);
+				reset( hit.special);
+				}
+			}
+		else {
+			ignore.blocks( ego);
+			reset( ignore.special);
+			}
+		}
+
+
+[ Freeway Ramps left to right #1 #2 #3 #4 
+
+[enter
+	if (priority != 14 &&
+		(posn( ego, 70, 70, 75, 74) ||
+		posn( ego, 102, 25, 112, 33) ||
+		posn( ego, 64, 123, 70, 131) ||
+		posn( ego, 85, 95, 90, 103))) {
+		priority = 14;
+		set.priority.f( ego, priority);
+		}
+[exit
+	if (priority != 5 &&
+		(posn( ego, 70, 65, 75, 69) ||
+		posn( ego, 90, 25, 100, 33) ||
+		posn( ego, 71, 123, 76, 131) ||
+		posn( ego, 85, 104, 90, 108))) {
+		priority = 5;
+		set.priority.f( ego, priority);
+		}
+
+
+[ Traffic @ off ramp 
+	if (posn( a.car3, 103, 26, 103, 33)) {
+		set.priority( a.car3, 5);
+		}
+	if (posn( a.car6, 70, 123, 70, 131)) {
+		set.priority( a.car6, 5);
+		}
+	}
+	
+
+[ Crash logic
+if ((posn(ego, 25, 39, 27, 118) ||
+	posn(ego, 83, 39, 85, 118) ||
+	posn(ego, 141, 39, 143, 118))) {
+
+	if ((ego.dir == ego.up.left ||
+		ego.dir == ego.left ||
+		ego.dir == ego.down.left)) {
+		reset( hit.special);
+		}
+	}
+
+
+if (hit.special && !crashing) {
+	crashing = curbCrash;
+	}
+
+if (crashing > ranLight && !crashed) {
+	stop.motion( ego);
+	set( game.control);
+	set( crashed);
+	x = car.x;
+	y = car.y;
+	if (x > 5) {
+		x -= 5;
+		}
+	if (y < 163) {
+		y += 5;
+		}
+
+	position.f( a.crash, x, y);
+	draw( a.crash);
+	end.of.loop( a.crash, crashDone);
+	sound( s.crash, snd.done);
+	}
+
+if (crashDone)
+	{
+	reset( crashDone);
+	work = 2;
+ 	cycle.time( a.crash, work);
+	normal.cycle( a.crash);
+	start.cycling( a.crash);
+	set.view( a.crash, v.crash.scene);
+	set.cel( a.crash, 1);
+	force.update( a.crash);
+
+	if (progress < dead) {
+		set( certainDeath);
+
+		if (crashing == curbCrash) {
+			print( 20);
+			}
+		else {
+			if (crashing == droveOffOverPass) {
+				print( 21);
+				}
+			else {
+				print( 22);
+				}
+			}
+		}
+	}
+
+
+[ Stop light logic 
+
+if (street.timer == 255) {
+	street.timer = 0;
+
+	if (intersection < east.yellow) {
+		++intersection;
+		}
+	else	{
+		intersection = all.stop1;
+		}
+	set.cel.f( a.intersection, intersection);
+	set( change.signal);
+
+	if ((intersection == north.yellow
+	|| intersection == east.yellow)) {
+		street.timer = 245;
+		}
+	if ((intersection == all.stop1
+	|| intersection == all.stop2)) {
+		street.timer = 250;
+		}
+	}
+++street.timer;
+
+
+[ Running traffic signals
+
+
+[ Reset light.ok !B, !D, !E.
+if (	!posn( ego, 75, 25, 85, 39) &&
+	!posn( ego, 17, 117, 27, 131) &&
+	!posn( ego, 75, 117, 85, 131)) {
+
+	reset( light.ok);
+
+	if ( Xstreet && Ystreet) {
+		stopLight = stopLight;
+		}
+	else {
+		if ( Xstreet) {
+			stopLight = north.stop;
+			}
+		else {
+			stopLight = east.stop;
+			}
+		}
+	}
+else {
+	if (!light.ok &&
+		progress != dead &&
+	    (current.car != patrol.car ||
+		code < lights.siren)) {
+
+		set( light.ok);
+[B
+		if (posn( ego, 75, 25, 85, 39) &&
+			(current.room == 13 ||
+			current.room == 16 ||
+			current.room == 18 ||
+			current.room == 19 ||
+			current.room == 20 ||
+			current.room == 22 ||
+			current.room == 24)) {
+			if ( intersection == east.stop &&
+				stopLight == intersection) {
+				crashing = ranLight;
+				}
+			if (intersection == north.stop &&
+				stopLight == intersection) {
+				crashing = ranLight;
+				}
+			}
+[D
+		if (posn( ego, 17, 117, 27, 131) &&
+			(current.room == 15	||
+			current.room == 17)) {
+			if (intersection == east.stop &&
+				stopLight == intersection) {
+				crashing = ranLight;
+				}
+			if (intersection == north.stop &&
+				stopLight == intersection) {
+				crashing = ranLight;
+				}
+			}
+
+[E
+		if (posn( ego, 75, 117, 85, 131) &&
+			(current.room == 11 ||
+			current.room == 21)) {
+			if (intersection == east.stop &&
+				stopLight == intersection) {
+				crashing = ranLight;
+				}
+			if (intersection == north.stop &&
+				stopLight == intersection) {
+				crashing = ranLight;
+				}
+			}
+		}
+	}
+
+[ !light.ok && for after through 
+if (	crashing == ranLight &&
+	progress < dead) {
+	stop.motion( ego);
+
+	print( 23);			[ good cops don't run lights
+
+	set( crashed);
+	crashing = crash;
+	set( certainDeath);
+	}
+
+[ Collision logic 
+if (priority == 14) {	[ ego = 14, cars = 15 test alike
+	++priority;
+	impact = 3;
+	}
+[ setup for car approaching ego from behind to stop
+if (ego.dir) {
+	egoLastDir = ego.dir;
+	}
+
+carStopped = stopCarRadius;
+if (stopCar2) {
+	carStopped += stopCarRadius;
+	}
+if (stopCar3) {
+	carStopped += stopCarRadius;
+	}
+if (stopCar4) {
+	carStopped += stopCarRadius;
+	}
+if (stopCar5) {
+	carStopped += stopCarRadius;
+	}
+if (stopCar6) {
+	carStopped += stopCarRadius;
+	}
+
+distance( ego, a.suspect, suspect);
+if (suspect < dangerZone) {
+	get.priority( a.suspect, victim.priority);
+	if (suspect < impact && victim.priority == priority) {
+		stop.motion( a.suspect);
+		moving0 = crash;
+		crashing = collision;
+		suspect.speed = 0;
+		}
+	}
+[ new stop
+distance( ego, a.car1, carDist);
+if (carDist < carStopped) {
+	carHit = 1;
+	get.posn( a.car1, x, y);
+	get.dir(a.car1, victimDir)
+	get.priority( a.car1, victim.priority);
+	call( 115);		[ lgcBumpercars
+	}
+else {
+	if (!crashing && stopCar1) {
+		reset( stopCar1);
+		start.update( a.car1);
+		}
+	}
+
+distance( ego, a.car2, carDist);
+if (carDist < carStopped) {
+	carHit = 2;
+	get.posn( a.car2, x, y);
+	get.dir(a.car2, victimDir)
+	get.priority( a.car2, victim.priority);
+	call( 115);
+	}
+else {
+	if (!crashing && stopCar2) {
+		reset( stopCar2);
+		start.update( a.car2);
+		}
+	}
+
+distance( ego, a.car3, carDist);
+if (carDist < carStopped) {
+	carHit = 3;
+	get.posn( a.car3, x, y);
+	get.dir(a.car3, victimDir)
+	get.priority( a.car3, victim.priority);
+	call( 115);
+	}
+else {
+	if (!crashing && stopCar3) {
+		reset( stopCar3);
+		start.update( a.car3);
+		}
+	}
+
+distance( ego, a.car4, carDist);
+if (carDist < carStopped) {
+	carHit = 4;
+	get.posn( a.car4, x, y);
+	get.dir(a.car4, victimDir)
+	get.priority( a.car4, victim.priority);
+	call( 115);
+	}
+else {
+	if (!crashing && stopCar4) {
+		reset( stopCar4);
+		start.update( a.car4);
+		}
+	}
+
+distance( ego, a.car5, carDist);
+if (carDist < carStopped) {
+	carHit = 5;
+	get.posn( a.car5, x, y);
+	get.dir(a.car5, victimDir)
+	get.priority( a.car5, victim.priority);
+	call( 115);
+	}
+else {
+	if (!crashing && stopCar5) {
+		reset( stopCar5);
+		start.update( a.car5);
+		}
+	}
+distance( ego, a.car6, carDist);
+if (carDist < carStopped) {
+	carHit = 6;
+	get.posn( a.car6, x, y);
+	get.dir(a.car6, victimDir)
+	get.priority( a.car6, victim.priority);
+	call( 115);
+	}
+else {
+	if (!crashing && stopCar6) {
+		reset( stopCar6);
+		start.update( a.car6);
+		}
+	}
+
+distance( ego, a.back.up, carDist);
+if (carDist < carStopped) {
+	carHit = 7;
+	get.posn( a.back.up, x, y);
+	get.dir(a.back.up, victimDir)
+	get.priority( a.back.up, victim.priority);
+	call( 115);
+	}
+else {
+	if (!crashing && stopBackUp) {
+		reset( stopBackUp);
+		start.update( a.back.up);
+		}
+	}
+
+
+if (priority == 15) {	[ restore after test alike
+	--priority;
+	}
+
+
+
+[ 
+:no.crashs
+[ Set dir & loop of traffic
+
+get.dir( a.car1, work);
+
+if (work != car1.dir) {
+	if ((work == ego.up.right
+	|| work == ego.down.left)) {
+		set.view( a.car1, v.diag.cars);
+		release.loop( a.car1);	
+		set.loop( a.car1, 1);
+		fix.loop( a.car1);
+		}
+	else {
+		if ((work == ego.down.right
+		|| work == ego.up.left)) {
+			set.view( a.car1, v.diag.cars);
+			release.loop( a.car1);	
+			set.loop( a.car1, 0);
+			fix.loop( a.car1);
+			}
+		else {
+			release.loop( a.car1);	
+			set.view( a.car1, v.cars);
+			}
+		}
+	}
+
+
+get.dir( a.car2, work);
+if (work != car2.dir) {
+	if ((work == ego.up.right
+	|| work == ego.down.left)) {
+		set.view( a.car2, v.diag.cars);
+		release.loop( a.car2);	
+		set.loop( a.car2, 1);
+		fix.loop( a.car2);
+		}
+	else {
+		if ((work == ego.down.right
+		|| work == ego.up.left)) {
+			set.view( a.car2, v.diag.cars);
+			release.loop( a.car2);	
+			set.loop( a.car2, 0);
+			fix.loop( a.car2);
+			}
+		else {
+			release.loop( a.car2);	
+			set.view( a.car2, v.cars);
+			}
+		}
+	}
+
+
+get.dir( a.car3, work);
+if (work != car3.dir) {
+	if ((work == ego.up.right
+	|| work == ego.down.left)) {
+		set.view( a.car3, v.diag.cars);
+		release.loop( a.car3);	
+		set.loop( a.car3, 1);
+		fix.loop( a.car3);
+		}
+	else {
+		if ((work == ego.down.right
+		|| work == ego.up.left)) {
+			set.view( a.car3, v.diag.cars);
+			release.loop( a.car3);	
+			set.loop( a.car3, 0);
+			fix.loop( a.car3);
+			}
+		else {
+			release.loop( a.car3);	
+			set.view( a.car3, v.cars);
+			}
+		}
+	}
+		
+
+get.dir( a.car4, work);
+if (work != car4.dir) {
+	if ((work == ego.up.right
+	|| work == ego.down.left)) {
+		set.view( a.car4, v.diag.cars);
+		release.loop( a.car4);	
+		set.loop( a.car4, 1);
+		fix.loop( a.car4);
+		}
+	else {
+		if ((work == ego.down.right
+		|| work == ego.up.left)) {
+			set.view( a.car4, v.diag.cars);
+			release.loop( a.car4);	
+			set.loop( a.car4, 0);
+			fix.loop( a.car4);
+			}
+		else {
+			release.loop( a.car4);	
+			set.view( a.car4, v.cars);
+			}
+		}
+	}
+
+
+get.dir( a.car5, work);
+if (work != car5.dir) {
+	if ((work == ego.up.right
+	|| work == ego.down.left)) {
+		set.view( a.car5, v.diag.cars);
+		release.loop( a.car5);	
+		set.loop( a.car5, 1);
+		fix.loop( a.car5);
+		}
+	else {
+		if ((work == ego.down.right
+		|| work == ego.up.left)) {
+			set.view( a.car5, v.diag.cars);
+			release.loop( a.car5);	
+			set.loop( a.car5, 0);
+			fix.loop( a.car5);
+			}
+		else {
+			release.loop( a.car5);	
+			set.view( a.car5, v.cars);
+			}
+		}
+	}
+
+
+get.dir( a.car6, work);
+if (work != car6.dir) {
+	if ((work == ego.up.right
+	|| work == ego.down.left)) {
+		set.view( a.car6, v.diag.cars);
+		release.loop( a.car6);	
+		set.loop( a.car6, 1);
+		fix.loop( a.car6);
+		}
+	else {
+		if ((work == ego.down.right
+		|| work == ego.up.left)) {
+			set.view( a.car6, v.diag.cars);
+			release.loop( a.car6);	
+			set.loop( a.car6, 0);
+			fix.loop( a.car6);
+			}
+		else {
+			release.loop( a.car6);	
+			set.view( a.car6, v.cars);
+			}
+		}
+	}
+
+				
+
+[ Text
+
+if ((!have.input ||
+	progress != dead)) {
+	goto exit;
+	}
+
+
+if (said( hello)) {
+	print( 7);
+	}
+	
+if ((said( one) ||
+	said( code, one) ||
+	said( go, code, one) ||
+	said( slow, down))) {
+
+	set( func6);
+	}
+
+if ((said( two) ||
+	said( code, two) ||
+	said( go, code, two) ||
+	said( go, fast))) {
+
+	set( func8);
+	}
+
+if ((said( three) ||
+	said( code, three) ||
+	said( turn, light, off) ||
+	said( turn, off, light) ||
+	said( turn, light, on) ||
+	said( turn, on, light) ||
+	said( go, code, three) ||
+	said( speed, up) ||
+	said( go, fastest))) {
+
+	set( func10);
+	}
+
+
+[
+:exit
+[
+
+if (func6) {
+	code = cruising;
+	if (current.car == patrol.car) {
+	 	set.cel( ego, 0);
+		}
+	stop.cycling( ego);
+	set( no.cycling);
+	reset( keep.cycling);
+	step.size( ego, code);
+	stop.sound( );
+
+	reset( siren);
+	reset( func6);
+	}
+else {
+	if (func8) {
+		set( no.cycling);
+	 	code = lights;
+		step.size( ego, code);
+		stop.sound( );
+		reset( siren);
+		reset( func8);
+		}
+	else {
+		if (func10) {
+			if (current.car == patrol.car) {
+				reset( no.cycling);
+				set( keep.cycling);
+				set( snd.done);
+				set( siren);
+				}
+			code = lights.siren;
+			step.size( ego, code);
+			reset( func10);
+			}
+		}
+	}
+		
+if (code == 3 && siren && snd.done && progress < 255)
+	{
+	if ((suspect == 255 ||			[ suspect !drawn
+		current.suspect == 1)) {
+		{
+		sound( s.siren, snd.done);
+		}
+	else
+		{
+		sound( mKeystone, snd.done);
+		}
+	}
+
+
+if (current.suspect < 255) {
+	call( 119);					[ lgc.suspect.vehicle
+	call( 95);					[ lgc.traffic.stop
+	}
+
+[temp 
+[%message 56
+["%v220 %v152"
+["obj.hit.edge %v4, edge.obj.hit %v5"
+[	"M0 %v220|3, M1 %v221|3, M2 %v222|3, \n
+[	M3 %v223|3, M4 %v224|3, M5 %v225|3, M6 %v226|3\n
+[	Fp %v136|2, Np %v137|2"
+[	
+[
+[distance( ego, a.suspect, work);
+[set(QA);
+[	if (QA) {
+[		display( 22, 5, 56);
+[		}
+[%message 56
+["%v50|3"
+[%message 56
+["s%v50|3 i%v234|3 x%v253|3 y%v254|3"
+[display( 22, 10, 56);

@@ -1,0 +1,191 @@
+[ POLICE QUEST
+[ rm42.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 10, 1987al
+
+[ srgoff.room
+
+
+%message	1
+"\"Are you sizin' up my office, or what?\""
+
+%message	2
+"\"Sonny, you know you don't belong in this office without an invitation!
+ Get to work!\""
+
+%message	3
+"\"Officer Bonds, your public awaits you!\""
+
+%message	4
+"\"I heard you were going undercover at Hotel Delphoria, Sonny!\""
+
+%message	5
+"\"CLUCK!!\""
+
+%message	6
+"You can hardly believe your eyes.
+ A full-grown chicken, with its legs tied together,
+ is flapping about and clucking raucously, right on Sgt. Dooley's desk!
+ Feathers fly everywhere!
+ But that's not the worst:
+ unfortunately, the chicken has lost control of her bodily functions."
+
+%message	7
+"The mysterious \"Gremlin\" has struck Sgt. Dooley again!"
+
+%message	8
+"\"Sonny! If I find out you are that inconsiderate, worthless 'Gremlin,'
+ I'll hang you out to dry!!\""
+
+%message	9
+"Nah, you don't want to do that.
+ Who'd dirty their clean uniform by picking up a chicken that just
+ relieved herself all over Sgt. Dooley's desk?"
+
+%message	10
+"Before you say anything, you think back a few years and remember that
+ Lytton PD officer who received a disability retirement because
+ the blood stopped circulating in his brain.
+ He also talked to chickens!"
+
+%message	11
+"The office is furnished with a desk and chair, a file cabinet,
+ and a bookcase with a trophy on it."
+
+%message	12
+"On one wall is a photograph of Sgt. Dooley with Chief Whipplestick.
+ On the other wall hangs a Certificate of Accomplishment."
+
+%message	13
+"The inscription on the trophy reads...\n\n
+\"Sgt. John Dooley\n
+   Third Place\n
+   Fifth Annual\n
+ Pygmy Goat Races\""
+
+%message	14
+"\"Sonny! Are you going to be late for briefing again?\""
+
+%message	15
+"In the bookcase are various volumes of Official Departmental Procedures
+ and General Orders guaranteed to cure insomnia."
+
+%message	16
+"This file cabinet is crammed full of personnel records and officer
+ evaluations."
+
+%message	17
+"\"Certificate of Accomplishment for Outstanding Achievement
+ in the Leadership of City of Lytton Community Youth Programs\""
+
+%message	18
+"The file cabinet is off-limits to all except Sgt. Dooley,
+ the Chief of Police, and the Department of Internal Affairs."
+
+%message	20
+"\"Well, hello, Mr. Bonds.\""
+
+%message	21
+"The photograph of Sgt. Dooley and Chief Whipplestick amuses you."
+
+%message	22
+"You see the brickwork of an exterior wall."
+
+%message	23
+"It IS open."
+
+%message	24
+"It IS closed."
+
+%message	25
+"You're too far from the door."
+
+%message	26
+"Closing the door now would be rather painful."
+
+%message	27
+"\"Hello, Sonny!
+ I have a memo here concerning you.
+ Let me read it to you.\""
+
+%message	28
+"As Sgt. Dooley starts to read,
+ his eyes begin to sting and water profusely."
+
+%message 29
+"\"Get out of my way!\" screams Dooley.
+ \"I think my eyeballs are comin' out of my head!\""
+
+%message 30
+"Sgt. Dooley races for the bathroom,
+ cursing the \"Gremlin\" for spraying the memo with mace!"
+
+%message 31
+"On his way out, Dooley yells,
+ \"Read the memo yourself, Sonny -- if you can.\""
+
+%message 32
+"From the hallway comes uncontrolled laughter, as Dooley declares,
+ \"When I find who that 'Gremlin' is, I swear I'll kill him!\""
+
+%message 33
+"You can't; that thing is dripping with mace."
+
+%message 34
+"You think to yourself, \"This is one excited chicken,\"
+ as you watch it flop, squirt and cluck around on Dooley's desk.
+ You bite your lip trying to keep from laughing."
+
+%message 35
+"You may be smart, but you can't read a memo upside down!"
+
+%message 36
+"What a cruel thought."
+
+%message 37
+"\"Interdepartmental Memo\n\n
+From: Lt. James Morgan, Narcotics.\n\n
+Re: Officer Bonds\n\n
+Officer Bonds' request for a temporary transfer to the Narcotics
+ Department has been approved.
+ Bonds is to report to my office ASAP in suitable street clothes.\""
+
+%message	38
+"Dooley shouts, \"I swear if I catch that 'gremlin,' whoever he is,
+ I'm gonna make hamburger out of him!\""
+
+%message	39
+"You don't need the books."
+
+%message	40
+"They belong to Sgt. Dooley. Don't bother them."
+
+%message	41
+"Dooley keeps his desk neat and orderly."
+
+%message	42
+"Sgt. Dooley, the old veteran, barks a lot, but rarely bites."
+
+%message	43
+"This is Sgt. Dooley's office.
+ Many butts have been chewed out in this room."
+
+%message	44
+"Forget it!"
+
+%message	45
+"\"Bonds!\" Dooley growls.
+ \"Aren't you assigned enough work to do? Go on, get out of here!\""
+
+%message	46
+"Do that in \"King's Quest III.\""
+
+%message	47
+"\"Interdepartmental Memo\n\n
+From: Lt. James Morgan, Narcotics.\n\n
+Re: Officer Bonds\n\n
+Due to our extreme manpower shortage, Officer Bonds is hereby
+ temporarily transferred to the Narcotics Department.
+ Bonds is to report to my office ASAP in suitable street clothes.\""
+

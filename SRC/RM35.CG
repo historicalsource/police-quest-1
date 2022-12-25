@@ -1,0 +1,413 @@
+[ POLICE QUEST
+[ rm35.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 2/13/87
+[ Last Update October 15, 1987GR
+
+[rm.caffine.entrance
+
+
+%include "gamedefs"
+%include "rm35.msg"
+%include "rm94.h"
+
+
+
+%define	moved0			lf0
+%define	cafeDoorOpening 	lf1
+%define	bikerDoorOpening	lf2
+%define	cafeDoorDone		lf3
+%define	bikerDoorDone		lf4
+
+
+%define	moving0			lcl0
+%define	moving1			lcl1
+
+
+%object	aCafeDoor			1
+%object	aBikerBarDoor		2
+%object	aBunchOfBikes		3
+%object	aBikerBarSign		4
+
+
+
+if (init.log) {
+	if ( !in.car &&
+		(f.car.door ||
+		b.car.door)) {
+		carStolen = 4;
+		}
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	load.view( v.phone.door);
+	load.view( v.caffine.signs);
+	load.view( v.patCar);
+
+	load.sound( s.door.open);
+	load.sound( s.door.close);
+	
+	load.logics( 94);				[lgc.stopped.cars
+
+	if (!SxFoundCarol's)
+		{
+		set( SxFoundCarol's);
+		score += 3;
+		}
+
+	if (current.suspect == 1) {		[	steve coffee
+		if (coffee.scene < 3 &&
+			rmsFirstRadioCall) {
+			current.suspect = 0;
+			coffee.scene = 0;
+			}
+		else {
+		 	add.to.pic( v.patCar, 0, 0, 12, 159, 14, 0);
+			}
+		}
+
+	if ( biker.scene &&
+		biker.scene < 4 &&
+		current.suspect == 4) {
+
+		biker.scene = 1;
+
+		load.view( v.motorcycles);
+
+		if (bikes.down) {
+			moving0 = 2;
+			work = 2;
+			}
+		else {
+			work = 0;
+			}
+
+		animate.obj( aBunchOfBikes);
+		set.view( aBunchOfBikes, v.motorcycles);
+		set.cel.f( aBunchOfBikes, work);
+		stop.cycling( aBunchOfBikes);
+		position( aBunchOfBikes, 10, 162);
+		draw( aBunchOfBikes);
+		stop.update( aBunchOfBikes);
+		work = 7;
+		cycle.time( aBunchOfBikes, work);
+		}
+	else {
+		if ( biker.scene > 3) {
+			biker.scene = 255;
+			reset( suspect.present);
+			}
+		}
+
+	animate.obj( aCafeDoor);
+	animate.obj( aBikerBarDoor);
+	animate.obj( aBikerBarSign);
+
+	set.view( aCafeDoor, v.phone.door);
+	set.view( aBikerBarDoor, v.phone.door);
+	set.view( aBikerBarSign, v.caffine.signs);
+
+	set.loop( aCafeDoor, 1);
+	set.loop( aBikerBarDoor, 2);
+	set.loop( aBikerBarSign, 0);
+
+	position( aCafeDoor, 38, 124);
+ 	position( aBikerBarDoor, 125, 116);
+	position( aBikerBarSign, 111, 60);
+
+	stop.cycling( aCafeDoor);
+	stop.cycling( aBikerBarDoor);
+
+	set.priority( aCafeDoor, 5);
+	set.priority( aBikerBarDoor, 5);
+
+	set.cel( aCafeDoor, 0);			[	No matter what, start with this.
+	set.cel( aBikerBarDoor, 0);
+
+	work = DOOR_CYCLE_TIME;
+	cycle.time( aBikerBarDoor, work);
+	cycle.time( aCafeDoor, work);
+
+	if (priorX) {
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		}
+	else {
+		if (previous.room == 37)		[rm.biker.bar
+			{
+			position( ego, 127, 119);
+			}
+		else {
+			if (previous.room == 36)
+				{
+				position( ego, 40, 127);
+				}
+			else
+				{
+				position( ego, 77, 135);
+				}
+			}
+		}
+	
+	add.to.pic( v.caffine.signs, 1, 0, 10, 58, 15, 0);
+
+	work = 18;
+	cycle.time( aBikerBarSign, work);
+
+	draw( aCafeDoor);
+	draw( aBikerBarDoor);
+	draw( aBikerBarSign);
+
+	stop.update( aCafeDoor);
+	stop.update( aBikerBarDoor);
+
+	call( 94);					[lgc.stopped.cars
+
+	show.pic();
+
+	return();
+	}
+
+
+
+[ caffine door
+
+if (!cafeDoorOpening &&
+	posn( ego, 35, 120, 41, 125))
+	{
+	set( cafeDoorOpening);
+	start.update( aCafeDoor);
+	end.of.loop( aCafeDoor, cafeDoorDone);
+	sound( s.door.open, snd.done);
+	
+	set( game.control);
+	stop.update( ego);
+	prevent.input();
+	}
+
+if (cafeDoorDone)
+	{
+	reset( game.control);
+	accept.input();
+	start.update( ego);
+	new.room( 36);					[	Welcome to Caffeine Castle
+	}
+
+
+
+[ Biker door
+
+if (!bikerDoorOpening &&
+	posn( ego, 125, 117, 128, 118))
+	{
+	set( bikerDoorOpening);
+	start.update( aBikerBarDoor);
+	end.of.loop( aBikerBarDoor, bikerDoorDone);
+	sound( s.door.open, snd.done);
+
+	set( game.control);
+	stop.update( ego);
+	prevent.input();
+	}
+
+
+if (bikerDoorDone)
+	{
+	reset( game.control);
+	accept.input();
+	start.update( ego);
+	new.room( 37);					[	Welcome to Wino Willy's
+	}
+
+
+
+[ CYCLE STUFF
+
+if (biker.scene && biker.scene < 4) {
+	if (posn( ego, 7, 155, 55, 161)) {
+		set.priority( ego, 13);
+		}
+	else {
+		release.priority( ego);
+		}
+
+	if (!moving0 && posn( ego, 0, 158, 55, 164)) {
+		start.update( aBunchOfBikes);
+		end.of.loop( aBunchOfBikes, bikes.down);
+		++moving0;
+		}
+
+	if (moving0 == 1 && bikes.down) {
+		sound( s.door.close, snd.done);
+		shake.screen( 1);
+		stop.update( aBunchOfBikes);
+		print( 12);
+		++moving0;
+		}
+	}
+
+
+
+[ Text Response
+
+if (!have.input) {
+	goto exit;
+	}
+
+if ((said( look) ||
+	said( look, room))) {
+	print( 2);
+	}
+
+if ((said( look, up) ||
+	said( look, sky))) {
+	print( 3);
+	}
+
+if ((said( look, down) ||
+	said( look, ground))) {
+	print( 4);
+	}
+
+if ((said( look, coffee, shop) ||
+	said( look, carols, caffeine) ||
+	said( look, caffeine)))			[	castle is ignored
+	{
+	print( 9);
+	}
+
+if (said( look, wino, willys))
+	{
+	print( 10);
+	}
+
+if ((said( look, bar) ||				[	Cause these could be either.
+	said( look, willys) ||
+	said( look, joint)))
+	{
+	print( 9);
+	print( 10);
+	}
+
+if ((said( look, window) ||
+	said( look$in, window)))
+	{
+	if (posn( ego, 54, 130, 99, 135)) {
+		print( 5);
+		}
+	else {
+		if (posn( ego, 0, 130, 22, 135)) {
+			print( 6);
+			}
+		else {
+			if (posn( ego, 135, 118, 153, 123)) {
+				print( 15);
+				}
+			else {
+				if (posn( ego, 31, 126, 50, 133)) {
+					print( 6);
+					}
+				else {
+					print( 16);
+					}
+				}
+			}
+		}
+	}
+
+if (current.suspect == 1)
+	{
+	if (posn( ego, 0, 142, 81, 167))
+		{
+		if (said( look, car)) {
+			print( 7);
+			}
+		}
+	
+	if (posn( ego, 25, 142, 51, 167))
+		{
+		if (said( anyword, door)) {
+			print( 11);
+			}
+		}
+	}
+
+
+if ( current.suspect == 1) {
+	if (said( call)) {
+		set.string( 3, 26);
+		if ( coffee.scene < 3) {
+			print( 21);
+			}
+		else {
+			print( 22);
+			}
+		}
+	}
+if ( current.suspect == 4) {
+	if (said( call)) {
+		set.string( 3, 25);
+		if ( biker.scene < 255) {
+			print( 21);
+			}
+		else {
+			print( 24);
+			}
+		}
+	}
+
+
+
+if ( biker.scene &&
+	biker.scene < 4)
+	{
+	if ((said( look, plate, rol) ||
+		said( look, bike, plate, rol) ||
+		said( look, bike, license, rol) ||
+		said( look, license, plate, rol)))
+		{
+		print( 17);
+		}
+
+	if ((said( call) ||
+		said( call, bike, rol)))
+		{
+		print( 19);
+		print( 20);
+		}
+
+	if ((said( get, bike, rol) ||
+		said( ride, bike, rol)))
+		{
+		print( 18);
+		}
+
+	if (said( look, bike)) {
+		if (bikes.down) {
+			print( 13);
+			}
+		else {
+			print( 14);
+			}
+		}
+	}
+
+if (current.car == patrol.car &&
+	posn( ego, 82, 137, 159, 167)) {
+	if (said( look, car))
+		{
+		print( 8);
+		}
+	}
+
+
+
+[
+:exit
+[
+
+call( 94);						[lgc.stopped.cars
+

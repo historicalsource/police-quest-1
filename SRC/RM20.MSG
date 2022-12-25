@@ -1,0 +1,18 @@
+[ POLICE QUEST
+[ rm20.msg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/11/86
+[ Last Update September 24, 1987GR
+
+[ rm.map20
+
+
+%message 1
+"You skipped the required safety inspection of your vehicle
+ prior to leaving the station yard.
+ You're now disabled here with a flat tire!"
+
+%message 2
+"The Lytton Police Department is located here."
+
+

@@ -1,0 +1,157 @@
+[ POLICE QUEST
+[ rm44.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 7/21/86
+[ Last Update October 10, 1987al
+
+[ lgc.brief1
+
+
+%message	1
+"\"Wanna bet five bucks on who gets the first arrest?\""
+
+%message	2
+"\"Get to work, boy!\""
+
+%message	3
+"Sergeant Dooley will have your can if you read a newspaper while on duty."
+
+%message	4
+"This is your assigned position for briefings."
+
+%message	5
+"Sergeant John Dooley briefs the 1300 shift,
+ beginning with the latest hot sheet of stolen rides..."
+
+%message	6
+"\"Welcome back, men\" says Sergeant John Dooley.
+ \"I hope you enjoyed the long weekend.\""
+
+%message	7
+"\"Now, listen up,\" he barks.
+ \"We're looking for a black 1983 Cadillac, license number 'LOP1238,'
+ VIN C03456218, reported stolen last week.
+ Try hard to find it, so I can get
+ that Malcolm Washington character off my back for a change.\""
+
+%message	 8
+"\"Also, please contact any street informants that you may have.
+ We need any line we can get on this stinking drug traffic.\""
+
+%message	9
+"Dooley continues, \"Now, hear this:
+ last night, three teenagers were arrested in three separate arrests,
+ each for drunk driving.
+ Two of the three were in possession of cocaine,
+ and all three attend Jefferson High School.
+ That should tell you something, boys and girls!\""
+
+%message	10
+"\"Well, that's it for today.
+ Watch your butts, kids.
+ We don't want ol' Chief Whipplestick whining about our industrial
+ injury stats going up again!
+ Sonny Bonds, your call number will be 83-32.\""
+
+%message	11
+"You pick up this morning's edition of the \"Lytton Tribune.\""
+
+%message	12
+"You check your pigeonhole and find a hand-written message..."
+
+%message	13
+"\"Sonny:\n\n
+How's about a 11-98 at Carol's Caffeine Castle later in the shift?\n\n
+Steve\""
+
+%message	14
+"You look in Steve's pigeonhole and see a stack of subpoenas."
+
+%message	15
+"You look in Jack's pigeonhole and see a message that reads,
+ \"I shot the last sucker that nosed around in MY pigeonhole!\""
+
+%message	16
+"Sgt. Dooley runs a quiet, organized briefing.
+ Wandering around and being a general nuisance just won't cut it.
+ He demands respect for superior officers."
+
+%message	17
+"My, my! What a filthy little mind we have!"
+
+%message	18
+"Your pigeonhole is empty."
+
+%message	19
+"Not now! Sgt. Dooley is ready to start his briefing."
+
+%message	20
+"Quit snooping around in other officer's pigeonholes."
+
+%message	21
+"\"Hey, Sonny! That story in this morning's paper sure made you look good.\""
+
+%message	22
+"\"Sonny Bonds, please find your place. Briefing is about to begin.\""
+
+%message	23
+"Since you no longer need the message, you discard it."
+
+%message	24
+"Dooley yells, \"Sonny, find your desk!\""
+
+%message	 25
+"\"You're gonna havta hump to catch me, boy!
+ I wrote so many tickets while you were off duty,
+ I wore down two pencils and ran a pen clear out of ink!\""
+
+%message	 26
+"\"Did you hear? The 'Greasy Spoon' quit giving half-price meals!\""
+
+%message	 27
+"\"Can you believe our flea-bitten jail lost another prisoner last night?\""
+
+%message	 28
+"\"Dooley sure has been putting on the pressure for ticket activity.\""
+
+%message	 29
+"\"Sonny, you look good enough to take home.\""
+
+%message	 30
+"\"Man! That aftershave lotion is getting to me, Sweet Thing.\""
+
+%message	 31
+"\"I had two arrests last night;
+ it's a shame both of them wanted to go the hard way!\""
+
+%message	32
+"\"Step aside, boy!\""
+
+%message	 33
+"\"It's guys like you that make me want to retire.\""
+
+%message	 34
+"\"Better write some tickets, if you want to keep Dooley off your back.\""
+
+%message	 35
+"\"You keep wearing that aftershave lotion, and I'm going to jump you.\""
+
+%message	36
+"Oh, no!
+ Here you are for the 1300 briefing, and it's 1315!
+ Once again, you've spent too much time goofing off."
+
+%message	37
+"Time to buy \"Leisure Suit Larry in the Land of the Lounge Lizards,\"
+ the new, adult-themed 3-D animated, graphic adventure from Sierra!"
+
+%message	38
+"Briefing should be starting soon."
+
+%message	39
+"\"Bonds, next time find your place and face this podium,\"
+ shouts Sgt. Dooley."
+
+%message	40
+"There is a newspaper lying on the table."
+

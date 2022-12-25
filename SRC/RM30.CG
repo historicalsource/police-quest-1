@@ -1,0 +1,266 @@
+[ POLICE QUEST 
+[ rm30.cg 
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 12/24/86
+[ Last Update October 15, 1987GR
+
+[ rm.foxstop
+
+
+%include "gamedefs"
+%include "rm30.msg"
+%include "rm94.h"
+
+
+
+%define	rebuke			lf0
+
+
+
+if (init.log)
+	{
+	if (!stoppedFox)
+		{
+		set( stoppedFox);
+		score += 4;
+		}
+	load.logics( 94);				[lgc.stopped.cars
+								[note fox car add.to.pic in rm94		
+	load.pic( streetScene);
+	draw.pic( streetScene);
+	discard.pic( streetScene);
+	load.logics.f( streetScene);
+
+	load.logics( 94);				[lgc.stopped.cars
+	
+	load.view( v.foxCar);
+	load.view( v.patCar);
+
+	if (!in.car) {
+		position.f( ego, ego.x, ego.y);
+		set.loop.f( ego, loop);
+		draw( ego);
+		}
+	call( 94);					[lgc.stopped.cars
+
+	add.to.pic( v.foxCar, 0, 0, 10, 158, 14, 0);		[ fox
+
+	show.pic();
+
+	if (previous.room == 3)
+		{
+		status.line.on();
+		}
+
+	return();
+	}
+
+
+
+[ Logic 
+
+if ( SxToldFoxNo &&
+	secondsInRoom == 6 &&
+	!rebuke) {
+
+	print( 7);					[	I'll file a complaint
+	set( rebuke);
+	}
+
+
+[ near Person 
+if (posn( ego, 20, 152, 40, 167))
+	{
+	set( nearPerson);
+	}
+
+
+[ Text 
+
+if (!have.input) {
+	goto exit;
+	}
+
+if (!in.car &&
+	has( i.case) &&
+    (said( anyword, case, rol) ||
+	said( anyword, anyword, case, rol) ||
+	said( anyword, anyword, anyword, case, rol)))
+	{
+	print( 9);					[it's in car
+	}
+
+if ((said( look, car) ||
+	said( look)))
+	{
+	print( 12);					[rich girls car
+	}
+
+if (said( talk, girl))
+	{
+	if (!nearPerson)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (!SxGaveFoxTicket)
+			{
+			print( 21);
+			}
+		else
+			{
+			print( 16);
+			}
+		}
+	}
+
+
+if ((said( look, girl) ||
+	said( get, out) ||
+	said( get, out, car) ||
+	said( read, license) ||
+	said( write, ticket) ||
+	said( look, pussy) ||
+	said( look, drive) ||
+	said( look$in, car)))
+	{
+	if (in.car)
+		{
+		print( 3);
+		}
+	else
+		{
+		if (!nearPerson)			[	Walking up to her
+			{
+			print( 4);
+			}
+		else
+			{
+			if (SxGaveFoxTicket)
+				{
+				print( 16);		[ Get lost jerk
+				}
+			else
+				{
+				if (hasfPhone)
+					{
+					print( 17);	[ Thanx Officer, call me soon
+					}
+				else
+					{
+					if (foxScene)
+						{
+						print( 20);
+						}
+					else
+						{
+						get.posn( ego, ego.x, ego.y);
+						current.loop( ego, loop);
+						reset( have.input);
+						new.room( 3);	[lgc.tits
+						}
+					}
+				}
+			}
+		}
+	}
+
+if (said( look, plate))
+	{
+	if ((posn( ego, 54, 1, 159, 167) ||[	behind car
+		posn( ego, 0, 1, 4, 167)))	[	in front of car
+		{
+		print( 1); 				[ lic. #
+		}
+	else {
+		print( 13); 				[ Can't see from here
+		}
+	}
+
+if ((said( run, plate) ||
+	said( run, license, number) ||
+	said( check, plate) ||
+	said( call) ||
+	said( radio, plate) ||
+	said( run, make)))
+	{
+	if ((in.car ||
+		has( i.extnd) ||
+		posn( ego, 111, 161, 118, 162)))[	near patrol car door
+		{
+		print( 8);				[	Hello, central?
+		if (!SxFoxPlate)
+			{
+			set( SxFoxPlate);
+			score += 1;
+			print( 2);			[	no wants no warrents
+			}
+		else
+			{
+			print( 19);
+			}
+		}
+	else
+		{
+		set.string( 3, 18);				[ radio
+		parse( 3);
+		}
+	}
+
+if ((said( anyword, registration) ||
+	said( anyword, anyword, registration)))
+	{
+	print( 10);
+	print( 11);
+	}
+
+if  (nearPerson &&
+    (said( open, door) ||
+	said( anyword, get$out, rol) ||
+	said( get$out, rol)))
+	{
+	print( 15);					[ no need to get her out
+	}
+
+
+
+if  (nearPerson &&
+	have.input &&
+	!have.match)
+	{
+	reset( have.input);
+	set( have.match);
+
+	if (SxGaveFoxTicket)
+		{
+		print( 16);				[ Get lost jerk
+		}
+	else
+		{
+		if (hasfPhone)
+			{
+			print( 17);			[ Thanx Officer, call me soon
+			}
+		else
+			{
+			if (foxScene)
+				{
+				print( 20);
+				}
+			else
+				{
+				print( 6);
+				}
+			}
+		}
+	}
+
+
+[
+:exit
+[
+
+call.f( streetScene);
+call( 94);						[lgc.stopped.cars
+

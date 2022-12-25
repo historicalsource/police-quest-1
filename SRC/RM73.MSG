@@ -1,0 +1,38 @@
+[ POLICE QUEST
+[ rm73.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 26, 1987GR
+
+[	Message for room 73 -- scDyn
+
+
+%message	1
+"\"That sounds like a good idea, Honey!\" says Sweet Cheeks Marie,
+ \"but I thought we were on duty!\""
+
+%message	2
+"Sweet Cheeks is, hmmmm, an intensely good-looking female-type unit.
+ As you ogle her shapely figure, your imagination numbs your conscious mind,
+ sending you into a lecherous dream world."
+
+%message	3
+"SC %v242/%v243 "
+
+%message	4	
+"\"Whee!\""
+
+%message	5
+"\"Isn't this fun, darlin'?\" Sweet Cheeks whispers into your ear."
+
+%message	6
+"\"All I know is what I told you at Wino Willy's, Sweet Pea!\""
+
+%message	7
+"\"Why, darlin', street corners ain't got phones!\""
+
+%message	8
+"\"Honey, I only do mink-lined handcuffs.\""
+
+%message	9
+"\"I'm with you Big Guy!\""

@@ -1,0 +1,382 @@
+[ POLICE QUEST
+[ rm38.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 8/2/86
+[ Last Update September 25, 1987al
+
+[ lgc.briefcase
+
+
+%include "gamedefs"
+%include "rm38.msg"
+
+
+
+%define	soundDone			lf0
+%define	getTicketBook		lf1
+%define	getNoteBook		lf2
+%define	getPen			lf3
+%define	putTicketBook		lf4
+%define	putNoteBook		lf5
+%define	putPen			lf6
+
+%object	aTicketBook		1
+%object	aNoteBook			2
+%object	aPen				3
+
+
+
+if (init.log)
+	{
+	if (!openedBriefcase)
+		{
+		set( openedBriefcase);
+		score += 1;
+		}
+
+	load.pic( current.room);
+	draw.pic( current.room);
+
+	load.view( v.TNpen);
+
+	load.sound( s.case);
+	
+	animate.obj( aTicketBook);
+	animate.obj( aNoteBook);
+	animate.obj( aPen);
+
+	set.view( aTicketBook, v.TNpen);
+	set.view( aNoteBook, v.TNpen);
+	set.view( aPen, v.TNpen);
+
+	set.cel( aPen, 0);
+	set.cel( aTicketBook, 1);
+	set.cel( aNoteBook, 2);
+
+	stop.cycling( aTicketBook);
+	stop.cycling( aNoteBook);
+	stop.cycling( aPen);
+
+	position( aTicketBook, 82, 123);
+	position( aNoteBook, 53, 122);
+	position( aPen, 73, 121);
+
+	if (obj.in.room( i.TB, current.room)) {
+		draw( aTicketBook);
+		}
+
+	if (obj.in.room( i.NB, current.room)) {
+		draw( aNoteBook);
+		}
+	
+	if (obj.in.room( i.pen, current.room)) {
+		draw( aPen);
+		}
+	
+	show.pic( );
+	status.line.off( );
+	reset( enable.menu);
+
+	return( );
+	}
+
+
+
+if (soundDone)
+	{
+	reset( soundDone);
+
+	status.line.on( );
+	set( enable.menu);
+	new.room.f( previous.room);
+	}
+
+
+
+[ Text
+
+if (!have.input) {
+	goto exit
+	}
+
+if ((said( look) ||
+	said( look, case) ||
+	said( look$in, briefcase)))
+	{
+	if (!obj.in.room( i.NB, current.room) &&
+	    !obj.in.room( i.pen, current.room) &&
+	    !obj.in.room( i.TB, current.room))
+		{
+		print( 13);
+		}
+	else
+		{
+		if  (obj.in.room( i.NB, current.room) &&
+			obj.in.room( i.pen, current.room) &&
+			obj.in.room( i.TB, current.room))
+			{
+			print( 14);
+			}
+		else
+			{
+			if (obj.in.room( i.NB, current.room))
+				{
+				print( 15);
+				}
+			if (obj.in.room( i.pen, current.room))
+				{
+				print( 16);
+				}
+			if (obj.in.room( i.TB, current.room))
+				{
+				print( 17);
+				}
+			}
+		}
+	}
+
+
+if ((said( close, case) ||
+	said( look, room) ||
+	said( stop, looking, case) ||
+	said( lock, case)))
+	{
+	sound( s.case, soundDone);
+	}
+
+if ((said( look$in, case) ||
+	said( open, case)))
+	{
+	print( 1);					[ it is open
+	}
+
+
+if (said( get, all, rol))
+	{
+	set( getNoteBook);
+	set( getTicketBook);
+	set( getPen);
+	}
+
+if (said( put, all, rol))
+	{
+	set( putNoteBook);
+	set( putTicketBook);
+	set( putPen);
+	}
+
+
+if ((said( get, book, rol) ||
+	said( look$in, book, rol) ||
+	said( open, book, rol)))
+	{
+	if  (obj.in.room( i.NB, current.room) &&
+		obj.in.room( i.TB, current.room))
+		{
+		print( 10);				[ 	which book?
+		}
+	else
+		{
+		if (!obj.in.room( i.NB, current.room) &&
+		    !obj.in.room( i.TB, current.room))
+			{
+			print( 6);			[	no books
+			}
+		else
+			{
+			if (obj.in.room( i.NB, current.room))
+				{
+				set( getNoteBook);
+				}
+			else
+				{
+				set( getTicketBook);	[	Only possibility.
+				}
+			}
+		}
+	}
+
+if ((getTicketBook ||
+	said( get, pinch$book, rol) ||
+	said( look$in, black, pinch$book, rol) ||
+	said( look$in, black, book, rol) ||
+	said( look$in, pinch$book, rol) ||
+	said( get, black, pinch$book, rol) ||
+	said( get, black, book, rol)))
+	{
+	if (has( i.TB))
+		{
+		reset( have.match);			[	let rm0 handle it.
+		}
+	else
+		{
+		if (!obj.in.room( i.TB, current.room))
+			{
+			print( 18);
+			}
+		else
+			{
+			erase( aTicketBook);
+			get( i.TB);
+			if (!SxTicketBook)
+				{
+				set( SxTicketBook);
+				score += 1;
+				}
+
+			if (!getTicketBook)
+				{
+				print( 3);				[ you take it
+				}
+			}
+		}
+	reset( getTicketBook);
+	}
+
+
+if ((getNoteBook ||
+	said( get, notebook, rol) ||
+	said( look$in, blue, book, rol) ||
+	said( look$in, blue, notebook, rol) ||
+	said( look$in, notebook, rol) ||
+	said( get, blue, notebook, rol) ||
+	said( get, blue, book, rol)))
+	{
+	if (has( i.NB))
+		{
+		reset( have.match);			[	let rm0 handle it.
+		}
+	else
+		{
+		if (!obj.in.room( i.NB, current.room))
+			{
+			print( 18);
+			}
+		else
+			{
+			erase( aNoteBook);
+			get( i.NB);
+			if (!SxNoteBook)
+				{
+				set( SxNoteBook);
+				score += 1;
+				}
+			if (!getNoteBook)
+				{
+				print( 5);				[ you take
+				}
+			}
+		}
+	reset( getNoteBook);
+	}
+
+if ((getPen ||
+	said( get, pen, rol)))
+	{
+	if (has( i.pen))
+		{
+		reset( have.match);			[	let rm0 handle it.
+		}
+	else
+		{
+		if (!obj.in.room( i.pen, current.room))
+			{
+			print( 18);
+			}
+		else
+			{
+			erase( aPen);
+			get( i.pen);
+			if (!SxPen)
+				{
+				set( SxPen);
+				score += 1;
+				}
+			if (!getPen)
+				{
+				print( 7);				[ from mommy
+				}
+			}
+		}	
+	reset( getPen);
+	}
+
+
+
+if ((putTicketBook ||
+	said( put, pinch$book, rol) ||
+	said( put, black, pinch$book, rol) ||
+	said( put, black, book, rol)))
+	{
+	if (has( i.TB))
+		{
+		draw( aTicketBook);
+		put( i.TB, current.room);
+		print( 9);				[ you put back
+		}
+	else
+		{
+		if (!putTicketBook)
+			{
+			print( 8);
+			}
+		}
+	reset( putTicketBook);
+	}
+
+
+if ((putNoteBook ||
+	said( put, notebook, rol) ||
+	said( put, blue, notebook, rol) ||
+	said( put, blue, book, rol)))
+	{
+	if (has( i.NB))
+		{
+		draw( aNoteBook);
+		put( i.NB, current.room);
+		print( 11);				[ you put back
+		}
+	else
+		{
+		if (!putNoteBook)
+			{
+			print( 8);
+			}
+		}
+	reset( putNoteBook);
+	}
+
+
+if ((putPen ||
+	said( put, pen, rol)))
+	{
+	if (has( i.pen))
+		{
+		draw( aPen);
+		put( i.pen, current.room);
+		print( 12);				[ you put back
+		}
+	else
+		{
+		if (!putPen)
+			{
+			print( 8);
+			}
+		}
+	reset( putPen);
+	}
+
+
+if ((said( anyword, paper) ||
+	said( read, file, rol) ||
+	said( get, file, rol) ||
+	said( open, file, rol) ||
+	said( anyword, anyword, paper)))
+	{
+	print( 4);
+	}
+
+[
+:exit
+[
+

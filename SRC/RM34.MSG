@@ -1,0 +1,254 @@
+[ POLICE QUEST
+[ rm34.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 2/13/87
+[ Last Update September 25, 1987al
+
+[BLUE ROOM
+
+
+%message	1						[	1st scene with jack and Hannah
+"You see your friend, Jack, seated alone at a table.
+ There is a jukebox against the wall to the left."
+
+%message	2
+"Jack speaks, in a very depressed voice,
+ \"Oh, Sonny!
+ I just discovered my daughter is doing drugs!
+ It's really screwed me up!\""
+
+%message	3
+"\"I know she's getting 'em at school,
+ but I just can't finger the punk who's supplying!\""
+
+%message	4
+"\"My life is going to crap.
+ I can't talk to my daughter, she won't listen to me any more!
+ My drinking has my marriage on the rocks, my wife's ready to leave me!
+ Everything's a mess!\""
+
+%message	5
+"Jack is totally surprised as everyone sings \"Happy Birthday.\""
+
+%message	6
+"While everyone wishes Jack a \"Happy Birthday,\"
+ you notice the front door open, as one wild-looking female enters
+ the Blue Room."
+
+%message	7
+"%m64, a dancer from the local \"Rent-A-Gag\" business,
+ enters the room, dressed in a grass skirt and balloons!"
+
+%message	8
+"You relax and enjoy the selection \"My Eyes Cross With Your Touch.\""
+
+%message	9
+"You select the latest in love songs,
+ \"I Shoulda Bought A Monkey To Take Your Place.\""
+
+%message	10
+"You select that old instrumental classic
+ \"My Nostrils Slam Shut When You Breathe.\""
+
+%message	11
+"In a depressed, slurred voice, Jack speaks to you..."
+
+%message	12
+"\"Sonny, I really do appreciate you nailing that filthy
+ scum bag pusher, but I'm afraid it might be too late.\""
+
+%message	13
+"\"My daughter, Kathy, is in the Intensive Care Ward over at Lytton
+ General Hospital!\" he explains.
+ \"She's in a coma from a drug OD! There's nothing I can do!\""
+
+%message	14
+"\"Oh, Sonny! There's nothing anyone can do!!\""
+
+%message	15
+"\"That's it for me, Sonny. I'll see you later.\""
+
+%message	16
+"Jack motions you to the chair on his left."
+
+%message	17
+"This table is occupied."
+
+%message	18
+"Move closer to the chair."
+
+%message	19
+"Jack says, \"I can't hear you, Sonny. Come over here\"."
+
+%message	20
+"Keith pipes up, \"Ohm'gosh, Sonny!
+ Did you forget? We swapped shifts last week!
+ You're due at the station for swing shift briefing in fifteen minutes!\""
+
+%message	21
+"\"You'd better get moving, boy!\""
+
+%message	22
+"The bartender says,
+ \"For your information, Sonny, I have a cab on the way for Jack.\""
+
+%message	23
+"This is \"The Blue Room\", a popular lounge for cops.
+ Behind the bar stands the owner, retired LPD officer Bobby Lopez."
+
+%message	24
+"Please don't sit here."
+
+%message	25
+"escaped"
+
+%message	26
+"been released"
+
+%message	27
+"Morgan wants to see you back in his office, ASAP!"
+
+%message	28
+"There is a city-wide dragnet out on him right now and..."
+
+%message	29
+"\"%m27\""
+
+%message	30
+"You are looking at the latest in jukeboxes.
+ This machine features a one-touch, fully-automated selection system."
+
+%message	31
+"Its sound system features light amplification by stimulated
+ emissions of radiation..."
+
+%message	32
+"...and fully-computerized, video reproductions of your favorite artists,
+ which thankfully are inoperative at this time!"
+
+%message	33
+"In her most seductive voice, %m64 whispers,
+ \"Here's a little something so you'll have a happy birthday, Jack, baby!\""
+
+%message	34
+"\"Wow!\""
+
+%message	35
+"Keith says,
+ \"Well, Jack, you ol' codger.
+ What did you think of %m64?\""
+
+%message	36
+"\"You know, Keith,\" Jack answers,
+ \"I think I'll ask Santa to put her under my tree this year.\""
+
+%message	37
+"Jack invites you to join him,
+ \"Hi, Sonny. Come on over here, and have a seat.\""
+
+%message	38
+"\"See you later, Sonny. I have business to take care of.\""
+
+%message	39
+"Jack speaks, \"Boy, what a depressing day I've had today, Sonny!\""
+
+%message	40
+"\"Hey, Keith!\" you say. \"How's it goin'?\""
+
+%message	41
+"\"Oh, my God!\""
+
+%message	42
+"\"Happy Birthday, Jack.\""
+
+%message	43
+"Jack says, \"Oh, no! Now what?!\""
+
+%message	44
+"You say, \"It's time to stand up and face the music, Jack!\""
+
+%message	45
+"You enter the Blue Room and see Jack seated at a table.
+ He appears to be quite intoxicated."
+
+%message	46
+"Jack says, \"Have a sssheat, Sssshonny.\""
+
+%message	47
+"Trying to cheer Jack, you tell him about the Victor Simms arrest
+ and how he was responsible for selling dope at the high school."
+
+%message	48
+"It seems to be a happy, but quiet, group."
+
+%message	49
+"\"Ain't it great! Some big-city lawyer shows up and, pop, out he goes.\""
+
+%message	50
+"This couple is so engrossed in conversation they don't hear you."
+
+%message	51
+"\"I sure would love to stretch the neck of that sorry dope-pushing
+ scum-sucker that hurt my little girl!\""
+
+%message	52
+"The cab driver shouts out, \"Hey, who called for the taxi?\""
+
+%message	53
+"The cabby says, \"Right this way, Buddy Boy, and don't fall down!\""
+
+%message	54
+"\"Whew, man! Is this boy in bad shape!\""
+
+%message	55
+"\"I'm sorry to have to tell you this, Sonny,\" says Keith,
+ \"but I have some bad news for you!\""
+
+%message	56
+"\"Lieutenant Morgan sent me over here to advise you that your boy,
+ %s2, has %s3 from jail.\""
+
+%message	57
+"\"%s2 jumped a guard, then made it to the exercise yard,
+ where he escaped by climbing over the fence.\""
+
+%message	58
+"\"There is a city-wide dragnet out on him right now! %m27\""
+
+%message	59
+"For some reason, they're ignoring you."
+
+%message	60
+"\"Hello, Bonds!\""
+
+%message	61
+"\"Hi Sonny! Long time, no see.\""
+
+%message	62
+"\"Well! If it ain't Super Cop Bonds!\""
+
+%message	63
+"On the walls is Bobby's personal collection of photographs,
+ taken when he was still with the Department."
+
+%message	64
+"Hoochy Coochy Hannah"
+
+%message	65						[	Used in string #2, message 56/7
+"Taselli"
+
+%message	66
+"Hoffman"
+
+%message	67
+"\"Good, Sonny,\" he replies."
+
+%message	68
+"Try sitting down first."
+
+%message	69
+"\"Hey, Bobby,\" you shout, \"what's the word?\""
+
+%message	70
+"\"Nothing 'round here, baby,\" he replys."
+

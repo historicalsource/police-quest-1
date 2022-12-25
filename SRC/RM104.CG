@@ -1,0 +1,311 @@
+[ POLICE QUEST 
+[ rm104.cg 
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. July 27, 1987
+[ Last Update September 20, 1987al
+
+[	logics for room 104 -- rmWinner2
+
+
+%include "rm104.msg"
+%include "gamedefs"
+%include "roomnums.h"
+
+
+
+#define	L_BODY			0	[	mayor view
+#define	L_HEAD			1
+
+#define	musicDone			lf0
+
+#define	picture			lcl0
+#define	mayorCycles		lcl1
+
+#object	aMayorBody		1
+#object	aMayorHead		2
+#object	aChief			3
+#object	aKiss			4
+
+
+
+if (init.log)
+	{
+	set.horizon( 1);
+	set( game.control);
+	prevent.input();
+	set.horizon( 1);
+
+
+	load.view( v.sweet.cheeks);
+	load.view( v.egok);
+	load.view( vChief);
+	load.view( vMayor);
+	load.view( v.ego);
+	load.sound( mWinner);
+
+	
+	picture = 53;					[	rm.court.house;
+	
+	load.view( vHonorGuard);							[	Leave
+	load.view( vCrowd104);							[	this
+	load.view( v.Cdoor);							[	block
+	load.view( v.court.sign);						[	of
+	load.pic( picture);								[	code
+												[	alone.
+	draw.pic( picture);								[
+	add.to.pic( v.court.sign, 0, 0,  27,  12,  5, 5);		[
+	add.to.pic( v.court.sign, 0, 1,  69,  12,  5, 5);		[
+	add.to.pic(      v.Cdoor, 0, 0,  65,  82,  8, 4);		[
+	add.to.pic(      v.Cdoor, 0, 1,  66,  81,  4, 4);		[
+	add.to.pic(      v.Cdoor, 1, 0,  79,  85,  8, 4);		[
+	add.to.pic(      v.Cdoor, 2, 0,  80,  84,  4, 4);		[
+	add.to.pic(    vCrowd104, 1, 0,   0, 146, 14, 4);		[	Y146
+	add.to.pic(    vCrowd104, 1, 1,  20, 146, 14, 4);		[	is
+	add.to.pic(    vCrowd104, 1, 3,  40, 146, 14, 4);		[	lower
+	add.to.pic(    vCrowd104, 1, 2,  60, 146, 14, 4);		[	row
+	add.to.pic(    vCrowd104, 0, 2,  80, 146, 14, 4);		[	of
+	add.to.pic(    vCrowd104, 0, 3, 100, 146, 14, 4);		[	crowd.
+	add.to.pic(    vCrowd104, 0, 1, 120, 146, 14, 4);		[
+	add.to.pic(    vCrowd104, 0, 0, 140, 146, 14, 4);		[
+	add.to.pic(    vCrowd104, 1, 0,   0, 131, 11, 4);		[	Left	
+	add.to.pic(    vCrowd104, 1, 1,  10, 120, 10, 4);		[	rear
+	add.to.pic(    vCrowd104, 1, 3,  20, 131, 11, 4);		[	group.
+	add.to.pic(    vCrowd104, 0, 0, 120, 131, 11, 4);		[	Right
+	add.to.pic(    vCrowd104, 0, 1, 130, 120, 10, 4);		[	rear
+	add.to.pic(    vCrowd104, 0, 3, 140, 131, 11, 4);		[	group.
+	add.to.pic(  vHonorGuard, 0, 0,  43, 129, 12, 4);		[	Left 
+	add.to.pic(  vHonorGuard, 0, 0,  46, 123, 11, 4);		[	row,
+	add.to.pic(  vHonorGuard, 0, 0,  49, 117, 10, 4);		[	front
+	add.to.pic(  vHonorGuard, 0, 0,  52, 111,  9, 4);		[	to 
+	add.to.pic(  vHonorGuard, 0, 0,  55, 105,  8, 4);		[	back.
+	add.to.pic(  vHonorGuard, 0, 0,  58,  99,  7, 4);		[
+	add.to.pic(  vHonorGuard, 1, 0, 109, 129, 12, 4);		[	Right
+	add.to.pic(  vHonorGuard, 1, 0, 106, 123, 11, 4);		[	row,
+	add.to.pic(  vHonorGuard, 1, 0, 103, 117, 10, 4);		[	front
+	add.to.pic(  vHonorGuard, 1, 0, 100, 111,  9, 4);		[	to
+	add.to.pic(  vHonorGuard, 1, 0,  97, 105,  8, 4);		[	back.
+	add.to.pic(  vHonorGuard, 1, 0,  94,  99,  7, 4);		[
+		[view, loop, cel, x, y, obj priority, box priority[
+												[
+	discard.pic( picture);							[
+	discard.view( v.court.sign);						[
+	discard.view( v.Cdoor);							[
+	discard.view( vCrowd104);						[
+	discard.view( vHonorGuard);						[
+
+
+	sound( mWinner, musicDone);
+
+
+	animate.obj( aMayorBody);
+	set.view( aMayorBody, vMayor);
+	ignore.blocks( aMayorBody);
+	ignore.objs( aMayorBody);
+	position( aMayorBody, 68, 93);
+	set.priority( aMayorBody, 9);
+	set.loop( aMayorBody, 0);
+	set.cel( aMayorBody, 0);
+	draw( aMayorBody);
+	stop.update( aMayorBody);
+	stop.cycling( aMayorBody);
+
+	animate.obj( aMayorHead);
+	set.view( aMayorHead, vMayor);
+	ignore.blocks( aMayorHead);
+	ignore.objs( aMayorHead);
+	position( aMayorHead, 70, 70);
+	set.priority( aMayorHead, 10);
+	set.loop( aMayorHead, 1);
+	set.cel( aMayorHead, 0);
+	draw( aMayorHead);
+	stop.update( aMayorHead);
+
+	animate.obj( aChief);
+	set.view( aChief, vChief);
+	ignore.blocks( aChief);
+	ignore.objs( aChief);
+	position( aChief, 84, 93);
+	set.loop( aChief, 0);
+	set.cel( aChief, 0);
+	set.priority( aChief, 9);
+	draw( aChief);
+	stop.update( aChief);
+	stop.cycling( aChief);
+	cycle.time( aChief, three);
+
+	animate.obj( aSweetCheeks);
+	set.view( aSweetCheeks, v.sweet.cheeks);
+	position( aSweetCheeks, 111, 90);
+	set.loop( aSweetCheeks, facing.left);
+	set.priority( aSweetCheeks, 8);
+	draw( aSweetCheeks);
+	stop.update( aSweetCheeks);
+
+	animate.obj( aKiss);
+	set.view( aKiss, v.egok);
+	ignore.horizon( aKiss);
+	ignore.blocks( aKiss);
+	ignore.objs( aKiss);
+	position( aKiss, 74, 74);
+	set.loop( aKiss, 0);
+	set.cel( aKiss, 0);
+	set.priority( aKiss, 13);
+	cycle.time( aKiss, three);
+
+	set.view( ego, v.ego);
+	position( ego, 153, 135);
+	set.loop( ego, facing.left);
+	set.priority( ego, 12);
+	draw( ego);
+	move.obj( ego, 76, 135, 1, scriptDone);
+
+	animation.interval = NORMAL;
+	scriptCycles = 20;
+[	set( musicDone);
+
+	show.pic( );
+	status.line.on();
+	set( enable.menu);
+
+	return( );
+	}
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+	set( game.control);
+	program.control();
+
+	if (script == 1)
+		{
+		print( 1);
+		}
+
+	if (script == 2)
+		{
+		print( 2);
+		move.obj( ego, 76, 96, 1, scriptDone);
+		}
+
+	if (script == 3)
+		{
+		start.update( aMayorBody);
+		start.update( aMayorHead);
+		start.cycling( aMayorHead);
+		mayorCycles = 2;
+		scriptTimer = 4;
+		}
+
+	if (script == 4)
+		{
+		print( 3);
+		scriptTimer = 4;
+		}
+
+	if (script == 5)
+		{
+		end.of.loop( aChief, scriptDone);
+		}
+
+	if (script == 6)
+		{
+		scriptTimer = 4;
+		}
+
+	if (script == 7)
+		{
+		reverse.loop( aChief, scriptDone);
+		}
+
+	if (script == 8)
+		{
+		scriptTimer = 4;
+		}
+
+	if (script == 9)
+		{
+		stop.cycling( aMayorHead);
+		set.cel( aMayorHead, 0);
+		set.cel( aMayorBody, 0);
+		mayorCycles = 0;
+
+		print( 4);
+		scriptTimer = 4;
+		}
+
+	if (script == 10)
+		{
+		print( 5);
+		scriptTimer = 4;
+		}
+
+	if (script == 11)
+		{
+		print( 6);
+		scriptTimer = 4;
+		}
+
+	if (script == 12)
+		{
+		print( 7);
+		scriptTimer = 4;
+		}
+
+	if (script == 13)
+		{
+		start.update( aSweetCheeks);
+		move.obj( aSweetCheeks, 75, 90, 0, scriptDone);
+		}
+
+	if (script == 14)
+		{
+		stop.cycling( aSweetCheeks);
+		move.obj( aSweetCheeks, 75, 95, 0, scriptDone);
+		}
+
+	if (script == 15)
+		{
+		scriptCycles = 14;
+		}
+
+	if (script == 16)
+		{
+		draw( aKiss);
+		scriptCycles = 22;
+		}
+
+	if (script == 17)
+		{
+		set.loop( aKiss, 1);
+		scriptTimer = 4;
+		}
+
+	if (script == 18)
+		{
+		print( 8);
+		accept.input();
+		}
+	}
+
+
+
+--mayorCycles;
+if (mayorCycles == 1)
+	{
+	random( 0, 3, cell);
+	set.cel.f( aMayorBody, cell);
+	random( 4, 12, mayorCycles);
+	}
+
+if (musicDone)
+	{
+	sound( mWinner, musicDone);
+	}
+
+
+[*****
+:exit
+[*****
+

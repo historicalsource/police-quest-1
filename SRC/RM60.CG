@@ -1,0 +1,552 @@
+[ POLICE QUEST
+[ rm60.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 2/9/87
+[ Last Update October 8, 1987al
+
+[rm.cotton.cove
+
+
+%include "gamedefs"
+%include "rm60.msg"
+%include "rm94.h"
+
+
+
+%define	justStarting		1		[	cotton.cove equates [var 91]
+%define	sawDeadTit		2
+%define	coronerOnTheWay	20
+%define	sceneDone			255
+
+
+%define	moved0			lf0
+%define	moved1			lf1
+%define	movedBlanket		lf2
+%define	nearCops			lf4
+%define	nearBody			lf5
+%define	openedShirt		lf3
+
+
+%define	moving0			lcl0
+%define	moving1			lcl1
+%define	egoBodyDistance	lcl2
+%define	steve			lcl3
+%define	jack				lcl4
+
+
+%object	a.body			1
+%object	a.steve			2
+%object	a.jack			3
+%object	a.light0			4
+%object	a.light1			5
+%object	a.ripples			6
+
+
+
+if (init.log)
+	{
+	if (!hasRebooked) {
+		set.string( 6, 34);
+		}
+	else {
+		set.string( 6, 35);
+		}
+
+	load.logics( 94);				[lgc.stopped.cars
+
+	load.view( v.dead.guys);
+	load.view( v.patCar);
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	if (forceAtest)
+		{
+		cotton.scene = 1;
+		position( ego, 80, 144);
+		}
+
+	if (cotton.scene == 1)			[ Seen Sweet Cheeks in jail
+		{
+		score += 2;
+
+		load.view( v.steve);
+		load.view( v.jack);
+		load.view( v.rack);
+
+		animate.obj( a.body);
+		animate.obj( a.steve);
+		animate.obj( a.jack);
+		animate.obj( a.light0);
+		animate.obj( a.light1);
+
+		position( a.body, 81, 105);
+		position( a.steve, 72, 104);
+		position( a.jack, 92, 104);
+		position( a.light0, 30, 142);
+		position( a.light1, 38, 129);
+		
+		set.view( a.body, v.dead.guys);
+		set.view( a.steve, v.steve);
+		set.view( a.jack, v.jack);
+
+		set.view( a.light0, v.rack);
+		set.view( a.light1, v.rack);
+
+		set.priority( a.light0, 15);
+		set.priority( a.light1, 13);
+		
+		ignore.objs( a.light0);
+		ignore.objs( a.light1);		
+
+		set.loop( a.body, 2);
+
+		set.loop( a.steve, facing.right);
+		set.loop( a.jack, facing.front);
+
+		stop.cycling( a.body);
+		stop.cycling( a.steve);
+		stop.cycling( a.jack);
+		
+		set( NOcase);
+		add.to.pic( v.patCar, 0, 0, 1, 167, 15, 0);
+		add.to.pic( v.patCar, 0, 0, 9, 154, 13, 0);
+	
+		set.cel( a.body, 0);
+
+		draw( a.body);
+		draw( a.steve);
+		draw( a.jack);
+		draw( a.light0);
+		draw( a.light1);
+
+		cycle.time( a.light0, two);
+		cycle.time( a.light1, three);
+ 		}
+	
+	animate.obj( a.ripples);
+	set.view( a.ripples, v.dead.guys);
+	set.priority( a.ripples, 4);
+	set.loop( a.ripples, 1);
+	cycle.time( a.ripples, three);
+  	position( a.ripples, 141, 74);
+  	draw( a.ripples);
+	ignore.objs( a.ripples);
+
+
+	call( 94);					[lgc.stopped.cars
+
+	show.pic();
+	return();
+	}
+
+
+
+if (moved0) {						[ Ani Timers
+	reset( moved0);
+	++moving0;
+	}
+
+if (moved1) {
+	reset( moved1);
+	++moving1;
+	}
+
+
+
+[ LOGIC
+
+if  (func4 &&
+	in.car &&
+    !f.car.door &&
+	cotton.scene &&
+	cotton.scene < 4)
+	{
+	if (cotton.scene == justStarting)
+		{
+		print( 13);				[ Sonny you got a job to due
+		reset( func4);
+		}
+
+	if (cotton.scene == sawDeadTit)
+		{
+		print( 14);				[ Should report findings
+		reset( func4);
+		}
+	}
+
+
+
+[ nearPerson
+
+distance( ego, a.jack, jack);
+distance( ego, a.steve, steve);
+if ((steve < dist ||
+	jack  < dist))
+	{
+	set( nearPerson);
+	}
+
+distance( ego, a.body, egoBodyDistance);
+if (egoBodyDistance < dist)
+	{
+	set( nearBody);
+	}
+else
+	{
+	reset( nearBody);
+	}
+
+
+
+
+[ Drowning/Murder Scene
+
+if  (cotton.scene &&
+	cotton.scene < 21)
+	{
+	if (posn( ego, 50, 95, 110, 148))
+		{
+		set( nearCops);
+		}
+	else
+		{
+		reset( nearCops);
+		}
+	
+	if (nearCops && !moving1)
+		{
+		start.cycling( a.steve);
+		++moving1;
+		}
+
+	if (moving1)
+		{
+		follow.ego( a.steve, 10, moved1);
+		get.posn( a.steve, x, y);
+		
+		if ((work5 != x ||
+			work6 != y))
+			{
+			work5 = x;
+			work6 = y;
+			start.cycling( a.steve);
+			}
+		else
+			{
+			stop.cycling( a.steve);
+			}
+		}
+
+ 	if (moving1 == 3)
+		{
+ 		print( 2);				[ Hows it hanging Sonny? We have
+ 		print( 3);				[ was involved in booking him
+		++moving1;
+ 		}	
+	}
+	
+
+
+[	This asshole walked into the creek!
+
+if ((posn( ego, 139, 78, 159, 87) ||
+	ego.y < 79))					[	In the creek.
+	{
+	if (moving0 == 0)
+		{
+		set.view( ego, v.dead.guys);
+		set.loop( ego, 0);
+		ego.y -= 5;
+		reposition.to.f( ego, ego.x, ego.y);
+		ignore.objs( ego);
+		ignore.blocks( ego);
+		set( game.control);
+		prevent.input();
+		set( keep.cycling);
+		move.obj( ego, 151, 74, 1, moved0);
+		moving0 = 1;
+		}
+	
+	if (moving0 == 2)
+		{
+	  	erase( ego);
+		print( 10);				[ swimming with shoes is no good!
+		set( certainDeath);
+		++moving0;
+		stop.update( a.steve);
+		stop.update( a.jack);
+		force.update( a.steve);
+		force.update( a.jack);
+		}
+	}
+
+
+
+[ Text
+
+if (!have.input) {
+	goto exit;
+	}
+
+if  (cotton.scene &&
+	cotton.scene < 255)
+	{
+	if (said( look, man))
+		{
+		print( 31);
+		}
+
+	if ((said( talk, man) ||
+		said( talk, jack) ||
+		said( talk) ||
+		said( ask, man, rol)))
+		{
+		if (cotton.scene == justStarting)
+			{
+			print( 25);
+			}
+		else
+			{
+			if (cotton.scene == sawDeadTit)
+				{
+				print( 26);
+				}
+			else
+				{
+				print( 27);
+				}
+			}
+		}
+
+	if ((said( look, plants) ||
+		said( look, ground)))
+		{
+		print( 18);
+		}
+
+	if ((said( look, body, rol) ||
+		said( look, taselli, rol) ||
+		said( look, hoffman, rol) ||
+		said( look, pierson, rol) ||
+		said( look, tattoo, rol) ||
+		said( take, shirt, rol) ||
+		said( look, nipple) ||
+		said( put, uniform, rol) ||
+		said( drop, uniform, rol) ||
+		said( give, uniform, rol) ||
+		said( remove, uniform, rol) ||
+		said( take, off, uniform, rol) ||
+		said( remove, shirt, rol) ||
+		said( move, shirt) ||
+		said( open, mans, shirt) ||
+		said( look, chest, rol) ||
+		said( open, shirt, rol)))
+		{
+		if (!nearBody)
+			{
+			print( 6);			[ must get closer
+			}
+		else
+			{
+			if (!movedBlanket)
+				{
+				print( 29);
+				}
+			else
+				{
+				if (!openedShirt)
+					{
+					set( openedShirt);
+					set.cel( a.body, 2);
+					print( 5);	[ open his shirt and find the tattoo
+					cotton.scene = 2;
+					
+					if (!SxDeadTattoo)
+						{
+						set( SxDeadTattoo);
+						score += 2;
+						}
+					}
+				else
+					{
+					print( 7);
+					}
+				}
+			}
+		}
+
+	if ((said( move, blanket, rol) ||
+		said( get, blanket, rol) ||
+		said( identify, body) ||
+		said( look, dead, body) ||
+		said( look, dead, man) ||
+		said( look, ground) ||
+		said( look, hoffman) ||
+		said( pull, back, cover) ||
+		said( remove, cover) ||
+		said( remove, blanket, rol) ||
+		said( lift, blanket, rol) ||
+		said( uncover, body, rol)))
+		{
+		if (!nearBody)
+			{
+			print( 6);			[ must get closer
+			}
+		else
+			{
+			if (!movedBlanket)
+				{
+				set( movedBlanket);
+				set.cel( a.body, 1);
+				print( 4);		[ As you pull off the blanket
+				}
+			else
+				{
+				print( 28);
+				}
+			}
+		}
+	
+	if ((said( stop, looking, body, rol) ||
+		said( stop, looking, taselli, rol) ||
+		said( stop, looking, tattoo, rol) ||
+		said( replace, shirt, rol) ||
+		said( stop, looking, chest, rol) ||
+		said( close, shirt, rol) ||
+		said( drop, blanket, rol) ||
+		said( remove, blanket, rol) ||
+		said( cover, body, rol)))
+		{
+		if (!nearBody)
+			{
+			print( 6);			[ must get closer
+			}
+		else
+			{
+			if (!movedBlanket)
+				{
+				print( 29);
+				}
+			else
+				{
+				reset( openedShirt);
+				reset( movedBlanket);
+				set.cel( a.body, 0);
+				print( 30);
+				}
+			}
+		}
+
+	if (said( call))
+		{
+		if  (!in.car &&
+			!has( i.extnd) &&
+			!posn( ego, 111, 161, 118, 162))	[ near door
+			{
+			print( 11);			[ with extender could call from here
+			}
+		else
+			{
+			if (cotton.scene == sawDeadTit)
+				{
+				score += 3;
+				print( 8);		[	yep, it's him
+				print( 9);		[ Roger, will cancel city dragnet
+ 				print( 15);		[ coroner on the way
+				cotton.scene = coronerOnTheWay;
+				}
+			else
+				{
+				if (cotton.scene < sawDeadTit)
+					{
+					print( 24);
+					print( 12);		[ dispatch answers
+					}
+				else
+					{
+					print( 33);
+					}
+				}
+			}
+		}
+	}
+
+
+if ((said( look, car) ||
+	said( look, police, car)))
+	{
+	if (ego.x < 75 &&
+		cotton.scene &&
+		cotton.scene < 255)
+		{
+		print( 16);	  		["You observe two patrol units
+		}
+	else
+		{
+		print( 21);	 		[Thinking your car
+		}
+	}
+
+if ((said( swim, rol) ||
+	said( get, water, rol) ||
+	said( get$in, river, rol) ||
+	said( go, river, rol)))
+	{
+	print( 32);
+	}
+
+if ((said( look, plants) ||
+	said( look, tree) ||
+	said( look, ground)))
+	{
+	print( 36);
+	}
+
+if ((said( look) ||
+	said( look$in, water) ||
+	said( look, river) ||
+	said( look, room)))
+	{
+	if (ego.y < 90)
+		{
+		print( 19);  				[The Clear Water River
+		}
+	else
+		{
+		if ((!cotton.scene || cotton.scene == 255))
+			{
+			print( 17);  			[You look around at a beautiful wooded
+			}
+		else
+			{
+			if ((posn( ego,   1, 90,  34, 108) ||
+				posn( ego, 118, 95, 152, 128)))
+				{
+				print( 18);	  	[You see nothing
+				}
+			else
+				{
+				print( 22);  		[You look around and see two
+				}
+			}
+		}
+	}
+
+
+
+[
+:exit
+[
+
+call( 94);						[lgc.stopped.cars
+
+[ Ctemp
+[%message 100
+["M0 %v220|3, M1 %v221|3, CS %v91|3"
+[if (QA)
+[	{
+[	display( 1, 0, 100);
+[	}
+[

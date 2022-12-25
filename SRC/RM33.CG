@@ -1,0 +1,198 @@
+[ POLICE QUEST
+[ rm33.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 2/5/87
+[ Last Update October 12, 1987GR
+
+[rm.blue.enter
+
+
+%include "gamedefs"
+%include "rm33.msg"
+%include "rm94.h"
+
+
+
+%define	doorOpening		lf0
+%define	doorDone			lf4
+
+%object	aDoor			1
+%object	aSign			2
+%object	aBudSign			3
+
+
+
+if (init.log)
+	{
+	if (!SxFoundBlueRoom)
+		{
+		set( SxFoundBlueRoom);
+		score += 2;
+		}
+
+	if ( !in.car &&
+		(f.car.door ||
+		b.car.door)) {
+		carStolen = 4;
+		}
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	load.logics( 94);				[lgc.stopped.cars
+
+	load.view( v.blue.room.door);
+	load.view( v.bar.signs);
+	load.view( v.patCar);
+
+	load.sound( s.door.open);
+	load.sound( s.door.close);
+
+
+	animate.obj( aDoor);
+	animate.obj( aSign);
+	animate.obj( aBudSign);
+
+	set.view( aDoor, v.blue.room.door);
+	set.view( aSign, v.bar.signs);
+	set.view( aBudSign, v.bar.signs);
+
+	set.loop( aSign, 0);
+	set.loop( aBudSign, 1);
+
+	observe.objs( aDoor);
+	set.cel( aDoor, 0);
+
+	position( aDoor, 54, 120);
+	position( aSign, 40, 72);
+	position( aBudSign, 98, 95);
+
+	set.priority( aDoor, 5);
+
+	draw( aSign);
+	draw( aBudSign);
+	draw( aDoor);
+	stop.update( aDoor);
+
+	work = DOOR_CYCLE_TIME;
+	cycle.time( aDoor, work);
+
+	work = 8;
+	cycle.time( aSign, work);
+	cycle.time( aBudSign, five);
+
+
+	if (priorX) {
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		}
+	else {
+		position( ego, 60, 140);
+		if (previous.room == 34) {				[rm.blue.room
+			position( ego, 60, 123);
+			}
+		}
+
+	call( 94);					[lgc.stopped.cars
+
+	show.pic();
+
+	return();
+	}
+
+
+
+[ Logic
+[ Bar Door
+if (!doorOpening &&
+	posn( ego, 54, 122, 61, 122))
+	{
+	set( game.control);
+	stop.update( ego);
+	prevent.input();
+	set( doorOpening);
+	start.update( aDoor);
+	end.of.loop( aDoor, doorDone);
+	sound( s.door.open, snd.done);
+	}
+
+
+if (doorDone) {
+	reset( game.control);
+	accept.input();
+	start.update( ego);
+	new.room( 34);					[rm.blue.room
+	}
+
+
+[ Text Response
+
+if (!have.input) {
+	goto exit;
+	}
+
+if (ego.y < 144 &&
+    (said( close, door) ||
+	said( open, door)))
+	{
+	print( 1);
+	}
+
+if ((said( look, caddie) ||
+	said( look, corvette) ||
+	said( look, car)))
+	{
+	if (current.car == patrol.car) {
+		print( 3);
+		}
+	
+	if (current.car == corvette.car) {
+		print( 4);
+		}
+	
+	if (current.car == cadillac.car) {
+		print( 5);
+		}
+	}
+
+if ((said( look) ||
+	said( look, bar) ||
+	said( look, room))) {
+	print( 6);
+	print( 7);
+	}
+
+if (said( look, door))
+	{
+	print( 2);
+	}
+
+if (said( look, window)) {
+	if (posn( ego, 145, 130, 153, 137)) {
+		print( 9);						  
+		}
+	else {
+		if (posn( ego, 85, 130, 120, 137)) {
+			print( 10);
+			}
+		else {	
+			set( notCloseEnough);
+			}
+		}
+	}
+
+if ((said( look, sign) ||
+	said( look, anyword, sign)))
+	{
+	print( 8);
+	}
+
+
+[
+:exit
+[
+
+call( 94);						[lgc.stopped.cars
+

@@ -1,0 +1,1376 @@
+[ POLICE QUEST
+[ rm57.cg
+[ By:  Greg Rowland Ed Anderson and Jim Walls
+[ For: Sierra On-Line Inc. 1/2/87
+[ Last Update October 6, 1987GR
+
+[ rm.park.scene
+
+
+%include "gamedefs"
+%include "rm57.msg"
+
+
+
+[Here's the room flow chart:
+
+[	Enter scene;
+[	if !hiding && been in room 25", print "go hide"
+[	when hiding behind either of rear bushes, start Simms entrance timer 
+[	if stop hiding before Simms drawn, clear Simms entrance timer;
+[	if call partner before deal done, set( calledPartner1);
+[	when Simms timer expires, Simms enters from right;
+[	move Simms to table; upon arrival at table, start Colby timer.
+[	[If stop hiding during this sequence, Simms runs; game over.]
+[	when Colby timer expires, Colby enters from left.
+[	[If stop hiding during this sequence, Both run; game over.]
+[	they go through their drug deal;
+[	after deal done, if hide for another 30", prevent.input and motion;
+[		both leave; game over.
+
+
+[Here's the truth table for the arrest sequence (if deal done):
+
+[	if call partner, set( calledPartner2);
+[	if you stop hiding or say halt, they notice you.  When the notice you:
+[	if (!gun drawn),
+[		if saidHalt, print something, both run, game over.
+[		else, if !saidHalt, print something different, both run, game over.
+
+[	if (gun drawn),
+[		if !saidHalt, print something, Colby shoot out, Simms runs.
+[			If Colby shoots 5 times without killing ego, the 6th shot WILL
+[			kill ego.  Cheat with:	y = ego.y;
+[								shot.first = suspect.shot.first;
+[			Either Colby or Ego dies. Either way, game over.
+[
+[		if saidHalt, Colby runs. Simms scared, so stays.
+[			if (!call partner2), Colby got away, Game over.
+[			if (call partner2), Colby captured. Can arrest Simms.
+
+[	if (shoot Simms), game over.
+[	ego puts gun away
+[	cuffs Simms.
+[	read him his rights
+[	search Simms; finds Dope & ID
+[	question him
+[	walk him to car
+[	set park.bust = 199
+
+
+[	NOTE: suspect logics use timer.1
+
+
+
+%define	SIMMS_TIME_MIN		40
+%define	SIMMS_TIME_MAX		66
+%define	COLBY_TIME_MIN		30
+%define	COLBY_TIME_MAX		55
+%define	HEAD_CYCLES_MIN	11
+%define	HEAD_CYCLES_MAX	31
+
+%define	parkBust			park.bust	[	Following are parkBust levels:
+%define	PBnotThisTime		0
+%define	PBjustStarting		1
+%define	PBwaitingForSimms	2
+%define	PBSimmsHere		3
+%define	PBwaitingForColby	4
+%define	PBColbyHere		5
+%define	PBdealingDrugs		6
+%define	PBdealDone		7
+%define	PBchaseOn 		8
+%define	PBSimmsCuffed		9
+%define	PBSimmsToCar		10
+%define	PBdone			199
+
+
+%define	SimmsHere			lf0
+%define	SimmsInPlace		lf1
+%define	SimmsHeadTurning	lf2
+%define	SimmsTalkedSome	lf3
+%define	ColbyHere			lf4
+%define	ColbyHeadTurning	lf5
+%define	ColbyInPlace		lf6
+%define	calledPartner1		lf7
+%define	calledPartner2		lf8
+%define	warning			lf9
+%define	saidHalt			lf10
+%define	hiding			lf11
+%define	lclReadRights		lf12
+%define	musicDone			lf13
+
+
+%define	ColbySeconds		lcl0
+%define	ColbyHeadCycles	lcl1
+%define	startColbyHead		lcl2
+%define	SimmsSeconds		lcl3
+%define	SimmsHeadCycles	lcl4
+%define	startSimmsHead		lcl5
+%define	deathMessage		lcl6
+
+
+%object	aSimms			1
+%object	aSimmsHead		2
+%object	aSimmsDope		3
+%object	aColbyHead		4
+%object	aColbyDope		5
+
+
+
+if (init.log)
+	{
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	load.logics( 2);				[	lgc.ego
+	call( 2);
+
+	if (parkBust && parkBust < PBdone)
+		{
+		set( NOcase);
+
+		load.logics( 118);			[lgc.suspect
+
+		load.view( v.simms);
+		load.view( v.simms.cuffed);
+		load.view( v.simms.head);
+
+		load.view( v.colby.head);
+		load.view( v.dope.cash);
+
+		load.sound( mTension);
+		load.sound( mBadGuy);
+
+		call( 118);				[lgc.suspect
+
+		animate.obj( aSimms);
+		animate.obj( aSimmsHead);
+		animate.obj( aSimmsDope);
+		animate.obj( aColbyHead);
+		animate.obj( aColbyDope);
+
+		set.view( aSimms, v.simms);
+		set.view( aSimmsHead, v.simms.head);
+		set.view( aSimmsDope, v.dope.cash);
+		set.view( a.suspect, v.colby);
+		set.view( aColbyHead, v.colby.head);
+		set.view( aColbyDope, v.dope.cash);
+
+		ignore.objs( aSimmsHead);
+		ignore.objs( aSimmsDope);
+		ignore.objs( aColbyHead);
+		ignore.objs( aColbyDope);
+
+		position( aSimmsDope, 80, 138);
+		position( aColbyDope, 78, 131);
+
+		set.priority( aSimmsDope, 13);
+		set.priority( aColbyDope, 13);
+
+		cycle.time( aColbyDope, four);
+		cycle.time( aSimmsDope, four);
+
+		work = 9;
+		cycle.time( aColbyHead, work);
+		cycle.time( aSimmsHead, work);
+ 		}
+
+	position( ego, 80, 120);
+
+	if (priorX)
+		{
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		}
+	else
+		{
+		if (previous.room == 56)		[rm.park.entrance
+			{
+			position( ego, 80, 165);
+			}
+		}
+
+	startSimmsHead = 255;
+	startColbyHead = 255;
+	step = 2;						[	If they run, they go quick!
+
+	draw( ego);
+
+	show.pic( );
+	return( );
+	}
+
+
+
+[	LOGIC
+
+if (!edge.ego.hit)
+	{
+	reset( warning);
+	}
+else
+	{
+	if (edge.ego.hit == bottom && !warning)
+		{
+		if (parkBust && parkBust < PBSimmsHere)
+			{
+			print( 12);			[	You're suposed to be hiding
+			set( warning);
+			}
+		else
+			{
+			if (parkBust && parkBust < PBdone)
+				{
+				print( 45);		[	can't leave suspect
+				set( warning);
+				}
+			else
+				{
+				new.room( 56);		[	rm.park.entrance
+				}
+			}
+		}
+	}
+
+
+current.view( ego, view);
+distance( ego, aSimms, work);
+if (work < dist)
+	{
+	set( nearPerson);
+	}
+
+
+
+if (aSecondPassed)
+	{
+	if (secondsInRoom == 25 &&
+		has( i.extnd) &&
+		parkBust < PBwaitingForSimms &&
+		park.bust)
+		{
+		print( 8);
+		}
+
+	--SimmsSeconds;
+	if (SimmsSeconds == 1)
+		{
+		script = 0;
+		set( scriptDone);
+		}
+
+	--ColbySeconds;
+	if (ColbySeconds == 1)
+		{
+		script = 10;
+		set( scriptDone);
+		}
+	}
+
+
+
+
+[	Is Sonny hiding or NOT?
+
+reset( hiding);
+if ((ego.hidden ||
+	posn( ego,   0, 117,  14, 130) ||	[	almost behind  left bush
+	posn( ego, 119, 118, 159, 119)))	[	almost behind right bush
+	{
+	set( hiding);
+	}
+
+if (saidHalt)						[	Can never hide again.
+	{
+	reset( hiding);
+	}
+
+if (!hiding &&
+	parkBust == PBwaitingForSimms)
+	{
+	stop.sound();
+	reset( musicDone);
+
+	print( 12);					[	Let's Make A Dope Deal
+	SimmsSeconds = 0;
+	parkBust = PBjustStarting;
+	}
+
+if (hiding &&
+	parkBust &&
+	parkBust < PBwaitingForSimms)		[	Start it as soon as Ego hides.
+	{
+	parkBust = PBwaitingForSimms;
+	random( SIMMS_TIME_MIN, SIMMS_TIME_MAX, SimmsSeconds);
+	sound( mTension, musicDone);
+
+	if (!has( i.extnd))
+		{
+		print( 13);
+		}
+	else
+		{
+		print( 7);
+		}
+	}
+
+
+
+if (!hiding &&						[	The big TRUTH table.
+	parkBust < PBchaseOn &&
+    (SimmsHere || ColbyHere))			[	Somebody's here.
+	{
+	if (parkBust < PBdealDone)
+		{
+		unanimate.all();			[	stop everything!
+		print( 59);
+		set( certainDeath);
+		}
+	else							[	It's a done deal!
+		{
+		parkBust = PBchaseOn;
+
+		SimmsHeadCycles = 2;
+		ColbyHeadCycles = 2;
+		startColbyHead = 255;
+		startSimmsHead = 255;
+
+		scriptCycles = 0;
+		scriptTimer = 0;
+		set( scriptDone);
+
+		if (view != 11)			[	no gun drawn!
+			{
+			deathMessage = 42;		[	You blew this one.
+			script = 250;			[	Both run
+
+			if (!saidHalt)
+				{
+				print( 39);		[	"You step on a branch
+				print.at( 57, 9,  2, 17);
+				print.at( 63, 9, 20, 17);
+				}
+			else
+				{
+				print.at( 64, 9,  2, 17);
+				print.at( 65, 9, 20, 17);
+				}
+			}
+		else
+			{
+			if (!saidHalt)
+				{
+				script = 200;		[	Colby whips it out! Simms splits.
+				}
+			else
+				{
+				script = 150;		[	Colby runs.
+				}
+			}
+		}
+	}
+
+
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+	if (script == 1)				[	enter Simms, stage left.
+		{
+		prevent.input();
+		set( game.control);
+		stop.sound();
+		reset( musicDone);
+
+		set( SimmsHere);
+		set( preventEgoFire);
+		parkBust = PBSimmsHere;
+		set.loop( aSimms, facing.left);
+		position( aSimms, 152, 130);
+		draw( aSimms);
+
+		random( HEAD_CYCLES_MIN, HEAD_CYCLES_MAX, startSimmsHead);
+		SimmsHeadCycles = startSimmsHead;
+		SimmsHeadCycles += 1;
+		scriptCycles = SimmsHeadCycles;
+		}
+
+	if (script == 2)
+		{
+		move.obj( aSimms, 120, 130, 1, scriptDone);
+		}
+
+	if (script == 3)
+		{
+		random( HEAD_CYCLES_MIN, HEAD_CYCLES_MAX, startSimmsHead);
+		SimmsHeadCycles = startSimmsHead;
+		SimmsHeadCycles += 1;
+		scriptCycles = SimmsHeadCycles;
+		}
+
+	if (script == 4)
+		{
+		move.obj( aSimms, 85, 150, 1, scriptDone);
+		print( 15);
+		}
+
+	if (script == 5)
+		{
+		accept.input();
+		reset( game.control);
+
+		set.cel( aSimms, 7)
+		stop.cycling( aSimms);
+		set( SimmsInPlace);			[	Now his head moves on its own.
+		print( 16);				[	He appears very cautious
+		random( SIMMS_TIME_MIN, SIMMS_TIME_MAX, ColbySeconds);
+		parkBust = PBwaitingForColby;
+
+		random( HEAD_CYCLES_MIN, HEAD_CYCLES_MAX, startSimmsHead);
+		SimmsHeadCycles = startSimmsHead;
+		SimmsHeadCycles += 2;
+		}
+
+
+
+	if (script == 11)				[	Enter Colby, stage right.
+		{
+		prevent.input();
+		set( game.control);
+		sound( mBadGuy, done);
+
+		set( ColbyHere);
+		parkBust = PBColbyHere;
+		set.loop( a.suspect, facing.right);
+		position( a.suspect, 1, 150);
+		draw( a.suspect);
+
+		random( HEAD_CYCLES_MIN, HEAD_CYCLES_MAX, startColbyHead);
+		ColbyHeadCycles = startColbyHead;
+		ColbyHeadCycles += 1;
+		scriptCycles = ColbyHeadCycles;
+		}
+
+	if (script == 12)
+		{
+		move.obj( a.suspect, 17, 166, 1, scriptDone);
+		}
+
+	if (script == 13)
+		{
+		print( 17);				[	hear someone else approaching
+		random( HEAD_CYCLES_MIN, HEAD_CYCLES_MAX, startColbyHead);
+		ColbyHeadCycles = startColbyHead;
+		ColbyHeadCycles += 1;
+		scriptCycles = ColbyHeadCycles;
+		}
+
+	if (script == 14)
+		{
+		move.obj( a.suspect, 43, 140, 1, scriptDone);
+		}
+
+	if (script == 15)
+		{
+		print.at( 18, 9, 2, 17);		[	Pssst!, Vic, were you followed
+		random( HEAD_CYCLES_MIN, HEAD_CYCLES_MAX, startColbyHead);
+		ColbyHeadCycles = startColbyHead;
+		ColbyHeadCycles += 1;
+		scriptCycles = ColbyHeadCycles;
+		}
+
+	if (script == 16)
+		{
+		print.at( 19, 9, 20, 17);	[	No way Jose', it's cool
+		move.obj( a.suspect, 77, 140, 1, scriptDone);
+		}
+
+	if (script == 17)
+		{
+		move.obj( a.suspect, 77, 141, 1, scriptDone);
+		}
+
+	if (script == 18)
+		{
+		accept.input();
+		reset( game.control);
+
+		stop.cycling( a.suspect);
+		stop.update( a.suspect);
+		set( ColbyInPlace);
+		parkBust = PBdealingDrugs;
+
+		print.at( 20, 9, 2, 17);		[	I got the stuff; you got the cash?
+		scriptTimer = 4;
+		}
+
+	if (script == 19)
+		{
+		print.at( 21, 9, 21, 17);	[	Ya, I got it right here
+		scriptTimer = 4;
+		script = 100;				[	Now's the time.  A cheap patch.
+		}
+
+
+
+	if (script == 101)				[	Let's Deal some Drugs.
+		{
+		set.loop( aSimmsDope, 2);
+		set.cel( aSimmsDope, 0);
+		draw( aSimmsDope);
+		end.of.loop( aSimmsDope, scriptDone);
+		}
+
+	if (script == 102)
+		{
+		stop.cycling( aColbyDope);
+		print( 22);				[	First suspect hands envelope
+		scriptTimer = 4;
+		}
+
+	if (script == 103)
+		{
+		set.loop( aColbyDope, 0);
+		set.cel( aColbyDope, 0);
+		draw( aColbyDope);
+		end.of.loop( aColbyDope, scriptDone);
+		}
+
+	if (script == 104)
+		{
+		stop.cycling( aColbyDope);
+		set.loop( aColbyDope, 1);
+		set.loop( aSimmsDope, 3);
+		print( 23);				[	small plastic bag containing dope
+		reverse.loop( aSimmsDope, scriptDone);
+		}
+
+	if (script == 105)
+		{
+		erase( aSimmsDope);
+		reverse.loop( aColbyDope, scriptDone);
+		}
+
+	if (script == 106)
+		{
+		erase( aColbyDope);
+		parkBust = PBdealDone;
+		scriptTimer = 5;
+		}
+
+	if (script == 107)
+		{
+		print.at( 24, 9, 2, 17);		[	this ain't enough cash
+		scriptTimer = 4;
+		}
+
+	if (script == 108)
+		{
+		print( 25);				[	pusher is not satisfied
+		scriptTimer = 30;
+		}
+
+	if (script == 109)				[	Timer elasped. Both walk away.
+		{
+		stop.motion( ego);
+		set( game.control);
+		prevent.input();
+
+		print( 62);
+		print.at( 53, 9,  2, 17);	[	Bye.
+		print.at( 54, 9, 21, 17);	[	OK, bye.
+		print( 55);				[	They split.
+		step = 1;
+		deathMessage = 60;			[	Why you died, dummy.
+		script = 251;
+		}
+
+
+	
+	if (script == 151)				[	Colby runs. Simms scared; stays.
+		{						[	This is the CORRECT path!
+		reset( ColbyInPlace);
+
+		stop.motion( aSimms);
+		stop.cycling( aSimms);
+
+		start.update( a.suspect);
+		start.cycling( a.suspect);
+
+		step = 2;
+		if (ego.x > 77)
+			{
+			x = 1;
+			}
+		else
+			{
+			x = 151;
+			}
+		y = 142;
+		move.obj.f( a.suspect, x, y, step, scriptDone);
+
+		print.at( 68, 9,  2, 17);	[	"It's the cops!
+		print.at( 69, 9, 21, 17);	[	"I give up!
+		}
+
+	if (script == 152)				[	Here we decide if it's a success
+		{
+		erase( a.suspect);
+		reset( ColbyHere);
+
+		if (!calledPartner2)		[	Nope, he forgot to call Laura
+			{
+			print( 70);
+			set( certainDeath);
+			}
+		else						[	YES! HE DID IT!!
+			{
+			score += 5;
+			accept.input();		[	Now, deal with this kid...
+			reset( game.control);
+			}
+		}
+
+
+	[	There's a pause here, while we interrogate the kid.
+
+
+	if (script == 153)				[	March Simms to the car.
+		{
+		reset( SimmsInPlace);
+		start.update( aSimms);
+		start.cycling( aSimms);
+		release.priority( aSimms);
+		move.obj( aSimms, 85, 155, 1, scriptDone);
+		}
+
+	if (script == 154)
+		{
+		move.obj( aSimms, 85, 166, 1, scriptDone);
+		}
+
+	if (script == 155)
+		{
+		print( 30);
+		parkBust = PBdone;
+		new.room( 56);				[	rm.park.entrance
+		}
+
+	
+
+
+	if (script == 201)				[	Colby pissed. Simms splits.
+		{
+
+[		timer.1 = 254;
+[ 		set( kill.ego);
+[ 		set( suspect.shooting);
+[		set( suspect.following);
+
+ 		set( in.motion);
+		start.cycling( a.suspect);
+
+		reset( preventEgoFire);
+
+		print.at( 66, 9,  2, 17);
+		print.at( 67, 9, 21, 17);
+	
+		start.update( aSimms);
+		start.cycling( aSimms);
+		reset( SimmsInPlace);
+
+		if (ego.x > 77)
+			{
+			move.obj( aSimms, 150, 166, 2, scriptDone);
+			}
+		else
+			{
+			move.obj( aSimms, 1, 166, 2, scriptDone);
+			}
+		}
+
+	if (script == 202)
+		{
+		erase( aSimms);
+		reset( SimmsHere);
+		}
+
+	
+	
+	if (script == 251)				[	Colby runs.  Simms also runs.
+		{
+		reset( SimmsInPlace);
+		reset( ColbyInPlace);
+
+		start.update( a.suspect);
+		start.cycling( a.suspect);
+
+		if (ego.x > 77)
+			{
+			x = 1;
+			}
+		else
+			{
+			x = 151;
+			}
+		y = 142;
+		move.obj.f( a.suspect, x, y, step, scriptDone);
+		scriptCycles = 20;			[	Give Colby a little head start.
+		}
+
+	if (script == 252)
+		{
+		start.update( aSimms);
+		start.cycling( aSimms);
+
+		if (ego.x > 72)
+			{
+			x = 1;
+			}
+		else
+			{
+			x = 151;
+			}
+		y = 166;
+		move.obj.f( aSimms, x, y, step, scriptDone);
+		}
+
+	if (script == 253)
+		{
+		erase( a.suspect);
+		reset( ColbyHere);
+		}
+
+	if (script == 254)
+		{
+		erase( aSimms);
+		reset( SimmsHere);
+
+		print.f( deathMessage);
+		set( certainDeath);
+		}
+	}
+
+
+
+
+--SimmsHeadCycles;
+if (SimmsHeadCycles == startSimmsHead)	[	Turning Simms' head.
+	{
+	set( SimmsHeadTurning);
+
+	get.priority( aSimms, priority);
+	get.posn( aSimms, x, y);
+	current.cel( aSimms, cell);
+ 	
+	stop.update( aSimms);
+	current.loop( aSimms, loop);
+	set.loop.f( aSimmsHead, loop);
+	set.priority.f( aSimmsHead, priority);
+	if (loop < 2 &&
+	   (!cell || cell == 4))
+		{
+		y -= 22;
+		}
+	else
+		{
+		y -= 21;
+		}
+	position.f( aSimmsHead, x, y);
+	set.cel( aSimmsHead, 0);
+	draw( aSimmsHead);
+	}
+
+if (SimmsHeadCycles == 1)
+	{
+	reset( SimmsHeadTurning);
+	erase( aSimmsHead);
+	start.update( aSimms);
+	if (SimmsInPlace && parkBust < PBchaseOn)
+		{
+		random( 55, 111, SimmsHeadCycles);
+		}
+	}
+
+
+
+--ColbyHeadCycles;
+if (ColbyHeadCycles == startColbyHead)	[	Turning Colby's head.
+	{
+	set( ColbyHeadTurning);
+
+	get.priority( a.suspect, priority);
+	get.posn( a.suspect, x, y);
+	current.cel( a.suspect, cell);
+
+	stop.update( a.suspect);
+	current.loop( a.suspect, loop);
+	set.loop.f( aColbyHead, loop);
+	set.priority.f( aColbyHead, priority);
+	if (loop < 2 &&
+	   (!cell || cell == 4))
+		{
+		y -= 23;
+		}
+	else
+		{
+		y -= 22;
+		}
+	position.f( aColbyHead, x, y);
+	set.cel( aColbyHead, 0);
+	draw( aColbyHead);
+	}
+
+if (ColbyHeadCycles == 1)
+	{
+	reset( ColbyHeadTurning);
+	erase( aColbyHead);
+	start.update( a.suspect);
+	if (ColbyInPlace && parkBust < PBchaseOn)
+		{
+		random( 55, 111, ColbyHeadCycles);
+		}
+	}
+
+
+if  (preventEgoFire &&
+	has( i.loaded.gun) &&
+	current.ego == current.draw &&
+    (func10 ||
+	said( use, gun, rol) ||
+	said( fire, gun, rol) ||
+	said( shoot, gun, rol) ||
+	said( fire) ||
+	said( shoot) ||
+	said( fire, man) ||
+	said( fire, suspect) ||
+	said( shoot, man) ||
+	said( shoot, suspect) ||
+	said( fire, on, man) ||
+	said( fire, on, suspect)))
+	{
+	reset( func10);
+	print( 75);
+	set( certainDeath);
+	}
+
+
+
+[****
+:haveInput;
+[****
+
+if (!have.input)
+	{
+	goto exit;
+	}
+
+
+[	Regular old text goes here.
+
+if ((said( look, table) ||
+	said( look, bench)))
+	{
+	print( 3);
+	}
+if ((said( read, table) ||
+	said( read, carvings) ||
+	said( read, initials))) {
+	print( 80);
+	}
+
+if (said( look, bush))
+	{
+	print( 4);
+	}
+
+if ((said( look, park) ||
+	said( look, room) ||
+	said( look)))	
+	{
+	print( 71);
+	}
+
+if ((said( look, ground) ||
+	said( look, down)))
+	{
+	print( 72);
+	}
+
+if ((said( look, up) ||
+	said( look, sky))) 
+	{
+	print( 73);
+	}
+
+if (said( look, fence))
+	{
+	print( 5);
+	}
+
+if (said( look, tree))
+	{
+	print( 6);
+	}
+
+
+
+
+if (!parkBust)
+	{
+	goto exit;
+	}
+
+
+[	Text for park bust
+
+if ((said( call) ||
+	said( talk, girl) ||
+	said( talk, laura)))
+	{
+	if (!has( i.extnd))
+		{
+		print( 9);				[	don't have radio
+		}
+	else
+		{
+		if (!hiding)
+			{
+			if (parkBust == PBjustStarting)
+				{
+				secondsInRoom = 26;	[	So don't get Laura's call.
+				print( 61);
+				print( 8);		[	notify when in position
+				}
+			else
+				{
+				if (parkBust == PBSimmsToCar)
+					{
+					print( 48);
+					}
+				else
+					{
+					if (parkBust == PBchaseOn)
+						{
+						print( 56);
+						}
+					else
+						{
+						print( 58);
+						}
+					}
+				}
+			}
+
+		else						[	He's hidden.
+			{
+			if (parkBust < PBdealDone)
+				{
+				if (calledPartner1)
+					{
+					print( 14);
+					}
+				else
+					{
+					set( calledPartner1);
+					print( 10);	[You notify Det. Laura
+					print( 11);	[	Ten-Four! Will maintain silence
+					}
+				}
+			else
+				{
+				if (parkBust == PBdealDone)
+					{
+					print( 26);	[	making bust
+					set( calledPartner2);
+					}
+				else
+					{
+					print( 58);
+					}
+				}
+			}
+		}
+	}
+
+
+if ((said( halt, rol) ||
+	said( police, rol) ||
+	said( halt, police, rol)))
+	{
+	print( 28);					[	HALT! Cop
+	if (!SimmsHere && !ColbyHere)
+		{
+		print( 49);				[	Nobody here but you.
+		}
+	else
+		{
+		set( saidHalt);
+		if (parkBust < PBdealDone)
+			{
+			print( 29);
+			}
+		}
+	}
+
+if ((said( hands, up) ||
+	said( put, hands, up)))
+	{
+	if (parkBust == PBSimmsCuffed)
+		{
+		print( 77);
+		}
+	else
+		{
+		if (parkBust == PBchaseOn)
+			{
+			print( 78);
+			}
+		else
+			{
+			print( 76);					[	HALT! Cop
+			if (!SimmsHere && !ColbyHere)
+				{
+				print( 49);				[	Nobody here but you.
+				}
+			else
+				{
+				set( saidHalt);
+				if (parkBust < PBdealDone)
+					{
+					print( 29);
+					}
+				}
+			}
+		}
+	}
+
+if (SimmsHere &&
+    (said( read, rights, rol) ||
+	said( read, anyword, rights, rol) ||
+	said( give, rights, rol) ||
+	said( give, anyword, rights, rol) ||
+	said( rights, rol) ||
+	said( anyword, rights, rol)))
+	{
+	if (parkBust < PBdealDone)
+		{
+		print( 50);
+		}
+	else
+		{
+		if (parkBust < PBSimmsCuffed)
+			{
+			print( 32);			[	safer cuff first
+			}
+		else
+			{
+			if (!nearPerson)
+				{
+				set( notCloseEnough);
+				}
+			else
+				{
+				set( readRights);
+				if (!lclReadRights)
+					{
+					set( lclReadRights);
+					score += 1;
+					}
+
+				call( 72);		[	rmMiranda
+				}
+			}
+		}
+	}
+
+if (SimmsHere &&
+    (said( raise, hands) ||
+	said( raise, hands) ||
+	said( raise, your, hands) ||
+	said( put, hands, over, head) ||
+	said( put, your, hands, your, head) ||
+	said( lay, down, rol) ||
+	said( hit, ground, rol) ||
+	said( get, down, rol) ||
+	said( face, floor, rol)))
+	{
+	if (parkBust < PBdealDone)
+		{
+		print( 50);
+		}
+	else
+		{
+		print( 43);				[	he's just a kid
+		}
+	}
+
+if (SimmsHere &&
+    (said( cuff, man) ||
+	said( cuff, suspect) ||
+	said( cuff, anyword, man) ||
+	said( cuff, anyword, suspect) ||
+	said( anyword, cuff, anyword, man) ||
+	said( anyword, cuff, anyword, suspect) ||
+	said( cuff, simms) ||
+	said( cuff, anyword, simms) ||
+	said( anyword, cuff, anyword, simms)))
+	{
+	if (parkBust < PBdealDone)
+		{
+		print( 50);
+		}
+	else
+		{
+		if (parkBust > PBchaseOn)
+			{
+			print( 35);
+			}
+		else
+			{
+			if (!nearPerson)
+				{
+				set( notCloseEnough);
+				}
+			else
+				{
+				if (view == 11)	[	w/ gun
+					{
+					print( 44);	[	put gun away first
+					}
+				else
+					{
+					if (!has( i.cuffs))
+						{
+						set( dontHaveThem);
+						}
+					else
+						{
+						drop( i.cuffs);
+						print( 31);	[	You cuff suspect
+						set.view( aSimms, v.simms.cuffed);
+						parkBust = PBSimmsCuffed;
+						score += 1;
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+if (SimmsHere &&
+    (said( get, bag) ||
+	said( search) ||
+	said( search, man) ||
+	said( search, simms) ||
+	said( search, suspect)))
+	{
+	if (parkBust < PBdealDone)
+		{
+		print( 50);
+		}
+	else
+		{
+		if (parkBust < PBSimmsCuffed)
+			{
+			print( 32);			[	safer cuff first
+			}
+		else
+			{
+			if (!nearPerson)
+				{
+				set( notCloseEnough);
+				}
+			else
+				{
+				if (SxCSdope)
+					{
+					print( 34);	[	nothing more.
+					}
+				else {
+					set( SxCSdope);
+					print( 36);	[	You search Simms.
+					score += 1;
+					}
+				}
+			}
+		}
+	}
+
+if (SimmsHere &&
+    (said( who, partner)	||
+	said( name, rol) ||
+	said( ask, name) ||
+	said( partner, name) ||
+	said( question, man) ||
+	said( question, simms) ||
+	said( question, suspect) ||
+	said( talk, man) ||
+	said( talk, simms) ||
+	said( talk, suspect) ||
+	said( ask, who, partner)	||
+	said( simms, who, partner)))
+	{
+	if (!nearPerson)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (!readRights)
+			{
+			set( certainDeath);
+			call( 72);
+			}
+		else
+			{
+			if (!SimmsTalkedSome)
+				{
+				print( 51);
+				set( SimmsTalkedSome);
+				}
+			else
+				{
+				print( 52);
+				print( 47);				[	ah ! ah colby
+				if (!knowsColbyName)
+					{
+					set( knowsColbyName);
+					score += 2;
+					}
+				}
+			}
+		}
+	}
+
+if (SimmsHere &&
+    (said( go, rol) ||
+	said( come, with, me, rol) ||
+	said( walk, car) ||
+	said( walk, patrol, car) ||
+	said( follow, me, rol) ||
+	said( move, rol)))
+	{
+	if (parkBust < PBdealDone)
+		{
+		print( 50);
+		}
+	else
+		{
+		if (parkBust < PBSimmsCuffed)
+			{
+			print( 32);			[	safer cuff first
+			}
+		else
+			{
+			parkBust = PBSimmsToCar;
+			script = 152;			[	Just in case?
+			set( scriptDone);
+			}
+		}
+	}
+
+
+if (SxCSdope)
+	{
+	if ((said( look, dope) ||
+		said( look, bag)))
+		{
+		print( 38);				[	appear to be cocaine
+		}
+
+	if (said( snort, dope))
+		{
+		print( 27);
+		set( certainDeath);
+		}
+
+	if (said( look, id))
+		{
+		print( 37);				[	I.D. is Jefferson High School
+		}
+	}
+
+if (SimmsHere &&
+    (said( arrest, man) ||
+	said( arrest, suspect) ||
+	said( arrest, simms)))
+	{
+	if (!nearPerson)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 79);
+		}
+	}
+
+if ((said( look, man) ||
+	said( look, colby) ||
+	said( look, simms)))
+	{
+	if (!SimmsHere && !ColbyHere)
+		{
+		print( 81);
+		}
+	else
+		{
+		if (SimmsHere)
+			{
+			print( 82);
+			}
+
+		if (ColbyHere)
+			{
+			print( 83);
+			}
+		}
+	}
+			
+
+
+[
+:exit
+[
+
+call( 2);							[	lgc.ego's gun
+call( 118);						[	lgc.suspect
+
+
+if (!certainDeath)
+	{
+	if (ego.shot.dead)	{
+		print( 1);				[	This drug peddling punk just shot you
+		stop.cycling( a.suspect);
+		set( certainDeath);
+		}
+
+	if (suspect.dead)
+		{
+		print( 2);				[	You just blew that drug
+		print( 74);
+		stop.update( a.suspect);
+		stop.update( aSimms);
+		set( certainDeath);
+		}
+	}
+
+if (musicDone)
+	{
+	sound( mTension, musicDone);
+	}
+
+
+[	Temp
+[if (QA)
+[	{
+[	display( 1, 0, 80);
+[	}
+[

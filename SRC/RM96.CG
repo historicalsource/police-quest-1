@@ -1,0 +1,547 @@
+[ POLICE QUEST
+[ rm96.cg
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. 6/9/87
+[ Last Update October 12, 1987GR
+
+[ lgc.carRadio
+
+
+%include "gamedefs"
+%include "rm117.h"
+%include "rm96.msg"
+
+
+if (init.log)
+	{
+	if (PreventBackAndForth != current.room) {
+		--rmsFirstRadioCall;		[ dispatch time out
+		--rmsNextRadioCall;			[ room counter
+		}
+	PreventBackAndForth = previous.room;
+
+	if  (previous.room != 106 &&
+	    (previous.room < 10 ||
+		previous.room > 25))		[!map room
+		{
+		rmsNextRadioCall = 1;
+		random( radioWaitShort, radioWaitLong, rmsFirstRadioCall);
+		}
+	
+	if (previous.room == 41 && cotton.scene == 1) {
+		rmsFirstRadioCall = 1;
+		}
+	
+	if (cotton.scene == 20) {
+		cotton.scene = 21;
+		}
+	else {
+		if (cotton.scene == 21) {
+			cotton.scene = 100;
+			}
+		}
+
+	return( );
+	}
+
+
+[ Logic 
+
+if (secondsInRoom > 15 && PreventBackAndForth) {
+	PreventBackAndForth = 0
+	}
+
+if (current.suspect == 255) {			[ Radio calls 
+	if (!rmsFirstRadioCall
+	&& !rmsNextRadioCall
+	&& posn( ego, 17, 25, 143, 131)) {
+		random( 4, 6, rmsNextRadioCall);[ redispatch
+		if (cotton.scene == 1) {
+			print( 8);			[ respond cotton cove
+			}
+		}
+	}
+
+
+[ Radio Response
+[ General Direction 
+[ Set Up for radio call stuff below have.input
+[ also used by rm117 Running traffic signals
+
+Xstreet = 0;
+Ystreet = 0;
+	
+if (posn( ego, 1, 19, 159, 45)) {		[ 1
+	Ystreet = 1;
+	}
+if (posn( ego, 1, 111, 159, 137)) {	[ 2
+	Ystreet = 2;
+	}
+if (posn( ego, 11, 1, 33, 167)) {		[ 3
+	Xstreet = 3;
+	}
+if (posn( ego, 69, 1, 91, 167)) {		[ 4
+	Xstreet = 4;
+	}
+if (posn( ego, 127, 1, 149, 167)) {	[ 5
+	Xstreet = 5;
+	}
+
+if ((!have.input ||
+	progress == dead)) {
+	goto exit;
+	}
+
+[ using radio 
+if ((said( call) ||
+	said( ask, location) ||
+   	said( what, street, rol) ||
+	said( where, rol) ||
+	said( street, rol) ||
+	said( request, location)))
+	{
+	if (!current.sonny) {
+		set.string( 2, 6);					[ 83-32
+		}
+	else {
+		set.string( 2, 68);				[ 83-nora-10
+		}
+
+	set.string( 8, 66);				[ radio
+	parse( 8);
+	}
+
+if ( current.sonny == 17 &&
+	said( call)) {
+	print( 69);
+	}
+if ( current.sonny == disguised.sonny &&
+	said ( call)) {
+	reset( have.match);
+	goto exit;
+	}
+
+if ( gotcha &&
+	said( call)) {
+	if ( !current.suspect) {
+		if ( wreck.scene < 199) {
+			print( 46);			[ at traffic accident
+			print( 50);			[ will advise
+			}
+		else {
+			print( 85);
+			}
+		}
+	
+	if (current.suspect == 3) {	[ Fox
+		print( 47);			[ run check
+		print( 48);			[ suspect license #
+		print( 49);			[ no wants no warrants
+		}
+	
+	if (current.suspect == 38) {	[ taselli
+		print( 54);			[ run check
+		print( 55);			[ suspect license
+		print( 56);			[ registerd to junk
+		print( 57);			[ approach with caution
+		}
+	
+	if (current.suspect == 137) {	[ drunk
+		print( 58);			[ run check
+		print( 59);			[ registerd to junk
+		print( 61);			[ approach with caution
+		}
+	}
+
+[ In custody 
+if ( has.suspect &&
+	said( call)) {
+	if ((current.suspect == 38 ||			[ taselli	
+		current.suspect == 137)) {		[ drunk
+		print( 62);
+		}
+	if (current.suspect == 175) {	[ colby simms
+		print( 63);
+		if ( knowsColbyName) {
+			if ( !SxSusCheck) {
+				score += 1;
+				set( SxSusCheck);
+				set( refresh);
+				}
+			print( 63);
+			print( 65);
+			print( 67);
+			}
+		}
+	}
+
+[ Who we after
+
+if ( suspect.present &&
+	suspect < 80 &&
+	said ( call)) {
+	if (current.suspect == 3) {	[ fox
+		if ((SxGaveFoxTicket || hasfPhone)) {
+			reset( have.match);
+			}
+		else {
+			print( 83);
+			}
+		}
+	else {
+		if ( current.suspect == 4) {
+			if ( biker.scene < 4) {
+				print( 91);
+				}
+			else {
+				print( 85);
+				}
+			}
+		else {
+			if (current.suspect == 38) {	[ taselli
+				print( 81);
+				}
+			else {
+				if (current.suspect == 137) {	[ drunk
+					print( 82);
+					}
+				else {
+					reset( have.match);
+					}
+				}
+			}
+		}
+	}
+
+[ after dispatch radio call
+if ( !rmsFirstRadioCall &&
+	said ( call)) {
+	if ( !current.suspect) {
+		if ( wreck.scene == 199) {
+			print( 60);
+			print( 88);
+			reset( have.match);
+			}
+		else {
+			print( 85);
+			}
+		}
+	else {
+		if ( current.suspect == 1 &&
+			!current.room == 12) {
+			print( 87);
+			}
+		else {
+			reset( have.match);
+			}
+		}
+	}
+
+
+
+if (said( call)) {
+	reset( work.f)
+
+	if (current.room == 11 &&
+		posn( ego, 32, 66, 38, 87)) {			[ hotel
+		set.string( 3, 72);
+		set( work.f);							
+		}
+	
+	if (current.room == 12 &&
+		posn( ego, 37, 113, 65, 117)) {		[ coffee shop
+		set.string( 3, 73);
+		set( work.f);
+		}
+	
+	if (current.room == 14 &&
+		posn( ego, 8, 26, 26, 133)) {			[ park
+		set.string( 3, 74);
+		set( work.f);
+		}
+	
+	if (current.room == 17 &&
+		posn( ego, 27, 48, 30, 72)) {			[ Blue room
+		set.string( 3, 75);
+		set( work.f);
+		}
+	
+	if (current.room == 20 &&
+		posn( ego, 27, 39, 39, 63)) {			[ station
+		set.string( 3, 76);
+		set( work.f);
+		}
+	
+	if (current.room == 25 &&
+		posn( ego, 130, 131, 149, 150)) {		[ Cotton Cove
+		set.string( 3, 77);
+		set( work.f);
+		}
+	
+	if (current.room == 24) {
+		if (posn( ego, 72, 62, 75, 92)) {		[ court
+			set.string( 3, 78);
+			set( work.f);
+			}
+		else {
+			if (posn( ego, 85, 91, 105, 107)) {[ jail
+				set.string( 3, 79);
+				set( work.f);
+				}
+			}
+		}
+
+	if (work.f) {
+		print( 71);
+		}
+	else {
+	[	set.string( 3, 43);		[ description
+	[	set.string( 4, 43);		[ Xstreet
+	[	set.string( 5, 43);		[ Ystreet
+	
+		get.dir( ego, work);
+		if (!work) {				[ parked
+			set.string( 3, 10);
+			}
+		else {
+			if (work == ego.up) {
+				set.string( 3, 11);	   [ north bond ect.
+				}
+			else {
+				if (work == ego.up.right) {
+					set.string( 3, 12);
+					}
+				else {
+					if (work == ego.right) {
+						set.string( 3, 13);
+						}
+					else {
+						if (work == ego.down.right) {
+							set.string( 3, 14);
+							}
+						else {
+							if (work == ego.down) {
+								set.string( 3, 15);
+								}
+							else {
+								if (work == ego.down.left) {
+									set.string( 3, 16);
+									}
+								else {
+									if (work == ego.left) {
+										set.string( 3, 17);
+										}
+									else {		[ ego.up.left
+										set.string( 3, 18);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+	
+
+		if (priority == 14) {
+			print( 41);			[ on freeway
+			}
+		else {
+			if (ego.hidden) {
+				print( 42);		[ under freeway
+				}
+			else {	[ NOTE added 6 to standards to cover general
+				
+				if (current.room < 14) {				[ 10 - 13
+					if (Ystreet == 1) {
+						set.string( 4, 33);			[ jan
+						}
+					if (Ystreet == 2) {
+						set.string( 4, 34);			[ Feb
+						}
+					}
+				else {
+					if (current.room < 18) {			[ 14 - 17
+						if (Ystreet == 1) {
+							set.string( 4, 35);		[ March
+							}
+						if (Ystreet == 2) {
+							set.string( 4, 36);		[ April
+							}
+						}
+					else {
+						if (current.room < 22) {		[ 18 - 21
+							if (Ystreet == 1) {
+								set.string( 4, 37);	[ May
+								}
+							if (Ystreet == 2) {
+								set.string( 4, 38);	[ June
+								}
+							}
+						else {					[ 22 - 25
+							if (Ystreet == 1) {
+								set.string( 4, 39);	[ July
+								}
+							if (Ystreet == 2) {
+								set.string( 4, 40);	[ August
+								}
+							}
+						}
+					}
+
+				if ((current.room == 10 ||
+					current.room == 14 ||
+					current.room == 18 ||
+					current.room == 22)) {
+					if (Xstreet == 3) {
+						set.string( 5, 21);
+						}
+					if (Xstreet == 4) {
+						set.string( 5, 22);
+						}
+					if (Xstreet == 5) {
+						set.string( 5, 23);
+						}
+					}
+				else {
+					if ((current.room == 11 ||
+						current.room == 15 ||
+						current.room == 19 ||
+						current.room == 23)) {
+						if (Xstreet == 3) {
+							set.string( 5, 24);
+							}
+						if (Xstreet == 4) {
+							set.string( 5, 25);
+							}
+						if (Xstreet == 5) {
+							set.string( 5, 26);
+							}
+						}
+					else {
+						if ((current.room == 12 ||
+							current.room == 16 ||
+							current.room == 20 ||
+							current.room == 24)) {
+							if (Xstreet == 3) {
+								set.string( 5, 27);
+								}
+							if (Xstreet == 4) {
+								set.string( 5, 28);
+								}
+							if (Xstreet == 5) {
+								set.string( 5, 29);
+								}
+							}
+						else {
+							if (Xstreet == 3) {
+								set.string( 5, 30);
+								}
+							if (Xstreet == 4) {
+								set.string( 5, 31);
+								}
+							if (Xstreet == 5) {
+								set.string( 5, 32);
+								}
+							}
+						}
+					}
+
+				if (Xstreet && Ystreet) {
+					print( 45);		[ intersection off
+					}
+				else {
+					if (Ystreet) {
+						print( 43);	[ on xx St
+						}
+					else {
+						print( 44);	[ on xx St
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+if ((said( pull, over, car) ||   		[ if !observe violation
+	said( pull, car, over) ||
+	said( stop, car) ||
+	said( make, stop)))
+	{
+	if (suspect.present)
+		{
+		print( 89);				[ if observe violation	
+		}
+	else {
+		print( 90);
+		}
+	}
+
+
+if (has( i.case) &&
+	said( anyword, case))
+	{
+	print( 84);
+	}		
+	
+if ((said( get, pr24) ||
+	said( get, pr24, off, door) ||
+	said( get, pr24, from, door) ||
+	said( remove, pr24, from, door) ||
+	said( get, pr24, from, car)))
+	{
+	print( 84);
+	}		
+	
+
+if ((said( stop) ||
+	said( stop, car) ||
+	said( park) ||
+	said( park, car) ||
+	said( drive) ||
+	said( drive, car) ||
+	said( drive, car, away) ||
+	said( start, car) ||
+	said( turn, key) ||
+	said( turn, off, rol) ||
+	said( go))) {
+	set( func4);
+	}
+
+
+[
+:exit
+[
+
+if (func4 && progress != dead) {
+	reset( func4);
+	if ( progress > 70 &&
+		current.room != 11) {
+		print( 2);
+		print( 3);
+		}
+	else {
+		 if (cotton.scene == 21 &&
+			current.room == 25) {
+			print( 86);					[  coroner dispatched
+			print( 9);					[  10-19 office
+			}
+		else {
+			if ( current.room != 25 &&
+				cotton.scene &&
+				cotton.scene < 20) {
+				if (rmsFirstRadioCall) {
+					rmsFirstRadioCall = 0;
+					print( 8);		[ respond cotton cove
+					}
+				else {
+	 				print( 7);	[  officers waiting
+					}
+				}
+			else {
+				set( func4);
+				}
+			}
+		}
+	}

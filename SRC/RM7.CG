@@ -1,0 +1,956 @@
+[ POLICE QUEST 
+[ rm7.cg 
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 10/13/86
+[ Last Update October 19, 1987GR
+
+[ rm.yard
+
+
+%include "gamedefs"
+%include "rm7.msg"
+%include "rm94.h"
+
+
+
+[	Room 94 handles the nightstick and wallet stuff, but is ignored
+[for all other actions.
+
+
+
+%define	moved0			lf0	
+%define	moved1			lf1	
+%define	nearDoorsP1		lf2
+%define	nearDoorsP2		lf3
+%define	nearPatrolDoorF	lf4
+%define	nearPatrolDoorB	lf5
+%define	nearCadDoorF		lf6
+%define	nearCadDoorB		lf7
+%define	nearVetDoor		lf8
+%define	nearOtherPatrol	lf9		[ top left & right
+%define	nearOurPatrol		lf10		[ lower left
+%define	nearCad 			lf11
+%define	nearVett			lf12
+%define	checkedLeftRear	lf13
+%define	checkedLeftFront	lf14
+%define	checkedRightRear	lf15
+%define	checkedRightFront	lf16
+%define	go.for.it			lf17
+%define	pr24Warning		lf18
+
+%define	moving0			lcl0
+%define	moving1			lcl1
+%define	carChk			lcl2
+%define	laura			lcl3
+
+
+%object	a.laura			1
+%object	a.CaDoor			2
+%object	a.VettDoor		3
+
+
+
+if (init.log)						[ Room setup 
+	{
+	code = 1;	[	Shift the car into park.
+	reset( f.car.door);
+	work5 = 0;
+	work6 = 0;
+	car.location = 20;				[rm.map20;
+	street.address = 7;				[rm.yard;
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+	
+	load.logics( 94);				[ parked car
+
+	load.view( v.patCar);
+	load.view( v.vettCar);
+	load.view( v.cadCar);
+
+	load.sound( s.car.open);
+	load.sound( s.car.close);
+	
+	animate.obj( a.Fdoor);
+	animate.obj( a.CaDoor);
+	animate.obj( a.VettDoor);
+
+
+	load.view( v.CopDoor);
+	load.view( v.CaDoor);
+	load.view( v.VettDoor);
+	load.view( v.DisgDoor);
+
+	set.view( a.Fdoor, v.CopDoor);
+	set.view( a.CaDoor, v.CaDoor);
+	set.view( a.VettDoor, v.VettDoor);
+
+	if (current.sonny == 13) {	[ disguised.sonny
+		set.view( a.CaDoor, v.DisgDoor);
+		}
+
+	set.loop( a.Fdoor, 0);
+	set.loop( a.CaDoor, 0);
+	set.loop( a.VettDoor, 0);
+
+	stop.cycling( a.Fdoor);
+	stop.cycling( a.CaDoor);
+	stop.cycling( a.VettDoor);
+
+	position( a.Fdoor, 29, 149);
+	position( a.CaDoor, 110, 111);
+	position( a.VettDoor, 119, 147);
+
+	if (!has( i.PCkey)) {
+		reset( f.car.door);
+		reset( b.car.door);
+		}
+	if (!has( i.corvkey)) {
+		reset( corvette.door);
+		}
+	if (!has( i.cadkey)) {
+		reset( cadillac.door);
+		}
+
+	if  (narcoff.scene &&
+		moroff.scene &&
+		!park.bust &&
+		previous.room == 20) {
+		park.bust = 1;
+		set( game.control);
+		wait.1 = 1;
+
+		if (jail.scene < 4) {		[ rebooked to escape
+			jail.scene = 5;		[ taselli released
+			}
+		}
+
+	if (park.bust && park.bust < 255) {
+		load.view( v.laura);
+		animate.obj( a.laura);
+		set.view( a.laura, v.laura);
+		if (park.bust == 1) {
+			position( a.laura, 36, 90);
+			set.loop( a.laura, facing.front);
+			}
+		else {
+			position( a.laura, 114, 107);
+			set.loop( a.laura, 1);
+			park.bust = 250;
+			}
+		reset( LauraCar);
+		stop.cycling( a.laura);
+		draw( a.laura);
+		}
+
+	if (priorX) {
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		}
+	else {
+		position( ego, 40, 90);
+		}
+	
+
+	if (!current.sonny) {
+		car.x = 30;
+		car.y = 48; 
+		current.car = patrol.car;
+		current.diag.car = diag.patrol.car
+		}
+
+	if (current.sonny == 8) {		[ narc
+		car.x = 36;
+		car.y = 61;
+		current.car = cadillac.car;
+		}
+	
+	if (current.sonny == 13)	{		[ sonny.disgiused
+		current.car = cadillac.car;
+		}
+	
+	if (current.sonny == 17) {		[ sonny.civies
+ 		car.x = 29;
+		car.y = 61;
+		current.car = corvette.car;
+		}
+
+	if (in.car) {
+		if (current.car == patrol.car) {
+			if (!f.car.door) {
+				set.cel( a.Fdoor, 0);
+				}
+			else {
+				set.cel( a.Fdoor, 1);
+				}
+			ego.x = 40;
+			ego.y = 151;
+			draw( a.Fdoor);
+			}
+	
+		if (current.car == cadillac.car) {
+			if (!cadillac.door) {
+				set.cel( a.CaDoor, 0);
+				}
+			else {
+				set.cel( a.CaDoor, 1);
+				}
+			ego.x = 119;
+			ego.y = 113;
+			draw( a.CaDoor);
+			}
+		
+		if (current.car == corvette.car) {
+			if (!corvette.door) {
+				set.cel( a.VettDoor, 0);
+				}
+			else {
+				set.cel( a.VettDoor, 1);
+				}
+			ego.x = 121;
+			ego.y = 149;
+			draw( a.VettDoor);
+			}
+		position.f( ego, ego.x, ego.y);
+		}
+	else {
+		if (f.car.door) {
+			set.cel( a.Fdoor, 2);
+			draw( a.Fdoor);
+			}
+		if (cadillac.door) {
+			set.cel( a.CaDoor, 2);
+			draw( a.CaDoor);
+			}
+		if (corvette.door) {
+			set.cel( a.VettDoor, 2);
+			draw( a.VettDoor);
+			}
+		draw( ego);
+		}
+
+ 	add.to.pic( v.patCar, 0, 0,  8, 128, 11, 0);
+ 	add.to.pic( v.patCar, 0, 0, 10, 150, 13, 0);		[patrol.car
+ 	add.to.pic( v.cadCar, 0, 0, 88, 112, 10, 0);		[cadillac.car
+ 	add.to.pic( v.patCar, 0, 0, 90, 128, 11, 0);
+ 	add.to.pic(v.vettCar, 0, 0, 95, 148, 13, 0);		[corvette.car
+
+	show.pic();
+	return();
+	}
+
+
+[ Logic 
+
+if (posn( ego, 55, 89, 159, 93)) {		[ Door Way
+	if (park.bust == 250) {
+		park.bust = 255;
+		}
+
+	if (!has( i.pr24)) {
+		new.room( 52);					[rm.hqhall2;
+		}
+	else {
+		if (!pr24Warning) {
+			set( pr24Warning);
+			print( 17);
+			}
+		}
+	}
+else {
+	reset( pr24Warning);
+	}
+
+if (progress == beginning && !certainDeath) {
+	print( 31);
+	set( certainDeath);
+	}
+
+
+[ Near Doors 
+reset( nearDoorsP1);
+if (posn( ego, 29, 128, 51, 132)) {
+	set( nearDoorsP1);
+	}
+
+reset( nearDoorsP2);
+if (posn( ego, 112, 128, 132, 132)) {
+	set( nearDoorsP2);
+	}
+
+reset( nearPatrolDoorF);
+if (posn( ego, 29, 149, 42, 154)) {
+	set( nearPatrolDoorF);
+	}
+
+reset( nearPatrolDoorB);
+if (posn( ego, 43, 149, 56, 154)) {
+	set( nearPatrolDoorB);
+	}
+
+reset( nearCadDoorF);
+if (posn( ego, 111, 111, 122, 116)) {
+	set( nearCadDoorF);
+	}
+
+reset( nearCadDoorB);
+if (posn( ego, 123, 111, 133, 116)) {
+	set( nearCadDoorB);
+	}
+
+reset( nearVetDoor);
+if (posn( ego, 120, 147, 133, 153)) {
+	set( nearVetDoor);
+	}
+
+
+[ Near cars 
+reset( nearOtherPatrol);
+if ((posn( ego, 01, 103, 79, 137) ||	[ top left patrol car
+ 	posn( ego, 79, 116, 159, 137))) {	[ right patrol car
+	set( nearOtherPatrol);
+	}
+
+reset( nearOurPatrol);
+if (posn( ego, 01, 138, 79, 167)) {	[ nearOur PatrolCar
+	set( nearOurPatrol);
+	}
+
+reset( nearCad);
+if (posn( ego, 79, 103, 159, 116)) {	[ near Cad
+	set( nearCad);
+	}
+
+reset( nearVett);
+if (posn( ego, 79, 137, 159, 167)) {	[ near vett
+	set( nearVett);
+	}
+
+distance( ego, a.laura, laura);		[ nearPerson 
+if (laura < dist) {
+	set( nearPerson);
+	}
+
+
+if (moved0) {						[ Animation timers 
+	reset( moved0);
+	++moving0;
+	}
+
+if (moved1) {
+	reset( moved1);
+	++moving1;
+	}
+
+if (aSecondPassed) {
+	if (wait.1) {
+		++wait.1;
+		if (wait.1 == 255) {
+			wait.1 = 1;
+			}
+		}
+	}
+
+
+[ Safety Check
+
+if (!hasSafeCar)
+	{
+	if (!current.sonny)				[ only need ck patrol car
+		{
+		if (posn( ego,   0, 137,  20, 143))	{set( checkedRightFront);}
+		if (posn( ego,  53, 137,  69, 143))	{set( checkedRightRear);}
+		if (posn( ego,   0, 151,  20, 158))	{set( checkedLeftFront);}
+		if (posn( ego,  53, 151,  69, 158))	{set( checkedLeftRear);}
+		}
+
+	if ((current.sonny == sonny.narc ||
+		current.sonny == disguised.sonny))
+		{
+		if (posn ( ego,  87, 103,  97, 107))	{set( checkedRightFront);}
+		if (posn ( ego, 131, 103, 140, 107))	{set( checkedRightRear);}
+		if (posn ( ego,  87, 113,  97, 119))	{set( checkedLeftFront);}
+		if (posn ( ego, 131, 113, 140, 119))	{set( checkedLeftRear);}
+		}
+
+
+	if  (checkedLeftFront &&
+		checkedLeftRear &&
+		checkedRightFront &&
+		checkedRightRear)
+		{
+		print( 23);
+		set( hasSafeCar);
+		if (!SxSafetyCheck) {
+			set( SxSafetyCheck);
+			score += 5;
+			}
+		}
+	}
+
+
+if ((said( go, pr24, rol) ||
+	said( go, wallet, rol))) {
+	reset( have.match);
+	goto exit;
+	}
+
+if ((said( go, car) ||				[Logic below cleans up what we mean
+	said( sit) ||
+	said( sit, car) ||
+	said( stand) ||
+	said( enter) ||
+	said( leave, car) ||
+	said( climb, car) ||
+	said( go, rol) ||
+	said( climb, car))) {
+	set( func4);
+	}
+
+
+if ((said( drive) ||
+	said( drive, car) ||
+	said( start, car, with, keys) ||
+	said( use, car, keys) ||
+	said( use, keys, start, car) ||
+	said( start, car) ||
+	said( start, motor) ||
+	said( turn, key) ||
+	said( drive, car))) {
+	set( func4);
+	}
+
+
+
+[ Laura 
+
+if (park.bust == 1)					[ laura.in.yard
+	{
+
+[ Handle User
+
+	if (func4 && !LauraCar)
+		{
+		reset( func4);
+		reset( have.input);
+
+		if (moving1 < 7) {
+			print( 12);			[hold on
+			}
+		else {
+			print( 14);			[let's roll
+			scriptTimer = 5;
+			}
+		}
+
+	if (have.input) {
+		reset( have.input);
+		if (moving1 < 7) {
+			print( 12);			[hold on
+			}
+		else {
+			print( 14);			[let's roll
+			scriptTimer = 5;
+			}
+		}
+
+	if  (scriptDone) {
+		reset(scriptDone);
+		print( 14);				[let's roll
+		scriptTimer = 10;
+		}
+
+
+[ Handle Laura 
+
+	if (!moving1 && wait.1 == 2) {
+		print( 11);				[ looks like shes waiting
+		start.cycling( a.laura);
+		move.obj( a.laura, 36, 105, 1, moved1);
+		wait.1 = 0;
+		++moving1;
+		}
+
+	if (moving1 == 2) {
+		move.obj( a.laura, 115, 105, 1, moved1);
+		}
+	
+	if (moving1 == 3) {
+		move.obj( a.laura, 115, 107, 1, moved1);
+		}
+	
+	if (moving1 == 4) {
+		stop.cycling( a.laura);
+		sound( s.car.open, snd.done);
+		wait.1 = 1;
+		++moving1;
+		}
+	
+	if (moving1 == 5) {
+		if (wait.1 == 3) {
+			erase( a.laura);
+			set.loop( a.CaDoor, 1);
+			set.cel( a.CaDoor, 0);
+			set( LauraCar);
+			}
+	
+		if (wait.1 == 5) {
+			sound( s.car.open, snd.done);
+			++ wait.1
+			}
+		
+		if (wait.1 == 7) {
+			print( 13);			[stake out
+			scriptTimer = 5;
+			moving1 = 7;
+			}
+		}
+	}
+
+
+[ Laura after bust 
+if ( park.bust == 250) {
+	if ( moving0 == 0) {
+		wait.1 = 1;
+		sound( s.car.open, work.f);
+		++moving0;
+		}
+
+	if ( wait.1 == 3 &&
+		moving0 == 1) {
+		print( 29);				[ Laura will go do write up.
+		print( 30);				[ go see jack at blue room.
+		bluerm.scene = 10;
+		start.cycling( a.laura);
+		move.obj( a.laura, 36, 105, 1, moved0);
+		++moving0;
+		wait.1 = 0;
+		}
+	
+	if (moving0 == 3) {
+		move.obj( a.laura, 36, 90, 1, moved0);
+		}
+	
+	if (moving0 == 4) {
+		move.obj( a.laura, 56, 90, 1, moved0);
+		}
+	
+	if (moving0 == 5) {
+		erase( a.laura);
+		++moving0;
+		}
+	}
+
+
+[	In and Out of Car
+
+if (func4) {
+	reset( func4);
+
+	if ( in.car) {
+		if (current.car == patrol.car) {
+			if (!f.car.door) {
+				set( go.for.it);
+				}
+			else {
+				set.cel( a.Fdoor, 2);
+				position( ego, 36, 151);
+				set.loop( ego, 1);
+				draw( a.Fdoor);
+				draw( ego);
+				reset( in.car);
+				}
+			}
+
+		if (current.car == cadillac.car && !park.bust) {
+			if (!cadillac.door) {
+				set( go.for.it);
+				}
+			else {
+				set.cel( a.CaDoor, 2);
+				position( ego, 118, 113);
+				set.loop( ego, 1);
+				draw( a.CaDoor);
+				draw( ego);
+				reset( in.car);
+				}
+			}
+
+		if (current.car == cadillac.car && park.bust) {
+			if (!cadillac.door) {
+				set( go.for.it);
+				}
+			else {
+				set.cel( a.CaDoor, 2);
+				position( ego, 118, 113);
+				set.loop( ego, 1);
+				draw( a.CaDoor);
+				draw( ego);
+				reset( in.car);
+				}
+			}
+
+		if (current.car == corvette.car) {
+			if (!corvette.door) {
+				set( go.for.it);
+				}
+			else {
+				set.cel( a.VettDoor, 2);
+				position( ego, 125, 150);
+				set.loop( ego, 1);
+				draw( a.VettDoor);
+				draw( ego);
+				reset( in.car);
+				}
+			}
+		}
+	else {
+		if ((nearDoorsP1 ||
+			nearDoorsP2)) {
+			print( 5);			[ crawl through window
+			}
+		else {
+			if (nearPatrolDoorF) {
+				if (!f.car.door) {
+					print( 5);	[	"Do you plan to crawl.."
+					}
+				else {
+					set.cel( a.Fdoor, 1);
+					erase( ego);
+					draw( a.Fdoor);
+					current.car = patrol.car;
+					set( in.car);
+					}
+				}
+			else {
+				if (nearCadDoorF) {
+					if (!cadillac.door) {
+						print( 5);[	"Do you plan to crawl.."
+						}
+					else {
+						set.cel( a.CaDoor, 1);
+						erase( ego);
+						draw( a.CaDoor);
+						current.car = cadillac.car;
+						set( in.car);
+						}
+					}
+				else {
+					if (nearVetDoor) {
+						if (!corvette.door) {
+							print( 5);[	"Do you plan to crawl.."
+							}
+						else {
+							set.cel( a.VettDoor, 1);
+							erase( ego);
+							draw( a.VettDoor);
+							current.car = corvette.car;
+							set( in.car);
+							}
+						}
+					else {
+						set( notCloseEnough);
+						}
+					}
+				}
+			}
+		}
+	}
+			
+
+
+if (go.for.it) {					[to street.map
+	if (park.bust == 250) {
+		park.bust = 255;
+		}
+
+	ego.dir = 0;
+	car.loop = facing.front;
+	car.cell = 0;
+	priority = 5;
+	start.motion( ego);
+	new.room.f( car.location);
+	}
+
+
+
+:text
+
+if (!have.input) {
+	goto exit;
+	}
+
+[ Passenger Doors 
+
+if ((posn( ego, 110, 105, 130, 107) ||	[ Cad
+	posn( ego,  30, 116,  48, 119) ||	[ Patrol 1
+	posn( ego, 108, 116, 130, 119) ||	[ Patrol 2
+	posn( ego,  29, 140,  50, 143) ||	[ Patrol 3
+	posn( ego, 118, 140, 130, 143)))
+    	{
+	if ((said( open, door) ||
+		said( open, car, door)))
+		{
+		print( 9);				[ don't fool with passgenger doors
+		}
+	}
+
+if ((said( open, door) ||
+	said( open, car, door)))
+	{
+	if ((nearDoorsP1 ||				[ P1
+		nearDoorsP2)) {			[ P2
+		print( 7);				[ You don't have keys
+		}
+	else {
+		if (nearPatrolDoorF) {		[ patrol
+			if (!f.car.door) {
+				if (!has( i.PCkey)) {
+					print( 7);[ You don't have keys
+					}
+				else {
+					if (in.car) {
+						set.cel( a.Fdoor, 1);	
+						}
+					else {
+						set.cel( a.Fdoor, 2);
+						}
+					draw( a.Fdoor);
+					sound( s.car.open, snd.done);
+					set( f.car.door);
+					}
+				}
+			else {
+				print( 1);		[ The door is open.
+				}
+			}
+		else {
+			if (nearPatrolDoorB) {[ back door patrol.car
+				print( 4);
+				}
+			else {
+				if (nearCadDoorF) {	[ cad
+					if (!cadillac.door) {
+						if (!has( i.cadkey)) {
+							print( 7);[ don't have keys 
+							}
+						else {
+							if (in.car) {
+								set.cel( a.CaDoor, 1);	
+								}
+							else {
+								set.cel( a.CaDoor, 2);
+								}
+							draw( a.CaDoor);
+							sound( s.car.open, snd.done);
+							set( cadillac.door);
+							}
+						}
+					else {
+						print( 1);[ it's open
+						}
+					}
+				else {
+					if (nearCadDoorB) { [ back door cadillac.car
+						print( 4);	[ back reserved prisoners
+						}
+					else {
+						if (nearVetDoor) {	[ vet
+							if (!corvette.door) {
+								if (!has( i.corvkey)) {
+									print( 7);[ no keys
+									}
+								else {
+									if (in.car) {
+										set.cel( a.VettDoor, 1);	
+										}
+									else {
+										set.cel( a.VettDoor, 2);
+										}
+									draw( a.VettDoor);
+									sound( s.car.open, snd.done);
+									set( corvette.door);
+									}
+								}
+							else {
+								print( 1);[ it's open
+								}
+							}
+						else {
+							set( notCloseEnough);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+if ((said( close, door) ||
+	said( close, car, door)))
+	{
+	if ((nearDoorsP1 ||
+		nearDoorsP2)) {
+		print( 2);
+		}
+	else {
+		if (nearPatrolDoorF) {
+			if (!f.car.door) {
+				print( 2);
+				}
+			else {
+				if (in.car) {
+					set.cel( a.Fdoor, 0);
+					draw( a.Fdoor);
+					}
+				else {
+					erase( a.Fdoor);
+					}
+				sound( s.car.close, snd.done);
+				reset( f.car.door);
+				}
+			}
+		else {
+			if (nearPatrolDoorB) {	[back door patrol.car
+				print( 4);
+				}
+			else {
+				if (nearCadDoorF) {	[ cad
+					if (!cadillac.door) {
+						print( 2);
+						}
+					else {
+						if (in.car) {
+							set.cel( a.CaDoor, 0);
+							draw( a.CaDoor);
+							}
+						else {
+							erase( a.CaDoor);
+							}
+						sound( s.car.close, snd.done);
+						reset( cadillac.door);
+						}
+					}
+				else {
+					if (nearCadDoorB) {	[back door cadillac.car
+						print( 4);
+						}
+					else {
+						if (nearVetDoor) {	[ vett
+							if (!corvette.door) {
+								print( 2);
+								}
+							else {
+								if (in.car) {
+									set.cel( a.VettDoor, 0);
+									draw( a.VettDoor);
+									}
+								else {
+									erase( a.VettDoor);
+									}
+								sound( s.car.close, snd.done);
+								reset( corvette.door);
+								}
+							}
+						else {
+							set( notCloseEnough);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+					
+
+if ((said( look, wall) ||
+	said( look, wall, hq) || 
+	said( look, hq, wall))) {
+	print( 10);	
+	}
+
+if (!in.car &&						[	if in.car, rm94 handles it
+	said( look, car))
+	{
+	if ((nearOtherPatrol ||
+		nearOurPatrol)) {
+		print( 26);				[ Your marked patrol car
+		}
+	else {
+		if (nearCad) {
+			print( 27);
+			}
+		else {
+			if (nearVett) {
+				print( 28);
+				}
+			else {
+				set( notCloseEnough);
+				}
+			}
+		}
+	}
+
+if (!in.car &&
+   (said( look) ||
+	said( look, room))) {
+  	print( 25);
+	}
+
+
+
+if ((said( do, check) ||				[	Safety is .ignored
+	said( check) ||
+	said( make, check) ||
+	said( make, check, car) ||
+	said( check, car)))
+	{
+	if (nearOtherPatrol) {
+		print( 3);				[ aren't assigned to this vehicle
+		}
+	else {
+		if (nearVett)	{
+			print( 8);			[ only when operating a official vehicles."
+			}
+		else {
+			if (hasSafeCar) {
+				print( 24);		[ don't need to double ckeck
+				}
+			else {
+				if (nearOurPatrol) {
+					if (!current.sonny) {
+						print( 6); [ Hum! this side looks OK!"
+						}
+					else {
+						print( 15) ;[ your not in uniform
+						}
+					}
+				else {
+					if (nearCad) {
+						if ((current.sonny == sonny.narc ||
+							current.sonny == disguised.sonny)) {
+							print( 6); [ Hum! this side looks OK!"
+							}
+						else {
+							print( 3);[ aren't assigned to this vehicle
+							}
+						}
+					else {
+						set( notCloseEnough);
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+
+[
+:exit
+[
+
+call( 94);						[ stopped.cars

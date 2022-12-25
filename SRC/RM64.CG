@@ -1,0 +1,645 @@
+[ POLICE QUEST
+[ rm64.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 10, 1987al
+
+[ room hotel lobby
+
+
+%include "gamedefs"
+%include "rm64.msg"
+
+
+
+%define	elevDone			lf0
+%define	testElev			lf1
+%define	clerkDone			lf2
+%define	nextFloor			lf3
+%define	elevOpen			lf4
+%define	drawEgo			lf5
+%define	payedForRoom		lf6
+%define	rangBell			lf7
+%define	conver0			lf8
+%define	nearBox			lf9
+
+
+%define	elevStatus		lcl0
+	%define	closing	1
+	%define	movingUp	2
+	%define	movingDown 3
+
+%define	clerkStatus		lcl1
+	%define	entering	1
+	%define	toDesk	2
+	%define	atDesk	3
+	%define	moneyWait	4
+
+	%define	exiting1	10
+	%define	exiting2	11
+
+%define	clerkDistance		lcl2
+
+
+%object	aElevator			1
+%object	aClerk			2
+
+
+
+if (init.log) {				
+	set( NOcase);				
+	set.horizon( 5);
+
+	load.view( v.deskClerk);
+	load.view( v.deskBell);
+
+	load.sound( s.deskBell);
+
+	load.logics( 74);				[hotelText
+	
+	if (together) {
+		load.logics( 73);			[scDyn
+		load.view( v.jimmyScInElev);
+		}
+	else {
+		load.view( v.jimmyInElev);
+		}
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	animate.obj( aElevator);
+	ignore.objs( aElevator);
+	ignore.blocks( aElevator);
+	if (together) {
+		set.view( aElevator, v.jimmyScInElev);
+		}
+	else {
+		set.view( aElevator, v.jimmyInElev);
+		}
+	set.priority( aElevator, 4);
+
+
+	if (previous.room != 66) {
+		position( aElevator, 66, 87);
+		set.loop( aElevator, 0);
+		set.cel( aElevator, 0);
+		draw( aElevator);
+		stop.update( aElevator);
+		}
+	else {
+		position( aElevator, 66, 6);
+		set.loop( aElevator, 1);
+		set.cel( aElevator, 5);
+		draw( aElevator);
+		stop.cycling( aElevator);
+		move.obj( aElevator, 66, 87, 0, elevDone);
+		elevStatus = movingDown;
+		set( testElev);
+		}
+
+	animate.obj( aClerk);
+	set.view( aClerk, v.deskClerk);
+	position( aClerk, 150, 106);
+
+	observe.blocks( ego);
+	
+	if (previous.room == 68) {
+		position( ego, 24, 97);
+		}
+	else {
+		if (previous.room == 63) {
+			position( ego, 61, 167);
+			}
+		else {
+			position( ego, 76, 110);
+			}
+		}
+	
+	if (previous.room != 66) {
+		draw( ego);
+		}
+	
+	if (together) {
+		call( 73);				[scDyn
+		}
+
+	add.to.pic( v.deskBell, 0, 0, 115, 112, 13, 4);
+
+	show.pic( );
+	return( );					[***		End Inits		***
+	}
+
+
+
+reset( nearBox);					[ near Stuff
+if (posn( ego, 89, 112, 151, 158))	{
+	set( nearBox);
+	}
+
+reset( inElevator);
+if ((      posn( ego, 63, 82, 79, 86) ||[	new
+	obj.in.box( ego, 61, 76, 89, 87)))	[	old?
+	{
+	set( inElevator);
+	}
+
+distance( ego, aClerk, clerkDistance);	[ near person
+if (clerkDistance < dist) {
+	set( nearPerson);
+	}
+
+
+if (!posn( ego, 99, 121, 113, 144)	&&	[ force aClerk out
+	clerkStatus &&
+	clerkStatus < 10)
+	{
+	print( 22);					[ Just ring if I can 
+	scriptTimer = 0;
+	set( scriptDone);
+	}
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	clerkStatus = exiting1;
+	start.cycling( aClerk);
+	move.obj( aClerk, 126, 106, 0, clerkDone);
+	}
+
+if (posn( ego, 94, 83, 114, 99))
+	{
+	set.priority( ego, 8);
+
+	if (together)
+		{
+		reset( caughtEgo);
+		reset( testDist);
+		stop.cycling( aSweetCheeks);
+		stop.motion( aSweetCheeks);
+		}
+	}
+else
+	{
+	release.priority( ego);
+	if (!inElevator)
+		{
+		set( testDist);
+		}
+	}
+
+
+if (clerkDone) {
+	reset( clerkDone);
+
+	if (clerkStatus == exiting2) {
+		erase( aClerk);
+		clerkStatus = 0;
+		reset( rangBell);
+		}
+
+	if (clerkStatus == exiting1) {
+		move.obj( aClerk, 150, 106, 0, clerkDone);
+		clerkStatus = exiting2;
+		}
+
+	if (clerkStatus == toDesk) {
+		stop.motion( aClerk);
+		stop.cycling( aClerk);
+		set.loop( aClerk, 1);
+		force.update( aClerk);
+		clerkStatus = atDesk;
+		print( 1);				[	"May I help you?"
+		scriptTimer = 20;
+		}
+
+	if (clerkStatus == entering) {
+		move.obj( aClerk, 126, 123, 0, clerkDone);
+		clerkStatus = toDesk;
+		}
+	}
+
+if (nextFloor)
+	{
+	reset( nextFloor);
+
+	prevent.input();
+	set( game.control);
+	start.update( aElevator);
+	set.cel( aElevator, 1);
+	end.of.loop( aElevator, elevDone);
+	erase( ego);
+	elevStatus = closing;
+	}
+
+if (elevOpen) {
+	reset( elevOpen);
+	stop.update( aElevator);
+	reset( game.control);
+	accept.input();
+	elevStatus = 0;
+	}
+
+if (elevDone) {
+	reset( elevDone);
+
+	if (elevStatus == movingDown) {
+		reverse.loop( aElevator, elevOpen);
+		set( drawEgo);
+		}
+
+	if (elevStatus == movingUp) {
+		previousFloor = 1;
+		new.room( 66);				[rm.hotelhall1
+		}
+
+	if (elevStatus == closing) {
+		set.loop( aElevator, 1);
+		set.cel( aElevator, 0);
+		stop.cycling( aElevator);
+		move.obj( aElevator, 66, 6, 0, elevDone);
+		elevStatus = movingUp;
+		set( testElev);
+		}
+	}
+
+if (drawEgo) {
+	current.cel( aElevator, work);
+
+	if (work == 1) {
+		reset( drawEgo);
+		start.motion( ego);
+		set.loop( ego, 2);
+		set.cel( ego, 0);
+	
+		if (togetherInElev) {
+			set( doSc);
+			position( ego, 76, 85);
+			}
+		else {
+			position( ego, 72, 85);
+			}
+		draw( ego);
+		}
+	}
+
+if (testElev) {
+	get.posn( aElevator, x, y);
+
+	if (elevStatus == movingUp)
+		{
+		if (y == 44) 			{set.cel( aElevator, 1);}
+		if (y == 36) 			{set.cel( aElevator, 2);}
+		if (y == 31) 			{set.cel( aElevator, 3);}
+		if (y == 24) 			{set.cel( aElevator, 4);}
+		if (y == 16) 			{set.cel( aElevator, 5);}
+		}
+
+	if (elevStatus == movingDown)
+		{
+		if (y == 44) 			{set.loop(aElevator, 0);
+							 set.cel( aElevator, 5);}
+		if (y == 35) 			{set.cel( aElevator, 1);}
+		if (y == 30) 			{set.cel( aElevator, 2);}
+		if (y == 23) 			{set.cel( aElevator, 3);}
+		if (y == 15) 			{set.cel( aElevator, 4);}
+		}
+	}
+
+
+
+[*****
+[ SAID
+[*****
+
+if (inElevator)
+	{
+	if ((said( look) ||
+		said( look, room) ||
+		said( look, wall) ||
+		said( look, buttons) ||
+		said( look, elevator)))
+		{
+		print( 27);
+		}
+
+	if ((said( push, one) ||
+		said( one)))
+		{
+		print( 10);				[	"You are already on that floor."
+		}
+
+	if ((said( push, two) ||
+		said( two)))
+		{
+		previousFloor = 1;
+		toFloor = 2;
+		set( nextFloor);
+		}
+
+	if ((said( push, three) ||
+		said( three)))
+		{
+		previousFloor = 1;
+		toFloor = 3;
+		set( nextFloor);
+		}
+	
+	if ((said( push, four) ||
+		said( four)))
+		{
+		previousFloor = 1;
+		toFloor = 4;
+		set( nextFloor);
+		}
+	
+	if (said( push, button, rol))
+		{
+		print( 30);
+		}
+
+	if (nextFloor)
+		{
+		if (progress < undercover)
+			{
+			print( 11);
+			previousFloor = 0;
+			toFloor = 0;
+			reset( nextFloor);
+			}
+		else
+			{
+			if (together)
+				{
+				set( togetherInElev);
+				erase( aSweetCheeks);
+				reset( caughtEgo);
+				reset( testDist);
+				}
+			}
+		}
+	}
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look, lobby))) {
+	print( 5);					[	"This is the lobby
+	}
+
+if ((said( look, desk) ||
+	said( look, desk, top) ||
+	said( look, top$of, desk)))
+	{
+	print( 6);					[	"You see a bell on top of the
+	}
+
+if ((said( look, carpet) ||
+	said( look, floor) ||
+	said( look, down)))
+	{
+	print( 28);
+	}
+
+if ((said( look, ceiling) ||
+	said( look, up)))
+	{
+	print( 29);
+	}
+
+if  (clerkStatus &&
+    (said( look, man) ||
+	said( look, desk, clerk)))
+	{
+	print( 8);					[	"The desk clerk appears.."
+	}
+
+if ((said( look, box) ||
+	said( look, pigeonhole)))
+	{							[pigeonhole
+	if (!nearBox) {
+		set( notCloseEnough);
+		}
+	else {
+		print( 7);
+		}
+	}
+
+if ((said( look, bell) ||
+	said( look, button) ||
+	said( look, bell, desk) ||
+	said( look, bell, on, desk) ||
+	said( look, desk)))
+	{
+	if (posn( ego, 99, 121, 113, 144)) {
+		print( 16);				[	"The bell is metal and small.."
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( ring, bell) ||
+	said( ring) ||
+	said( ring, bell, desk) ||
+	said( ring, bell, on, desk) ||
+	said( ring, desk, bell) ||
+	said( push, button)))
+	{
+	if (posn( ego, 99, 121, 113, 144)) {
+		if (!rangBell) {
+			set( rangBell);
+			sound( s.deskBell, snd.done);
+			draw( aClerk);
+			move.obj( aClerk, 126, 106, 0, clerkDone);
+			clerkStatus = entering;
+			}
+		else {
+			print( 13);			[	"Don't get impatient!"
+			}
+		}
+	else {
+		if (posn( ego, 61, 76, 89, 87)) {	[ in elevator
+			print( 23);			[ that's pretty general
+			}
+		else {
+			set( notCloseEnough);
+			}
+		}
+	}
+
+if ((said( rent, room) ||
+	said( check$in, rol) ||
+	said( get, room) ||
+	said( get, room, key) ||
+	said( give, money, man) ||
+	said( register) ||
+	said( register, for, room) ||
+	said( sign, register) ||
+	said( check, rol) ||
+	said( me, rent, room) ||
+	said( buy, room) ||
+	said( give, me, room) ||
+	said( rent, me, room) ||
+	said( do, rooms)))				[	Like in "do you have any rooms?"
+	{
+	if (clerkStatus == atDesk) {
+		if (!has( i.roomKey)) {
+			print( 17);			[	"We have room 204.."
+			clerkStatus = moneyWait;
+			scriptTimer = 25;
+			}
+		else {
+			print( 12);			[	"Sorry. We have no vacancies.."
+			scriptTimer = 0;
+			clerkStatus = exiting1;
+			start.cycling( aClerk);
+			move.obj( aClerk, 126, 106, 0, clerkDone);
+			}
+		}
+	else {
+		print( 19);				[	"No one heard you."
+		}
+	}
+
+if ((said( ask, clerk, phone) ||
+	said( call, cab, rol) ||
+	said( phone, cab, rol)))
+	{
+	if (clerkStatus != atDesk)
+		{
+		print( 19);
+		}
+	else
+		{
+		print( 18);
+		}
+	}
+
+if (clerkStatus == moneyWait)
+	{
+	if ((said( pay, man) ||
+		said( pay, man, one, dollars) ||
+		said( pay, man, dollars) ||	[	"hundred" is ignored word.
+		said( pay, room) ||
+		said( pay, dollars) ||
+		said( pay, one, dollars) ||
+		said( give, dollars, man) ||
+		said( give, one, dollars, man) ||
+		said( give, man, one, dollars) ||
+		said( give, man, dollars)))
+		{
+		if (marked.cash > 9) {
+			marked.cash -= 10;
+			set( payedForRoom);
+			}
+		else {
+			if (cash > 99) {		
+				cash -= 100;
+				set( payedForRoom);
+				}
+			else {
+				print( 14);		[	"I'm a little short
+		  		print( 20);		[	"and not just in the wallet!"
+				set( scriptDone);
+				scriptTimer = 0;
+				}
+			}
+	
+		if (payedForRoom) {
+			if (current.sonny == disguised.sonny) {
+				set.string( 3, 24);	[	Jimmy Lee Banksten
+				}
+			else {
+				set.string( 3, 25);	[	Doe
+				}
+			print( 15);			[	"Banksten / doe."
+			print( 3);			[	"Thank you very much sir, .."
+			print( 4);			[	"After you fill out the register.."
+		
+			if (together) {
+				print( 2);		[	"Hope you get your moneys worth, .."
+				}
+
+			if (obj.in.room( i.roomKey, current.room))
+				{
+				score += 3;
+				}
+			
+			get( i.roomKey);
+			}
+
+		scriptTimer = 0;
+		clerkStatus = exiting1;
+		start.cycling( aClerk);
+		set.loop( aClerk, 0);
+		move.obj( aClerk, 126, 106, 0, clerkDone);
+		reset( payedForRoom);
+		}
+	}
+
+
+if (clerkStatus &&
+    (said( talk, man) ||
+	said( talk, desk, man)))
+	{
+	print( 1);
+	}
+
+
+if (said( get, bell))
+	{
+	print( 9);					[	"It's not yours. Leave it alone."
+	}
+
+
+call( 74);						[	hotelText
+
+
+
+[*****
+[ EXIT
+[*****
+
+if (edge.ego.hit != bottom)
+	{
+	reset( conver0);
+	}
+else
+	{
+	if (together)
+		{
+		if (!conver0)
+			{
+			print( 26);			[ let's go to room
+			set( conver0);
+			}
+		}
+	else
+		{
+		if (progress > tippedBt)
+			{
+			if (!conver0)
+				{
+				set( conver0);
+				print( 31);
+				}
+			}
+		else
+			{
+			previousFloor = 1;
+			new.room( 63);				[rm.hotel
+			}
+		}
+	}
+
+if (posn( ego, 0, 0, 20, 107)) {
+	previousFloor = 1;
+	new.room( 68);					[rm.cocktail
+	}
+
+if (together) {
+	call( 73);					[scDyn
+	}
+

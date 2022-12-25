@@ -1,0 +1,196 @@
+[ POLICE QUEST
+[ rm101.cg dynamic lgc.startup
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 10, 1987al
+
+%include "gamedefs"
+
+
+%message	1	"_"
+%message	2	"<"					[	á
+%message	3	"PQ"
+
+
+
+set.cursor.char( 1);
+set.string( 0, 2);  				[	prompt
+set.game.id( 3);
+trace.info( 105, 11, 6);				[	sets: room#, y TOP, lines tall
+set.text.attribute( TEXT_COLOR, BG_COLOR);
+max.score = 245;
+
+if (machine.type == PC)
+	{
+	if (monitor.type != mono)
+		{
+		clear.lines( 22, 24, 0);
+		}
+	else
+		{
+		set( hercules);
+		}
+	}
+
+
+animation.interval = 2;
+configure.screen( 1, 23, 0);
+disable.item( c.dummy);
+
+current.dead = dead.sonny.uniform;
+current.Sdead = SDeadCop;
+current.draw = ego.draw.gun;
+current.fire = ego.fire.gun;
+current.car = patrol.car;
+current.diag.car = diag.patrol.car;
+street.timer = 128;
+code = 1;
+
+ego.x = 77;
+ego.y = 160;
+position.f( ego, ego.x, ego.y);
+
+  one = 1;
+  two = 2;
+three = 3;
+ four = 4;
+ five = 5;
+ dist = 30;
+
+if ((machine.type == PC		||
+	machine.type == JR		||
+	machine.type == TANDY	||
+	machine.type == APPLEII))
+	{
+	set( twoButtonJoystick);
+	}				
+else
+	{
+	set( mouseMachine);
+	if (machine.type == ST)
+		{
+		set( enable.double.click);
+		}
+	}
+
+
+
+
+
+[	Comment out this next line, or make your favorite startup room.
+[	test.room = 110;
+[	if (test.room)
+[		{
+[		set( debugging);
+[		accept.input();
+[		set( logging);
+[		set( enable.menu);
+[		status.line.on();
+[		animation.interval = 0;
+[		}
+[	else
+[		{	    
+	if (!restart.in.progress)
+		{
+		set( demo);				[	Set up for a real start!
+		set( game.control);
+		prevent.input();
+		reset( enable.menu);
+		status.line.off();
+		}
+	else
+		{
+		reset( demo);				[	Don't do a real start.
+		status.line.on();
+		set( enable.menu);
+		return();					[	Don't reassign keys.
+		}
+[	}
+
+
+
+[ Set keys 
+
+[	Assign keys to controller functions.
+set.key(  0, 59, c.help);			[F1
+set.key(  0, 60, c.sound.toggle)		[F2
+set.key(  0, 61, c.echo.line);		[F3
+set.key(  0, 62, c.func4);			[F4
+set.key(  0, 63, c.save);			[F5
+set.key(  0, 64, c.func6);			[F6
+set.key(  0, 65, c.restore);			[F7
+set.key(  0, 66, c.func8);			[F8
+set.key(  0, 67, c.restart);			[F9
+set.key(  0, 68, c.func10);			[F10
+
+
+[		Set control & alt keys.
+if (machine.type == TANDY)
+	{
+	set.key( 61, 0, cCrescendo);		[+
+	set.key( 45, 0, cDecrescendo);	[-
+	set.key( 43, 0, cCrescendo);		[+
+	}
+set.key(  9,  0, c.status);			[TAB
+if (machine.type == AMIGA)
+	{
+	set.key( 27, 0, c.pause);		[ESC
+	}
+else
+	{
+	set.key( 27, 0, c.menu);	    		[ESC
+	}
+
+set.key(  3,  0, c.cancel.line);		[^C
+set.key(  4,  0, c.radio);			[^D
+set.key(  5,  0, c.echo.line);		[^E
+set.key( 10,  0, c.init.joy);			[^J
+set.key( 18,  0, c.rgb.toggle);		[^R
+set.key( 19,  0, c.show.obj);			[^S
+
+set.key(  0, 32, c.debug);			[@D
+set.key(  0, 18, c.show.ego);			[@S
+set.key(  0, 23, cObjInfo);			[@I
+set.key(  0, 38, cLevel);			[@L
+set.key(  0, 50, c.show.mem);			[@M
+set.key(  0, 25, c.show.priority); 	[@P
+set.key(  0, 47, c.version);			[@V
+set.key(  0, 45, c.QA);				[@X
+set.key(  0, 44, c.quit);			[@Z
+
+
+
+[		Substitute PCjr number keys as function keys.
+if (machine.type == JR)				[	Substitute PCjr number keys
+	{ 			
+	set.key( 49, 0, c.help);			[1
+	set.key( 50, 0, c.sound.toggle);	[2
+	set.key( 51, 0, c.echo.line);		[3
+	set.key( 52, 0, c.func4);		[4
+	set.key( 53, 0, c.save);			[5
+	set.key( 54, 0, c.func6);		[6
+	set.key( 55, 0, c.restore);		[7
+	set.key( 56, 0, c.func8);		[8
+	set.key( 57, 0, c.restart);		[9
+	set.key( 48, 0, c.func10);		[0
+	}
+
+
+[	Set joystick controllers.
+set.key( joystick.low.byte, button0, c.menu);
+if (twoButtonJoystick)
+	{
+	set.key( joystick.low.byte, button1, c.status);
+	}
+else
+	{
+	if (machine.type == ST)
+		{
+		set.key( joystick.low.byte, button1.double, c.status);
+		}
+	}
+
+
+
+
+

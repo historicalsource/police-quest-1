@@ -1,0 +1,796 @@
+[ POLICE QUEST
+[ rm26.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 2/23/87
+[ Last Update October 14, 1987GR
+
+[ rm.wreck.scene
+
+
+%include "gamedefs"
+%include "rm26.msg"
+%include "rm94.h"
+
+
+
+[%var	wreck.scene		92
+
+
+%define	nearCrowd			lf0
+%define	nearDoor			lf1
+%define	sawVictim			lf2
+%define	knowsVictimShot	lf3
+%define	radioedPossible187	lf4
+%define	knowsLicenseNumber	lf5
+%define	radioedLicense		lf6
+%define	DooleySaidGo		lf7
+%define	radioMatch		lf8
+%define	HamiltonInPlace	lf9
+%define	nearPassengerDoor	lf10
+%define	conver0			lf11
+%define	punkRockerTalking	lf12
+%define	knowsCarDescrip	lf13
+%define	radioedCarDescrip	lf14
+%define	nearHoleInBuilding	lf15
+%define	nearVictimLicenseP	lf16
+
+%define	witness			lcl0
+%define	dooley			lcl1
+%define	hamilton			lcl2
+%define	crowd			lcl3
+%define	smokeTimer		lcl4
+%define	smokeCycles		lcl5
+
+
+%object	a.witness			1
+%object	a.dooley			2
+%object	a.hamilton		3
+%object	a.smoke			4
+%object	a.crowd			5
+%object	a.backup			6
+
+
+
+if (init.log)
+	{
+	set( NOcase);
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	load.view( v.PunkRock);			[v14
+	load.view( v.dooley);			[v26
+	load.view( v.hamilton);			[v185
+	load.view( v.crowd);			[v189
+ 	load.view( v.crashed.car);		[v187
+	load.view( v.smoke);			[v188
+	load.view( v.van.sign);			[v84
+	load.view( v.patCar);
+
+	load.logics( 94);				[lgc.stopped.cars
+
+	animate.obj( a.witness);
+	animate.obj( a.dooley);
+	animate.obj( a.hamilton);
+	animate.obj( a.smoke)
+	animate.obj( a.crowd);
+
+	animate.obj( a.backup);
+	set.view( a.backup, v.patCar);
+	position( a.backup, 139, 154);
+	set.loop( a.backup, 1);
+	fix.loop( a.backup);
+	set.cel( a.backup, 0);
+	stop.cycling( a.backup);
+	cycle.time( a.backup, five);
+
+	set.view( a.witness, v.PunkRock);
+	set.view( a.dooley, v.dooley);
+	set.view( a.hamilton, v.hamilton);
+	set.view( a.smoke, v.smoke);
+	set.view( a.crowd, v.crowd);
+
+	if (wreck.scene < 199)
+		{
+		wreck.scene = 1;
+
+		if (!SxFoundWreck)
+			{
+			set( SxFoundWreck);
+			score += 3;
+			}
+		}
+
+	if (!in.car)
+		{
+		position( ego, 115, 162);
+		draw( ego);
+		}
+
+	position( a.witness, 115, 135);
+	position( a.smoke, 55, 121);
+	position( a.crowd, 96, 133);
+	position( a.dooley, right.edge, 155);
+	position( a.hamilton, 153, 143);
+
+	set.priority( a.smoke, 12);
+
+	work = 10;
+	cycle.time( a.crowd, work);
+
+	set.loop( a.witness, facing.left);
+	stop.cycling( a.witness);
+
+	add.to.pic( v.crashed.car, 0, 0, 41, 152, 13, 4);
+
+	add.to.pic( v.van.sign, 0, 0,  4, 48, 4, 4);
+	add.to.pic( v.van.sign, 0, 1, 12, 25, 4, 4);
+	add.to.pic( v.van.sign, 0, 1, 37, 25, 4, 4);
+	add.to.pic( v.van.sign, 0, 1, 59, 25, 4, 4);
+
+	draw( a.smoke);
+	draw( a.crowd);
+	draw( a.witness);
+
+	smokeTimer = 2;				[	Trigger code below.
+
+	call( 94);					[lgc.stopped.cars
+
+	show.pic();
+	return();
+	}
+
+
+
+[ Logic
+
+reset( nearDoor);
+if (posn( ego, 41, 140, 51, 149))
+	{
+	set( nearDoor);
+	}
+
+reset( nearCrowd);
+if (posn( ego, 70, 126, 116, 141))
+    	{
+	set( nearCrowd);
+	}
+
+reset( nearHoleInBuilding);
+if (posn( ego, 27, 130, 75, 140)) {
+	set( nearHoleInBuilding);
+	}
+
+reset( nearVictimLicenseP);
+if (posn( ego, 60, 145, 116, 167)) {
+	set( nearVictimLicenseP);
+	}
+
+
+if  (wreck.scene < 199 &&
+	sawVictim &&
+	knowsVictimShot &&
+	knowsLicenseNumber &&
+	radioedPossible187 &&
+	radioedLicense &&
+	DooleySaidGo)
+	{
+	wreck.scene = 199;
+	score += 5;
+	}
+
+
+
+
+[	Let's play with the smoke!
+
+if (aSecondPassed)
+	{
+	--smokeTimer;
+	if (smokeTimer == 1)
+		{
+		++smokeCycles;
+		random( 3, 8, smokeTimer);
+		}
+
+	if (smokeCycles > 9)
+		{
+		erase( a.smoke);
+		}
+	else
+		{
+		cycle.time( a.smoke, smokeCycles);
+		}
+	}
+
+
+
+[ CROWD CRAP
+distance( ego, a.witness, witness);
+distance( ego, a.dooley, dooley);
+distance( ego, a.hamilton, hamilton);
+distance( ego, a.crowd, crowd);
+if (( witness < dist ||
+	  dooley < dist ||
+	hamilton < dist ||
+	   crowd < dist))
+	{
+	set( nearPerson);
+	}
+
+
+reset( nearPassengerDoor);
+if (posn( ego, 64, 130, 77, 143))
+	{
+	set( nearPassengerDoor);
+	}
+
+
+if (!DooleySaidGo &&
+	radioedLicense &&
+	func4)
+	{
+	reset( func4);
+	if (script < 102)
+		{
+		print( 48);
+		}
+	else
+		{
+		print( 31);
+		}
+	}
+
+
+if (HamiltonInPlace)				[	Handle Hamilton's pedaling.
+	{
+	stop.cycling( a.hamilton);
+	}
+
+
+if (DooleySaidGo)					[	Make Dooley look at ego.
+	{
+	get.posn( a.dooley, work5, work6);
+	if (ego.x < work5)
+		{
+		set.loop( a.dooley, 1);
+		}
+	else
+		{
+		work5 += 7
+		if (ego.x > work5)
+			{
+			set.loop( a.dooley, 0);
+			}
+		else
+			{
+			if (ego.y < work6)
+				{
+				set.loop( a.dooley, 3);
+				}
+			else
+				{
+				set.loop( a.dooley, 2);
+				}
+			}
+		}
+	}
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+	if (script == 1)
+		{
+		if ( ego.x < 105) {
+			start.cycling( a.witness);
+			add.to.pic( v.crowd, 0, 0, 96, 133, 12, 0);
+			erase( a.crowd);
+			prevent.input( );
+			set( game.control);
+
+			get.posn( ego, work1, work2);
+			work1 += 10;
+			work2 = 135;
+			work3 = 1;
+			move.obj.f( a.witness, work1, work2, work3, scriptDone);
+			}
+		else {
+			set( scriptDone);
+			}
+		}
+
+	if (script == 2)
+		{
+		set( punkRockerTalking);
+		set( knowsCarDescrip);
+		stop.cycling( a.witness);
+		print( 14);
+		print( 15);
+		print( 16);
+		print( 17);
+		print( 18);
+		reset( game.control);
+		accept.input( );
+		script = 0;
+		}
+
+
+
+	if (script == 101)				[	Here comes the Cavalry.
+		{
+		if (posn( ego, 129, 140, 159, 155))
+			{
+			script = 100;
+			scriptTimer = 4;
+			if (!conver0)
+				{
+				set( conver0);
+				print( 52);
+				}
+			}
+		else
+			{
+			stop.motion( ego);
+			draw( a.backup);
+			end.of.loop( a.backup, scriptDone);
+			}
+		}
+
+	if (script == 102)
+		{
+		add.to.pic( v.patCar, 1, 2, 139, 154, 13, 0);
+		erase( a.backup);
+		start.motion( ego);
+		scriptTimer = 4;
+		}
+
+	if (script == 103)
+		{
+		get.posn( a.witness, x, y);
+		get.priority( a.witness, priority);
+		view = 14;				[witness
+		loop = 0;
+		add.to.pic.f( view, loop, loop, x, y, priority, loop);
+		erase( a.witness);
+
+		draw( a.dooley);
+		move.obj( a.dooley, 120, 155, 1, scriptDone);
+		}
+
+	if (script == 104)
+		{
+		draw( a.hamilton);
+		print( 21);
+		move.obj( a.dooley, 90, 145, 1, scriptDone);
+		move.obj( a.hamilton, 74, 140, 1, HamiltonInPlace);
+		}
+
+	if (script == 105)
+		{
+		stop.cycling( a.dooley);
+		print( 22);
+		scriptTimer = 4;
+		}
+
+	if (script == 106)
+		{
+		set( DooleySaidGo);			[	local
+		print( 23);
+		random( 33, 44, scriptTimer);
+		}
+
+	if (script == 107)
+		{
+		if (in.car)
+			{
+			script = 0;
+			}
+		else
+			{
+			script = 106;			[	So we catch it again in 30 secs.
+			random( 35, 37, work);
+			print.f( work);
+			random( 33, 44, scriptTimer);
+			}
+		}
+	}
+
+
+[ Text
+
+if (!have.input)
+	{
+	goto exit;
+	}
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look, wreck)))
+	{
+	print( 1);
+	}
+
+if ((said( look, car) ||
+	said( investigate, car) ||
+	said( check, car) ||
+	said( check, damage) ||
+	said( look, wreck, car)))
+	{
+	if (!posn( ego, 29, 130, 84, 160))
+		{
+		print( 34);
+		}
+	else
+		{
+		print( 38);
+		}
+	}
+
+if ((said( look, bullet, hole) ||
+	said( look, door) ||
+	said( look, window) ||
+	said( look, car, window)))
+	{
+	if (!nearDoor)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		print( 2);
+		}
+	}
+
+if ((said( look, man) ||
+	said( look, body) ||
+	said( look, driver) ||
+	said( look$in, window) ||
+	said( investigate, accident, scene) ||
+	said( get, man, from, car) ||
+	said( look$in, car) ||
+	said( help, man) ||
+	said( save, man, rol) ||
+	said( give, cpr) ||
+	said( help, driver)))
+	{
+	if (!nearDoor)
+		{
+		set( notCloseEnough);
+		}
+	else
+		{
+		if (!sawVictim)
+			{
+			set( sawVictim);
+			print( 3);
+			print( 4);
+			}
+		else
+			{
+			if (!knowsVictimShot)
+				{
+				set( knowsVictimShot);
+				print( 5);
+				print( 6);
+				}
+			else
+				{
+				print( 28);
+				}
+			}
+		}
+	}
+
+
+if (said( call))
+	{
+	if  (!in.car &&
+		!has( i.extnd) &&			[ near door
+		!posn( ego, 111, 161, 118, 162))
+		{
+		print( 9);
+		}
+	else
+		{
+		if (!knowsVictimShot && !knowsLicenseNumber)
+			{
+			print( 12);			[	Learn something first
+			}
+		else
+			{
+			if (radioedPossible187 && radioedLicense)
+				{
+				print( 46);		[	Told both already
+				}
+			else
+				{
+				reset( radioMatch);
+				if (knowsVictimShot && !radioedPossible187)
+					{
+					set( radioedPossible187);
+					set( radioMatch);
+					print( 7);
+					print( 8);
+					print( 10);
+					print( 11);
+					}
+
+				if (knowsCarDescrip && !radioedCarDescrip)
+					{
+					set( radioedCarDescrip);
+					set( radioMatch);
+					print( 20);
+					print( 53);
+					}
+
+				if (knowsLicenseNumber && !radioedLicense)
+					{
+					set( radioedLicense);
+					set( radioMatch);
+					print( 20);
+					print( 54);
+					print( 44);
+					script = 100;
+					random( 11, 33, scriptTimer);
+					}
+
+				if (!radioMatch)
+					{
+					print( 45);	[	Stop bugging us.
+					}
+				}
+			}
+		}
+ 	}
+
+if ((said( talk, crowd, rol) ||
+	said( ask, cad) ||
+	said( ask, blue, cad) ||
+	said( ask, light, blue, cad) ||
+	said( ask, license, number))) {
+	if (!nearCrowd) {
+		print( 13);
+		}
+	else	{
+		if (!knowsVictimShot) {
+			print( 26);
+			}
+		else {
+			if (!punkRockerTalking) {
+				set( scriptDone);
+				}
+			else {
+				set( knowsLicenseNumber)
+				print( 32);
+				}
+			}
+		}
+	}
+
+if ((said( question, lady) ||
+	said( talk, woman))) {
+
+	if (nearCrowd) {
+		print( 26);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( write, report) ||
+	said( write, accident, report))) {
+	print( 62);
+	}
+
+
+if ((said( get, plate, rol) ||
+	said( get, license, plate, rol) ||
+	said( look, license, plate, rol) ||
+	said( look, plate, rol) ||
+	said( read, plate, rol))) {
+
+	if ( nearVictimLicenseP) {
+		print( 56);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( get, license, rol) ||
+	said( get, anyword, license, rol) ||
+	said( ask, license, number) ||
+	said( ask, license) ||
+	said( ask, man, license, rol) ||
+	said( question, man) ||
+	said( question, crowd) ||
+	said( ask, question, rol) ||
+	said( ask, man, question, rol) ||
+	said( talk) ||
+	said( talk, man) ||
+	said( talk, witness) ||
+	said( look, anyword, license, rol) ||
+	said( look, license, rol)))
+	{
+	if (nearDoor)
+  		{
+		print( 24);
+		}
+	else
+		{
+		if (!nearCrowd)
+			{
+			print( 27);
+			}
+		else
+			{
+			if (!knowsVictimShot)
+				{
+				print( 26);
+				}
+			else
+				{
+				if (!punkRockerTalking)
+					{
+					script = 0;
+					set( scriptDone);
+					}
+				else
+					{
+					set( knowsLicenseNumber)
+					print( 32);
+					}
+				}
+			}
+		}
+	}
+
+if ((said( look, sign) ||
+	said( look, moving, rol) ||
+	said( look, wall)))
+	{
+	print( 29);
+	}
+
+if ((said( get, body, out, car) ||
+	said( get, body) ||
+	said( get, dead, body) ||
+	said( remove, body, from, car) ||
+	said( pull, body, from, car) ||
+	said( pull, body) ||
+	said( pull, dead, body) ||
+	said( pull, man) ||
+	said( pull, dead, man) ||
+	said( get, man, out, car) ||
+	said( get, man) ||
+	said( get, dead, man) ||
+	said( remove, man, from, car) ||
+	said( pull, man, from, car)))
+	{
+	print( 28);
+	}
+
+if ((said( call, ambulance) ||
+	said( get, help) ||
+	said( report, accident) ||
+	said( call, help)))
+	{
+	print( 39);
+	}
+
+if ((said( look$in, hole) ||
+	said( look$in, building) ||
+	said( look, hole)))
+	{
+	print( 40);
+	}
+
+if (nearDoor &&
+	said( close, door, rol))
+	{
+	print( 63);
+	}
+
+if ((said( go, hole) ||
+	said( go, building) ||
+	said( climb, hole)))
+	{
+	if ( nearHoleInBuilding) {
+		print( 55);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+
+if ((said( look, brick) || 
+	said( move, brick) || 
+	said( get, brick))) 
+	{
+	print( 30);
+	}
+
+if ((said( look, smoke) || 
+	said( look, steam)))
+	{
+	print( 42);
+	}
+
+if (said( look, crowd, rol))
+	{
+	print( 51);
+	}
+
+if ((said( search, man) ||
+	said( search, trunk) ||
+	said( open, trunk) ||
+	said( search, car) ||
+	said( look$in, trunk) ||
+	said( look$in, mans, clothes)))
+	{
+	print( 41);
+	}
+if ((said( smell, rol) ||
+	said( anyword, smell, rol))) {
+	if ( nearDoor) {
+		print( 56);
+		}
+	else {
+		if ( nearCrowd) {
+			print( 58);
+			}
+		else {
+			if ( nearHoleInBuilding) {
+				print( 59);
+				}
+			else {
+				if ( nearVictimLicenseP) {
+					print( 60);
+					}
+				else {
+					print( 61);
+					}
+				}
+			}
+		}
+	}
+
+
+if (nearPassengerDoor)
+	{
+	if (said( open, door))
+		{
+		print( 47);
+		}
+
+	if ((said( open, window) ||
+		said( break, window)))
+		{
+		print( 49);
+		}
+
+	if (said( look, window))
+		{
+		print( 50);
+		}
+	}
+
+
+if (DooleySaidGo)					[	Every input will trigger Dooley.
+	{
+	script = 106;
+	scriptTimer = 4;
+	}
+
+
+[
+:exit
+[
+
+call( 94);						[lgc.stopped.cars
+

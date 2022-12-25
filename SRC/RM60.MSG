@@ -1,0 +1,132 @@
+[ POLICE QUEST
+[ rm60.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 9/18/86
+[ Last Update October 8, 1987al
+
+[cotton.room & nipple room combined
+
+
+%message	1
+"Officer Steve Johnson greets you upon your arrival at Cotton Cove."
+
+%message	2
+"\"Good to see you, Sonny,\" he says.
+ \"We've got a ripe one here, with no ID!
+ Is this the dude you arrested?\""
+
+%message	3
+"\"Since you're the guy who booked him, we hope you can identify him.\""
+
+%message	4						[if said open shirt
+"You lift the white blanket and examine the swollen body.
+ It resembles %s6, however, you can't be sure."
+
+%message	5
+"The soggy shirt peels slowly from his chest.
+ Above his left nipple you spot the flower tattoo
+ which confirms your identification."
+
+%message	6
+"\"I know he reeks, Sonny, but you'll have to get closer to do that,\"
+ says Steve."
+
+%message	7
+"You see as much as you care to!"
+
+%message	8
+"You key the radio, \"Dispatch, this is 83-Nora-10.
+ Report positive ID on body of one %s6.
+ 10-8, Cotton Cove.\""
+
+%message	9
+"Your radio crackles, \"10-4, 83-Nora-10.
+ Dispatch copies 10-22 APB %s6.\""
+
+%message	10
+"The water is nice this time of year, but swimming is deadly!"
+
+%message	11
+"With an extender, you could radio dispatch from here."
+
+%message	12
+"Your radio crackles, \"10-4, 83-Nora-10.
+ Dispatch copies 10-97 Cotton Cove.\""
+
+%message	13
+"\"Go on, Sonny. Get up there and take a look.\""
+
+%message	14
+"You'd better report your findings."
+
+%message	15						[if said look car or police car
+"\"Thanks, Sonny. Be advised Coroner is en route.
+ 10-19, per Lt. Morgan.\""
+
+%message	16						[if said look around or look scene
+"You observe two patrol units parked with emergency lights flashing.
+ They both appear unoccupied."
+
+%message	17
+"You look around at a beautiful wooded area.
+ The Clearwater River flows in the background."
+
+%message	18						[if said look river
+"You see nothing that would help you."
+
+%message	19
+"The Clearwater River looks refreshing."
+
+%message	20
+"You're not close enough."
+
+%message	21
+"Thinking your car is one slick machine, you admire it one more time."
+
+%message	22
+"The two marked patrol cars with emergency lights flashing,
+ and the covered body in the clearing,
+ clouds the natural beauty of Cotton Cove."
+
+%message	23
+"\"Yep,\" you respond, \"this is %s6, alright.\""
+
+%message	24
+"You radio in, \"Dispatch, 83-Nora-10 10-97 Cotton Cove.\""
+
+%message	25
+"\"Well, Sonny,\" says Steve, \"is this %s6, or not?\""
+
+%message	26
+"\"Are you going to inform Dispatch?\" asks Steve."
+
+%message	27
+"\"Thanks for your help, Sonny,\" says Steve."
+
+%message	28
+"You don't need to uncover any more."
+
+%message	29
+"The body is covered by a blanket."
+
+%message	30
+"Gladly."
+
+%message	31
+"The policemen stand near a dead body."
+
+%message	32
+"Just walk right in, the water looks fine!"
+
+%message	33
+"You radio, \"10-8 from scene.\""
+
+%message	34
+"Marvin Hoffman"
+
+%message	35
+"Jason Taselli"
+
+%message	36
+"You've always thought this a lovely part of Lytton."
+

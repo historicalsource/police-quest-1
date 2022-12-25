@@ -1,0 +1,119 @@
+[ POLICE QUEST
+[ rm29.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 8/18/86
+[ Last Update August 30, 1987al
+
+[ lgc.janitor1
+
+
+%message	1			[if said hello; R. J. Jefferson
+"\"Hey, Sonny!
+ You sure missed a good one while you was off duty,\"
+ says R. J. Jefferson, Lytton PD custodian.
+ \"Someone filled a pair of pantyhose full of cotton balls and
+ crammed 'em into Sgt. Dooley's pigeonhole.\""
+
+%message	2
+"\"Sonny, my man, you keeping 'the fat boy' off your back?\" asks Jefferson.
+ \"I sure felt sorry for Jack yesterday.
+ Ol' Dooley was really reaming him about his low activity!\""
+
+%message	3
+"\"Say, Sonny!\" says R. J.
+ \"Better keep your eye on that female officer.
+ She was eyeballin' you the other day like a rat lookin' at a piece
+ o' cheese!!\""
+
+%message	4
+"\"Mercy, mercy, mercy!
+ If it ain't Sonny 'Big Man' Bonds!
+ How is my favorite cop?
+ You should have been with me last night!
+ I had such a good time, I had to come back to work just to get some rest!\""
+
+%message	5						[if too close
+"\"Saaaay, fool! Back out of here just a shade?
+ You gettin' close enough to dance with and lord only knows
+ I did enough dancin' last night!\""
+
+%message	6
+"\"Sho' would be nice if the city fixed some of these vents in here.
+ Smells like one, big, cattle yard after every shift change!\""
+
+%message	7
+"\"Come on, Man!
+ Give me some room before I mop a shine onto those big feet of yours.\""
+
+%message	8						[ lgc.janitor2
+"\"Say, Man! I heard the word from the bird last night.
+ I heard that a fine little lady of the evening
+ by the name of Sweet Cheeks Marie thinks you are the finest,
+ 'USDA Prime Cut' in blue she ever did see!\""
+
+%message	9
+"\"I heard the 'Gremlin' got to ol' Sarge again last night.
+ What a shame! He should learn to leave you people alone.\""
+
+%message	10
+"\"Well, if it ain't Sonny 'My Main Man' Bonds!\""
+
+%message	11
+"\"Hey, Brother!
+ You can see I'm still sloppin', moppin', and hoppin' on clothes.
+ I'm gettin sick of this job and I'll bet it shows!\""
+
+%message	12						[	Too close, janitor2
+"\"That's close enough, Turkey. Quit trackin up my floor!\""
+
+%message	13
+"Say baby, what it is!!
+ Watch out for that wet floor.
+ The last man that came in here,
+ he fell right straight down on his tail bone."
+
+%message	14
+"R. J. Jefferson yells,
+ \"I sho' do wish you'd walk 'round where I'm workin'!\""
+
+%message	15						[ lgc.janitor3
+"\"All right, Sonny, my man!
+ I hear you're now assigned to the Narc Division.
+ You better watch them dudes loadin' up on all that dope.
+ They get real crazy!\""
+
+%message	16
+"\"I'll tell you one thing, Sonny.
+ You be signed up with the finest looking partner
+ in this whole police force!\""
+
+%message	17
+"\"I see you's still workin' Narco and you's still in one piece,\" says
+ Jefferson, the janitor.
+ \"You be careful with those dope people.
+ I knew a dude, he got so high, he thought he was a buzzard.
+ He sailed off a five-story building and broke his back in ninty-nine places.\""
+
+%message	18
+"\"Mr. Plainclothes Bonds, himself.\""
+
+%message	19
+"\"Sonny, you been swipin' dope from the lockup,
+ or are you tryin' to walk over me just 'cause you wants to?\""
+
+%message	20
+"\"Watch out for the floor, man!
+ It's so slippery,
+ you'll look like one of them dudes in the Russian Ice Follies.\""
+
+%message	21
+"\"Sonny, you should have been here an hour ago,\" says R. J.
+ \"The boys were crawlin' over each other like rats on a sinkin' ship lookin'
+ for a porthole, when they found out the Chief was a'coming through.\""
+
+%message	22
+"He doesn't clean very well, but he sure cleans slow!"
+
+%message	23
+"\"Woooo wheeee! Lookee whats we gots here!\" laughs Jefferson."
+

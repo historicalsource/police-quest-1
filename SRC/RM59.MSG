@@ -1,0 +1,130 @@
+[ POLICE QUEST
+[ rm59.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 3/10/87
+[ Last Update September 26, 1987GR
+
+[ lgc.drunk.jail
+
+
+%message	1
+"You remove the 'cuffs and place them in your handcuff case."
+
+%message	2
+"\"Well,\" asks the jailer, \"are you going to remove his 'cuffs or not?\""
+
+%message	3
+"After a short wait, the jailer asks,
+ \"Are you going to book this dude or not?\""
+
+%message	4
+"\"My goodness gracious!\" says the jailer.
+ \"Here stands Bonds again on behalf of the people.\""
+
+%message	5
+"\"This is one bad dude,\" says the jailer.
+ \"What are you booking him for, Sherlock?\""
+
+%message	6
+"The jailer responds,
+ \"Ok, %w1 will do. Fill out the booking slip and give me his property!\""
+
+%message	7
+"\"You can't book anyone on a %w1!\""
+
+%message	8
+"Deep down you know this sleeze bag is not the man he claims he is.
+ You book him as \"Marvin Hoffman\" anyway,
+ hoping his numerous felony charges will keep him in the slammer long enough
+ for you to ascertain his true identity."
+
+%message	9
+"You hand the jailer the booking slip and the suspect's property."
+
+%message	10
+"\"Ok, Bonds,\" the jailer says, \"you can remove his 'cuffs and place
+ Mr. So-Called \"Marvin Hoffman\" into cell number one.\""
+
+%message	11
+"\"You little meter maids can't keep me in here!\" he shouts."
+
+%message	12
+"Hoffman yells,
+ \"I'll be out of this tank before you finish your coffee break!\""
+
+%message	13
+"\"Since my shift is over, I'll see you back at the station.\""
+
+%message	14
+"\"I received a call from dispatch on the way over here.
+ Dooley wants to see you in his office when you are done here.\""
+
+%message	15
+"\"If you want to book this crook, I'll need a clue as to the charges.\""
+
+%message	16
+"Jack says, \"Well, I see you got that slimeball pusher booked!\""
+
+%message	17
+"\"Your penthouse awaits you, Hoffman!\""
+
+%message	18
+"\"Shove it, Pig!\""
+
+%message	19
+"\"The car's tucked away and all the evidence is booked.
+ This is one clean bust, my boy!\""
+
+%message	20
+"The jailer seethes,
+ \"I hope you know, Bonds, at this very moment Hoffman's lawyer is in the
+ front reception area, bailing that worm out.\""
+
+%message	21
+"\"Hey, Sonny, come over here,\" says the jailer.
+ \"I have something to tell you.\""
+
+%message	22
+"You hand the jailer the No Bail Warrant just in time to keep Mr. Taselli
+ from returning to the streets."
+
+%message	23
+"\"Oh, man! This is great, Sonny,\" the jailer laughs.
+ \"I hope you know this will slam the ol' boy's orifice shut.\""
+
+%message	24
+"\"I bet you wish you had a No Bail Warrant on this guy!\" says the jailer."
+
+%message	25
+"\"I'll be right back. This is gonna blow his attorney's mind!\""
+
+%message	26
+"\"You know something, Pig? All you're doing is slightly delaying my exit!\"
+ Taselli rants."
+
+%message	27
+"\"Boy, that made my day, Sonny! You should have seen the guy.\""
+
+%message	28
+"\"He started ranting and raving like a little kid who just had his
+ lollipop taken away!\""
+
+%message	29
+"In a desperate attempt to escape,
+ the suspect seizes your weapon and blows you into eternity!
+ Next time, check your weapon at the door!"
+
+%message	30
+"\"Sonny, you already gave me the No Bail Warrant.\""
+
+%message 31
+"Failure to search the suspect has cost you dearly!
+ The LPD Widows and Orphan Fund will contact your next of kin!"
+
+%message	32
+"\"What's your name?\" the jailer asks your prisoner."
+
+%message	33
+"\"The name's, uh, Marvin Hoffman, you scum bag!\" he responds.
+ \"And that's all you're gettin' outta me!\""
+

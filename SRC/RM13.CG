@@ -1,0 +1,53 @@
+[ POLICE QUEST
+[ rm13.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/11/86
+[ Last Update September 24, 1987GR
+
+[rm.map13 w/ freeway
+
+%include "gamedefs"
+%include "rm117.h"
+
+
+
+if (init.log) {
+	load.logics( 28);				[lgc.freeway2
+	position( a.intersection, 75, 40);
+	draw( ego);
+	draw( a.intersection);
+
+	add.to.pic( vBuildings2, 2, 0, 029, 073, 0, 4);
+	add.to.pic( vBuildings2, 2, 0, 044, 073, 0, 4);
+	add.to.pic( vBuildings2, 0, 1, 005, 123, 0, 4);
+	add.to.pic( vBuildings2, 2, 0, 098, 116, 0, 4);
+	add.to.pic( vBuildings2, 2, 0, 113, 116, 0, 4);
+	add.to.pic( vBuildings2, 1, 4, 056, 167, 0, 4);
+	add.to.pic( vBuildings2, 1, 2, 087, 167, 0, 4);
+	add.to.pic( vBuildings2, 1, 2, 101, 167, 0, 4);
+	add.to.pic( vBuildings2, 1, 5, 117, 167, 0, 4);
+
+	show.pic( );
+	return( );
+	}	
+
+if ( ego.y < 33) {
+	streetScene = 93;
+	}
+else {
+	streetScene = 92;
+	}
+
+call( 28);	[lgc.freeway2
+
+%message 1
+"The freeway leaves the City of Lytton here."
+
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look, town)))	{
+	print( 1);
+	}
+
+

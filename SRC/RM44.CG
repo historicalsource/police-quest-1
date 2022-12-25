@@ -1,0 +1,713 @@
+[ POLICE QUEST
+[ rm44.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 7/21/86
+[ Last Update September 26, 1987al
+
+[ lgc.brief1
+
+
+%include "gamedefs"
+%include "rm44.msg"
+%include "rm4.h"
+
+
+
+if (init.log)
+	{
+  	add.to.pic( v.chalk, 0, 0, 52, 66, 4, 4);	[	briefing @ 1300
+
+	if  (!elapsed.minutes < MIN_BEFORE_BRIEF1 &&	[	He's late.
+		 previous.room == 6 &&				[	Ok, if reading paper.
+		!hasBrief1)						[	He missed it.
+		{
+		set( heMissedBrief1);
+		return( );
+		}
+
+ 	load.view( v.dooley);
+	load.view( v.steve);
+	load.view( v.karen);
+	load.view( v.jack);
+	load.view( v.jackson);
+
+	animate.obj( a.cop1);
+	animate.obj( a.cop2);
+	animate.obj( a.cop4);
+	animate.obj( a.cop5);
+	animate.obj( a.cop7);
+
+	set.view( a.cop1, v.steve);
+	set.view( a.cop2, v.karen);
+	set.view( a.cop4, v.jack);
+	set.view( a.cop5, v.jackson);
+	set.view( a.cop7, v.dooley);
+
+
+	position( a.cop1, 14, 112);
+	position( a.cop2, 14, 115);
+	position( a.cop4, 15, 113);
+	position( a.cop5, 14, 112);
+	position( a.cop7, 15, 112);
+
+	if (obj.in.room( i.paper, current.room))
+		{
+		load.view( v.paper);
+
+		animate.obj( a.paper);
+		set.view( a.paper, v.paper);
+		ignore.blocks( a.paper);
+		position( a.paper, 94, 148);
+ 		draw( a.paper);
+		stop.update( a.paper);
+  	  	}
+
+	if (previous.room != 6)			[	Let's have a briefing real soon!
+		{
+		scriptTimer = 3;
+		}
+	else
+		{
+		random( 60, 180, scriptTimer);
+
+		if ((posn( ego, 89, 127, 105, 135) ||
+			hasBrief1))
+			{
+			set( your.seat);
+			}
+		}
+
+	return( );
+	}
+
+
+
+if (aSecondPassed)
+	{
+	if  (secondsInRoom > 5 &&
+		heMissedBrief1)
+		{
+		print( 36);
+		set( certainDeath);
+		}
+	}
+
+
+if (nearSeat && !your.seat) {
+	set( your.seat);
+	print( 4);					[ your desk
+	}
+
+
+
+[ CONVERSATIONS BEFORE BRIEFING 
+
+if (squad.scene == 1) {
+	if (cop1 < 20 && !conver0) {
+		print( 21);
+		set( conver0);
+		}
+
+	if (cop2 < 10 && !conver1) {
+		if (moving1 == 4) {
+			print( 29);
+			set( conver1);
+			}
+		else {
+			print( 30);
+			set( conver1);
+			}
+		}
+	
+	if (cop4 < 10 && !conver3) {
+		if (moving2 == 4) {
+			print( 1);
+			set( conver3);
+			}
+		else {
+			print( 26);
+			set( conver3);
+			}
+		}
+	
+	if (cop5 < 10 && !conver4)	{
+		if (moving4 == 4) {
+			print( 27);
+			set( conver4);
+			}
+		else	{
+			print( 28);		
+			set( conver4);
+			}
+		}
+	
+	if (cop7 < 10 && !conver6) {
+		if (moving6 == 4) {
+			print( 32);
+			set( conver6);
+			}
+		else	{
+			print( 33);
+			set( conver6);
+			}
+		}
+	}
+
+
+
+[ CONVERSATIONS AFTER BRIEFING 
+	
+if (squad.scene == 5) {
+	if (cop1 < 10 && !conver0) {
+		print( 25);
+		set( conver0);
+		}
+	
+	if (cop2 < 10 && !conver1) {
+		print( 35);
+		set( conver1);
+		}
+	
+	if (cop4 < 10 && !conver3) {
+		print( 34);
+		set( conver3);
+		}
+	
+	if (cop5 < 10 && !conver4)	{
+		print( 31);
+		set( conver4);
+		}
+	
+	if (cop7 < 10 && !conver6) {
+		print( 2);
+		set( conver6);
+		}
+	}
+	
+
+
+[ PROGRAM CONTROL BRIEFING SCENE -- move em in
+
+if (squad.scene == 1) {
+	if (moving0 == 0 && !posn( ego, 17, 105, 42, 127)) {
+		draw( a.cop1);
+		move.obj( a.cop1, 112, 112, 1, moved0)
+		}
+	
+	if (moving0 == 1) {
+		move.obj( a.cop1, 130, 130, 1, moved0)
+		}
+	
+	if (moving0 == 2) {
+		move.obj( a.cop1, 108, 130, 1, moved0)
+		}
+	
+	if (moving0 == 3) {
+		move.obj( a.cop1, 108, 129, 1, moved0)
+		}
+	
+	if (moving0 == 4) {
+		stop.update( a.cop1);
+		++moving0;
+		}
+
+
+	[cop2
+	
+	if (moving0 > 1) {
+		if (moving1 == 0) {
+			draw( a.cop2);
+			move.obj( a.cop2, 24, 115, 1, moved1);
+			}
+		
+		if (moving1 == 1) {
+			move.obj( a.cop2, 40, 131, 1, moved1);
+			}
+		
+		if (moving1 == 2) {
+			move.obj( a.cop2, 48, 131, 1, moved1);
+			}
+		
+		if (moving1 == 3) {
+			move.obj( a.cop2, 48, 129, 1, moved1);
+			}
+		
+		if (moving1 == 4) {
+			stop.update( a.cop2);
+			++moving1;
+			}
+		}
+
+
+	[cop4
+	
+	if (moving1 > 1) {
+		if (moving2 == 0) {
+			draw( a.cop4);
+			move.obj( a.cop4, 114, 113, 1, moved2);
+			}
+		
+		if (moving2 == 1) {
+			move.obj( a.cop4, 129, 128, 1, moved2);
+			}
+		
+		if (moving2 == 2) {
+			move.obj( a.cop4, 129, 162, 1, moved2);
+			}
+		
+		if (moving2 == 3) {
+			move.obj( a.cop4, 113, 162, 1, moved2);
+			}
+		
+		if (moving2 == 4) {
+			move.obj( a.cop4, 113, 155, 1, moved2);
+			}
+		
+		if (moving2 == 5) {
+			stop.update( a.cop4);
+			++moving2;
+			}
+		}
+
+	
+	[cop5
+
+	if (moving2 > 1) {
+		if (moving4 == 0) {
+			draw( a.cop5);
+			move.obj( a.cop5, 75, 112, 1, moved4);
+			}
+		
+		if (moving4 == 1) {
+			move.obj( a.cop5, 75, 132, 1, moved4);
+			}
+		
+		if (moving4 == 2) {
+			move.obj( a.cop5, 61, 132, 1, moved4);
+			}
+		
+		if (moving4 == 3) {
+			move.obj( a.cop5, 61, 129, 1, moved4);
+			}
+		
+		if (moving4 == 4) {
+			stop.update( a.cop5);
+			++moving4;
+			}
+		}
+
+	
+	[cop7	IS secretly Sgt. Dooley!
+ 	
+	if ( moving0 == 5 &&
+		moving1 == 5 &&
+		moving2 == 6 &&
+		moving4 == 5) {
+ 		if (moving6 == 0) {
+ 			draw( a.cop7);
+ 			move.obj( a.cop7, 40, 112, 1, moved6);
+ 			}
+ 		
+		if (moving6 == 1) {
+ 			move.obj( a.cop7, 57, 95, 1, moved6);
+ 			}
+ 		
+		if (moving6 == 2) {
+ 			move.obj( a.cop7, 77, 95, 1, moved6);
+ 			}
+ 		
+		if (moving6 == 3) {
+ 			set.loop( a.cop7, facing.front);
+			set( moved6);
+			}
+ 		
+		if (moving6 == 4) {
+			stop.update( a.cop7);
+			squad.scene = 2;
+			++moving6;
+			scriptTimer = 0;
+			set( scriptDone);
+			}
+		}	
+	}
+
+
+
+[ The briefing
+
+current.loop( ego, loop);
+if  (nearSeat &&
+	loop == facing.back &&
+	script == 1)
+	{
+	set( readyForBriefing);
+	set( scriptDone);
+	}
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+	if (script == 1)
+		{
+		set( NOcase);
+		squad.scene = 1;
+		if (!nearSeat)
+			{
+			print( 22);			[	find seat about to begin
+			}
+		}
+
+	if (script == 2)
+		{
+		if (readyForBriefing)
+			{
+			++script;
+			}
+		else
+			{
+			++Strikes;
+			if (Strikes > 2)
+				{
+				print( 39);
+				print( 16);
+				set( certainDeath);
+				}
+			else
+				{
+				print( 24);
+				scriptTimer = 15;
+				--script;
+				}
+			}
+		}
+
+	if (script == 3)
+		{
+		set( game.control);
+		stop.motion( ego);
+		prevent.input( );
+		if (moving6 > 4)			[	Dooley's at the podium.
+			{
+			++script;
+			}
+		}
+
+	if (script == 4)
+		{
+		score += 4;
+	 	print( 5);
+		scriptTimer = 4;
+		}
+
+	if (script == 5)
+		{
+		print( 6);
+		scriptTimer = 4;
+		}
+
+	if (script == 6)
+		{
+		print( 7);
+		scriptTimer = 4;
+		}
+
+	if (script == 7)
+		{
+		print( 9);
+		scriptTimer = 4;
+		}
+
+	if (script == 8)
+		{
+		set( hasBrief1);
+		progress = 1;				[has.first briefing
+		score += 4;
+
+		print( 10);
+		
+		reset( conver0);
+		reset( conver1);
+		reset( conver2);
+		reset( conver3);
+		reset( conver4);
+		reset( conver5);
+		reset( conver6);
+
+		reset( game.control);
+		start.motion( ego);
+		accept.input( );
+		squad.scene = 5;			[briefing done
+		}
+	}
+
+
+
+[ move em out 
+
+if (squad.scene == 5) {
+	if (moving6 == 5) {
+		start.update( a.cop7);
+		move.obj( a.cop7, 57, 95, 1, moved6);
+		}
+	
+	if (moving6 == 6) {
+		move.obj( a.cop7, 40, 112, 1, moved6);
+		}
+	
+	if (moving6 == 7) {
+		move.obj( a.cop7, 15, 112, 1, moved6);
+		}
+	
+	if (moving6 == 8) {
+		erase( a.cop7);
+		reset( moved6);
+		++moving6;
+		}
+
+
+	[ exit cop1
+	
+	if (moving6 > 5) {
+		if (moving0 == 5) {
+			start.update( a.cop1);
+			move.obj( a.cop1, 130, 129, 1, moved0)
+			}
+		
+		if (moving0 == 6) {
+			move.obj( a.cop1, 112, 112, 1, moved0)
+			}
+		
+		if (moving0 == 7) {
+			move.obj( a.cop1, 14, 112, 1, moved0)
+			}
+		
+		if (moving0 == 8) {
+			erase( a.cop1)
+			reset( moved0);
+			++moving0;
+			}
+		}
+
+
+	[exit cop2
+
+	if (moving0 > 6) {
+		if (moving1 == 5) {
+			start.update( a.cop2);
+			move.obj( a.cop2, 40, 129, 1, moved1);
+			}
+		
+		if (moving1 == 6) {
+			move.obj( a.cop2, 24, 115, 1, moved1);
+			}
+		
+		if (moving1 == 7) {
+			move.obj( a.cop2, 14, 115, 1, moved1);
+			}
+		
+		if (moving1 == 8) {
+			erase( a.cop2)
+			reset( moved1);
+			++moving1;
+			}
+		}
+
+
+	[exit cop5
+
+	if (moving1 > 6) {
+		if (moving4 == 5) {
+			start.update( a.cop5);
+			move.obj( a.cop5, 75, 129, 1, moved4);
+			}
+		
+		if (moving4 == 6) {
+			move.obj( a.cop5, 75, 112, 1, moved4);
+			}
+		
+		if (moving4 == 7) {
+			move.obj( a.cop5, 14, 112, 1, moved4);
+			}
+		
+		if (moving4 == 8) {
+			erase( a.cop5)
+			reset( moved4);
+			++moving4;
+			}
+		}
+
+
+	[exit cop4
+
+	if (moving4 > 6) {
+		if (moving2 == 6) {
+			start.update( a.cop4);
+			move.obj( a.cop4, 129, 155, 1, moved2);
+			}
+		
+		if (moving2 == 7) {
+			move.obj( a.cop4, 129, 128, 1, moved2);
+			}
+		
+		if (moving2 == 8) {
+			move.obj( a.cop4, 114, 113, 1, moved2);
+			}
+		
+		if (moving2 == 9) {
+			move.obj( a.cop4, 14, 113, 1, moved2);
+			}
+		
+		if (moving2 == 10) {
+			erase( a.cop4)
+			reset( moved2);
+			++moving2;
+			squad.scene = 10;		[	Everybody's gone now.
+			reset( NOcase);
+			}
+		}
+	}
+					
+
+
+[ Text 
+
+if (!have.input) {
+	goto exit;
+	}
+
+if (lookInMyBox)
+	{
+	reset( lookInMyBox);
+
+	if (squad.scene == 1)
+		{
+		print( 19);
+		}
+	else
+		{
+		if (nearHole1) {
+			print( 20);
+			}
+		else {
+			if (nearHole2) {
+			 	print( 14);
+			 	}
+			else {
+				if (nearHole3)
+					{
+					if (!SxSteveNote)
+						{
+						set( SxSteveNote);
+						score += 1;
+					 	print( 12);
+					 	print( 13);
+					 	print( 23);
+						}
+					else
+						{
+						print( 18);
+						}
+				 	}
+				else {
+					if (nearHole4) {
+						print( 15);
+						}
+					else
+						{
+						set( lookInMyBox);	[	Let rm4 handle it.
+						}
+					}
+				}
+			}
+		}
+
+	if (!lookInMyBox && !lookedInHisBox)
+		{
+		set( lookedInHisBox);
+		score += 1;
+		}
+	}
+
+	
+if (obj.in.room( i.paper, current.room) &&
+	said( look, table))
+    	{
+	print( 40);
+	}
+
+
+if ((said( get, paper) ||
+	said( read, paper) ||
+	said( open, paper) ||
+	said( get, paper, off, table) ||
+	said( get, paper, from, table)))
+	{
+	if (has( i.paper))				[	Prevent rm0 showing the paper.
+		{
+		print( 3);
+		}
+	else
+		{
+		if (!obj.in.room( i.paper, current.room))
+			{
+			set( alreadyGotIt);
+			}
+		else
+			{
+			if (!posn( ego, 91, 151, 107, 157))
+				{
+				set( notCloseEnough);
+				}
+			else
+				{
+				if (squad.scene == 1)
+					{
+					print( 19);
+					}
+				else
+					{
+					if (squad.scene)
+						{
+						print( 3);
+						}
+					else
+						{
+						get( i.paper);
+						score += 5;
+						start.update( a.paper);
+						erase( a.paper);
+						print( 11);			[ you get
+
+						get.posn( ego, priorX, priorY);
+						current.loop( ego, loop);
+						new.room( 116);		[ rm.newspaper
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+if ((said( time, rol) ||				[	what is .ignored
+	said( look, clock, rol) ||
+	said( look, watch, rol)))
+	{
+	if (!hasBrief1)
+		{
+		print( 38);
+		}
+	else
+		{
+		print( 37);
+		}
+	}
+
+
+[
+:exit
+[
+

@@ -1,0 +1,764 @@
+[ POLICE QUEST
+[ rm3.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 1/8/87
+[ Last Update October 17, 1987GR
+
+[ lgc.tits
+
+%include "gamedefs"
+%include "rm3.msg"
+
+
+
+%define	TALK_TIME			 22
+							
+%define	notStarted		  0	[	foxScene constants
+%define	sawHerLicense		  1
+%define	wroteTicket		  2
+%define	sheSignedTicket	  3
+%define	gaveHerTicket		  4
+%define	goForIt			100
+%define	gotHerNumber		101
+%define	foxSceneDone		199
+
+
+%define	smile			lf0
+%define	bat.eyes			lf1
+%define	haveLicense		lf2
+%define	goToNewRoom		lf3
+%define	toldHerReason		lf4
+%define	saidLetMeGo		lf5
+%define	saidNoWay			lf6
+%define	waitingForResponse	lf7							
+
+
+%define	talkTimer			lcl0
+%define	face				lcl1
+	%define	blank	0
+	%define	happy	1
+	%define	sad		2
+	%define	face.done	3
+
+%define	times.to.bat		lcl2
+%define	now.batting		lcl3
+%define	test				lcl4
+%define	message1			lcl5
+%define	message2			lcl6
+%define	message3			lcl7
+
+
+%object	aFace			1
+%object	aEyes			2
+
+
+
+if (init.log)
+	{
+	set( NOcase);
+	talkTimer = TALK_TIME;
+	set.horizon( 0);
+
+	load.pic( current.room);
+
+	load.view( vTnA);
+	load.view( v.fox.face);
+
+	draw.pic( current.room);
+
+	animate.obj( aFace);
+	animate.obj( aEyes);
+
+	set.view( aFace, v.fox.face);
+	set.view( aEyes, v.fox.face);
+
+	set.loop( aFace, facing.right);
+	set.loop( aEyes, facing.left);
+
+	position( aFace, 54, 63);
+	position( aEyes, 60, 28);
+
+	set.priority( aFace, 5);
+	set.priority( aEyes, 6);
+
+	stop.cycling( aFace);
+	stop.cycling( aEyes);
+
+	set.cel( aFace, 0);
+	set.cel( aEyes, 0);
+
+	cycle.time( aEyes, two);
+
+	draw( aFace);
+	draw( aEyes);
+
+	show.pic( );
+
+	status.line.off();
+
+	print( 1);					[	as you make contact
+	print( 2);					[	titanic melting blouse
+
+	return( );
+	}
+
+
+
+[****
+[	noInput
+[****
+
+set( nearPerson);					[	at all times near girl
+
+if (haveLicense && refresh)
+	{
+	reset( refresh);
+	clear.text.rect( 13, 0, 21, 19, 15);
+	set.text.attribute( BG_COLOR, TEXT_COLOR);
+
+	display( 13, 6, 23);
+	display( 14, 6, 24);
+	display( 15, 6, 25);
+	display( 16, 6, 26);
+	display( 17, 6, 27);
+	display( 18, 6, 28);
+	display( 19, 6, 29);
+	display( 20, 6, 30);
+	display( 21, 8, 31);
+
+	set.text.attribute( TEXT_COLOR, BG_COLOR);
+
+	if (hercules)
+		{
+		add.to.pic( vTnA, 0, 0, 2, 143, 15, 15);
+		}
+	else
+		{
+		add.to.pic( vTnA, 0, 0, 2, 133, 15, 15);
+		}
+	}
+
+
+
+[	Facial control
+
+if (!now.batting)
+	{
+	random( 1, 111, work);
+	if (work == 1)
+		{
+		set( bat.eyes);
+		times.to.bat = 1;
+		}
+	}
+
+
+if (aSecondPassed &&
+	!foxScene)					[	no progress yet; prompt him
+	{
+	--talkTimer;
+	if (talkTimer == 20)			[	did you want something
+		{						[ GR was 11
+		message1 = 3;
+		face = happy;
+		times.to.bat = 3;
+		set( bat.eyes);
+		}
+
+	if (talkTimer == 1)				[	still nothing said
+		{
+		face = blank;
+		times.to.bat = 1;
+		set( bat.eyes);
+		talkTimer = TALK_TIME;		[	try again leter
+		}
+	}
+
+
+if (bat.eyes)
+	{
+	if (now.batting < times.to.bat)
+		{
+		++now.batting;
+		set.cel( aEyes, 0);
+		end.of.loop( aEyes, bat.eyes);
+		}
+	else
+		{
+		reset( bat.eyes);
+		now.batting = 0;
+		set.cel( aEyes, 0);
+		force.update( aEyes);
+		}
+	}
+
+
+current.cel( aFace, cell);		[	To smile or ! to smile
+if (face != cell)
+	{
+	set.cel.f( aFace, face);
+	}
+
+
+if (!now.batting && !typing)
+	{							[	Message timeout
+	if (message1)
+		{						[	message in var
+		if (!haveLicense) {
+			print.f( message1);
+			}
+		else {
+			print.at.v( message1, 2, 3, 35);
+			}
+
+		message1 = 0;
+		}
+
+	if (message2)
+		{
+		if (!haveLicense) {
+			print.f( message2);
+			}
+		else {
+			print.at.v( message2, 2, 3, 35);
+			}
+
+		message2 = 0;
+		}
+
+	if (message3)
+		{
+		if (!haveLicense) {
+			print.f( message3);
+			}
+		else {
+			print.at.v( message3, 2, 3, 35);
+			}
+
+		message3 = 0;
+		}
+	}
+
+
+[****
+[	haveInput
+[****
+
+if (!have.input)
+	{
+	goto exit;
+	}
+
+if  (hercules)			[ On Herc Machines
+	{
+	set( refresh);
+	}
+
+
+if ((said( smell, rol) ||
+	said( search, girl) ||
+	said( anyword, smell, rol))) {
+	{
+	face = blank;
+	message1 = 50;
+	}
+
+if ((said( look, tit) ||
+	said( look, body) ||
+	said( look, pussy)))
+	{
+	message1 = 36;					[	don't stare there!
+	face = happy;
+	}
+
+if ((said( show, license, rol) ||
+	said( ask, drivers, license, rol) ||
+	said( ask, license, rol) ||
+	said( please, give, me, license) ||
+	said( ask, her, license) ||
+	said( show, me, license, rol) ||
+	said( get, license, rol) ||
+	said( give, me, license, rol) ||
+	said( give, me, drivers, license, rol) ||
+	said( me, license, rol) ||
+	said( me, drivers, license, rol) ||
+	said( me, look, license, rol) ||	[	may i see your license, mam
+	said( me, look, drivers, license, rol) ||
+	said( look, drivers, license, rol)))
+	{
+	if (haveLicense)
+		{
+		message1 = 18; 			[	you're holding it
+		face = happy;
+		}
+	else
+		{
+		if (foxScene < sawHerLicense)
+			{
+			foxScene = sawHerLicense;
+			set( haveLicense);
+			talkTimer = 0;			[ shut her down GR 10/4
+			set( refresh);
+			face = sad;
+			message1 =  8;			[	veteran that you are
+			message2 = 10;			[	if you must write ticket
+			message3 = 11;			[	it's guys like you
+			}
+		else						[	You saw it once already!
+			{
+			set( haveLicense);
+			set( refresh);
+			face = sad;
+			message1 = 9;
+			}
+		}
+	}
+
+if ((said( look, rol) ||
+	said( look$in, rol)))
+	{
+	face = blank;
+	message1 = 19;					[	what is cop staring at
+	message2 = 38;					[	what a face
+	message3 = 13;					[	what tits!
+	}
+
+if ((said( nasty, rol) ||
+	said( kiss, rol) ||
+	said( let, girl, go) ||
+	said( ask, her, number) ||
+	said( ask, her, phone) ||
+	said( ask, her, phone, number) ||
+	said( get, her, phone, number) ||
+	said( get, phone, number) ||
+	said( phone, number, rol) ||
+	said( ask, phone, number) ||
+	said( anyword, kiss, rol) ||
+	said( anyword, tit, rol) ||
+	said( anyword, pussy, rol) ||
+	said( anyword, nasty, rol) ||
+	said( anyword, anyword, tit, rol) ||
+	said( anyword, anyword, pussy, rol) ||
+	said( anyword, anyword, nasty, rol)))
+	{
+	message1 = 43;
+	message2 = 46;
+	message3 = 7;
+	foxScene = goForIt;
+	face = happy;
+	set( goToNewRoom);
+	if (!hasfPhone)
+		{
+		set( hasfPhone);
+		score += 1;
+		}
+	}
+
+
+if ((said( me, rol) ||
+	said( name, me, rol) ||
+	said( me, me, name, rol)))
+	{
+	if (foxScene < wroteTicket)
+		{
+		set( saidLetMeGo);
+		set( waitingForResponse);
+		message1 = 4;				[	if you could let me off i'll give #
+		face = happy;
+		if (haveLicense)
+			{
+			print.at( 45, 2, 3, 35);
+			}
+		else
+			{
+			print( 45);
+			}
+		}
+	else
+		{
+		message1 = 6;
+		}
+	}
+
+
+if ((said( name, rol) ||
+	said( talk, helen) ||
+	said( anyword, name, rol) ||
+	said( talk, girl, rol) ||
+	said( hello, rol)))
+	{
+	if (foxScene < sawHerLicense)
+		{
+		message1 = 20; 			[	my name is helen
+		face = happy;
+		}
+	else
+		{
+		if (haveLicense)
+			{
+			message1 = 44;
+			}
+		else
+			{
+			message1 = 47;			[	He gave it back already
+			}
+		}
+	}
+
+
+
+if  (has( i.case) &&
+    (said( anyword, case, rol) ||
+	said( anyword, anyword, case, rol) ||
+	said( case, rol)))
+	{
+	message1 = 35;					[	brief case is in car
+	}
+
+
+
+if ((said( ran, red, light, rol) ||
+	said( drove, red, light, rol) ||
+	said( light, rol) ||
+	said( red, light, rol) ||
+	said( ran, light, rol) ||
+	said( drove, light, rol) ||
+	said( driving, rol)))
+	{
+	set( toldHerReason);
+	message2 = 21;					[	I didn't see it. let me go
+	face = blank;
+	if (haveLicense)
+		{
+		print.at( 32, 2, 3, 35);
+		}
+	else
+		{
+		print( 32);				[	you ran a red miss
+		}
+	}
+
+
+if (!saidNoWay &&
+	saidLetMeGo &&
+	waitingForResponse)
+	{
+	if ((said( yes, rol) ||			[	answer to "wanna screw?"
+		said( anyword, yes, rol)))
+		{
+		message2 = 7;				[	my number is
+		set( goToNewRoom);
+		foxScene = goForIt;
+		face = happy;
+		reset( waitingForResponse);
+		if (!hasfPhone)
+			{
+			set( hasfPhone);
+			score += 1;
+			}
+
+		if (haveLicense)
+			{
+			print.at( 5, 2, 3, 35);	[	you just traded your badge
+			}
+		else
+			{
+			print( 5);
+			}
+		}
+
+	if ((said( no, rol) ||
+		said( anyword, no, rol)))
+		{
+		reset( waitingForResponse);
+		set( saidNoWay);
+		if (!SxToldFoxNo)
+			{
+			set( SxToldFoxNo);
+			score += 2;
+			}
+		message1 = 8;				[	veteran that you are
+		set( haveLicense);
+		talkTimer = 0;
+		set( refresh);
+		face = sad;
+		}
+	}
+
+
+if ((said( write, pinch, rol) ||
+	said( write, girl, pinch, rol) ||
+	said( anyword, write, pinch, rol)))
+	{
+	if (!toldHerReason)
+		{
+		set( toldHerReason);
+ 		message2 = 4;				[	I didn't see it. let me go
+ 		face = blank;
+		if (haveLicense)
+			{
+			print.at( 32, 2, 3, 35);
+			}
+		else
+			{
+			print( 32);			[	you ran a red miss
+			}
+ 		}
+	else
+		{
+		if (!haveLicense)
+			{
+			message1 = 15;			[	you need license
+			face = blank;
+			}
+		else
+			{
+			if (!has( i.TB))
+				{
+				message1 = 12;		[	can't write with out TB
+				face = happy;
+				}
+			else
+				{
+				if (!has( i.pen))
+					{
+					message1 = 42;	[	can't write with out pen
+					face = happy;
+					}
+				else
+					{
+					if (!foxScene < wroteTicket)
+						{
+						message1 = 41;	[	One is enough.
+						}
+					else
+						{
+						foxScene = wroteTicket;
+						if (hasfPhone)
+							{
+							message1 = 34;
+							}
+						else
+							{
+						  	message1 = 51; [	fill out form
+						  	message2 = 10; [	if you must write 
+						  	message3 = 11; [	it's guys like you
+						  	face = sad;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+if ((said( sign, pinch, rol) ||
+	said( get, signature, rol) ||
+	said( put, signature, rol) ||
+	said( ask, ticket) ||
+	said( take, ticket) ||
+	said( ask, girl, sign, ticket) ||
+	said( have, girl, sign, ticket) ||
+	said( give, pinch, girl, sign, rol) ||
+	said( take, pinch, sign, rol)))
+	{
+	if (!foxScene < sheSignedTicket)
+		{
+		message1 = 41;				[	One is enough.
+		}
+	else
+		{
+		if (haveLicense)
+			{
+			message1 = 37;			[	you give her license back.
+			}
+		else
+			{
+			foxScene = sheSignedTicket;
+
+			message1 = 39;			[	Please sign here
+			message2 = 16;			[	she hands you the ticket book
+			face = sad;
+			if (hasfPhone)
+				{
+				message3 = 34;		[	you bastard!
+				}
+			}
+		}
+	}
+
+
+if ((said( give, license, rol) ||
+	said( give, back, license, rol) ||
+	said( stop, looking, license, rol) ||
+	said( give, girl, license, rol) ||
+	said( give, drivers, license, rol) ||
+	said( give, back, drivers, license, rol) ||
+	said( stop, looking, drivers, license, rol) ||
+	said( give, girl, drivers, license, rol) ||
+	said( return, girl, license, rol) ||
+	said( return, license, rol) ||
+	said( return, drivers, license, rol)))
+	{
+	if (!haveLicense)
+		{
+		set( dontHaveIt);
+		}
+	else
+		{
+		draw.pic( current.room);
+		show.pic( );
+		reset( haveLicense);
+		}
+	}
+
+
+if ((said( give, ticket, rol) ||
+	said( give, girl, ticket, rol)))
+	{
+	if (foxScene < wroteTicket)
+		{
+		message1 = 40;
+		}
+	else
+		{
+		if (foxScene < sheSignedTicket)
+			{
+			message1 = 17;
+			}
+		else
+			{
+			if (SxGaveFoxTicket)
+				{
+				message1 = 41;
+				}
+			else
+				{
+				set( goToNewRoom);
+				set( SxGaveFoxTicket);
+				score += 5;
+				message1 = 14;
+				face = sad;
+				}
+			}
+		}
+	}
+
+
+if ((said( ask, girl, washington, rol) ||
+	said( anyword, washington, rol)))
+	{
+	message1 = 22;
+	}
+
+
+if ((said( bye) ||
+	said( stop, looking, rol) ||
+	said( thanks) ||
+	said( go) ||
+	said( look, away) ||
+	said( turn, away) ||
+	said( leave, rol) ||
+	said( look, car)))
+	{
+	set( goToNewRoom);
+	}
+
+
+if ((said( go, rol) ||
+	said( walk, car, rol) ||
+	said( walk, patrol, car, rol) ||
+	said( follow, me, rol) ||
+	said( move, rol) ||
+	said( get$in, car, rol) ||
+	said( get$in, patrol, car, rol) ||
+	said( come, with, me, rol)))
+	{
+	message1 = 49;
+	}
+
+if ((said( cuff, girl, rol) ||
+	said( get, out, car, rol) ||
+	said( ask, girl, get, out, car, rol) ||
+	said( arrest, girl)))
+	{
+	message1 = 49;
+	}
+
+if ((said( read, rights, rol) ||
+	said( read, anyword, rights, rol) ||
+	said( give, rights, rol) ||
+	said( give, anyword, rights, rol) ||
+	said( rights, rol) ||
+	said( anyword, rights, rol)))
+	{
+	message1 = 49;
+	}
+
+
+if (!have.match)
+	{
+	if (haveLicense)
+		{
+		set( refresh);
+		}
+
+	if (!toldHerReason)
+		{
+		set( toldHerReason);
+		message1 = 48;
+		face = happy;
+		}
+
+	if (!saidLetMeGo)
+		{
+		set( saidLetMeGo);
+		set( waitingForResponse);
+		message2 = 4;				[	let me off i'll give you...
+		face = happy;
+		}
+
+	if (hasfPhone)
+		{
+		message3 = 34;				[	nice as I've been
+		set( have.match);
+		face = sad;
+		}
+	}
+
+
+if (face != sad)
+	{
+	random( 1, 3, times.to.bat);
+	set( bat.eyes);
+	}
+
+
+[****
+:exit
+[****
+
+if (!message1 &&
+    !message2 &&
+    !message3 &&
+	goToNewRoom)
+	{
+	if (foxScene == gotHerNumber)
+		{
+		print( 33);
+		}
+
+	if ((foxScene == gaveHerTicket ||
+		foxScene == gotHerNumber))
+		{
+		foxScene = foxSceneDone;		[	successful
+		}
+	else
+		{
+		foxScene = notStarted;		[	try again later.
+		}
+
+	new.room( 30);
+	}
+

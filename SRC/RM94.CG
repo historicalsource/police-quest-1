@@ -1,0 +1,810 @@
+[ POLICE QUEST
+[ rm94.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 12/16/86
+[ Last Update October 19, 1987GR
+
+[ lgc.stopped.cars and Sonny's current car
+
+
+%include "gamedefs"
+%include "rm94.msg"
+%include "rm94.h"
+
+
+[NOTE:  all defines are done in the "rm94.h" header file!
+
+
+
+if (init.log)
+	{
+	if (functionKeys == GUN)
+		{
+		functionKeys = CARandGUN;
+		}
+	else
+		{
+		functionKeys = CAR;
+		}
+	}
+
+
+[ does this look like a patch
+if (said( go, pr24, rol)) {
+	goto nightstick;
+	}
+if (said( go, wallet, rol)) {
+	goto wallet;
+	}
+
+if (current.room == 7) {
+	goto CheckInventory;
+	}
+
+if (init.log)
+	{
+	load.sound( s.car.open);
+	load.sound( s.car.close);
+	load.sound( s.siren);
+
+	animate.obj( a.Fdoor);
+	animate.obj( a.Bdoor);
+	animate.obj( a.SuspDoor);
+
+	stop.cycling( a.Fdoor);
+	stop.cycling( a.Bdoor);
+
+
+	if (current.car == patrol.car)
+		{
+		if (hercules && code == 3)
+			{
+			code = 1;				[	Automatic lights out, Mono Boy!
+			}
+
+		if (code == 3)
+			{
+			load.view( v.rack);
+
+			animate.obj( a.rack);
+			set.view( a.rack, v.rack);
+			position( a.rack, 119, 135);
+			set.priority( a.rack, 14);
+			ignore.objs( a.rack);
+			work = 5;
+			cycle.time( a.rack, work);
+			if ( !carStolen) {
+				draw( a.rack);
+				}
+			}
+
+		load.view( v.patCar);
+		load.view( v.CopDoor);
+
+		set.view( a.Fdoor, v.CopDoor);
+
+		position( a.Fdoor, 109, 159);
+		position( a.Bdoor, 122, 159);
+		if ( !carStolen) {
+		 	add.to.pic( v.patCar, 0, 0, 90, 160, 14, 0);
+			}
+		}
+
+	if (current.car == cadillac.car)
+		{
+		if ( !carStolen) {
+			load.view( v.cadCar);
+		  	add.to.pic( v.cadCar, 0, 0, 90, 160, 14, 0);
+			discard.view( v.cadCar);
+			}
+
+		position( a.Fdoor, 112, 159);
+		position( a.Bdoor, 124, 157);
+
+		if (current.sonny == 13) {	[ disguised.sonny
+			load.view( v.DisgDoor);
+			set.view( a.Fdoor, v.DisgDoor);
+			}
+		else {
+			load.view( v.CaDoor);
+			set.view( a.Fdoor, v.CaDoor);
+
+			if (in.car && LauraCar) {
+				set.loop( a.Fdoor, 1);
+				}
+			else {
+				if (LauraCar) {
+					set.loop( a.Fdoor, 2);
+					draw( a.Fdoor);
+					}
+				else {
+					set.loop( a.Fdoor, 0);
+					}
+				}
+			}
+		}
+
+	if (current.car == corvette.car) {
+		reset( f.car.door);
+		reset( b.car.door);
+		reset( corvette.door);
+
+		load.view( v.VettDoor);
+		set.view( a.Fdoor, v.VettDoor);
+		position( a.Fdoor, 107, 159);
+
+		if ( !carStolen) {
+			load.view( v.vettCar);
+		 	add.to.pic( v.vettCar, 0, 0, 83, 160, 14, 0);
+			discard.view( v.vettCar);
+			}
+		}
+
+	set.priority( a.Fdoor, 14);
+	set.priority( a.Bdoor, 14);
+
+	ignore.objs( a.Bdoor);
+
+	if (in.car) {
+		start.motion( ego);
+		if (!f.car.door) {
+			set.cel( a.Fdoor, 0);
+			}
+		else {
+			set.cel( a.Fdoor, 1);
+			}
+		position( ego, 115, 162);
+		draw( a.Fdoor);
+		}
+	else {
+		draw( ego);
+
+		if (f.car.door) {
+			set.cel( a.Fdoor, 2);
+			if ( !carStolen) {
+				draw( a.Fdoor);
+				}
+			}
+		else {
+			set.cel( a.Fdoor, 0);
+			}
+		}
+
+[ Suspect door do do
+
+	if (current.suspect == drunk) {
+		load.view( v.DrunkInCop);
+		set.view( a.Bdoor, v.DrunkInCop);
+		}
+	else {
+		if (current.suspect == taselli) {						[ felony
+			load.view( v.tasellinCop);
+			set.view( a.Bdoor, v.tasellinCop);
+			}
+		else {
+			if ( current.car == patrol.car) {
+				load.view( v.DrunkInCop);	[ if !has.suspect door open
+				set.view( a.Bdoor, v.DrunkInCop);
+				}
+			else {
+				load.view( v.ColbySimmsInCop);	[ colby simms cad
+				set.view( a.Bdoor, v.ColbySimmsInCop);
+				}
+			}
+		}
+
+
+	if (has.suspect) {
+		suspect.cop.car = incop.door.closed;
+		set.cel( a.Bdoor, 0)
+		draw( a.Bdoor);
+		}
+	else {
+		suspect.cop.car = none.in.car;
+		set.cel( a.Bdoor, 2);
+		if (b.car.door && !carStolen) {
+			draw( a.Bdoor);
+			}
+		}
+	}
+
+
+[ Logic
+
+if ( aSecondPassed) {
+	-- carStolen;
+	if ( carStolen == 1) {
+		print( 6);
+		set( certainDeath);
+		}
+	}
+
+
+if ( !work.f &&
+	(edge.ego.hit == right ||
+	edge.ego.hit == left)) {
+
+	random( 9, 10, work);
+	print.f( work);				[ nothing out there
+	set( refresh);
+	set( work.f);
+	}
+if (!edge.ego.hit && work.f) {
+	reset( work.f);
+	}
+
+
+[ Gen counters
+
+if (rm94Moved0) {
+	reset( rm94Moved0);
+	++rm94Moving0;
+	}
+
+if ( !typing) {
+	-- rm94ScriptCycles;
+	if (rm94ScriptCycles == 1) {
+		set( rm94ScriptDone);
+		}
+	}
+
+
+[ near shit
+reset( nearFdoor);
+if (posn( ego, 109, 160, 122, 164)) {
+	set( nearFdoor);
+	}
+
+reset( nearBdoor);
+if (posn( ego, 123, 160, 135, 164)) {
+	set( nearBdoor);
+	}
+
+reset( nearScar);
+if (posn( ego, 28, 158, 45, 165)) {
+	set( nearScar);
+	}
+
+reset( nearSdoor);
+if (posn( ego, 29, 150, 52, 162)) {
+	set( nearSdoor);
+	}
+
+
+if ((said( go, rol) ||				[Logic below cleans up what we mean
+	said( sit) ||
+	said( sit, car) ||
+	said( stand) ||
+	said( enter) ||
+	said( leave, car) ||
+	said( climb, car))) {
+	set( func4);
+	}
+
+
+if ((said( drive) ||
+	said( drive, car) ||
+	said( start, car, with, keys) ||
+	said( use, car, keys) ||
+	said( use, keys) ||
+	said( use, keys, start, car) ||
+	said( start, car) ||
+	said( start, motor) ||
+	said( turn, key) ||
+	said( drive, car))) {
+    	set( func4);
+	}
+
+[ Well do we have the car keys ..............
+
+reset( hasRightKeys);
+if (current.car == patrol.car && has(i.PCkey)) {
+	set( hasRightKeys);
+	}
+if (current.car == corvette.car && has(i.corvkey)) {
+	set( hasRightKeys);
+	}
+if (current.car == cadillac.car && has(i.cadkey)) {
+	set( hasRightKeys);
+	}
+
+if (func4) {						[ In & out of car
+	set( refresh);
+	reset( func4);
+
+	if (in.car) {
+		if (!f.car.door) {
+			if (current.room == 32 && felScene < 18) {
+				print( 15);		[ must face suspect
+				}
+			else {
+				if (!hasRightKeys) {
+					print( 27);
+					}
+				else {
+					if (b.car.door) {
+						if (has.suspect) {
+							print( 8);[ don't dump suspects
+							}
+						else {
+							print( 13);[ fool with Bdoor open
+							}
+						}
+					else {
+						code = 1;	[	Shift the car into park.
+						new.room.f( car.location);
+						}
+					}
+				}
+			}
+		else 					[ door open get out
+			{
+			if (LauraCar) {
+				set.loop( a.Fdoor, 1);
+				draw( a.Fdoor);
+				}
+			else {
+				set.loop( a.Fdoor, 0);
+				}
+			set.cel( a.Fdoor, 2);
+			position( ego, 115, 162);
+			set.loop( ego, 1);
+			draw( a.Fdoor);
+			draw( ego);
+			reset( in.car);
+			}
+		}
+	else {
+		if ( !nearFdoor) {
+			set( notCloseEnough);
+			}
+		else {
+			if (!f.car.door) {
+				print( 5);		[	"Do you plan to crawl.."
+				}
+			else {
+				if (current.room == 32 && felScene < 18) {
+					print( 15);	[ must face suspect
+					}
+				else {
+					if (LauraCar) {
+						set.loop( a.Fdoor, 1);
+						}
+					else {
+						set.loop( a.Fdoor, 0);
+						}
+
+					set.cel( a.Fdoor, 1);
+					erase( ego);
+					draw( a.Fdoor);
+					set( in.car);
+					}
+				}
+			}
+		}
+	}
+
+
+if (getting.in) {					[ Put crook in car
+	if (!rm94Moving0) {
+		if (!nearBdoor) {
+			move.obj( a.suspect, 127, 162, 1, rm94Moved0);
+			reset( rm94ScriptDone);
+			rm94ScriptCycles = 0;
+			++rm94Moving0;
+			}
+		else {
+			if (rm94ScriptDone) {
+				print( 26); 		[ go though you to get in the car
+				reset(rm94ScriptDone);
+				rm94ScriptCycles = 20;
+				}
+			}
+		}
+	if (rm94Moving0 == 2) {
+		++rm94Moving0;
+		rm94ScriptCycles = 10;
+		}
+	if (rm94Moving0 == 3 && rm94ScriptDone) {
+		erase( a.suspect);
+		set.cel( a.Bdoor, incop.door.open);
+		suspect.cop.car = incop.door.open;
+		reset( rm94ScriptDone);
+		rm94ScriptCycles = 0;
+		rm94Moving0 = 0;
+		getting.in = 0;
+		}
+	}
+
+[ Getting crook out of car
+
+if (has.suspect && getting.out) {
+	if (!nearBdoor && !rm94Moving0 && rm94ScriptDone) {
+		set.cel( a.Bdoor, cop.door.open);
+		position( a.suspect, 130, 161);
+		draw( a.suspect);
+		reset( rm94ScriptDone);
+		suspect.cop.car = none.in.car;
+		set( rm94Moved0);
+		}
+	else {
+		if (rm94ScriptDone) {
+			print( 26); 		[ go though you to get in the car
+			reset(rm94ScriptDone);
+			rm94ScriptCycles = 20;
+			}
+		}
+
+	if (rm94Moving0 == 1) {
+		move.obj( a.suspect, 135, 161, 1, rm94Moved0);
+		++ rm94Moving0;
+		}
+	if (rm94Moving0 == 3) {
+		set.loop( a.suspect, facing.left);
+		suspect.cop.car = none.in.car;
+		getting.out = 0;
+		getting.in = 0;
+		rm94Moving0 = 0;
+		}
+	}
+
+[ Text
+
+if (!have.input) {
+	goto exit;
+	}
+:text
+
+if ((said( do, check) ||				[	Safety is .ignored
+	said( check) ||
+	said( make, check) ||
+	said( make, check, car) ||
+	said( check, car)))
+	{
+	if ( ego.x < 80) {
+		set( notCloseEnough);
+		}
+	else {
+		set( OK);
+		}
+	}
+
+
+
+[ open em; on back door set loop to current suspect and cell to state
+
+if ((said( open, door) ||
+	said( open, rear, door) ||
+	said( open, car, door)))			[	front.door
+	{
+	if (posn( ego, 105, 150, 130, 156)) {
+		print( 14);				[	"you will never be passenger
+		}
+	else {
+		if ((nearFdoor || in.car)) {
+			if (f.car.door) {
+				set.string( 2, 16);
+				print( 1);		[ door is open
+				}
+			else {
+				if (in.car) {
+					set.cel( a.Fdoor, 1);
+					set( f.car.door);
+					sound( s.car.open, snd.done);
+					}
+				else {
+					if (LauraCar) {
+						set.loop( a.Fdoor, 1);
+						draw( a.Fdoor);
+						}
+					else {
+						set.loop( a.Fdoor, 0);
+						}
+		 			set.cel( a.Fdoor, 2);
+					draw( a.Fdoor);
+					sound( s.car.open, snd.done);
+					set( f.car.door);
+					}
+				}
+			}
+		else {					[	shall we try the back door?
+			if (!in.car && nearBdoor)
+				{
+				if (!has.suspect) {
+					print( 4);	[ back seat no Prisoner
+					}
+				else {
+					if (b.car.door) {
+						set.string( 2, 17);
+						print( 1);[ back door is open
+						}
+					else {
+						if (suspect.cop.car != incop.door.closed) {
+							if ( current.room == 41) [	rm.jail.yard
+								{
+								print( 28);	[ book suspect
+								goto exit;
+								}
+							else {
+								set.cel( a.Bdoor, cop.door.open);
+								reset( rm94ScriptDone);
+								rm94ScriptCycles = 20;
+								getting.in = 1;
+								getting.out = 0;
+								rm94Moving0 = 0;
+								draw( a.Bdoor);
+								}
+							}
+						if (suspect.cop.car == incop.door.closed) {
+							if (current.room == 41)
+								{
+								set.cel( a.Bdoor, incop.door.open);
+								draw( a.Bdoor);
+								reset(rm94ScriptDone);
+								rm94ScriptCycles = 20;
+								rm94Moving0 = 0;
+								getting.out = 1;
+								getting.in = 0;
+								}
+							else {
+								print( 11); [ not public
+								goto exit;
+							 	}
+							}
+						sound( s.car.open, snd.done);
+						set( b.car.door);
+						}
+					}
+				}
+			else {
+				if (nearSdoor) {
+					print( 29);
+					}
+				else {
+					print( 3);	[ arms aren't that long
+					}
+				}
+			}
+		}
+	}
+
+[ close em
+
+if ((said( close, door) ||
+	said( close, back, door))) {
+	if (nearFdoor) {
+		if (!f.car.door) {
+			set.string( 2, 16);
+			print( 2);			[ door closed
+			}
+		else {
+			if (in.car && LauraCar) {
+				set.loop( a.Fdoor, 1);
+				}
+			else {
+				if (LauraCar) {
+					set.loop( a.Fdoor, 2);
+					}
+				else {
+					set.loop( a.Fdoor, 0);
+					}
+				}
+			if ((in.car || LauraCar)) {
+				set.cel( a.Fdoor, 0);
+				draw( a.Fdoor);
+				}
+			else {
+				erase( a.Fdoor);
+				}
+			sound( s.car.close, snd.done);
+			reset( f.car.door);
+			}
+		}
+	else {
+		if (nearBdoor) {
+			if (!b.car.door) {
+				set.string( 2, 17);
+				print( 2);		[ door closed
+				}
+			else {
+				if ((getting.in || getting.out)) {
+					random( 18, 19, work);
+					print.f( work);
+					}
+				else {
+					if (suspect.cop.car == none.in.car) {
+						erase( a.Bdoor);
+						}
+					if (suspect.cop.car == incop.door.open) {
+						reset( game.control);
+						set.cel( a.Bdoor, incop.door.closed);
+						suspect.cop.car = incop.door.closed;
+						}
+					sound( s.car.open, snd.done);
+					reset( b.car.door);
+					}
+				}
+			}
+		else {
+			if (nearSdoor) {
+				print( 29);		[ not your car
+				}
+			else {
+				print( 3);		[ arms aren't that long
+				}
+			}
+		}
+	}
+
+
+[*****
+:CheckInventory;
+[*****
+
+if ((!in.car || have.match || !have.input))
+	{
+	goto exit;
+	}
+
+room = 94;
+
+if ((said( look) ||
+	said( look, car) ||
+	said( look$in, car) ||
+	said( search, car) ||
+	said( look, room)))
+	{
+	if (current.car == patrol.car)
+		{
+		if (!obj.in.room( i.pr24, room))
+			{
+			print( 23);			[ nothing else of interest
+			}
+		else {
+			print( 21);			[ Notice night
+			}
+		}
+	else
+		{
+		if (current.car == corvette.car)
+			{
+			if (obj.in.room( i.wallet, room))
+				{
+				print( 22);		[ Wallet on seat
+				}
+			else
+				{
+				print( 23);		[ nothing else of interest
+				}
+			}
+		else
+			{
+			reset( have.match);
+			}
+		}
+	}
+
+
+if (current.car == patrol.car)
+	{
+	if ((said( get, pr24) ||
+		said( get, pr24, off, door) ||
+		said( get, pr24, from, door) ||
+		said( remove, pr24, from, door) ||
+		said( get, pr24, from, car)))
+		{
+		if (!obj.in.room( i.pr24, room))
+			{
+			set( alreadyGotIt);
+			}
+		else
+			{
+			get( i.pr24);
+			set( OK);
+			if (!SxPR24)
+				{
+				set( SxPR24);
+				score += 3;
+				}
+			}
+		}
+
+	if ((said( put, pr24) ||
+		said( return, pr24, door) ||
+		said( put, pr24, on, door) ||
+		said( put, pr24, door) ||
+		said( hang, pr24, on, door) ||
+		said( put, pr24, car)))
+		{
+		:nightstick
+		if (!has( i.pr24))
+			{
+			set( dontHaveIt);
+			}
+		else
+			{
+			put( i.pr24, room);
+			set( OK);
+			}
+		}
+	}
+
+
+if ((said( get, wallet) ||
+	said( get, wallet, off, seat) ||
+	said( get, wallet, from, seat) ||
+	said( remove, wallet, from, seat) ||
+	said( get, wallet, from, car)))
+	{
+	if (current.car != corvette.car) {
+		print( 24);
+		}
+	else
+		{
+		if (!obj.in.room( i.wallet, room))
+			{
+			set( alreadyGotIt);
+			}
+		else	{
+			get( i.wallet);
+			set( OK);
+
+			if (!SxWallet)
+				{
+				set( SxWallet);
+				cash = 90;
+				score += 3;
+				}
+			else {
+				cash = oldCash;
+				}
+			}
+		}
+	}
+
+if ((said( put, wallet) ||
+	said( return, wallet, seat) ||
+	said( put, wallet, on, seat) ||
+	said( put, wallet, seat) ||
+	said( lay, wallet, on, seat) ||
+	said( lay, wallet, seat) ||
+	said( lay, wallet, car) ||
+	said( put, wallet, car)))
+	{
+	if (current.car != corvette.car)
+		{
+		print( 25);
+		}
+	else
+		{
+		:wallet
+		if (!has( i.wallet))
+			{
+			set( dontHaveIt);
+			}
+		else	{
+			oldCash = cash;
+			cash = 0;
+			put( i.wallet, room)
+			set( OK);
+			}
+		}
+	}
+
+if ( in.car) {
+	if ((said( wear, seatbelt) ||
+		said( put$on, seatbelt) ||
+		said( fasten, seatbelt) ||
+		said( remove, seatbelt) ||
+		said( take, off, seatbelt))) {
+		set( OK);
+		}
+	}
+
+
+
+[
+:exit
+[
+
+

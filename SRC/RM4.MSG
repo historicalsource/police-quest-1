@@ -1,0 +1,90 @@
+[ POLICE QUEST
+[ rm4.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 10, 1987al
+
+[ squad.room -- briefings
+
+
+%message	1
+"Where!?"
+
+%message	2
+"This is the pulpit from which Sgt. Dooley delivers his words of
+ wisdom and inspiration to his troops.
+ Listen and take careful notes during each briefing."
+
+%message	3
+"The pigeonhole is a police officer's mailbox.
+ He can receive love letters, subpoenas, nasty messages,
+ and even departmental memos.
+ You ought to check yours."
+
+%message	4
+"It's just an everyday, run-of-the-mill, rosewood, report-writing table with
+ four legs, three drawers, and 243 pieces of gum stuck underneath."
+
+%message	5
+"It's a regular blackboard, but Dooley keeps all his chalk and
+ erasers locked up so you can't leave any cute messages."
+
+%message	6
+"You see nothing special about this drawer."
+
+%message	7
+"There's nothing on the podium that opens."
+
+%message	8
+"You open the drawer and observe various tools used in diagraming
+ traffic collisions.
+ Nothing here will aid you."
+
+%message	9
+"Don't get any ideas, Sonny!"
+
+%message	10
+"There is no chalk available."
+
+%message	11
+"How nasty!"
+
+%message	12
+"It is not wise to leave just as briefing is ready to start!"
+
+%message	13
+"Sgt. Dooley will play \"kick the can\" with yours if you leave when he's
+ ready to begin his briefing. Get to your desk!"
+
+%message	14
+"There is a newspaper lying on the table."
+
+%message	15
+"The briefing room contains a single podium and four report writing tables.
+ %m16"
+
+%message	16
+"On the far wall are eight pigeonholes.
+ On the front wall there is a blackboard."
+
+%message	17
+"R. J. Jefferson, the Department's janitor, does good work.
+ Don't mess it up!"
+
+%message	18
+"You see a textured ceiling with florescent lighting."
+
+%message	19
+"Anyone caught climbing tables is automatically directed to the
+ locally-contracted Departmental Psychologist."
+
+%message	20
+"You don't need anything in the drawer."
+
+%message	21
+"Under the table, 243 pieces of gum defy gravity."
+
+%message	22
+"If you mess with his blackboard,
+ Sgt. Dooley may verbally assault you with his highly-acclaimed,
+ personal collection of four-letter words."

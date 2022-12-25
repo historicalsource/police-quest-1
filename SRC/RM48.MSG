@@ -1,0 +1,138 @@
+[ POLICE QUEST
+[ rm48.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 3/16/87
+[ Last Update October 4, 1987GR
+
+[ Bartender
+
+
+%message	1
+"\"What'll it be?\""
+
+%message	2
+"\"Hi, Buddy. What would you like to quench your thirst?\""
+
+%message	3
+"\"What's your pleasure, my boy?\""
+
+%message	4
+"\"How ya doing, Sonny? What can I get you?\""
+
+%message	5
+"\"One %w1, comin' right up.\""
+
+%message	6
+"\"Yes sir! A %w1 %w2? You've got it!\""
+
+%message	7
+"\"I think I can handle a %w1 %w2!\""
+
+%message	8
+"\"%m40Sonny. This one is on the house.\""
+
+%message	9
+"\"%m40Buddy. That'll be one dollar.\""
+
+%message	10
+"\"%m40Big Boy. Sit and sip.\""
+
+%message	11
+"\"Come back anytime, Sonny.\""
+
+%message	12
+"\"See you later, buddy.\""
+
+%message	13
+"\"Thanks, trooper. I appreciate your business.\""
+
+%message	14
+"\"Order? Order what?\""
+
+%message	15
+"\"Ok, one %w2 comin' right up.\""
+
+%message	16
+"There's no waitress. You'd better move over to the bar."
+
+%message	17
+"The bartender can't hear you from here."
+
+%message	18
+"Don't yell, move over to the bar."
+
+%message	19
+"\"My, aren't we thirsty today?\""
+
+%message	20
+"\"Hold on. It's comin'.\""
+
+%message	21
+"\"Hold your shorts. I'll be right there!\""
+
+%message	22
+"\"Thanks, my man.\""
+
+%message	23
+"\"Thank you, sir!\""
+
+%message	24
+"\"If you need anything, just come on back.\""
+
+%message	25
+"You don't have money?!
+ Man, what a charmer!
+ This creep stiffs me for a drink!!"
+
+%message	26
+"\"Sure, sure!
+ You lost your wallet.
+ Get lost, freeloader!\""
+
+%message	27
+"\"Ordering drinks without cash! What a cop!!\""
+
+%message	28
+"\"Gee thanks, Mister!\""
+
+%message	29
+"\"Feelin' flush today? Thanks for the tip, Bud.\""
+
+%message	30
+"\"You're outta money and you try to give me a tip? Sure thing.\""
+
+%message	31
+"\"If you can pay for your drinks, you can afford a tip, Jack.\""
+
+%message	32
+"The bar top is clean, well-worn, and horizontal.
+ However, years of elbows and drinks have taken their toll."
+
+%message	33
+"Like most glasses, these are more attractive full."
+
+%message	34
+"The shelves behind the bar are well-stocked with spirits."
+
+%message	35
+"The %w2 are heavy duty and comfortable."
+
+%message	36
+"They're not bad,
+ considering they were purchased ten years ago at a swap meet!"
+
+%message	37
+"\"Here ya go. That's on the house.\""
+
+%message	38
+"\"If you change your mind, just holler.\""
+
+%message	39
+"Sonny, you should know drinking in uniform is strictly prohibited!"
+
+%message	40						[	Used in message #8-10
+"Here you go, "
+
+%message	41
+"You swig the rancid fluid until you see the bottom of the glass."
+

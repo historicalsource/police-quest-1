@@ -1,0 +1,1173 @@
+[ POLICE QUEST
+[ rm43.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 26, 1987al
+
+[moroff.room
+
+
+%include "gamedefs"
+%include "rm43.msg"
+
+
+
+[%var	moroff.scene		35
+[%define	notNarcYet		0		[	Get the hell out of here!
+[%define	heardNarcBrief1	1		[	Welcome aboard, Sonny.
+[%define	KeithSaidSeeMorgan	2		[	Leave Blue Room.
+[%define	heardNarcBrief2	3		[	Look at Black book.
+[%define	LauraGaveSCmessage	4		[	SC called. Go see Morgan
+[%define	heardNarcBrief3	5		[	Go see SC in jail.
+[%define	SC&LauraHere		6		[	Kid died.
+[%define	heardGangBangBrief	7		[	Go bleach hair.
+[%define	bleachedHair		8		[	Ego is now blond.
+[%define	heardNarcBrief5	9		[	go to hotel
+
+
+%define	comeToDesk		lf0
+%define	nearBookcase		lf1
+%define	nearFileCabinet	lf2
+%define	nearMap			lf3
+%define	nearWindow		lf4
+%define	nearDesk			lf5
+%define	MorganOnScreen		lf6
+%define	conver0			lf7
+%define	lectureInProgress	lf8
+
+
+%define	laura			lcl1
+%define	morgan			lcl2
+%define	dooley			lcl3
+%define	SC				lcl4
+
+
+%object	aMorgan			1
+%object	aLaura			2
+%object	aDooley			3
+
+
+
+if (init.log) {
+	set( NOcase);
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	load.logics( 97);				[	Just script messages.
+
+	load.view( v.morgan);			[24
+
+	animate.obj( aMorgan);
+	ignore.blocks( aMorgan);
+	set.view( aMorgan, v.morgan);
+
+
+	if (priorX) {
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		}
+	else {
+		position( ego, 100, 155);
+	
+		if (previous.room == 52)	{
+			position( ego, 61, 167);
+			}
+		}
+
+	if (progress < narc)			[	make Morgan walk in later.
+		{
+		position( aMorgan, 61, 167);
+		set.loop( aMorgan, facing.back);
+		script = 0;				[	For purposes of documentation!
+		scriptTimer = 5;
+		}
+	else
+		{
+		if (!moroff.scene)
+			{
+			script = 50;
+			scriptCycles = 33;
+			set( MorganOnScreen);
+			}
+		}
+
+
+	if (moroff.scene == 2)			[	Taselli/Hoffman escaped.
+		{
+		script = 100;
+		scriptCycles = 33;
+		set( MorganOnScreen);
+		}
+
+	if (moroff.scene == 4)			[	Morgan covers hotel operation
+		{
+		script = 150;
+		scriptCycles = 33;
+		set( MorganOnScreen);
+		}
+
+	if (moroff.scene == 6)			[	The gang's all here scene
+		{
+		script = 200;
+		scriptCycles = 33;
+
+		load.view( v.sweet.cheeks);	[30
+		load.view( v.laura);		[21
+		load.view( v.dooley);		[26
+
+		animate.obj( aSweetCheeks);
+		set.view( aSweetCheeks, v.sweet.cheeks);
+		set.loop( aSweetCheeks, facing.right);
+		position( aSweetCheeks, 54, 126);
+		draw( aSweetCheeks);
+		stop.cycling( aSweetCheeks);
+[			stop.update( aSweetCheeks);
+
+		animate.obj( aLaura);
+		set.view( aLaura, v.laura);
+		set.loop( aLaura, facing.left);
+		position( aLaura, 98, 126);
+		draw( aLaura);
+		stop.cycling( aLaura);
+[			stop.update( aLaura);
+
+		animate.obj( aDooley);
+		set.view( aDooley, v.dooley);
+		set.loop( aDooley, 3);
+		position( aDooley, 61, 167);
+	
+		set( MorganOnScreen);
+		}
+
+	if (moroff.scene == 8)			[	give sonny the cane, pen & money
+		{
+		script = 240;
+		scriptCycles = 33;
+		set( MorganOnScreen);
+		}
+
+	if (MorganOnScreen)
+		{
+		set.loop( aMorgan, facing.front);
+		set.cel( aMorgan, 0);
+		position( aMorgan, 76, 114);
+		draw( aMorgan);
+		stop.update( aMorgan);
+		}
+
+	draw( ego);
+
+	show.pic( );
+	return( );
+	}
+
+
+
+[	Debug code:
+
+[	if (edge.ego.hit == bottom)
+[		{
+[		++moroff.scene;				
+[	
+[		if (progress == narc)
+[			{
+[			if (current.sonny != sonny.narc)
+[				{
+[				current.sonny = sonny.narc;
+[				--moroff.scene;
+[				}
+[			}
+[	
+[		if (progress < narc)
+[			{
+[			progress = narc;
+[			moroff.scene = 0;
+[			}
+[		}				  
+
+
+if (edge.ego.hit == bottom)
+	{
+	new.room( 52);					[rm.hqhall2
+	}
+
+if (posn( aMorgan, 66, 106, 84, 115))
+	{
+	if (posn( ego, 66, 106, 84, 115))
+		{
+		if (!conver0)
+			{
+			print( 57);
+			set( conver0);
+			}
+		}
+	else {
+		block( 66, 106, 84, 115); 	[ no walk over boss man
+		}
+	}
+else {
+	unblock( );
+	}
+
+reset( nearBookcase);
+if (posn( ego, 11, 121, 37, 156))
+	{
+	set( nearBookcase);
+	}
+
+reset( nearMap);
+if (posn( ego, 108, 114, 146, 163))
+	{
+	set( nearMap);
+	}
+
+reset( nearWindow);
+if (posn( ego, 54, 109, 99, 114))
+	{
+	set( nearWindow);
+	}
+
+reset( nearDesk);
+if (posn( ego, 62, 109, 91, 126))
+	{
+	set( nearDesk);
+	}
+
+reset( nearPhone);
+if (posn( ego, 56, 109, 70, 121))
+	{
+	set( nearPhone);
+	}
+
+reset( nearFileCabinet);
+if (posn( ego, 32, 115, 45, 120))
+	{
+	set( nearFileCabinet);
+	}
+
+
+distance( ego, aSweetCheeks, SC);
+distance( ego, aLaura, laura);
+distance( ego, aMorgan, morgan);
+distance( ego, aDooley, dooley);
+if ((morgan < dist ||
+	    SC < dist ||
+	 laura < dist ||
+	dooley < dist)) {
+	set( nearPerson);
+	}
+
+
+
+get.posn( aMorgan, x, y);			[	stop peddling
+if ((work1 != x || work2 != y)) {
+	work1 = x;
+	work2 = y;
+	start.cycling( aMorgan);
+	}
+else {
+	stop.cycling( aMorgan);
+	}
+
+
+if (comeToDesk && nearDesk)
+	{
+	reset( comeToDesk);
+
+	set( scriptDone);
+	scriptTimer = 0;
+	scriptCycles = 0;
+	}
+
+	
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+
+	[if he's "notNarcYet"			[	Get the hell out of here!
+
+	if (script == 1)				[	Walk Morgan to his desk.
+		{
+		set( MorganOnScreen);
+		draw( aMorgan);
+		move.obj( aMorgan, 52, 157, 1, scriptDone);
+		}
+
+	if (script == 2)
+		{
+		move.obj( aMorgan, 52, 114, 1, scriptDone);
+		}
+
+	if (script == 3)
+		{
+		move.obj( aMorgan, 65, 114, 1, scriptDone);
+		}
+
+	if (script == 4)
+		{
+		message = 2;
+		call( 97);
+		++script;					[	So, sue me!
+		}
+
+	if (script == 5)
+		{
+		move.obj( aMorgan, 75, 114, 1, scriptDone);
+		}
+
+	if (script == 6)
+		{
+		stop.cycling( aMorgan);
+		set.loop( aMorgan, 2);
+		scriptTimer = 10;
+		}
+
+	if (script == 7)
+		{
+		random( 64, 65, work);
+		print.f( work);
+		scriptTimer = 10;
+		--script;
+		}
+
+
+
+	[	It's Sonny's first time.  "Welcome aboard" says Morgan.
+
+
+	if (script == 51)				[	First Narcotics Briefing.
+		{
+		if (current.sonny == sonny.narc)
+			{
+			if (nearDesk)
+				{
+				++script;
+				}
+			else
+				{
+				message = 6;
+				call( 97);		[ step on over to my desk
+				set( comeToDesk);
+				--script;
+				scriptTimer = 10;
+				}
+			}
+		else
+			{
+			message = 62;
+			call( 97);			[ get into suitable clothes
+			--script;
+			scriptTimer = 10;
+			}
+		}
+
+	if (script == 52)
+		{
+		set( lectureInProgress);
+		set( game.control);
+		prevent.input();
+		stop.motion( ego);
+
+		message = 3;
+		call( 97);				[ Lt. Morgan, welcomes Sonny
+		scriptTimer = 4;
+		}
+
+	if (script == 53)
+		{
+		message = 4;
+		call( 97);
+		scriptTimer = 4;
+		}
+
+	if (script == 54)
+		{
+		score += 1;
+		message = 5;
+		call( 97);				[ dismissed to join Laura
+		moroff.scene = 1;			[%define	heardNarcBrief1	1
+		script = 255;
+		}
+
+
+	[%define	KeithSaidSeeMorgan	2	[	Leave Blue Room.
+
+	if (script == 101)				[2nd morgan brief, ego, black book
+		{
+		if (nearDesk)
+			{
+			++script;
+			}
+		else
+			{
+			message = 34;
+			call( 97);			[ Good to see you Sonny come desk
+			set( comeToDesk);
+			--script;
+			scriptTimer = 10;
+			}
+		}
+
+	if (script == 102)
+		{
+		message = 35;
+		call( 97);				[ hard work went for naught
+		scriptTimer = 4;
+
+		set( lectureInProgress);
+		set( game.control);
+		prevent.input();
+		stop.motion( ego);
+		}
+
+	if (script == 103)
+		{
+		scriptTimer = 4;
+		if (hasRebooked) {
+			message = 36;
+			call( 97);			[ bugger picken tower guard
+			}
+		else {
+			message = 82;
+			call( 97);			[ Judge fell I.D.
+			}
+		}
+
+	if (script == 104)
+		{
+		scriptTimer = 4;
+		if (hasRebooked) {
+			++script;
+			}
+		else {
+			message = 87;
+			call( 97);
+			}
+		}
+
+	if (script == 105)
+		{
+		scriptTimer = 4;
+		message = 37;
+		call( 97);				[ closer look at the black book
+		}
+
+	if (script == 106)
+		{
+		score += 1;
+		scriptTimer = 4;
+		message = 38;				[ Check Back Later
+		call( 97);
+		moroff.scene = 3;			[%define	heardNarcBrief2	3
+		script = 255;
+		}
+
+
+
+	[%define	LauraGaveSCmessage	4		[	SC called. Go see Morgan
+
+
+	if (script == 151)				[ Morgans run down on hotel operation
+		{
+		if (nearDesk)
+			{
+			++script;
+			}
+		else
+			{
+			message = 34;
+			call( 97);			[ Good to see you Sonny come desk
+			set( comeToDesk);
+			--script;
+			scriptTimer = 10;
+			}
+		}
+
+	if (script == 152)
+		{
+		message = 75;
+		call( 97);				[ Your sweet Heart is in Jail
+		scriptTimer = 4;
+
+		set( lectureInProgress);
+		set( game.control);
+		prevent.input();
+		stop.motion( ego);
+		}
+
+	if (script == 153)
+		{
+		scriptTimer = 4;
+		message = 76;
+		call( 97);				[ sweet cheeks help use?
+		}
+
+	if (script == 154)
+		{
+		scriptTimer = 4;
+		message = 77;
+		call( 97);				[ problem Delphoria.
+		}
+
+	if (script == 155)
+		{
+		scriptTimer = 4;
+		message = 78;
+		call( 97);				[ current state of affairs
+		}
+
+	if (script == 156)
+		{
+		scriptTimer = 4;
+		message = 79;
+		call( 97);				[	Go see SC in jail.
+		}
+
+	if (script == 157)
+		{
+		scriptTimer = 4;
+		message = 80;
+		call( 97);				[ I'll hold briefing
+		}
+
+	if (script == 158)
+		{
+		message = 81;
+		call( 97);				[ arrange transport
+		script = 255;
+		moroff.scene = 5;			[%define	heardNarcBrief3	5
+
+		jail.scene = 6;
+		if (narcoff.scene < 4)
+			{
+			narcoff.scene = 4;		[ if not talk laura "won't"
+			}
+		}
+
+
+
+	[%define	SC&LauraHere		6		[	Kid died.
+
+
+	if (script == 201)				[briefing 3, w/Sweet Cheeks & Laura
+		{
+		if (nearDesk)
+			{
+			++script;
+			}
+		else
+			{
+			message = 13;
+			call( 97);			[ step over to my desk
+			set( comeToDesk);
+			--script;
+			scriptTimer = 10;
+			}
+		}
+
+	if (script == 202)
+		{
+		set( lectureInProgress);
+		set( game.control);
+		prevent.input();
+		stop.motion( ego);
+
+		scriptTimer = 4;
+		message = 14;
+		call( 97);				[ devised plan
+		}
+
+	if (script == 203)
+		{
+		scriptTimer = 4;
+		message = 15;
+		call( 97);				[ check into hotel
+		}
+
+	if (script == 204)
+		{
+		scriptTimer = 4;
+		message = 16;
+		call( 97);				[ when enter lounge
+		}
+
+	if (script == 205)
+		{
+		scriptTimer = 4;
+		message = 17;
+		call( 97);				[ need marked bills
+		}
+
+	if (script == 206)
+		{
+		scriptTimer = 4;
+		message = 18;
+		call( 97);				[ laura has info/disguise
+		set.loop( ego, facing.right);
+		}
+
+	if (script == 207)
+		{
+		scriptTimer = 4;
+		message = 19;
+		call( 97);				[ for your disguise
+		get( i.suit);
+		get( i.cane);
+		}
+
+	if (script == 208)
+		{
+		scriptTimer = 4;
+		message = 20;
+		call( 97);				[ handel of cane
+		}
+
+	if (script == 209)
+		{
+		scriptTimer = 4;
+		get( i.bleach);
+		message = 31;
+		call( 97);				[ Laura continues
+		}
+
+	if (script == 210)
+		{
+		scriptTimer = 4;
+		message = 21;
+		call( 97);				[ that's all
+		set.loop( ego, facing.left);
+		}
+
+	if (script == 211)
+		{
+		scriptTimer = 4;
+		message = 22;
+		call( 97);				[ oh sonny I'm so excited
+		}
+
+	if (script == 212)
+		{
+		message = 88;
+		call( 97);
+		scriptTimer = 3;
+		}
+
+	if (script == 213)
+		{
+		start.cycling( aSweetCheeks);
+		move.obj( aSweetCheeks, 61, 167, 1, scriptDone);
+		set.loop( ego, facing.front);
+		}
+
+	if (script == 214)
+		{
+		erase( aSweetCheeks);
+		set.loop( ego, facing.back);
+		scriptTimer = 4;
+		}
+
+	if (script == 215)
+		{
+		scriptTimer = 3;
+		message = 89;
+		call( 97);
+		}
+
+	if (script == 216)
+		{
+		start.cycling( aLaura);
+		move.obj( aLaura, 61, 167, 1, scriptDone);
+		}
+
+	if (script == 217)
+		{
+		erase( aLaura);
+		scriptTimer = 4;
+		}
+
+	if (script == 218)
+		{
+		message = 33;
+		call( 97);				[ bleach hair report back
+		scriptTimer = 7;
+		}
+
+	if (script == 219)
+		{
+ 		draw( aDooley);
+ 		move.obj( aDooley, 51, 157, 1, scriptDone);
+		}
+
+	if (script == 220)
+		{
+ 		move.obj( aDooley, 51, 119, 1, scriptDone);
+		set.loop( ego, facing.left);
+		}
+
+	if (script == 221)
+		{
+		set.loop( aDooley, facing.right);
+		stop.cycling( aDooley);
+		scriptTimer = 4;
+		}
+
+	if (script == 222)
+		{
+		scriptTimer = 4;
+		message = 26;
+		call( 97);				[ cobb kid dead
+		}
+
+	if (script == 223)
+		{
+		scriptTimer = 4;
+		message = 27;
+		call( 97);
+		}
+
+	if (script == 224)
+		{
+		scriptTimer = 4;
+		message = 28;
+		call( 97);				[ Jack is on leave
+		}
+
+	if (script == 225)
+		{
+		start.cycling( aDooley);
+ 		move.obj( aDooley, 51, 157, 1, scriptDone);
+		}
+
+	if (script == 226)
+		{
+		move.obj( aDooley, 61, 167, 1, scriptDone);
+		set.loop( ego, facing.front);
+		}
+
+	if (script == 227)
+		{
+		scriptTimer = 4;
+		erase( aDooley);
+		message = 29;
+		call( 97);				[ Sonny gets emotional
+		set.loop( ego, facing.back);
+		}
+
+	if (script == 228)
+		{
+		score += 2;
+		message = 30;
+		call( 97);				[	Go bleach hair
+		moroff.scene = 7;			[%define	heardGangBangBrief	7
+		cotton.scene = 100;			[ no go back to Cove
+		progress = 70;
+		script = 255;
+		}
+
+
+
+	[%define	bleachedHair		8		[	Ego is now blond.
+
+	if (script == 241)				[	4th morgan briefing
+		{						[	give him cane, pen & marked money
+		if (nearDesk)
+			{
+			++script;
+			}
+		else
+			{
+			message = 42;
+			call( 97);			[ have three things for you
+			set( comeToDesk);
+			--script;
+			scriptTimer = 10;
+			}
+		}
+
+	if (script == 242)
+		{
+		scriptTimer = 4;
+		message = 44;
+		call( 97);				[ backups
+
+		set( lectureInProgress);
+		set( game.control);
+		prevent.input();
+		stop.motion( ego);
+		}
+
+	if (script == 243)
+		{
+		scriptTimer = 4;
+		message = 45;
+		call( 97);				[ Marked bills
+		if (obj.in.room( i.Mmoney, current.room))
+			{
+			get( i.Mmoney);
+			marked.cash = 100;
+			Mdollar = 0;
+			}
+		}
+
+	if (script == 244)
+		{
+		scriptTimer = 4;
+		message = 46;
+		call( 97);				[ Take cad
+		}
+
+	if (script == 245)
+		{
+		scriptTimer = 4;
+		message = 47;
+		call( 97);				[ morgan take hamilton call
+		}
+
+	if (script == 246)
+		{
+		scriptTimer = 4;
+		message = 48;
+		call( 97);				[ Sonny Waits
+		}
+
+	if (script == 247)
+		{
+		scriptTimer = 4;
+		message = 49;
+		call( 97);				[ Conversation ends
+		}
+
+	if (script == 248)
+		{
+		scriptTimer = 4;
+		message = 50;
+		call( 97);				[ Shot exection style
+		}
+
+	if (script == 249)
+		{
+		scriptTimer = 4;
+		message = 51;
+		call( 97);				[ Be careful
+		}
+
+	if (script == 250)
+		{
+		score += 1;
+		message = 52;
+		call( 97);				[	go to hotel
+		script = 255;
+		progress = 100;
+		moroff.scene = 9;			[%define	heardNarcBrief5	9
+		narcoff.scene = 5;			[	Go to hotel, Sonny!
+		}
+
+
+
+
+	if (script == 255)				[	Close things down.
+		{
+		reset( lectureInProgress);
+		reset( game.control);
+
+		accept.input();
+		start.motion( ego);
+		}
+	}
+
+
+
+[ Text 
+
+if (!have.input) {
+	goto exit;
+	}
+
+if (said( look, phone, rol))
+	{
+	if (nearPhone)
+		{
+		print( 12);
+		if (!knowsMorganNumber)
+			{
+			set( knowsMorganNumber);
+			score += 2;
+			}
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (MorganOnScreen)
+	{
+	if ((said( ask, phone, number, rol) ||
+		said( phone, number, rol) ||
+		said( ask, morgan, number, rol)))
+		{
+		print( 12);
+		if (!knowsMorganNumber)
+			{
+			set( knowsMorganNumber);
+			score += 2;
+			}			
+		}
+
+	if  (moroff.scene == 7 &&			[	Only at end of lecture.
+		have.input)
+		{
+		set( have.match);
+		message = 30;					[ the sooner you get going
+		call( 97);
+		}
+		
+	if  (moroff.scene == 9 &&			[	Only at end of lecture.
+		have.input)
+		{
+		set( have.match);
+		message = 52;					[ get moving
+		call( 97);
+		}
+	}
+
+
+if ((said( open, door) ||
+	said( close, door))) {
+	print( 63);
+ 	}
+
+if ((said( look) ||
+	said( look, anyword, office) ||
+	said( look, room))) {
+	print( 1);
+	}
+
+if (said( look, under, desk)) {
+	if (nearDesk) {
+		print( 24);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( look, desk) ||
+	said( look, anyword, desk))) {
+	if (nearDesk) {
+		print( 8);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if (said( climb, desk))
+	{
+	if (nearDesk) {
+		print( 9);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( sit, desk) ||
+	said( sit, on, desk))) {
+	if (nearDesk) {
+		print( 10);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if (said( sit, rol))
+	{
+	if (posn( ego, 70, 109, 81, 114))
+		{
+		print( 43);
+		}
+	else 
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( look, up) ||
+	said( look, ceiling))) {
+	print( 74);
+	}
+
+if ((said( look, down) ||
+	said( look, floor))) {
+	print( 54);
+	}
+
+if ((said( look, window) ||
+	said( look, out, window))) {
+	if (nearWindow) {
+		print( 67);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if (said( open, window)) {
+	if (nearWindow) {
+		print( 25);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( open, shade) ||
+	said( pull, shade) ||
+	said( draw, shade))) {
+	if (nearWindow) {
+		print( 68);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if (said( look, map, rol)) {
+	if (nearMap) {
+		print( 69);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if (said( get, map, rol)) {
+	if (nearMap) {
+		print( 70);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if (said( show, map, rol)) {
+	if (nearMap) {
+		print( 71);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( open, file) ||
+	said( open, cabinet) ||
+	said( open, file, cabinet))) {
+	if (nearFileCabinet)
+		{
+		print( 40);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( look$in, file) ||
+	said( look$in, cabinet) ||
+	said( look$in, file, cabinet) ||
+	said( look, file) ||
+	said( look, cabinet) ||
+	said( look, file, cabinet)))
+	{
+	if (nearFileCabinet) {
+		print( 41);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if ((said( use, phone) ||
+	said( dial, phone)))
+	{
+	print( 55);
+	}
+
+if ((said( look, basket) ||
+	said( look, in, basket)))
+	{
+	print( 56);
+	}
+
+if ((said( look, shelves) ||
+	said( look, books))) {
+	if (nearBookcase) {
+		print( 72);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+if (said( get, book)) {
+	if (nearBookcase) {
+		print( 73);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+
+if (MorganOnScreen)
+	{
+	if ((said( talk, morgan) ||
+		said( talk, man)))
+		{
+		if (moroff.scene == 3)
+			{
+			print( 86);
+			}
+		else
+			{
+			print( 11);
+			}
+		}
+
+    if ((said( give, memo, man) ||
+		said( give, man, memo)))
+		{
+		if (morgan < dist)
+			{
+			print( 43);
+			}
+		else {
+			set( notCloseEnough);
+			}
+		}
+
+	if (said( look, man))
+		{
+		print( 2);
+		}
+	}
+
+
+
+
+[
+:exit
+[
+
+[	if (QA)
+[		{
+[		display( 24, 0, 61);
+[		}
+

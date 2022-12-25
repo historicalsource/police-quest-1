@@ -1,0 +1,161 @@
+[ POLICE QUEST
+[ rm5.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 7/30/86
+[ Last Update October 4, 1987GR
+
+[ locker.room
+
+
+%message 1
+"You are looking at the latest in locker room benches.
+ Don't slide after sitting or you'll spend the evening
+ plucking wood chips out of your tail!"
+
+%message 2
+"The wooden bench is securely attached to the floor."
+
+%message 3
+"You can't move something that's anchored to the floor."
+
+%message 4
+"This shower is unique.
+ It will give you all the hot water you want for two minutes,
+ or all the ice water you want forever."
+
+%message 5
+"The shower IS on!"
+
+%message 6
+"The shower IS Off!"
+
+%message 7
+"The spigot is out of reach."
+
+%message 8
+"Congratulations.
+ Most players don't enter a shower while fully-clothed.
+ You've just lost a point."
+
+%message 9
+"You'd better unlock your locker first!"
+
+%message 10
+"You've been docked one point for leaving the shower running."
+
+%message 11
+"There's no doubt that somewhere in your life you fell off a high porch
+ and landed hard on your head!"
+
+%message 12
+"Grown policemen don't climb on benches, Sonny."
+
+%message 13
+"Your locker is too far away."
+
+%message 14
+"Your locker is closed."
+
+%message 15
+"This shower is already occupied. (And you're not that kind of boy!)"
+
+%message 16
+"Morris Fudley has worn out this shower!"
+
+%message 17
+"Aaah... there's nothing like a nice, hot shower!"
+
+%message 18
+"Sorry, but your crime-stopping just can't wait!"
+
+%message 19
+"You look at the ceiling and observe a lighting system that adequately
+ illuminates the locker room. (Otherwise, it'd be dark in here!)"
+
+%message 20
+"You look down and note a very clean, blue-tiled floor."
+
+%message	21
+"Yuck!"
+
+%message	22
+"\"Hey! Somebody die in there?!\""
+
+%message	23
+"Hearing the sound of rustling paper,
+ you accurately surmise this stall's occupant is concentrating deeply!"
+
+%message	24
+"Grunts and groans encourage you to leave this area!"
+
+%message	25
+"From behind the door you hear the occupant whistling a familiar tune.
+ At least he enjoys his handiwork."
+
+%message	26
+"A disgusted voice snaps back, \"Don't be so impatient!\""
+
+%message	27
+"\"Use the next stall! I'm giving birth to a sergeant in here!\""
+
+%message	28
+"\"I'd love to visit with you, Sonny,
+ but there just isn't enough room in here for both of us!\""
+
+%message	29
+"\"I'm taking time out from any discussions right now, buddy boy!\""
+
+%message	30
+"You see uniform trousers crumpled on the floor around a pair of bare legs,
+ and conclude the stall is occupied."
+
+%message	31
+"The Lytton PD locker room has two rows of full-sized, double-stacked lockers
+ with a bench between them, two showers, and three toilet stalls."
+
+%message	32
+"If you had any points,
+ you would have lost them for leaving the shower running.
+ Remember, Sonny, \"waste not, want not!\""
+
+%message	33
+"Don't you feel foolish standing in the shower fully clothed?
+ If you had any points, you'd have lost some for this!"
+
+%message	34
+"That would be best done in the shower."
+
+%message	35
+"Good idea!"
+
+%message	36
+"At last, you'll find out if blondes really have more fun!"
+
+%message	37
+"One of these all-metal, double-stacked lockers is assigned to you.
+ Finding it is up to you."
+
+%message	38
+"You carefully pour the bleach on your hair. Now what?"
+
+%message	39 
+""
+
+%message	40
+"What are you going to rinse out?"
+
+%message	41
+"Your hair is wet."
+
+%message	42
+"With great anticipation, you carefully rinse the bleach from your hair."
+
+%message	43
+"Aaahhh! That feels good."
+
+%message	44	
+"Pervert!"
+
+%message	45
+"\"Strangers in the night, la da de dee dah...\""
+

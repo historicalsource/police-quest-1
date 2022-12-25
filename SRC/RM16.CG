@@ -1,0 +1,57 @@
+[ POLICE QUEST
+[ rm16.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/11/86
+[ Last Update September 24, 1987GR
+
+[ rm.map16
+
+%include "gamedefs"
+%include "rm117.h"
+
+
+
+if (init.log) {
+	load.logics( 27);				[lgc.freeway1
+	position( a.intersection, 75, 40);
+
+	draw( ego);
+	draw( a.intersection);
+
+	add.to.pic( vBuildings2, 0, 0, 006, 111, 0, 4);
+	add.to.pic( vBuildings2, 0, 1, 145, 114, 0, 4);
+	add.to.pic( vBuildings2, 0, 2, 144, 167, 0, 4);
+	add.to.pic( vBuildings2, 0, 3, 028, 078, 0, 4);
+	add.to.pic( vBuildings2, 0, 4, 043, 078, 0, 4);
+	add.to.pic( vBuildings2, 0, 5, 117, 116, 0, 4);
+	add.to.pic( vBuildings2, 2, 0, 115, 160, 0, 4);
+	add.to.pic( vBuildings2, 2, 1, 056, 167, 0, 4);
+	add.to.pic( vBuildings2, 2, 2, 098, 116, 0, 4);
+	add.to.pic( vBuildings2, 2, 3, 029, 024, 0, 4);
+	add.to.pic( vBuildings2, 2, 3, 053, 024, 0, 4);
+	add.to.pic( vBuildings2, 2, 3, 091, 024, 0, 4);
+
+	show.pic( );
+	return( );
+	}
+
+if ( ego.y < 33) {
+	streetScene = 80;
+	}
+else {
+	streetScene = 92;
+	}
+
+
+call( 27);				[lgc.freeway1
+
+%message 1
+"The pollutants of this industrialized area give the air a pungent odor."
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look, town)))	{
+	print( 1);
+	}
+
+

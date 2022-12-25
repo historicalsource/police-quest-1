@@ -1,0 +1,177 @@
+[ POLICE QUEST
+[ rm18.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/11/86
+[ Last Update October 4, 1987GR
+
+[ rm.map18
+
+%include "gamedefs"
+%include "rm117.h"
+
+
+
+if (init.log) {
+	position( a.intersection, 75, 40);
+	draw( ego);
+	draw( a.intersection);
+	show.pic( );
+	return( );
+	}
+
+
+[ Logic
+
+if ( ego.x < 22) {
+	streetScene = 93;
+	}
+else {
+	streetScene = 80;
+	}
+
+
+if (posn( a.car2, 75, 21, 80, 25)
+&& intersection == north.stop) {
+	observe.blocks( a.car2);
+	}
+else	{
+	ignore.blocks( a.car2);
+	}
+
+[ Traffic logic 
+[ start.cars
+[car1
+if ( !stopCar1) {
+	if (!posn( ego, 17, 0, 27, 25)
+	&& !posn( a.suspect, 17, 0, 27, 25)) {
+		if (moving1 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car1, work);
+			position( a.car1, t1x, top.edge);
+			ignore.blocks( a.car1);
+			set.priority( a.car1, 5);
+			set( moved1);
+			}
+		}
+	if (moving1 == 1) {
+		move.obj( a.car1, t1x, bottom.edge, 1, moved1);
+		draw( a.car1);
+		}
+	if (moving1 == 2) {
+		erase( a.car1);
+		moving1 = 0);
+		}
+	}
+	  
+[car2
+if ( !stopCar2) {
+	if (!posn( ego, 75, 0, 85, 25)
+	&& !posn( a.suspect, 75, 0, 85, 25)) {
+		if (moving2 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car2, work);
+			position( a.car2, t3x, top.edge);
+			ignore.blocks( a.car2);
+			set.priority( a.car2, 5);
+			set( moved2);
+			}
+		}
+	if (moving2 == 1) {
+	 	move.obj( a.car2, t3x, t7y, 1, moved2);
+	 	draw( a.car2);
+	 	}
+	if (moving2 == 2) {
+		move.obj( a.car2, t5x, t8y, 1, moved2);
+		}
+	if (moving2 == 3) {
+		move.obj( a.car2, t5x, bottom.edge, 1, moved2);
+		}
+	if (moving2 == 4) {
+		erase( a.car2);
+		moving2 = 0);
+		}
+	}
+		 
+[car3
+if ( !stopCar3) {
+	if (!posn( ego, 17, 131, 27, 167)
+	&& !posn( a.suspect, 17, 131, 27, 167)) {
+		if (moving3 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car3, work);
+			position( a.car3, t2x, bottom.edge);
+			ignore.blocks( a.car3);
+			set.priority( a.car3, 5);
+			set( moved3);
+			}
+		}
+	if (moving3 == 1) {
+		move.obj( a.car3, t2x, t10y, 1, moved3);
+	 	draw( a.car3);
+		}
+	if (moving3 == 2) {
+		move.obj( a.car3, t3x, t10y, 1, moved3);
+		}
+	if (moving3 == 3) {
+		move.obj( a.car3, t3x, bottom.edge, 1, moved3);
+		}
+	if (moving3 == 4) {
+		erase( a.car3);
+		moving3 = 0);
+		}
+	}
+
+[car4
+if ( !stopCar4) {
+	if (!posn( ego, 133, 131, 143, 167)
+	&& !posn( a.suspect, 133, 131, 143, 167)) {
+		if (moving4 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car4, work);
+			position( a.car4, t6x, bottom.edge);
+			ignore.blocks( a.car4);
+			set.priority( a.car4, 5);
+			set( moved4);
+			}
+		}
+	if (moving4 == 1) {
+		move.obj( a.car4, t6x, top.edge, 1, moved4);
+		draw( a.car4);
+		}
+	if (moving4 == 2) {
+		erase( a.car4);
+		moving4 = 0);
+		}
+	}
+
+[*****
+:exit
+[*****
+
+%message	1
+"This is a quiet, residential area of Lytton."	      
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look, town)))	{
+	print( 1);
+	}
+
+
+

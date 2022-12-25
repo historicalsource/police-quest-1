@@ -1,0 +1,181 @@
+[ POLICE QUEST
+[ rm25.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/11/86
+[ Last Update October 4, 1987GR
+
+[ rm.map25
+
+%include "gamedefs"
+%include "rm117.h"
+
+
+
+if (init.log) {
+	load.view( v.trees);
+
+	add.to.pic( v.trees, 0, 0, 119, 148, 6, 4);	[cotton.cove
+
+	add.to.pic( vBuildings0, 1, 0, 053, 114, 0, 4);
+	add.to.pic( vBuildings0, 0, 0, 028, 114, 0, 4);
+	add.to.pic( vBuildings0, 2, 0, 000, 024, 0, 4);
+	add.to.pic( vBuildings0, 2, 0, 030, 024, 0, 4);
+	add.to.pic( vBuildings0, 2, 0, 045, 024, 0, 4);
+	add.to.pic( vBuildings0, 2, 0, 060, 024, 0, 4);
+	add.to.pic( vBuildings0, 2, 0, 088, 024, 0, 4);
+	add.to.pic( vBuildings0, 2, 0, 103, 024, 0, 4);
+	add.to.pic( vBuildings0, 2, 0, 118, 024, 0, 4);
+	add.to.pic( vBuildings0, 1, 2, 001, 114, 0, 4);
+	add.to.pic( vBuildings0, 1, 2, 001, 076, 0, 4);
+	add.to.pic( vBuildings0, 1, 4, 041, 062, 0, 4);
+	add.to.pic( vBuildings0, 1, 6, 054, 112, 0, 4);
+
+
+	if (cotton.scene && cotton.scene < 100)		[ emergency vehicles 
+		{
+		set.view( a.car4, v.patrol.car);
+		set.view( a.car5, v.patrol.car);
+
+		set.loop( a.car4, 0);
+		set.loop( a.car5, 0);
+
+		position( a.car4, 143, 146);
+		position( a.car5, 144, 143);
+
+		set.priority( a.car4, 5);
+		set.priority( a.car5, 5);
+
+		start.cycling( a.car4);
+		start.cycling( a.car5);
+
+		draw( a.car4);
+		draw( a.car5);
+		}
+
+	draw( ego);
+	show.pic( );
+	return( );
+	}
+
+
+[ Logic
+if (( ego.y > 124 ||
+	ego.x > 138)) {
+	streetScene = 93;
+	}
+else {
+	streetScene = 80;
+	}
+
+
+[ start.cars 
+[car1
+if ( !stopCar1) {
+	if (!posn( ego, 0, 117, 17, 131)
+	&& !posn( a.suspect, 0, 117, 17, 131)) {
+		if (moving1 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car1, work);
+			position( a.car1, left.edge, t10y);
+			ignore.blocks( a.car1);
+			set.priority( a.car1, 5);
+			set( moved1);
+			}
+		if (moving1 == 1) {
+			move.obj( a.car1, t6x, t10y, 1, moved1);
+			draw( a.car1);		  
+			}
+		}
+	if (moving1 == 2) {
+		move.obj( a.car1, t6x, top.edge, 1, moved1);
+		}
+	if (moving1 == 3) {
+		erase( a.car1);
+		moving1 = 0;
+		}
+	}
+
+[ car2
+if ( !stopCar2) {
+	if (!posn( ego, 0, 25, 17, 39)
+	&& !posn( a.suspect, 0, 25, 17, 39)) {
+		if (moving2 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car2, work);
+			position( a.car2, left.edge, t8y);
+			ignore.blocks( a.car2);
+			set.priority( a.car2, 5);
+			set( moved2);
+			}
+		if (moving2 == 1) {
+			move.obj( a.car2, t1x, t8y, 1, moved2);
+			draw( a.car2);		  
+			}
+		}
+	if (moving2 == 2) {
+		move.obj( a.car2, t1x, t9y, 1, moved2);
+		}
+	if (moving2 == 3) {
+		move.obj( a.car2, left.edge, t9y, 1, moved2);
+		}
+	if (moving2 == 4) {
+		erase( a.car2);
+		moving2 = 0;
+		}
+	}
+
+[ car3
+if ( !stopCar3) {
+	if (!posn( ego, 133, 0, 143, 25)
+	&& !posn( a.suspect, 133, 0, 143, 25)) {
+		if (moving3 == 0) {
+			random( 0, 9, work);
+			if ( hercules && work < 4) {
+				++ work;
+				}
+
+			set.cel.f( a.car3, work);
+			position( a.car3, t5x, 5);
+			ignore.blocks( a.car3);
+			set.priority( a.car3, 5);
+			set( moved3);
+			}
+		if (moving3 == 1) {
+			move.obj( a.car3, t5x, t7y, 1, moved3);
+			draw( a.car3);		  
+			}
+		}
+	if (moving3 == 2) {
+		move.obj( a.car3, t2x, t7y, 1, moved3);
+		}
+	if (moving3 == 3) {
+		move.obj( a.car3, t2x, top.edge, 1, moved3);
+		}
+	if (moving3 == 4) {
+		erase( a.car3);
+		moving3 = 0;
+		}
+	}
+
+[*****
+:exit
+[*****
+
+%message 1
+"Cotton Cove is located here, near the lovely Clearwater River."
+
+if ((said( look) ||
+	said( look, room) ||
+	said( look, town)))	{
+	print( 1);
+	}
+
+

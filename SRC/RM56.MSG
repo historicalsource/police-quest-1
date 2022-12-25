@@ -1,0 +1,133 @@
+[ POLICE QUEST
+[ rm56.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 9/18/86
+[ Last Update October 10, 1987al
+
+[park entrance - dope bust
+
+
+%message	1
+"Laura says,
+ \"Ok, Sonny, I'll move the car out of sight and monitor you for backup.\""
+
+%message	2
+"Laura asks, \"What took you so long, Hot Rod?
+ I picked up this loose end trying to take foot bail on you!\""
+
+%message	3
+"You mumble under your breath,
+ \"Yeah, sure, Laura!
+ You probably just grabbed the first white male you could find!\""
+
+%message	4
+"What's wrong with you?"
+
+%message	5
+"From here, the park looks lovely. Perhaps you should enter it."
+
+%message	6
+"The search reveals an identification card,
+ and a small bag containing a white powdery substance."
+
+%message	7
+"The contents of the bag appear to be cocaine!"
+
+%message	8
+"Simms is reluctant but cooperative.
+ You learn he has been selling to kids at Jefferson High School,
+ including Officer Cobb's daughter, Kathy."
+
+%message	9
+"\"I used to buy from a guy named Jose Martinez,
+ but then Martinez introduced me to Don Colby here,\" Simms says,
+ \"I haven't seen Martinez since.\""
+
+%message	10
+"Colby refuses to answer any questions."
+
+%message	11
+"After persistant questioning of Colby,
+ you discover he buys his drugs from Leroy Pierson.
+ He says Leroy's telephone number is 555-6537.
+ He also asks that his cooperation be noted for consideration by the court."
+
+%message	12
+"You search the trembling youngster."
+
+%message	13
+"It might be wise to question these guys while they're still shaking."
+
+%message	14
+"\"What's the matter? Let's get this show on the road!\""
+
+%message	15
+"Laura comments, \"Lt. Morgan will be real happy with this bust!\""
+
+%message	16
+"\"Let's get these boys to jail.\""
+
+%message	17
+"You can't release these pushers here!"
+
+%message	18
+"The door is already shut."
+
+%message	19
+"Where are you going?"
+
+%message	20
+"\"Sonny, go stake out the picnic area.\""
+
+%message	21
+"\"His name is Don Colby, Officer,\" says the shaking youngster.
+ Colby glares at the boy."
+
+%message	22
+"The Jefferson High School Student Identification Card (in the name of
+ Victor Simms) matches the general description of your suspect."
+
+%message	23
+"You find nothing more."
+
+%message	24
+"question colby"
+
+%message	25
+"question simms"
+
+%message	26
+"Laura searches her suspect."
+
+%message	27
+"She finds his gun, an envelope of money and little else."
+
+%message	28
+"\"Yes, sir!\""
+
+%message 29
+"Laura says, \"I'll book this stuff into evidence.\""
+
+%message	30
+"\"I place you under arrest!\""
+
+%message	31
+"They can't hear you from here."
+
+%message	32
+"The Jefferson High School Student Identification Card (in the name of
+ Victor Simms) matches the general description of your suspect."
+
+%message	33
+"Laura looks pretty good today."
+
+%message	34
+"The young man is dressed in dark clothes."
+
+%message	35
+"You would not buy a used car from this man."
+
+%message	36
+"You key your radio, \"Dispatch, this is 83-Nora-10.
+ Be advised, Code-4 with two in custody.\""
+

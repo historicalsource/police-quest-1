@@ -1,0 +1,35 @@
+[ POKER QUEST 
+[ rm87.cg
+[ By:  Ken Williams, Greg Rowland, and Al Lowe
+[ For: Sierra On-Line Inc. 11/17/86
+[ Last Update August 14, 1987al
+
+%include "rm75.h"
+
+
+[ redeal -- handle dealing the cards
+
+
+
+card.to.deal = first.card;
+
+:deal.loop
+random( 1, 52, work);
+work2 =@ card.to.deal;
+if (work2 == 0)
+	{
+	function = test.already.dealt;
+	call( poker.subs);
+	if (already.dealt)
+		{
+ 		goto deal.loop;
+ 		}
+	card.to.deal @= work;
+	}
+
+if (card.to.deal != last.card)
+	{
+	++card.to.deal;
+	goto deal.loop;
+	}
+

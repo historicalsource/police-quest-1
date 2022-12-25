@@ -1,0 +1,163 @@
+[ POLICE QUEST
+[ rm70.msg
+[ By:  Greg Rowland, Scott Murphy, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update August 20, 1987al
+
+[logics for room 70 -- casino
+
+
+%message	1
+"You see some unfamiliar men playing cards."
+
+%message	2
+"It IS open."
+
+%message	3
+"This door is securely locked."
+
+%message	4
+"\"I said later tonight, Banksten!\""
+
+%message	5
+"There are no chairs at this table."
+
+%message	6
+"\"Listen, bozo: you can have this chair when I leave!\""
+
+%message	7
+"Angered at your interruption, the man says,
+ \"Can't you see? We're busy at this table!\""
+
+%message	8
+"\"If you continue to bother our game, you're outta here, Jack!\""
+
+%message	9
+"\"Someone is sitting there, but he'll be right back.
+ Take the other chair.\""
+
+%message	10
+"It seems you've tried to sit on the floor before."
+
+%message	11
+"This is no place to strech out on the floor."
+
+%message	12
+"\"Yes, we're playing poker.\""
+
+%message	13
+"\"We'll begin when our other player returns,\" says Otto."
+
+%message	14
+"\"Good evening, gentlemen,\" you say to the men at the table.
+ \"I'm %m15. May I join you?\""
+
+%message	15
+"Jimmy Lee Banksten"
+
+%message	16
+"\"Glad to meet you,\" you respond."
+
+%message	17
+"\"Let's play poker!\""
+
+%message	18
+"Solitaire is a good game to play by yourself.
+ However, there is no action at this table."
+
+%message	19
+"Find an open seat."
+
+%message	20
+"Don't leave now! You might blow your cover."
+
+%message	21
+"Frank says, \"Well, Mr. Banksten, it seems that poker is your kind of game.\""
+
+%message	22
+"\"If you'd like to come back later tonight,
+ we'll be playing a more private game with considerably
+ higher stakes.\""
+
+%message	23
+"\"Be sure to give Woody the password 'Frank sent you!'
+ He'll let you in for free, and you'll gain admission to our private room.\""
+
+%message	24
+"Woody knocks on the door at the back of the room."
+
+%message	25
+"\"Gentlemen,\" announces Woody, \"welcome back Mr. %m15.\""
+
+%message	26
+"Over each table hangs a shaded lamp."
+
+%message 27	
+"The carpet is worn, but clean."
+
+%message 28
+"They appear to be professional card tables."
+
+%message 29
+"You peek under the table and see knees, legs, ankles, and feet,
+ but nothing unusual."
+
+%message 30
+"You look under the empty table and see nothing."
+
+%message	31
+"\"Luckily, you didn't speak loudly enough for anyone to hear.
+ Otherwise, you would have blown this whole operation!\""
+
+%message	32
+"No one can hear you from this distance."
+
+%message	33
+"These men are too engrossed to talk to you."
+
+%message	34
+"The men at the table greet you, and invite you to join them."
+
+%message	35
+"\"If everything works out well,\" says Frank,
+ \"perhaps we can talk a little business afterwards.\""
+
+%message	36
+"\"Obviously, you're no gambler,\" says Frank.
+ You're no longer welcome in this game."
+
+%message	37
+"Well, Sonny. It seems you're not going to get anywhere disguised as a
+ gambler until you learn how to gamble!"
+
+%message	38
+"\"So, Mr. %m15, this game a little too intense for you?\" asks Otto.
+ \"Come back later, if you change your mind and want to try again.\""
+
+%message	39
+"Perhaps this would be a good time to take a break, Sonny."
+
+%message	40
+"\"Welcome back, %m15,\" says Frank, \"I presume you're ready to resume play.\""
+
+%message	41
+"\"Yes, you may, Mr. Banksten,\" says the man across the table.
+ \"Have a seat.\""
+
+%message	42
+"Otto introduces you to the newcomer,
+ \"Frank, this is Mr. %m15. He's going to join us for a few hands.
+ Mr. Banksten, meet Frank.\""
+
+%message	43
+"\"I'm Otto, and to your left is Gene.\""
+
+%message	44
+"\"Pleased to meet you, Mr. Banksten,\" says the newcomer."
+
+%message	45
+"\"Shall we play?\" you ask."
+
+%message	46
+"You take your position at the table."
+

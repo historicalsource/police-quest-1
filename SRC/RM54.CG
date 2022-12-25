@@ -1,0 +1,380 @@
+[ POLICE QUEST
+[ rm54.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 12/12/86
+[ Last Update September 26, 1987al
+
+[rm.court.clerk
+
+%include "gamedefs"
+%include "rm54.msg"
+
+
+
+[%var	court.scene	  		95
+	%define	no.scene		0
+	%define	no.clerk		1
+	%define	talk.clerk	2
+	%define	no.judge		3
+	%define	talk.judge	4
+	%define	saw.judge		5
+
+
+%define	moved0			lf0
+%define	conver0			lf1
+%define	nearClerk			lf2
+%define	doorDone			lf3
+%define	doorOpen			lf4
+%define	nearDoor			lf5
+%define	nearWrongDoor		lf6
+
+
+%define	moving0			lcl0
+%define	clerk			lcl1
+
+
+%object	aDoor			1
+%object	aClerk			2
+
+
+
+if (init.log) {
+	set( NOcase);
+
+	load.sound( s.door.open);
+	load.sound( s.door.close);
+	
+	load.view( v.court.clerk);
+	load.view( v.Lobbydoor);
+	load.view( vJustice);
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	add.to.pic( v.Lobbydoor, 0, 0, 68, 115, 5, 5);
+	add.to.pic( vJustice, 0, 0, 72, 59, 4, 4);
+
+	animate.obj( aClerk);
+	set.priority( aClerk, 4);
+	set.view( aClerk, v.court.clerk);
+	set.loop( aClerk, 1);
+	position( aClerk, 151, 128);	
+
+	animate.obj( aDoor);
+	ignore.blocks( aDoor);
+	ignore.objs( aDoor);
+	set.priority( aDoor, 5);
+	set.view( aDoor, v.Lobbydoor);
+	set.loop( aDoor, 1);
+	set.cel( aDoor, 0);
+	position( aDoor, 81, 115);
+	draw( aDoor);
+	stop.cycling( aDoor);
+	work = DOOR_CYCLE_TIME;
+	cycle.time( aDoor, work);
+	stop.update( aDoor);
+
+	if (previous.room == 55)
+		{
+		position( ego, 83, 120);
+		}
+	else
+		{
+		position( ego, 75, 167);
+		}
+
+	draw( ego);
+
+	show.pic( );
+	return( );
+	}
+
+
+
+if (posn( ego, 79, 116, 95, 117)) {
+	new.room( 55);					[rm.court.room
+	}
+
+if (edge.ego.hit == bottom) {
+	if (court.scene == 200) {
+		court.scene = 255;
+		}
+	new.room( 53);					[rm.court.house
+	}
+
+distance( ego, aClerk, clerk);
+if (clerk < dist) {
+	set( nearPerson);
+	}
+
+reset( nearDoor);
+if (posn( ego, 77, 118, 90, 123))
+	{
+	set( nearDoor);
+	}
+
+reset( nearWrongDoor);
+if (posn( ego, 63, 118, 76, 123))
+	{
+	set( nearWrongDoor);
+	}
+
+
+
+[ Animation timers 
+if (moved0) {
+	reset( moved0);
+	++moving0;
+	}
+
+
+reset( nearClerk);
+if (posn( ego, 128, 124, 143, 143))
+	{
+	set( nearClerk);
+	}
+else {
+	set( conver0);
+	if (moving0 == 4)
+		{
+		moving0 = 5;
+		}
+	}
+
+if (!moving0 && nearClerk) {
+	set( moved0);					[ allow one scan first for saids
+	}
+
+if (moving0 == 8) {
+	if (!scriptTimer) {
+		moving0 = 0;
+		}
+	else {
+		if (scriptDone) {			[ he's left bring him back
+			reset( scriptDone);
+			if (court.scene < 20) {
+				court.scene = 20;
+				}
+			moving0 = 1;
+			scriptTimer = 0;
+			}
+		}
+	}
+
+if (moving0 == 1) {					[ move'm in
+	draw( aClerk);
+	move.obj( aClerk, 143, 128, 1, moved0);
+	++moving0;
+	}
+
+if (moving0 == 3) {
+	++moving0;
+	stop.cycling( aClerk);
+
+	if (court.scene < 10) {
+		print( 1);				[ How do you do sir, can I help you?
+		if (court.scene == 1) {
+			court.scene = 10;
+			}
+		}
+	else {
+		if (court.scene == 20) {		[ clerk sent message with baliff
+			print( 7);			[ Palmer can see you if you
+			}
+		else {
+			if (court.scene == 200) {
+				print( 15);		[ Did you get what you needed
+				}
+			else {
+				print( 13);		[ don't have any business here
+				}
+			}
+		}
+	}
+
+if (moving0 == 5) {					[ move him out
+	++moving0;
+	start.cycling( aClerk);
+	move.obj( aClerk, 151, 128, 1, moved0);
+	}
+
+if (moving0 == 7) {
+	++moving0;
+	erase( aClerk);
+ 	}
+
+
+	
+[ Text 
+
+if (!have.input) {
+	goto exit;
+	}
+
+if (nearClerk)
+	{
+	if ((said( talk, clerk) ||
+		said( talk, man)))
+		{
+		print( 10);
+		}
+
+	if ((said( give, clerk, poster) ||
+		said( give, evidence, clerk) ||
+		said( give, hoffman, file) ||
+		said( give, hoffman, file, clerk) ||
+		said( give, clerk, hoffman, file) ||
+		said( show, poster, clerk) ||
+		said( show, clerk, poster) ||
+		said( show, clerk, wanted, poster) ||
+		said( show, file, clerk) ||
+		said( show, hoffman, file) ||
+		said( show, hoffman, file, clerk)))
+		{
+		print( 19);
+		}
+
+	if ((said( anyword, judge, rol) ||
+		said( anyword, anyword, judge, rol) ||
+		said( anyword, anyword, anyword, judge, rol)))
+		{
+		print( 2);				[ court is in session at this time
+		}
+
+	if ((said( evidence, judge) ||
+		said( warrant, rol) ||
+		said( anyword, warrant, rol) ||
+		said( anyword, anyword, warrant, rol) ||
+		said( anyword, anyword, anyword, warrant, rol)))
+		{
+		print( 3);				[ only interrupt court for emergencies
+		}
+
+	if ((said( emergency, rol) ||
+		said( anyword, emergency, rol) ||
+		said( anyword, anyword, emergency, rol) ||
+		said( no, time, rol)))
+		{
+		if (!has( i.warrant) &&
+			narcoff.scene)			[morgan.msg
+			{
+			print( 4);			[ send a message with the bailiff
+			moving0 = 5;
+			scriptTimer = 22;
+			if (!SxClerk)
+				{
+				set( SxClerk);
+				score += 3;
+				}
+			}
+		else {
+			print( 6);			[ For emergencies call 911
+			}
+		}
+	}
+
+
+
+[ Your Basic door 
+
+if (said( open, door))
+	{
+	if (nearWrongDoor)
+		{
+		print( 8);				[	wrong door
+		}
+	else {
+		if (!nearDoor)
+			{
+			set( notCloseEnough);
+			}
+		else
+			{
+			if (!conver0)
+				{
+				print( 14);		[ visit clerk
+				set( conver0);
+				}
+			else {
+				if (doorOpen)
+					{
+					print( 9);	[ is open
+					}
+				else {
+					start.update( aDoor);
+					end.of.loop( aDoor, doorDone);
+					sound( s.door.open, snd.done);
+					}
+				}
+			}
+		}
+	}
+	
+if (said( close, door))
+	{
+	if (nearWrongDoor)
+		{
+		print( 8);				[	wrong door
+		}
+	else {
+		if (!nearDoor)
+			{
+			set( notCloseEnough);
+			}
+		else
+			{
+			if (!doorOpen)
+				{
+				print( 11);		[ is closed
+				}
+			else {
+				start.update( aDoor);
+				reverse.loop( aDoor, doorDone);
+				sound( s.door.close, snd.done);
+				reset( doorOpen);
+				}
+			}
+		}
+	}
+
+
+if (moving0 == 4 &&
+	court.scene == 200 &&
+	said( yes)) {
+	print( 16);
+	}
+
+if ((said( look) ||
+	said( look, room))) {
+	print( 12);					[ reception room of the court
+	}
+
+if (said( look, wall))
+	{
+	print( 17);
+	}
+
+if (said( look, door))
+	{
+	print( 18);
+	}
+
+	
+[
+:exit
+[
+
+if (doorDone) {
+	reset( doorDone);
+	stop.update( aDoor);
+
+	toggle( doorOpen);
+	if (doorOpen) {
+		ignore.blocks( ego);
+		}
+	else {
+		observe.blocks( ego);
+		}
+	}
+

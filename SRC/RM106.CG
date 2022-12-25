@@ -1,0 +1,576 @@
+[ POLICE QUEST 
+[ rm106.cg 
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. 3/20/87
+[ Last Update October 4, 1987GR
+
+%include "gamedefs"
+%include "rm106.msg"
+
+
+
+[Note:	Highest score solutions assumed, variable solutions of lower
+[		values shall be play tested from next lower level.
+[		lower levels are documented here for clarity. 4/08
+
+
+%define	level			lcl1
+%define	nextRoom			lcl2
+
+
+
+if (init.log)
+	{
+	streetScene = 93;
+	set( no.prompt.restart);
+	accept.input( );
+
+	set( leave.window);
+	print( 1);
+	if (hercules)
+		{
+		close.window();
+		}
+
+	:getLevel;
+	get.num( 2, level);
+	if (!level) {
+	    	restore.game( );
+		goto getLevel;
+		}
+	else
+		{
+		if (level == 255) {
+			quit( 1);
+			}
+		else {
+			if (level > 31)
+				{
+				restart.game();
+				goto getLevel;
+				}
+			}
+		}
+	}
+
+
+if (level == 31) {					[level 0
+	nextRoom = 1;					[rm.title
+	new.room.f( nextRoom);
+	}
+
+if (level == 1) {					[level 1
+	nextRoom = 6;					[rm.station hall begin game
+	}
+
+if (level > 1) {					[level 2	HIT THE STREET
+	nextRoom = 7;					[rm.yard
+	squad.scene = 11;				[ got out ok
+
+	progress = has.brief1;
+	set( took.notes);		 		[ contents of notebook
+
+								[ scoring
+	get( i.gun);					[ + 1
+	get( i.cuffs);
+	get( i.ammo);					[ + 4
+	get( i.case);					[ + 5
+	get( i.TB);
+	get( i.NB);
+	get( i.pen);
+	get( i.paper);					[ + 1
+	set( hasBrief1); 				[ + 5
+	get( i.PCkey);					[ + 1
+	get( i.extnd);					[ + 5
+	get( i.pr24);					[ + 4
+	get( i.wallet);				[ + cash
+	cash = 90;
+
+
+	code = 1;
+	locker.scene = 10;				[janitor.1
+	status.line.on( );
+	set( enable.menu);
+	}
+
+
+
+if (level > 2) {					[level 3		WRECK CALL
+	nextRoom = 26;					[rm.wreck
+
+	set( hasSafeCar);				[ + 1
+
+	set( in.car);
+	set( gotcha);
+	set( suspect.present);
+	
+	x = 75;
+	y = 67;
+	car.x = 76;
+	car.y = 57;
+	car.loop = 2;
+	car.cell = 0;
+	car.location = 15;
+	priority = 5;
+	current.suspect = 0;
+	street.address = 26;
+[		current.room.type = gun.room;
+	}
+
+if (level > 3) {					[level 4		COFFEE SCENE
+	nextRoom = 35;					[rm.caffine.enter
+
+
+	reset( gotcha);
+	reset( suspect.present);
+	wreck.scene = 255;				[done
+	current.suspect = 1;			[Steve
+
+	car.x = 50;
+	car.y = 115;
+	car.loop = 0;
+	car.location = 12;
+	}
+
+if (level > 4) {					[level 5		FOX STOP
+	nextRoom = 35;					[rm.caffine.enter
+
+	coffee.scene = 3;				[ Dphone, done message from hamilton
+	}
+
+if (level > 5) {					[level 6		BIKER TIME
+	random( 10, 25, car.location);	[ Some street map
+	nextRoom = car.location;
+
+	coffee.scene = 4;				[ coffee done
+
+	set( SxGaveFoxTicket);
+
+	foxScene = 199;
+
+[		set( hasfPhone);			[ + 1
+
+	set( in.car);
+	priority = 5;
+	car.x = 95;
+	car.y = 130;
+	car.loop = 0;
+
+	set( gotcha);
+	set( suspect.present);
+	current.suspect = 3;			[tit.fox
+	current.suspect.car = 3;			[tit.mobile.car;
+	suspect.speed = 1;
+	dynamic1 = 1;					[suspect.loop
+	street.address = 30;
+	x = 104;
+	y = 130;
+	suspect.x = right.edge;
+	suspect.y = 128; 
+	}
+
+if (level > 6) {					[level 7 drunk stop
+	nextRoom = 12;
+
+	foxScene = 255;
+	biker.scene = 255;				[bikers.done
+
+	set( SxComplaint);				[ + 2
+
+	[ Sweet Cheeck @biker bar
+	set( SxSCTip);				[ + 5
+
+	reset( gotcha);
+	reset( suspect.present);
+
+	set( in.car);
+	priority = 5;
+	car.x = 50;
+	car.y = 117;
+	car.loop = 0;
+	car.location = 12;
+
+	street.address = 35;
+	}
+
+if (level > 7) {					[level 8 chicken scene
+	nextRoom = 52;
+	reset( in.car);
+
+	jail.scene = 2;				[drunk.done
+	chicken.scene = 1;
+
+	set( SxDUI);					[ + 5
+	}
+
+if (level > 8) {					[level 9 Jack's blue room
+	nextRoom = 33;
+
+	chicken.scene = 255;
+	bluerm.scene = 1;
+
+	current.sonny = sonny.civies;
+	current.dead = sonny.civies.dead;
+	current.car = corvette.car;
+
+	get( i.corvkey);				[ + 2
+	  
+	set( in.car);
+	priority = 5;
+	car.x = 28;
+	car.y = 67;
+	car.loop = 2;
+	car.location = 17;
+
+	street.address = 33;
+
+[ Dump 
+	work = 47;					[ rmInSideLocker
+	put( i.gun, work);				[ - 1
+	put( i.ammo, work);				[ - 4
+	put( i.case, work);				[ - 5
+
+	work = 38;					[ rmInSidecase
+	put( i.TB, work);
+	put( i.NB, work);
+	put( i.pen, work);
+
+	work = 6;						[ station hall
+	put( i.PCkey, work);			[ - 1
+	put( i.extnd, work);			[ - 5
+
+	work = 94;					[ Stopped.Cars
+	put( i.pr24, work);				[ - 4
+	reset( hasSafeCar); 			[ - 1
+
+	}
+
+if (level > 9) {					[level 10 BRIEFING 
+	nextRoom = 6;
+	reset( in.car);
+
+	bluerm.scene = 4;
+
+	[ Birthday party
+	set( hasBDP);					[ + 2				
+
+	locker.scene = 1;
+	reset( shower.talk0);
+	reset( shower.talk1);
+	reset( shower.talk2);
+
+	current.sonny = in.uniform
+	current.dead = dead.sonny.uniform;
+	current.Sdead = 1;				[ SDdeadCop
+	current.draw = ego.draw.gun;
+	current.fire = ego.fire.gun;
+	current.car = patrol.car;
+
+[ Reload 
+	set( took.notes);		 		[ 0
+
+	get( i.gun);					[ + 1
+	get( i.ammo);					[ + 4
+	get( i.case);					[ + 5
+	get( i.TB);
+	get( i.NB);
+	get( i.pen);
+	get( i.PCkey);					[ + 1
+	get( i.extnd);					[ + 5
+	get( i.pr24);					[ + 4
+	set( hasSafeCar);				[ + 1
+[ Dump 
+	work = 47;					[ rmInSideLocker
+	put( i.corvkey, work);			[ - 2
+	}
+
+if (level > 10) {					[level 11 Felony call
+	nextRoom = 6;
+
+	progress = has.brief2;			[ + 5 second briefing
+	set( hasBrief2);
+
+	set( ETnote);					[ + 5 gambling hotel Delphoria
+
+	set( SxMemo);					[ + 2 request transfer
+	}
+
+if (level > 11) {					[level 12 at station after Hoffman
+	work = 6;
+	set( hasVIN);					[ + 2 has VIN
+	  
+	set( SxTlicense);					[ + 2	license
+	set( SxTbook);					[ + 2
+	set( SxTgun);					[ + 3
+	set( SxTdope);					[ + 5
+
+	set( hasTbooked);				[ + 5
+
+	reset( has.suspect);
+	jail.scene = 2;
+
+	}
+
+if (level > 12) {					[level 13 Morgan Introduction
+	nextRoom = 52;
+	progress = narc;
+	current.sonny = sonny.narc
+	current.dead = dead.sonny.narc;
+	current.Sdead = 10;				[ SDeadNarc
+	current.draw = sonny.narc.draw;
+[		current.fire = sonny.narc.fire;
+	current.car = cadillac.car;
+
+	work = 6;						[ rmInSideLocker
+	put( i.PCkey, work);			[ + 1
+	}
+
+if (level > 13) {					[level 14 Det. Laura Watts Introduction
+	nextRoom = 52;
+	moroff.scene = 1;				[ have.intro
+	}
+
+if (level > 14) {					[level 15 No Bail Warrent
+	nextRoom = 53;
+	narcoff.scene = 2;				[ morgan.message
+
+	get( i.Hfile);					[ + 5
+	get( i.Wposter);				[ + 2 
+	get( i.cadkey);				[ + 3
+
+	set( in.car);
+	priority = 5;
+	car.x = 74;
+	car.y = 78;
+	car.loop = 2;
+	car.location = 24;
+
+	street.address = 53;
+	}
+
+if (level > 15) {					[level 16 Rebook Hoffman as Taselli
+	nextRoom = 41;
+	jail.scene = 3;				[ Rebook set in 49
+
+	work = 55;					[ court room
+	put( i.Hfile, work);			[ + 5
+	put( i.Wposter, work);			[ + 2
+	
+
+	court.scene = 255;
+	get( i.warrant);				[ + 10
+
+	set( in.car);
+	priority = 5;
+	car.x = 100;
+	car.y = 100;
+	car.loop = 0;
+	car.location = 24;
+
+	street.address = 41;
+	}
+
+if (level > 16) {					[ level 17 Park Bust
+	nextRoom = 20;
+
+[	park.bust = 1;					[	Added by AL, August 29, 1987
+								[ removed by Greg September 20, 1987
+	jail.scene = 4;
+	put( i.warrant, work);			[ + 10
+	set( hasRebooked);
+
+	reset( hasTbooked);				[ + 5
+[		reset( hasWarrant);			[ + 10
+
+	set( in.car);
+	priority = 5;
+	car.x = 36;
+	car.y = 61;
+	car.loop = 2;
+	car.location = 20;
+
+	street.address = 7;
+	}
+
+if (level > 17) {					[level 18 Book Colby And Simms
+	nextRoom = 41;
+
+	set( LauraCar);
+	set( has.suspect);
+	set( knowsColbyName);
+	park.bust = 220;
+
+	set( SxPierson);
+
+	current.suspect = colby;
+	current.suspect.draw = colby.draw;
+	current.dead.suspect = colby.dead;
+
+	set( in.car);
+	priority = 5;
+	car.x = 90;
+	car.y = 100;
+	car.loop = 0;
+	car.location = 24;
+
+	street.address = 41;
+	}
+
+if (level > 18) {					[level 19 Return to office
+	nextRoom = 20;
+
+	set( in.car);
+	set( LauraCar);
+	reset( has.suspect);
+	current.suspect = 255;
+	park.bust = 221;
+	jail.scene = 5;				[ ???? escape/released
+
+	set( SxDopers);
+
+	priority = 5;
+	car.x = 85;
+	car.y = 100;
+	car.loop = 2;
+	car.location = 20;
+
+	street.address = 7;
+	}
+
+if (level > 19) {					[ level 20 Drunk Jack @ Blue Room
+	nextRoom = 33;
+	bluerm.scene = 10;
+
+	reset( LauraCar);
+	park.bust = 255;
+	[ scoring of morgan message
+
+	set( in.car);
+	priority = 5;
+	car.x = 28;
+	car.y = 67;
+	car.loop = 2;
+	car.location = 17;
+
+	street.address = 33;
+	}
+
+if (level > 20) {					[ level 21 @ office Speak with morgan
+	nextRoom = 52;
+	bluerm.scene = 255;
+
+	moroff.scene = 2;				[ taselli call
+	reset( in.car);
+	}
+
+if (level > 21) {					[ level 22 Sweet Cheeks at jail
+	nextRoom = 41;
+	narcoff.scene = 4;
+	moroff.scene = 5;
+	jail.scene = 6;
+
+	set( hasPrints);
+
+	car.x = 95;
+	car.y = 103;
+	car.loop = 0;
+	car.location = 24;
+	street.address = 41;
+	}
+
+if (level > 22) {					[ level 23 ID Dead Taselli
+	nextRoom = 60;
+
+	jail.scene = 7;
+	moroff.scene = 6;				[ Briefing w/ Cheeks
+	cotton.scene = 1;
+
+	set( in.car);
+	car.x = 138;
+	car.y = 144;
+	car.location = 25;
+	street.address = 60;
+	}
+
+if (level > 23) {					[ level 24 Hotel Briefing
+	nextRoom = 52;
+
+	cotton.scene = 100;
+
+	set( SxDeadTattoo);
+
+
+	reset( in.car);
+	}
+
+if (level > 24) {					[ level 25 Begin Hotel Operation
+	nextRoom = 63;
+
+	progress = 100;
+	moroff.scene = 9;
+	narcoff.scene = 4;
+
+	current.sonny = disguised.sonny;
+	current.dead = disguised.dead;
+	current.draw = disguised.draw;
+	current.car = cadillac.car;
+
+[		get( i.suit);				[ + 5 now wearing it
+	get( i.cane);					[ + 5
+	get( i.bleach);				[ + 2 + 3 when bleached
+
+[		get( i.transmitter));		[ + 5 temp move to hotel room
+	get( i.Mmoney);
+	marked.cash = 100;
+
+
+
+	set( in.car);
+	car.x = 36;
+	car.y = 80;
+	car.loop = 2;
+	car.location = 11;
+	street.address = 63;
+	}
+
+if (level > 25) {					[ level 26 call morgan
+	nextRoom = 67;					[ hotel room
+	reset( in.car);
+	set( together);
+	progress = tippedBt;
+	}
+
+if (level > 26) {					[ level 27 Go gamble One
+	nextRoom = 68;
+
+	reset( together);
+	set( gotoCab);
+	progress = game1Time;
+	}
+
+if (level > 27) {					[ level 28 Go gamble two
+	nextRoom = 68
+	get( i.transmitter);			[ + 5
+
+	progress = game2Time;
+	}
+
+if (level > 28) {					[ level 29 Go Die
+	nextRoom = 65;
+	set( bainsEgoTogether);
+	toFloor = 4;
+	}
+	
+if (level > 29) {					[ level 30 endo of game
+	nextRoom = 79;
+	set( SxUsedTrans);
+	work = 79;
+	}
+
+new.room.f( nextRoom);
+	
+
+[
+:exit
+[
+

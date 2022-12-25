@@ -1,0 +1,723 @@
+[ POLICE QUEST 
+[ rm110.cg 
+[ By:  Greg Rowland, Jim Walls, and Al Lowe
+[ For: Sierra On-Line Inc. 9/2/86
+[ Last Update October 19, 1987GR
+
+[ lgc.filedrawer
+
+
+%include "gamedefs"
+%include "rm110.msg"
+
+
+
+%define	hoffman			1
+%define	justinfletch		2
+%define	jenkins			3
+%define	malone			4
+%define	watson			5
+
+
+%define	look.at.drawer		lf0
+%define	keepHoffmanFolder	lf1
+%define	cutToLongShot		lf2
+%define	readHoffmanFolder	lf3
+
+
+%define	initFolder		lcl0
+%define	folderInHand		lcl1
+%define	lastPage			lcl3
+%define	picture			lcl4
+
+
+
+if (init.log)
+	{
+	set( NOcase);
+	load.pic( current.room);
+	picture = 111;
+	load.pic( picture);
+
+	load.view( v.filenames);
+	load.view( v.mug.shots);
+	load.view( v.tasMug);			[ drivers license
+
+	status.line.off( );
+
+	set( look.at.drawer);
+	goto noInput;
+	}
+
+
+
+if (!have.input)
+	{
+	goto noInput;
+	}
+
+set( refresh);
+
+if ((said( look, file) ||
+	said( open, file) ||
+	said( look$in, folder) ||
+	said( look$in, file, folder) ||
+	said( get, file)))
+	{
+	if (folderInHand)
+		{
+		if ( folderInHand == hoffman) {
+			set( keepHoffmanFolder);
+			}
+		else {
+			print( 178);
+			}
+		}
+	else
+		{
+		print( 171);
+		}
+	}
+
+if ((said( get, all, file) ||
+	said( get, all) ||
+	said( open, all, file)))
+	{
+	print( 172);
+	}
+
+if ((said( look, drawer) ||
+	said( look) ||
+	said( look, file, cabinet) ||
+	said( look, file, drawer)))
+	{
+	if (folderInHand)
+		{
+		set( look.at.drawer);
+		}
+	else
+		{
+		print( 174);
+		}
+	}
+
+
+if  (folderInHand &&
+    (said( previous, page, rol) ||
+	said( turn, previous, page, rol) ||
+	said( look, previous, page, rol)))
+	{
+	set( refresh);
+	print( 170);
+	--page;
+	if (!page)
+		{
+		page = lastPage;
+		}
+	}
+
+if  (folderInHand &&
+    (said( turn, page, rol) ||
+	said( look, anyword, page, rol)))
+	{
+	set( refresh);
+	print( 170);
+	++page;
+	if (page > lastPage)
+		{
+		page = 1;
+		}
+	}
+
+if ((said( close, folder) ||
+	said( close, file) ||
+	said( put, folder, drawer) ||
+	said( put, folder, back, drawer) ||
+	said( put, folder, back) ||
+	said( return, folder, drawer) ||
+	said( return, folder) ||
+	said( put, folder, away) ||
+	said( stop, looking, folder) ||
+	said( close, anyword, file) ||
+	said( close, anyword, folder) ||
+	said( close, anyword, file) ||
+	said( put, anyword, folder, drawer) ||
+	said( put, anyword, folder, back, drawer) ||
+	said( put, anyword, folder, back) ||
+	said( return, anyword, folder, drawer) ||
+	said( return, anyword, folder) ||
+	said( put, anyword, folder, away) ||
+	said( stop, looking, anyword, folder) ||
+	said( close, anyword, file)))
+	{
+	if (!folderInHand)
+		{
+		print( 173);
+		}
+	else
+		{
+		set( look.at.drawer);
+		}
+	}
+
+
+if ((said( close, file, cabinet) ||
+	said( close, cabinet) ||
+	said( close, file, drawer) ||
+	said( close, drawer)))
+	{
+	if (!folderInHand)
+		{
+		reset( preventSaveGame);
+		reset( no.script);
+		new.room.f( previous.room);
+		}
+	else
+		{
+		if (folderInHand == hoffman)
+			{
+			set( keepHoffmanFolder);
+			}
+		else
+			{
+			set( cutToLongShot);
+			scriptCycles = 4;
+			print( 177);
+			}
+		}
+	}
+
+if  (obj.in.room( i.Hfile, current.room) &&
+    (said( keep, hoffman, folder) ||
+	said( remove, hoffman, file) ||
+	said( remove, hoffman, folder) ||
+	said( get, hoffman, file)))
+	{
+	if (readHoffmanFolder)
+		{
+		set( keepHoffmanFolder);
+		}
+	else
+		{
+		initFolder = hoffman;
+		}
+	} 
+
+if  (obj.in.room( i.Hfile, current.room) &&
+    (said( look, hoffman, rol) ||
+	said( open, hoffman, rol) ||
+	said( look$in, hoffman, rol) ||
+	said( get, hoffman, rol)))
+	{
+	initFolder = hoffman;
+	}
+
+if ((said( look, justinfletch, rol) ||
+	said( open, justinfletch, rol) ||
+	said( look$in, justinfletch, rol) ||
+	said( get, justinfletch, rol)))
+	{
+	initFolder = justinfletch;
+	}
+
+if ((said( look, jenkins, rol) ||
+	said( open, jenkins, rol) ||
+	said( look$in, jenkins, rol) ||
+	said( get, jenkins, rol)))
+	{
+	initFolder = jenkins;
+	}
+
+if ((said( look, malone, rol) ||
+	said( open, malone, rol) ||
+	said( look$in, malone, rol) ||
+	said( get, malone, rol)))
+	{
+	initFolder = malone;
+	}
+
+if ((said( look, watson, rol) ||
+	said( open, watson, rol) ||
+	said( look$in, watson, rol) ||
+	said( get, watson, rol)))
+	{
+	initFolder = watson;
+	}
+
+
+[****
+:noInput
+[****
+
+if (look.at.drawer)
+	{
+	reset( look.at.drawer);
+	folderInHand = 0;
+
+	draw.pic( current.room);
+  	add.to.pic( v.filenames, 0, 1, 66, 110, 4, 4);		[	Justinfletch
+  	add.to.pic( v.filenames, 0, 2, 81, 98, 4, 4); 		[	Jenkins
+  	add.to.pic( v.filenames, 0, 3, 93, 86, 4, 4); 		[	Malone
+  	add.to.pic( v.filenames, 0, 4, 36, 75, 4, 4); 		[	Watson
+	if (obj.in.room( i.Hfile, current.room))
+		{
+	  	add.to.pic( v.filenames, 0, 0, 43, 122, 4, 4);	[	Hoffman
+		}
+
+	show.pic( );
+	set( preventSaveGame);
+	set( no.script);
+	}
+
+
+if (initFolder)
+	{
+	if (folderInHand)
+		{
+		initFolder = 0;
+		folderInHand = 0;
+		set( look.at.drawer);
+		print( 177);
+		}
+	else {
+		folderInHand = initFolder;
+		initFolder = 0;
+		start.motion( ego);
+		page = 1;
+
+		if (folderInHand == hoffman)		{lastPage = 7;}	[max pages
+		if (folderInHand == justinfletch)	{lastPage = 3;}
+		if (folderInHand == jenkins)		{lastPage = 3;}
+		if (folderInHand == malone)		{lastPage = 3;}
+		if (folderInHand == watson)		{lastPage = 2;}
+
+		draw.pic( picture);
+		show.pic( );
+		set( refresh);
+		}
+	}
+
+if  (folderInHand &&
+    (ego.dir || refresh))
+	{
+	reset( refresh);
+
+	if ((ego.dir == ego.right ||
+		ego.dir == ego.down.right ||
+		ego.dir == ego.down))
+		{
+		++page;
+		if (page > lastPage)
+			{
+			page = 1;
+			}
+		}
+
+	if ((ego.dir == ego.up ||
+		ego.dir == ego.up.right ||
+		ego.dir == ego.left))
+		{
+		--page;
+		if (!page)
+			{
+			page = lastPage;
+			}
+		}
+
+	if (ego.dir == ego.up.left)
+		{
+		page = 1;
+		}
+
+	if (ego.dir == ego.down.left)
+		{
+		page = lastPage;
+		}
+
+	start.motion( ego);
+	set.text.attribute( BG_COLOR, TEXT_COLOR);
+
+
+
+	if (folderInHand == hoffman)
+		{
+		if (page == 1)
+			{
+			set( readHoffmanFolder);
+
+			clear.text.rect(  2, 10, 20, 30, 15);
+	  		add.to.pic( v.mug.shots, 0,  4, 55, 69,  4,  4);
+			display( 11, 10,  70);
+			display( 12, 10,  19);
+			
+			display( 14, 10,  69);
+			display( 15, 10, 155);
+
+			display( 17, 10,  20);
+			display( 18, 10,  26);
+			display( 19, 10,  25);
+			}			 
+	
+		if (page == 2)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+			display(  3, 10,  27);
+			display(  4, 10,  28);
+			display(  5, 10,  30);
+			display(  6, 10,  31);
+
+			display(  8, 10,  24);
+
+			display( 10, 10,  21);
+			display( 11, 10,  22);
+			display( 12, 10,  23);
+			
+			
+			display( 15, 10,  41);
+			display( 16, 10,  33);
+			display( 17, 10,  32);
+			}
+	
+		if (page == 3)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+			display(  3, 10,  34);
+			display(  4, 10,  35);
+			display(  5, 10,  36);
+			display(  6, 10,  37);
+			display(  7, 10,  38);
+			display(  8, 10,  39);
+			display(  9, 10,  40);
+
+
+			display( 12, 10,  43);
+			display( 13, 10,  42);
+			display( 14, 10,  44);
+
+						   
+			display( 17, 10,  66);
+			display( 18, 10,  45);
+			display( 19, 10,  46);
+			}
+	
+		if (page == 4)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+			display(  3, 10,   2);
+
+			display(  5, 10,   3);
+			display(  6, 10,   4);
+			display(  7, 10,   5);
+			display(  8, 10,   6);
+			display(  9, 10,   7);
+			display( 10, 10,   8);
+			display( 11, 10,   9);
+	  		display( 12, 10,  10);
+			display( 13, 10,  11);
+			display( 14, 10,  12);
+			display( 15, 10,  13);
+			display( 16, 10,  14);
+			display( 17, 10,  15);
+			display( 18, 10,  16);
+			display( 19, 10,  17);
+			}
+		
+		if (page == 5)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+		  	display(  3, 10,  47);
+			
+			display(  5, 10,  48);
+			display(  6, 10,  49);
+			
+			display(  8, 10,  50);
+			display(  9, 10,  51);
+			
+			display( 11, 10,  52);
+			display( 12, 10,  53);
+			
+			display( 14, 10,  54);
+			}
+	
+		 if (page == 6)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+		  	display(  3, 10,  55);
+
+			display(  5, 10,  56);
+			display(  6, 10,  57);
+			
+			display(  8, 10,  60);
+
+			display( 10, 10,  61);
+			
+			display( 12, 10,  58);
+			display( 13, 10,  59);
+			
+			display( 15, 10,  62);
+			display( 16, 10,  63);
+			display( 17, 10,  64);
+			display( 18, 10,  65);
+			}
+		
+		if (page == 7)
+			{
+			draw.pic( picture);
+			show.pic( );
+
+			clear.text.rect(  2, 10, 10, 30, 15);
+			clear.text.rect( 12, 10, 20, 30, 15);
+			add.to.pic( v.tasMug, 0, 0, 42, 45,  4,  4);
+			add.to.pic( v.tasMug, 0,  1, 42, 125,  4,  4);
+
+			display(  2, 17, 146);	[ L1 Hoffman
+			display(  3, 17, 147);
+			display(  4, 17, 148);
+			display(  5, 17, 149);
+			display(  6, 17, 150);
+			display(  7, 17, 151);
+			display(  8, 17, 152);
+			display(  9, 17, 153);
+			display( 10, 17, 154);
+		
+			display( 12, 17, 155);	[ L2 Peirson
+			display( 13, 17, 156);
+			display( 14, 17, 157);
+			display( 15, 17, 158);
+			display( 16, 17, 159);
+			display( 17, 17, 160);
+			display( 18, 17, 161);
+			display( 19, 17, 153);
+			display( 20, 17, 154);
+			}
+		}
+
+
+	if (folderInHand == justinfletch)
+		{
+		if (page == 1)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+		  	add.to.pic( v.mug.shots, 0,  3, 55, 69,  4,  4);
+			display( 11, 10,  70);
+			display( 12, 10,   1);
+
+			display( 14, 10,  69);
+			display( 15, 10,  67);
+
+			display( 17, 10,  20);
+			display( 18, 10,  71);
+			display( 19, 10,  25);
+			}
+		
+		if (page == 2)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+			display(  3, 10,  72);
+			display(  4, 10,  73);
+			display(  5, 10,  74);
+			display(  6, 10,  95);
+
+
+			display(  9, 10,  75);
+			display( 10, 10,  76);
+			display( 11, 10,  77);
+			display( 12, 10,  78);
+			}
+
+		if (page == 3)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+			display(  3, 10, 105);
+			display(  5, 10, 106);
+			display(  6, 10, 107);
+			display(  7, 10, 108);
+			display(  8, 10, 109);
+			display(  9, 10, 110);
+			display( 10, 10, 111);
+			display( 11, 10, 112);
+			display( 12, 10, 113);
+			display( 13, 10, 114);
+			display( 14, 10, 115);
+			display( 15, 10, 116);
+			display( 16, 10, 117);
+			}
+		}
+
+
+	if (folderInHand == jenkins)
+		{
+		if (page == 1)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+		  	add.to.pic( v.mug.shots, 0,  2, 55, 69,  4,  4);
+			display( 11, 10,  70);
+			display( 12, 10,  79);
+			
+			display( 14, 10,  69);
+			display( 15, 10,  80);
+			
+			display( 17, 10,  20);
+			display( 18, 10,  82);
+			display( 19, 10,  68);
+			}
+
+		if (page == 2)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+			display(  3, 10,  72);
+
+			display(  5, 10,  83);
+			display(  6, 10,  84);
+			display(  7, 10,  85);
+			
+			display(  9, 10,  86);
+			display( 10, 10,  87);
+			display( 11, 10,  88);
+			}
+
+		if (page == 3)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+			display(  4, 10, 122);
+			display(  5, 10, 118);
+			display(  6, 10, 119);
+			display(  7, 10, 120);
+			display(  8, 10, 121);
+			display(  9, 10, 123);
+			display( 10, 10, 124);
+			display( 11, 10, 125);
+			display( 12, 10,  81);
+			}
+		}
+	
+
+	if (folderInHand == malone)
+		{
+		if (page == 1)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+		  	add.to.pic( v.mug.shots, 0,  1, 55, 69,  4,  4);
+			display( 11, 10,  70);
+			display( 12, 10,  89);
+
+			display( 14, 10,  69);
+			display( 15, 10,  92);
+			
+			display( 17, 10,  20);
+			display( 18, 10,  90);
+			display( 19, 10,  25);
+			}		
+
+		if (page == 2)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+			display(  3, 10,  72);
+			display(  4, 10,  91);
+			display(  5, 10,  29);
+
+						   
+			display(  8, 10,  75);
+			display(  9, 10,  93);
+			display( 10, 10,  94);
+
+
+			display( 13, 10, 126);
+			display( 14, 10, 127);
+			display( 15, 10, 128);
+			display( 16, 10, 129);
+			display( 17, 10,  18);
+			}
+
+		if (page == 3)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+			display(  3, 10, 130);
+			display(  4, 10, 131);
+			display(  5, 10, 132);
+			display(  6, 10, 133);
+			display(  7, 10, 134);
+			display(  8, 10, 135);
+			display(  9, 10, 136);
+			display( 10, 10, 143);
+			display( 11, 10, 144);
+			display( 12, 10, 145);
+			}
+
+		}
+	
+
+	if (folderInHand == watson)
+		{
+		if (page == 1)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+		  	add.to.pic( v.mug.shots, 0, 0, 55, 69,  4,  4);
+			display( 11, 10,  70);
+			display( 12, 10,  96);
+			
+			display( 14, 10,  69);
+			display( 15, 10,  97);
+			
+			display( 17, 10,  20);
+			display( 18, 10,  98);
+			display( 19, 10,  99);
+			}		
+
+		if (page == 2)
+			{
+			clear.text.rect(  2, 10, 20, 30, 15);
+			display(  4, 10,  72);
+			display(  5, 10, 100);
+			display(  6, 10, 101);
+			display(  7, 10, 102);
+			
+			
+			display( 10, 10, 103);
+			display( 11, 10, 104);
+			display( 12, 10, 137);
+			display( 13, 10, 138);
+			
+			
+			display( 16, 10, 139);
+			display( 17, 10, 140);
+			display( 18, 10, 141);
+			display( 19, 10, 142);
+			}
+		}
+	set.text.attribute( TEXT_COLOR, BG_COLOR);
+	}
+
+				
+[
+:exit
+[
+
+if (keepHoffmanFolder)
+	{
+	reset( keepHoffmanFolder);
+	reset( preventSaveGame);
+	reset( no.script);
+	get( i.Hfile);
+	if (!SxHoffmanFile)
+		{
+		set( SxHoffmanFile);
+		score += 2;
+		}
+	print( 175);
+	new.room.f( previous.room);
+	}
+
+
+if (cutToLongShot && scriptDone)
+	{
+	reset( preventSaveGame);
+	reset( no.script);
+	new.room.f( previous.room);
+	}
+
+if (controller( c.menu))
+	{
+	set( refresh);
+	}
+

@@ -1,0 +1,84 @@
+[ POLICE QUEST
+[ rm51.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 3, 1987GR
+
+[ computer.room
+
+
+%message	1
+"This is LPD's Computer Room, complete with an outdated terminal
+ just packed with valuable information."
+
+%message	2
+"\"Sonny, you should be out on duty,
+ not fooling around here in the Computer Room.\""
+
+%message	3
+"\"Sonny! Are you going to be late for briefing again?\""
+
+%message	4
+"It works much more slowly when it's \"off!\""
+
+%message	5
+"It's a beautiful day in the neighborhood!"
+
+%message	6
+"If you're feeling stuffy, take a walk outside.
+ Fresh air makes computers do funny things."
+
+%message	7
+"Mounted on the wall above the computer are two shelves holding
+ approximately nine books."
+
+%message	8
+"You could rip the armpit out of your shirt trying to reach that shelf.
+ Anyway, don't you know: no one reads computer manuals!"
+
+%message	9
+"A few outdated memos, filled with superfluous crap,
+ hang on the bulletin board!"
+
+%message	10
+"It's a typical, acoustic ceiling with florescent lighting."
+
+%message	11
+"It's a plain, gray-tiled floor."
+
+%message	12
+"Under the table you see spider webs, dust and
+ approximately eighteen wads of dried gum."
+
+%message	13
+"\"Nice talking to you, Sonny\" says Laura. \"See you later!\""
+
+%message	14
+"\"I'd like to dance with you Sonny, but, ah, not at the moment! Ok?\""
+
+%message	15
+"Laura Watts, of Narcotics, enters the room. \"Hello, Sonny,\" she says."
+
+%message	16
+"You have no use for the computer manuals."
+
+%message	17
+"On the table is an outdated (but workable) computer system,
+ complete with monitor, keyboard and printer."
+
+%message	18
+"It IS off."
+
+%message	19
+"\"Go on, Sonny. Get out of here, and get to work.\""
+
+%message	20
+"\"Come on Sonny, get to work!\""
+
+%message	21
+"The office bulletin board hangs on the left wall,
+ while the rear wall contains two bookshelves."
+
+%message	22
+"The computer's blank screen indicates it's off."
+

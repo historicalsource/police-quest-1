@@ -1,0 +1,104 @@
+[ VIEWS.TXT POLICE QUEST
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. 3/18/86
+[ Last Update September 20, 1987al
+
+
+
+%viewtext	41
+"These keys fit your government-issue, choked-down, limp-wristed patrol car."
+
+%viewtext	42
+"These keys fit your personal 'Vette.
+ It goes like a \"runaway gazelle.\""
+
+%viewtext	43
+"These keys fit your government-issue, gas- hoggin', unmarked Caddie."
+
+%viewtext	44
+"Your hand held radio extender works in conjunction with your patrol
+ car's radio, so you can talk to Dispatch while out of your car."
+
+%viewtext	45
+"Your departmental-issue, double-action,
+ .357-magnum service revolver is made of fine blue steel
+ and equipped with wooden grips.
+ It can be a cop's best friend.
+ Your handcuffs are stored in a pouch on the gunbelt."
+
+%viewtext	46
+"Your speed loader holds six rounds of ammunition for your service revolver."
+
+%viewtext	47
+"This briefcase is made of impact-resistant plastic and has the name
+ \"Sonny\" engraved in the finest, imitation gold."
+
+%viewtext	48
+"Notes:\n\n%s10\n%s11\n%s12\n"
+
+%viewtext	49
+"This pen was a gift from your Mommy and Daddy
+ when you graduated from high school."
+
+%viewtext	50
+"Your ticket book, otherwise known as a pinch book,
+ is made of genuine cowhide.
+ It is a necessary tool for traffic enforcement."
+
+%viewtext	51
+"This is today's edition of the \"Lytton Tribune.\""
+
+%viewtext	52
+"Your wallet contains $%v89.00 in cash,
+ but no credit cards (ever since you missed those payments a while back)."
+
+%viewtext	53
+"This PR-24 nightstick is a self-defense tool.
+ It develops high levels of kinetic energy via centrifugal force.
+ Special training and certification are required to use it."
+
+%viewtext	54
+"Your departmental-issue, double-action, .357-magnum service revolver is
+ made of fine blue steel and equipped with wooden grips.
+ It is presently loaded with %v34 shells.
+ Your handcuffs are stored in a pouch on the gunbelt."
+
+%viewtext	55
+"This file contains Hoffman's Arrest Report Summary,
+ Booking Slips, Evidence Forms, and miscellaneous other information."
+
+%viewtext	56
+"Isn't it ironic that one of your best pieces of evidence was found
+ in your own office?"
+
+%viewtext	57
+"With a suit like this, you could become a Leisure Suit Sonny!"
+
+%viewtext	58
+"Your custom, African-walnut, ivory-inlayed cane has a gold eagle's head
+ concealing a .22-caliber, Derringer pistol."
+
+%viewtext	59
+"Donna's Miracle Blonde\n\n
+\"Just Wet And Rinse.\""
+
+%viewtext	60
+"This envelope contains $%v170%v171|1.00 in carefully marked bills."
+
+%viewtext	61
+"Although it looks like a ball-point pen, this is really a radio transmitter."
+
+%viewtext	62
+"  \"Hotel Delphoria\n
+       Box 485\n
+ Lytton, CA  93614\n\n
+Postage Guaranteed.\""
+
+%viewtext 63
+"No Bail Warrant for:\n
+Jason Taselli."
+
+%viewtext	64
+"Your handcuffs are made of case-hardened steel and make a sweet sound
+ when you ratchet them down tightly."
+

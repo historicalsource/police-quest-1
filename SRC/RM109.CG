@@ -1,0 +1,797 @@
+[ POLICE QUEST
+[ rm109.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/4/87
+[ Last Update October 12, 1987GR
+
+[ lgc.phone
+
+
+%include "gamedefs"
+%include "rm109.msg"
+
+
+
+%define	operator			tmp12	[ thinking time
+%define	ringCount			tmp13
+%define	dialogue			tmp15	[ on True who dialed
+
+
+%define	dropPhone			tf10
+%define	theyHungUp		tf11
+%define	busySignal		tf12
+%define	gotNumber			tf13
+
+
+
+if (init.log)
+	{
+	load.sound( sPhoneRing);			[ ring
+	load.sound( sDialTone);
+	load.sound( sPhoneBusy);
+	return( );
+	}
+
+
+if (dialogue == 1) {				[ Sierra Inc.
+	print( 42);					[ Customer support
+	accept.input( );
+	++dialogue;
+	}
+
+if (dialogue == 3) {
+	print( 47);					[ bye
+	set( theyHungUp);
+	}
+
+if (dialogue == 10) {				[ operator 
+	print( 49);					[ emerg dial 911, info dial 411
+	print( 24);					[ recording
+	set( theyHungUp);
+	}
+
+if (dialogue == 20) {				[ information
+	prevent.input();
+	if (!hercules)
+		{
+		clear.lines( 23, 23, 0)
+		}
+	print( 28);
+	get.string( 3, 26, 23, 0, 13);	[ string#, prompt, row, col, max length
+	if (!hercules)
+		{
+		clear.lines( 23, 23, 0)
+		}
+	random( 20, 40, operator);
+	++dialogue;
+	}
+
+
+--operator;
+if (operator == 1)					[	Make directory assistance answer.
+	{
+	if (dialogue == 21)
+		{
+		set.string( 8, 29);			[	Sierra
+		if (compare.strings( 8, 3)) {	
+			set.string( 8, 1);
+			++dialogue;
+			}										
+		}
+
+	if (dialogue == 21)
+		{
+		set.string( 8, 30);			[	Sierra
+		if (compare.strings( 8, 3)) {	
+			set.string( 8, 1);
+			++dialogue;
+			}										
+		}
+
+	if (dialogue == 21)
+		{
+		set.string( 8, 31);			[	Sierra
+		if (compare.strings( 8, 3)) {	
+			set.string( 8, 1);
+			++dialogue;
+			}										
+		}
+
+	if (dialogue == 21)
+		{
+		set.string( 8, 33);			[	Leroy
+		if (compare.strings( 8, 3)) {
+			set.string( 8, 5);
+			++dialogue;
+			}									
+		}
+
+	if (dialogue == 21)
+		{
+		set.string( 8, 34);			[	Williams
+		if (compare.strings( 8, 3)) {				
+			set.string( 8, 6);
+			++dialogue;
+			}								
+		}
+
+	if (dialogue == 21)
+		{
+		set.string( 8, 35);			[	Cobb
+		if (compare.strings( 8, 3)) {			
+			set.string( 8, 7);
+			++dialogue;
+			}							
+		}
+
+	if (dialogue == 21)
+		{
+		set.string( 8, 36);			[	Morgan
+		if (compare.strings( 8, 3)) {		
+			set.string( 8, 8);
+			++dialogue;
+			}
+		}
+
+	if (dialogue == 21)
+		{
+		set.string( 8, 65);			[	taber
+		if (compare.strings( 8, 3)) {
+			set.string( 8, 11);
+			++dialogue;
+			}
+		}
+
+	if (dialogue == 21)
+		{
+		set.string( 8, 93);			[	lytton cab
+		if (compare.strings( 8, 3)) {
+			set.string( 8, 12);
+			++dialogue;
+			}
+		}
+
+	if (dialogue == 21)
+		{
+		set.string( 8, 94);			[	lytton cab
+		if (compare.strings( 8, 3)) {
+			set.string( 8, 12);
+			++dialogue;
+			}
+		}
+
+	if (dialogue == 21)
+		{
+		set.string( 8, 95);			[	lytton cab
+		if (compare.strings( 8, 3)) {
+			set.string( 8, 12);
+			++dialogue;
+			}
+		}
+
+	if (dialogue == 21)
+		{
+		set.string( 8, 96);			[	lytton cab
+		if (compare.strings( 8, 3)) {
+			set.string( 8, 12);
+			++dialogue;
+			}
+		}
+
+	if (dialogue == 21)
+		{
+		set.string( 8, 76);			[	lytton cab
+		if (compare.strings( 8, 3)) {
+			set.string( 8, 12);
+			++dialogue;
+			}
+		}
+
+	if (dialogue == 21)
+		{
+		set.string( 8, 10);			[	no dial
+		if (compare.strings( 8, 3)) {
+			print( 48);			[	changed you rmind
+			dialogue = 23;
+			set( dropPhone);
+			}
+		}
+
+
+	[	No match, no way!
+
+	if (dialogue == 21)				[	STILL?!
+		{
+		print( 27);				[	no listed
+		print( 24);				[	recording
+		dialogue = 23;
+		set( theyHungUp);
+		}
+	}
+
+
+if (dialogue == 22) {
+	print( 37);					[	the number is
+	reset( game.control);
+	accept.input( );
+	set( theyHungUp);
+	}
+
+if (dialogue == 30) {				[	Helen
+	if (hasfPhone) {
+		print( 51);				[	Hello
+		accept.input( );
+		++dialogue;
+		}
+	else {
+		print( 50);				[	Hum no answer 
+		set( dropPhone);
+		}
+	}
+
+if (dialogue == 40) {				[	Leroy
+	print( 50);					[	Hum no answer 
+	set( dropPhone);
+	}
+
+if (dialogue == 50) {	 			[	Williams
+	if ((!hasRebooked ||
+		progress < narc)) {
+		print( 50);				[	Hum no answer 
+		set( dropPhone);
+		}
+	else {
+		print( 55);				[	Crime Lab, Det Williams 
+		accept.input( );
+		++dialogue;
+		}
+	}
+
+if (dialogue == 60) {
+	set( theyHungUp);
+	if (moroff.scene > 6)
+		{
+		print( 113);
+		print( 114);
+		print( 115);
+		if (!SxCobbCall)
+			{
+			set( SxCobbCall);
+			score += 3;
+			}
+		}
+	else
+		{
+		print( 59);				[	Jack's at blue room
+		}
+	}
+
+if (dialogue == 70) {
+	if (current.room == 67 &&
+		progress == tippedBt) {		[	not played poker
+		print ( 60);				[	Morgan
+		accept.input( );
+		++dialogue;
+		}
+	else {
+		print( 50);				[	Hum no answer 
+		set( dropPhone);
+		}
+	}
+
+if (dialogue == 80) {				[	911
+	print( 61);					[	cop's don't call 911
+	dialogue = 0;
+	set( dropPhone);
+	}
+
+if (dialogue == 90) {	 			[	Taber
+	if (jail.scene < 2)
+		{
+		print( 50);				[	Hum no answer 
+		set( dropPhone);
+		}
+	else {
+		if (narcoff.scene < 3)
+			{
+			narcoff.scene = 3;		[	checks in jail
+			}
+		print( 66);				[	Det Taber what can I do
+		accept.input( );
+		++dialogue;
+		}
+	}
+
+if (dialogue == 92) { 				[	taber on hoffman
+	print( 68);					[	link baines
+	print( 69);					[	dropped from sight
+	print( 74);					[	I'll send mug shot
+	print( 70);					[	good luck
+	set( theyHungUp);
+	dialogue = 99;
+	}
+
+if (dialogue == 93) { 				[	taber on gun
+	print( 72);					[	weapon stolen
+	print( 73);					[	your problem
+	print( 70);					[	good luck
+	set( theyHungUp);
+	}
+			
+if (dialogue == 100) { 				[	cab company
+	if ((current.room != 67 ||
+		!together)) {
+		print( 50);				[	Hum no answer 
+		set( dropPhone);
+		}
+	else {
+		print( 78);				[	cab co where's pickup
+		accept.input( );
+		++dialogue;
+		}
+	}
+			
+
+
+[ Test Number 
+
+if (gotNumber && !ringCount) {
+	reset( gotNumber);
+
+	stop.sound( );
+	dialogue = 0;
+
+
+[	FREE CODE BUILDING BLOCK, for additional phone numbers:
+[		set.string( 8, );
+[		if (compare.strings( 8, 3)) {
+[			dialogue = ;
+[			}
+[	
+
+	set.string( 8, 1);				[	209-683-6858 Sierra Inc.
+	if (compare.strings( 8, 3)) {
+		dialogue = 1;
+		}
+
+	set.string( 8, 18);				[	209-683-6858 Sierra Inc.
+	if (compare.strings( 8, 3)) {
+		dialogue = 1;
+		}
+
+	set.string( 8, 19);				[	209-683-6858 Sierra Inc.
+	if (compare.strings( 8, 3)) {
+		dialogue = 1;
+		}
+
+	set.string( 8, 20);				[	209-683-6858 Sierra Inc.
+	if (compare.strings( 8, 3)) {
+		dialogue = 1;
+		}
+
+	set.string( 8, 21);				[	209-683-6858 Sierra Inc.
+	if (compare.strings( 8, 3)) {
+		dialogue = 1;
+		}
+
+	set.string( 8, 89);		    		[	209-683-6858 Sierra Inc.
+	if (compare.strings( 8, 3)) {
+		dialogue = 1;
+		}
+
+	set.string( 8, 90);		    		[	683-6858 Sierra Inc.
+	if (compare.strings( 8, 3)) {
+		dialogue = 1;
+		}
+
+	set.string( 8, 9);				[	operator
+	if (compare.strings( 8, 3)) {
+		dialogue = 10;
+		}
+
+	set.string( 8, 3);				[	411
+	if (compare.strings( 8, 3)) {
+		dialogue = 20;
+		}
+
+	set.string( 8, 15);				[	555-1212
+	if (compare.strings( 8, 3)) {
+		dialogue = 20;
+		}
+
+	set.string( 8, 16);				[	1555-1212
+	if (compare.strings( 8, 3)) {
+		dialogue = 20;
+		}
+
+	set.string( 8, 4);				[	Helen
+	if (compare.strings( 8, 3)) {
+		dialogue = 30;
+		}
+
+	set.string( 8, 5);				[	Leroy
+	if (compare.strings( 8, 3)) {
+		dialogue = 40;
+		}
+
+	set.string( 8, 6);				[	Williams
+	if (compare.strings( 8, 3)) {
+		dialogue = 50;
+		}
+
+	set.string( 8, 7);				[	Cobb
+	if (compare.strings( 8, 3)) {
+		dialogue = 60;
+		}
+
+	set.string( 8, 8);				[	Morgan's home
+	if (compare.strings( 8, 3)) {
+		dialogue = 40;				[	Nobody home.
+		}
+
+	set.string( 8, 13);				[	Morgan's office
+	if (compare.strings( 8, 3)) {
+		dialogue = 70;
+		}
+
+	set.string( 8, 101);			[	taber
+	if (compare.strings( 8, 3)) {
+		dialogue = 90;
+		}
+
+	set.string( 8, 102);			[	taber
+	if (compare.strings( 8, 3)) {
+		dialogue = 90;
+		}
+
+	set.string( 8, 103);			[	taber
+	if (compare.strings( 8, 3)) {
+		dialogue = 90;
+		}
+
+	set.string( 8, 104);			[	taber
+	if (compare.strings( 8, 3)) {
+		dialogue = 90;
+		}
+
+	set.string( 8, 105);			[	taber
+	if (compare.strings( 8, 3)) {
+		dialogue = 90;
+		}
+
+	set.string( 8, 106);			[	taber
+	if (compare.strings( 8, 3)) {
+		dialogue = 90;
+		}
+
+	set.string( 8, 107);			[	taber
+	if (compare.strings( 8, 3)) {
+		dialogue = 90;
+		}
+
+	set.string( 8, 108);			[	taber
+	if (compare.strings( 8, 3)) {
+		dialogue = 90;
+		}
+
+	set.string( 8, 109);			[	taber
+	if (compare.strings( 8, 3)) {
+		dialogue = 90;
+		}
+
+	set.string( 8, 110);			[	taber
+	if (compare.strings( 8, 3)) {
+		dialogue = 90;
+		}
+
+	set.string( 8, 111);			[	taber
+	if (compare.strings( 8, 3)) {
+		dialogue = 90;
+		}
+
+	set.string( 8, 12);				[	265-9222 cab co
+	if (compare.strings( 8, 3)) {
+		dialogue = 100;
+		}
+
+	set.string( 8, 2);				[	911
+	if (compare.strings( 8, 3)) {
+		dialogue = 80;
+		}
+
+	if (!dialogue)
+		{
+		print( 23);				[	Disconnected
+		set( theyHungUp);
+		}
+	}
+	
+
+
+if (aSecondPassed &&
+	snd.done &&
+	ringCount)					[	ringing
+	{
+	--ringCount;
+	sound( sPhoneRing, snd.done);
+	}
+
+if (dropPhone)
+	{
+	reset( dropPhone);
+	stop.sound();
+
+	start.motion( ego);
+	reset( game.control);
+	accept.input( );
+
+	dialogue = 0;
+	}
+
+if (theyHungUp)					[	party hung up
+	{
+	reset( theyHungUp);
+	sound( sDialTone, done);
+	reset( game.control);
+	accept.input( );
+	dialogue = 0;
+	}
+
+if (busySignal) {
+	reset( busySignal);
+	sound( sPhoneBusy, done);
+	print( 25);					[	Hum! Busy
+	stop.sound();
+	reset( game.control);
+	accept.input( );
+	}
+
+
+
+[ Text Response 
+
+if (!have.input) {
+	goto exit;
+	}
+
+if ((said( use, phone) ||			[	get number 
+	said( make, phone, call) ||
+	said( dial, phone)))
+	{
+	if (!nearPhone) {
+		set( notCloseEnough);
+		}
+	else {
+		if (dialogue) {
+			print( 38);			[	It would be rude
+			}
+		else {
+			set( game.control);
+			prevent.input( );
+			stop.motion( ego);
+
+			if (!hercules)
+				{
+				clear.lines( 23, 23, 0);
+				}
+
+			set.string( 3, 17);		[	Default is " ".
+			get.string( 3, 22, 23, 0, 14); [ string#, prompt, row, col, max length
+
+			if (!hercules)
+				{
+				clear.lines( 23, 23, 0);
+				}
+
+			set.string( 8, 10);		[	no dial
+			if (compare.strings( 8, 3)) {
+				print( 48);		[	changed you rmind
+				set( dropPhone);
+				}
+			else {
+				set( gotNumber);
+				random( 1, 4, ringCount);
+				sound( sPhoneRing, snd.done);
+				}
+			}
+		}
+	}
+
+if ((said( hang, up, rol) ||
+	said( put, phone, down) ||
+	said( drop, phone, rol)))
+	{
+	if ( !nearPhone) {
+		set( dontHaveIt);
+		}
+	else {
+		if (	dialogue) {
+			dialogue = 0;
+			set( dropPhone);
+			sound( sDialTone, done);
+			print( 41);			[ Click
+			}
+		else {
+			set( OK);
+			}
+		}
+	}
+
+if ( dialogue &&
+	(said( bye, rol) ||
+	said( anyword, bye, rol)))
+	{
+	set( dropPhone);
+	sound( sDialTone, done);
+	print( 41);			[ Click
+	}
+
+
+
+if (dialogue == 2) {
+	++dialogue;
+	if ((said( bugs) ||
+		said( anyword, bugs)))
+		{
+		print( 43);				[	Damn programmers
+		}
+	else {
+		if ((said( game) ||
+			said( anyword, game))) {
+			print( 45);			[	games
+			print( 46);			[	new games
+			}
+		else {
+			print( 44);			[	hint books
+			set( have.match);
+			}
+		}
+	}
+
+if (dialogue == 32) {
+	++dialogue;
+	print( 53);					[	Commisioners Wife
+	print( 54);					[	your in big trouble
+	print( 87);
+	print( 88);
+	set( certainDeath);
+	set( have.match);
+	}
+
+if (dialogue == 31) {
+	++dialogue;
+	print( 52);					[	Yes this is Helen.
+	set( have.match);
+	}
+
+if (dialogue == 51) {
+	if (said( sonny)) {
+		print( 56);				[	hi sonny what you need
+		++dialogue;
+		}
+	}
+
+if (dialogue == 52) {
+	if ((said( write) ||
+		said( hoffman) ||
+		said( taselli) ||
+		said( anyword, write) ||
+		said( anyword, hoffman) ||
+		said( anyword, taselli)))
+		{
+		print( 57);				[	print match
+
+		if (hasRebooked) {
+			set.string( 7, 63);
+			}
+		else {
+			set.string( 7, 64);
+			}
+
+		print( 58);				[	heard he escaped bye
+		set( theyHungUp);
+		if (!hasPrints) {
+			set( hasPrints);
+			score += 5;
+			}
+		}
+	}
+
+if (dialogue == 71) {				[	Morgan 
+	if (said( me)) {
+		++dialogue;
+		if (!SxMorganCall)
+			{
+			set( SxMorganCall);
+			score += 3;
+			}
+
+		print( 82);				[	Hello Banksten
+
+		if (progress < wonPoker1)
+			{
+			print( 83);			[	cab cheeks back
+			}
+
+		print( 84);				[	Get behind scenes
+		print( 85);				[	Backup to arrive later
+		print( 86);				[	Good Luck.
+
+		set( theyHungUp);
+		}
+	else {
+		print( 60);				[	Morgan
+		set( have.match);
+		}
+	}
+
+
+if (dialogue == 91) {
+	if ((said( hoffman) ||
+		said( anyword, hoffman) ||
+		said( anyword, anyword, hoffman) ||
+		said( taselli) ||
+		said( anyword, taselli) ||
+		said( anyword, anyword, taselli))) {
+		prevent.input( );
+		if (!SxTaber) {
+			set( SxTaber);
+			score += 5;
+			}
+
+		print( 67);				[	oh yes Jason Taselli
+		dialogue = 92;
+		}
+
+	if ((said( gun, rol) ||
+		said( anyword, gun, rol) ||
+		said( sw9764912, rol) ||
+		said( anyword, sw9764912, rol) ||
+		said( anyword, anyword, sw9764912, rol))) {
+		prevent.input( );
+		print( 71);				[	oh guns get around
+		dialogue = 93;
+		}
+	}
+
+if (dialogue == 101) {
+	if (said( hotel)) {
+		set( gotoCab);
+		print( 79);				[	car on the way
+		}
+	else {
+		print( 80);				[	call when you know were you are
+		}
+	set( theyHungUp);
+	set( have.match);
+	}
+
+
+if ((said( answer) ||
+	said( talk , on, phone) ||
+	said( answer, rol))) {
+	if ( nearPhone) {
+		print( 62);					[	print match
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+
+if (said( read, phone, number)) {
+	if ( nearPhone) {
+		print( 112);
+		}
+	else {
+		set( notCloseEnough);
+		}
+	}
+
+
+
+
+[
+:exit
+[
+

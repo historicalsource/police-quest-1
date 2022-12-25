@@ -1,0 +1,462 @@
+[ POLICE QUEST
+[ rm40.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 11/7/86
+[ Last Update October 6, 1987GR
+
+[jail.rm
+
+%include "gamedefs"
+%include "rm40.h"
+%include "rm40.msg"
+
+
+
+[	jail.scene = 0
+[	jail.scene = 1					[ drunk
+[	jail.scene = 2					[ hoffman
+[	jail.scene = 3					[ rebook hoffman as taselli
+[	jail.scene = 4;				[ park bust (colby, simms)
+[	jail.scene = 5;				[ Taselli Escaped / Released
+[	jail.scene = 6;				[ sweet.cheeks
+
+[	58	lgc.drunk.jail
+[	59	lgc.taselli.jail
+[	61	lgc.colbysimms.jail
+[	62	lgc.cheeks.jail
+
+
+[ Room setup
+
+if (init.log) {
+	
+	set( NOcase);
+	dynamic1 = 0;
+	dynamic2 = 0;
+	suspect.in.car = 0;
+	suspect.cop.car = 0;
+
+	load.pic( current.room);
+	draw.pic( current.room);
+  	discard.pic( current.room);
+
+	load.logics( 108);				[ lgc.suspect.pedaling
+	call( 108);					[ lgc.suspect.pedaling
+
+	if ((current.suspect == taselli ||
+		current.suspect == colby)) {
+		dynamic2 = 118;
+
+		load.logics.f( dynamic2);	[ lgc.suspect
+		call.f( dynamic2);			[ lgc.suspect
+		if ((!check.gun || !SxTgun)) {
+			load.view.f( current.dead);[ ego death loop
+			}
+		}
+
+	load.view( v.booking.door);
+	load.view( v.cell.door);
+	load.view( v.jailer);
+
+	load.sound( s.buzzer);
+	load.sound( s.jail.door);
+	load.sound( mBadGuy);
+
+	if ((!park.bust || park.bust == 255))
+		{
+		load.view( v.bone.crusher);
+		animate.obj( a.bone.crusher);
+		set.view( a.bone.crusher, v.bone.crusher);
+		set.loop( a.bone.crusher, 0);
+		set.priority( a.bone.crusher, 4);
+		position( a.bone.crusher, 37, 97);	 [ prisoner
+		draw( a.bone.crusher);
+		stop.update( a.bone.crusher);
+		fix.loop( a.bone.crusher);
+		}
+	
+	animate.obj( a.suspect);
+	animate.obj( a.booking.door.open);
+	animate.obj( a.booking.door.closed);
+	animate.obj( a.cell.door);
+	animate.obj( a.jailer);
+	animate.obj( a.jack);
+
+	position( ego, 139, 115);
+	position( a.suspect, 135, 115);
+
+	if (current.suspect == drunk) {
+		dynamic1 = 58;				[ lgc.drunk.jail
+		}
+	else {
+		if ((current.suspect == taselli
+		|| jail.scene < 4)) {		[ Rebooked
+			dynamic1 = 59;			[ lgc.taselli.jail
+			}
+		else {
+			if (current.suspect == colby && jail.scene < 6) {
+				dynamic1 = 61;		[lgc.colbysimms.jail
+				}
+			else {
+				if (jail.scene == 6) {
+					dynamic1 = 62;	[lgc.cheeks.jail
+					}
+				}
+			}
+		}
+
+	if (dynamic1) {
+		load.logics.f( dynamic1);
+		call.f( dynamic1);
+		}
+
+	set.view( a.booking.door.open, v.booking.door);
+	set.view( a.booking.door.closed, v.booking.door);
+	set.view( a.cell.door, v.cell.door);
+	set.view( a.jailer, v.jailer);
+
+	set.loop( a.jailer, 2);
+
+	set.cel( a.booking.door.open, 0);
+	set.cel( a.booking.door.closed, 1);
+
+	set.priority( a.booking.door.open, 11);
+	set.priority( a.booking.door.closed, 10);
+	set.priority( a.jailer, 4);
+
+	stop.cycling( a.booking.door.open);
+	stop.cycling( a.jailer);
+
+	ignore.blocks( a.suspect);
+	ignore.blocks( a.booking.door.open);
+	ignore.blocks( a.booking.door.closed);
+	ignore.objs( a.booking.door.closed);
+
+	position( a.booking.door.open, 134, 125);
+	position( a.booking.door.closed, 139, 124);
+	position( a.cell.door, 53, 104);
+	position( a.jailer, 110, 82);
+
+	draw( a.booking.door.open);
+	set( door.open);
+	ignore.blocks( ego);
+
+	
+	draw( ego);
+	draw( a.booking.door.closed);
+	draw( a.cell.door);
+	draw( a.jailer);
+
+	stop.update( a.booking.door.closed);
+	stop.update( a.cell.door);
+
+	show.pic( );
+
+	return( );
+	}
+
+
+reset( nearSuspect);
+if (posn( ego, 51, 105, 82, 115)) {
+	set( nearSuspect);
+	set( nearPerson);
+	}
+
+distance( a.suspect, ego, work);
+if (work < dist) {
+	set( nearSuspect);
+	set( nearPerson);
+	}
+
+reset( nearBCrusher);
+if (posn( ego, 18, 105, 50, 115)) {
+	set( nearBCrusher);
+	set( nearPerson);
+	}
+
+reset( nearJailer);
+if (posn( ego, 96, 105, 127, 114)) {
+	set( nearJailer);
+	set( nearPerson);
+	}
+
+[reset( nearDoor);
+[if (posn( ego, 127, 114, 159, 126)) {
+[	set( nearDoor);
+[	}
+
+reset( MiddleOfFrontRoom);
+if (!posn( ego, 01, 01, 80, 167) &&
+	!posn( ego, 127, 01, 159, 167)) {
+	set( MiddleOfFrontRoom);
+	}
+	
+
+
+if (posn( ego, 80, 131, 100, 143) && !hit.special) {
+	set.priority( ego, 11);
+	}
+else {
+	if (ego.hidden) {
+		set.priority( ego, 8);
+		}
+	else {
+		release.priority( ego);
+		}
+	}
+	
+
+
+[ Logic
+
+if (posn( ego, 140, 114, 159, 126)) {
+	accept.input( );
+	new.room( 41);					[rm.jail.yard
+	}
+
+[ Genreral use timer
+if (!typing && aSecondPassed) {
+	--wait.1;
+	--wait.2;
+	}
+
+[ Ani Timers
+
+if (moved0) {
+	reset( moved0);
+	++moving0;
+	}
+if (moved1) {
+	reset( moved1);
+	++moving1;
+	}
+if (moved2) {
+	reset( moved2);
+	++moving2;
+	}
+
+[ Generic Ego Entry
+if (!moving0) {
+	move.obj( ego, 115, 115, 1, moved0);
+	}
+
+
+
+
+[ Text
+
+[ Jail Scenes
+
+if (nearJailer) {
+	if ((said( talk) ||
+		said( talk, man, rol))) {
+		reset( conver0);
+		}
+	
+	if (!conver0) {
+		random( 8, 10, work);
+		print.f( work);			[ sell'n tickets, loose agin ect
+		set( conver0);
+		}
+	}
+
+if ((said( look, room) ||
+	said( look, jail) ||
+	said( look))) {
+	print( 16);
+	}
+
+if (said( open, door)) {
+	if (posn( ego, 127, 114, 159, 126)) {
+		if (!door.open) {
+			if (has.suspect) {
+				print( 14);		[ unfinished business
+				}
+			else {
+				set( door.work);
+				}
+			}
+		else {
+			print( 13); [ Jailer thinks, lost your marbles
+			}
+		}
+	else {
+		print( 11);				[ the jailer will open the door
+		}
+	}
+
+if (said( close, door)) {
+	print( 12);					[ the jaileer controls this door
+	}
+
+
+
+[ jailer.head
+
+get.posn( a.jailer, x, y);
+if ((jailerX != x || jailerY != y))
+	{
+	jailerX = x;
+	jailerY = y;
+	start.cycling( a.jailer);
+	}
+else	{
+	stop.cycling( a.jailer);
+	if (jail.scene != 3) {
+		work = x;
+		x -= 7;
+		work += 13;
+		if (ego.x < x) {
+			set.loop( a.jailer, 1);
+			}
+		else {
+			if (ego.x > work) {
+				set.loop( a.jailer, 0);
+				}
+			else {
+				set.loop( a.jailer, 2);
+				if ( !dockedForGun &&
+					!has.suspect &&
+					!check.gun) {
+
+					set( dockedForGun);
+
+					if ((has( i.gun) ||
+						has( i.loaded.gun))) {
+
+						print(19);
+						if (score > 1) {
+							score -= 2;
+							print(20);
+							}
+						}
+					}			
+				}
+			}
+		}
+	}
+
+
+[ jail bird
+
+if ((!park.bust || park.bust == 255)) {
+	if (nearBCrusher) {
+		if (!moving2) {
+			start.update( a.bone.crusher);
+			move.obj( a.bone.crusher, 32, 104, 1, moved2);
+			moving2 = 1;
+			}
+
+		if ((said( look, man) ||
+			said( look, prisoner)))
+			{
+			print( 21);
+			}
+
+		if ((said( talk) ||
+			said( talk, man, rol))) {
+			random( 3, 7, work);
+			print.f( work);
+			}
+		}
+	
+	if (moving2 == 2) {
+		stop.cycling( a.bone.crusher);
+		random( 3, 7, work);
+		print.f( work);			[ Hey FUZZ
+		moving2 = 3;
+		}
+	
+	if (!nearBCrusher && moving2 == 3) {
+		set.loop( a.bone.crusher, 1);
+		start.cycling( a.bone.crusher);
+		move.obj( a.bone.crusher, 32, 97, 1, moved2);
+		moving2 = 4;
+		}
+	
+	if (moving2 == 5) {
+		set.loop( a.bone.crusher, 0);
+		set( moved2);
+		}
+	
+	if (moving2 == 6) {
+		stop.update( a.bone.crusher);
+		moving2 = 0;
+		}
+	}
+	
+		
+
+[
+:exit
+[
+
+if (dynamic1) {
+	call.f( dynamic1);
+	}
+
+if ((said( lock, jail) ||
+	said( lock, door) ||
+	said( lock, prisoner) ||
+	said( lock, man))) {
+	print( 2);
+	}
+
+if ((said( book, man) ||
+	said( book, suspect) ||
+	said( book, drunk)))
+	{
+	if (has.suspect) {
+		print( 1);
+		}
+	else {
+		print( 18);
+		}
+	}
+
+
+
+[ Booking Door
+
+if (posn( ego, 125, 114, 159, 127)
+&& !has.suspect
+&& !door.open
+&& !actor.using.door) {
+	set( door.work);				[open.it
+	}
+
+if (!posn( ego, 125, 114, 159, 127) &&
+	door.open &&
+	!actor.using.door) {
+	set( door.work);				[close.it
+	}
+
+if (door.work) {
+	reset( door.work);
+	if (door.open) {
+		erase( a.booking.door.open);
+		observe.blocks( ego);
+		reset( door.open);
+		}
+	else {
+		draw( a.booking.door.open);
+		ignore.blocks( ego);
+		observe.objs( a.booking.door.open);
+		set( door.open);
+		}
+	sound( s.jail.door, snd.done);
+	}
+
+if (door.open && posn( ego, 128, 120, 150, 125)) {
+	set.priority( ego, 10);
+	}
+else {
+	release.priority( ego);
+	}
+
+if (dynamic2) {
+	call.f( dynamic2);				[ lgc.suspect
+	}
+
+call( 108);					[ lgc.suspect.pedaling
+

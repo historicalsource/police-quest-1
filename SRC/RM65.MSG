@@ -1,0 +1,76 @@
+[ POLICE QUEST
+[ rm65.msg
+[ By:  Greg Rowland, Scott Murphy, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update October 10, 1987al
+
+[ hotel hallway
+
+
+%message	1
+"You have no way to inform your backups."
+
+%message	2
+"%m5 second %m6 201 to 204 %m7"
+
+%message	3
+"%m5 third %m6 301 to 304 %m7"
+
+%message	4
+"%m5 fourth %m6 401 to 404 %m7"
+
+%message	5
+"You are standing on the"
+
+%message	6
+"floor of the Hotel Delphoria. Rooms"
+
+%message	7
+"are on this floor."
+
+%message	8
+"The door is already open."
+
+%message	9
+"You whisper a soft \"Room 404\" into your transmitter \"pen,\"
+ informing your backup unit of your location."
+
+%message	10
+"You admire the plush carpet."
+
+%message	11
+"The door appears to be made of heavy wood."
+
+%message	12
+"You try, but the door is locked."
+
+%message	13
+"You don't have the key to this door."
+
+%message	14
+"You knock, and hear a muffled voice from within say,
+ \"Mind your own business, dude!\""
+
+%message	15
+"No one answers."
+
+%message	16
+"You knock and hear nothing but screaming obscenities from within."
+
+%message	17
+"After you knock, you hear footsteps, then silence."
+
+%message	18
+"Your knock brings the reply,
+ \"You can knock till your knuckles bleed, but I ain't opening the door!\""
+
+%message	19
+"Clinking glasses and loud laughter drown out your knock."
+
+%message	21
+"An interesting manuever on your part has separated you from your suspect.
+ Now what will you do?"
+
+%message	22
+"You hear a hollow, ringing sound."
+

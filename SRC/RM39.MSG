@@ -1,0 +1,91 @@
+[ POLICE QUEST
+[ rm39.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 7/30/86
+[ Last Update September 21, 1987al
+
+[ locker.room	dynamic 1
+
+
+%message	1
+"\"Say, Sonny, do you know how to tell the difference between an oral
+ and rectal thermometer?\""
+
+%message	2
+"\"By the taste.\""
+
+%message	3
+"\"Well, see you later.
+ I'm late for a date to raise my caffeine level.\""
+
+%message	4
+"\"Can you believe that Morris Fudley?
+ Every day he showers here, 'cause he's too cheap to shower at home!\""
+
+%message	5
+"\"Boy, what a hangover I have!
+ I shoulda left the Blue Room earlier last night.\""
+
+%message	6
+"\"Do you know the best thing about this shower, Sonny?\""
+
+%message	7
+"\"It's free.\""
+
+%message	8
+"\"Too bad you have to work, Sonny,\" says Fudley.
+ \"I'm 10-10. It's beer time for me.\""
+
+%message	9
+"\"You'd better get on your beat before Sergeant Dooley catches you
+ blowing off department time.\""
+
+%message	10
+"This is the Lytton PD locker room."
+
+%message	11
+"\"You wouldn't enjoy it. I'd just lie there!\""
+
+%message	12
+"\"Sonny, I heard a rumor that Sweet Cheeks Marie has the hots for you!
+ You'd better watch your step 'cause those hookers will put their hooks
+ in you before you know it!\""
+
+%message	13
+"\"Speaking of girls, that 'Hoochie Coochie' Hannah is sure one spicy dancer!
+ She drove the guys completely crazy!\""
+
+%message	14
+"\"Boy, you can sure tell there's a full moon out!
+ You should see the nut I arrested last night
+ for being under the influence of drugs."
+
+%message	15
+"\"This dude was so wired, he was nude break-dancing on loose gravel.
+ His back looked like raw meat!\""
+
+%message	16
+"\"Can you believe that Morris Fudley?
+ I hid all the soap and he's still in there showering.
+ I wonder if his wife goes down to the river to bathe?\""
+
+%message	17
+"\"I'm going to write a memo about this hot water situation.
+ This place never has enough hot water!
+ I, for one,
+ think we should be able to take longer, more comfortable showers.\""
+
+%message	18
+"\"You know as well as I do: Dooley doesn't like cops who waste time.\""
+
+%message	19
+"\"Hey, man! What're you staring at?!\""
+
+%message	20
+"\"Isn't it nice how affirmative action has helped guys like you
+ get on the force?\""
+
+%message	21
+"That's good, old \"Morris Fudley.\"
+ He's so tight, when he walks, he squeaks!"
+

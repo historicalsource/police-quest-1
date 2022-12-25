@@ -1,0 +1,174 @@
+[ POKER QUEST 
+[ rm90.cg
+[ By:  Ken Williams, Greg Rowland, and Al Lowe
+[ For: Sierra On-Line Inc. 11/17/86
+[ Last Update August 14, 1987al
+
+%include "rm75.h"
+
+
+[ computer.bet -- hands 1-3 need the computer to bet for them
+
+
+
+%define	feeling			work9
+	%define	ecstatic		0
+	%define	happy		1
+	%define	ok			2
+	%define	pissed		3
+
+%define	my.bet			work10
+	%define	pass			0
+	%define	call.bet		1
+	%define	raise		2
+	%define	fold			3
+	%define	bet.alittle	4
+
+
+
+raise.amount = 0;
+current.bet = 0;
+
+if (current.hand > h.2kind)
+	{
+	feeling = ecstatic;
+	}
+else
+	{
+	if (current.hand == h.2kind)
+		{
+		if (current.kicker > 9)
+			{
+			feeling = happy;
+			}
+		else
+			{
+			feeling = ok;
+			}
+		}
+	else
+		{
+		if (current.kicker == ace && bet.status == no.bet)
+			{
+			feeling = ok;
+			}
+		else
+			{
+			feeling = pissed;
+			}
+		}
+	}
+
+
+if (bet.status == no.bet)
+	{
+	if ((feeling == happy || feeling == ecstatic))
+		{
+		my.bet = raise;
+		}
+	else
+		{
+		if (feeling == ok)
+			{
+			my.bet = bet.alittle;
+			}
+		else
+			{
+			my.bet = pass;
+			}
+		}
+	}
+else
+	{
+	if (bet.status == normal.bet)
+		{
+		if ((feeling == happy || feeling == ecstatic))
+			{
+			my.bet = raise;
+			}
+		else
+			{
+			if (feeling == ok)
+				{
+				if (amount.to.call < 3)
+					{
+					my.bet = call.bet;
+					}
+		  		else
+					{
+					my.bet = fold;
+					}
+				}
+			else
+				{
+				my.bet = fold;
+				}
+			}
+		}
+	else
+		{
+		if (feeling == pissed)
+			{
+			my.bet = fold;
+			}
+		else
+			{
+			if (feeling == ok)
+				{
+				random( 0, 20, work);
+				if (work == 0)
+					{
+					my.bet = fold;
+					}
+				else
+					{
+					my.bet = call.bet;
+					}
+				}
+			else
+				{
+				my.bet = call.bet;
+				}
+			}
+		}
+	}
+
+
+
+[	Now that we know what we'd like to do, what are we gonna do???
+if (my.bet == raise)
+	{
+	current.bet = amount.to.call;
+	if (feeling == ecstatic)
+		{
+		random( 2, 3, raise.amount);
+		}
+	else
+		{
+		random( 1, 3, raise.amount);
+		}
+	current.bet += raise.amount;
+	if (bet.status == no.bet)
+		{
+		raise.amount = 0;
+		}
+	}
+else
+	{
+	if( my.bet == call.bet)
+		{
+		current.bet = amount.to.call;
+		}
+	else
+		{
+		if (my.bet == bet.alittle)
+			{
+			random( 1, 2, raise.amount);
+			}
+		else
+			{
+			current.bet = 0;
+			}
+		}
+	}
+

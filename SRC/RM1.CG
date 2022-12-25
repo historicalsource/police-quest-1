@@ -1,0 +1,728 @@
+[ POLICE QUEST 
+[ rm1.cg 
+[ By:  Greg Rowland,  Scott Murphy and Jim Walls
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 23, 1987al
+
+[logics for room 1 -- Banner screen
+
+%include "gamedefs"
+%include "rm1.msg"
+
+
+
+%define	nameDelay			3		[	Seconds names park on badge.
+
+%define	y1Names			100
+%define	y2Names			76
+%define	y3Names			53
+
+%define	y1Credits			111
+%define	y2Credits			87
+%define	y3Credits			64
+
+
+%define	cStory			0	[	V12, Loop, Cell & X-Coord. equates
+%define	lStory			0
+%define	xStory			40
+%define	cProgramming		1
+%define	lProgramming		0
+%define	xProgramming		50
+%define	cGraphics			2
+%define	lGraphics			0
+%define	xGraphics			58
+%define	cMusic			3
+%define	lMusic			0
+%define	xMusic			66
+
+%define	cJim				0	[	V12, Loop, Cell & X-Coord. equates
+%define	lJim				1
+%define	xJim				50
+%define	cGreg			1
+%define	lGreg			1
+%define	xGreg			41
+%define	cScott			2
+%define	lScott			1
+%define	xScott			41
+%define	cKen				3
+%define	lKen				1
+%define	xKen				43
+%define	cAl				4
+%define	lAl				1
+%define	xAl				56
+
+%define	cMark			0	[	V12, Loop, Cell & X-Coord. equates
+%define	lMark			2
+%define	xMark			46
+%define	cJerry			1
+%define	lJerry			2
+%define	xJerry			45
+%define	cMarg			2
+%define	lMarg			2
+%define	xMarg			36
+
+%define	cAnd				0	[	V12, Loop, Cell & X-Coord. equates
+%define	lAnd				3
+%define	cBy				1
+%define	lBy				3
+%define	cWritten			2
+%define	lWritten			3
+
+%define	cLytton			0	[	V12, Loop, Cell & X-Coord. equates
+%define	lLytton			4
+%define	cPolice			1
+%define	lPolice			4
+%define	cLogo			2
+%define	lLogo			4
+
+%define	cDevelopment		0	[	V16, Loop, Cell & X-Coord. equates
+%define	lDevelopment		0
+%define	xDevelopment		35
+
+%define	cBobbit			0	[	V16, Loop, Cell & X-Coord. equates
+%define	lBobbit			1
+%define	xBobbit			46
+%define	cChris			1
+%define	lChris			1
+%define	xChris			53
+%define	cJeff			2
+%define	lJeff			1
+%define	xJeff			36
+
+
+%define	bulletDone		lf0
+
+
+%define	picture			lcl0
+
+
+%object	aBullet1			1
+%object	aBullet2			2
+%object	aBullet3			3
+%object	aBullet4			4
+%object	aBullet5			5
+%object	aBullet6			6
+%object	aBullet7			7
+%object	aSubTitle1		8
+%object	aSubTitle2		9
+%object	aLogo			10
+%object	aNames			11
+%object	aCredits			12
+
+
+
+if (init.log) {
+	set.horizon( 1);
+	animation.interval = FAST;		[	But, not FASTEST!
+	reset( enable.menu);
+	reset( snd.done);				[	in case of we loop here from rm1
+
+	load.sound( mCredits);
+	load.sound( mFanfare1);
+	load.sound( mFanfare2);
+	load.sound( s.bullets);
+
+	load.view( v.titleBullets);
+	load.view( v.subtitle);
+	load.view( v.title1);
+	load.view( v.title2);
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	picture = 2;
+	load.pic( picture);
+
+	animate.obj( aSubTitle1);
+	animate.obj( aSubTitle2);
+	animate.obj( aBullet1);
+	animate.obj( aBullet2);
+	animate.obj( aBullet3);
+	animate.obj( aBullet4);
+	animate.obj( aBullet5);
+	animate.obj( aBullet6);
+	animate.obj( aBullet7);
+	animate.obj( aNames);
+	animate.obj( aLogo);
+	animate.obj( aCredits);
+
+	set.view( aSubTitle1, v.subtitle);
+	set.view( aSubTitle2, v.subtitle);
+	set.view( aBullet1, v.titleBullets);
+	set.view( aBullet2, v.titleBullets);
+	set.view( aBullet3, v.titleBullets);
+	set.view( aBullet4, v.titleBullets);
+	set.view( aBullet5, v.titleBullets);
+	set.view( aBullet6, v.titleBullets);
+	set.view( aBullet7, v.titleBullets);
+	set.view( aLogo, v.title1);
+	set.view( aNames, v.title1);
+	set.view( aCredits, v.title1);
+
+	ignore.objs( aSubTitle1);
+	ignore.objs( aSubTitle2);
+	ignore.objs( aLogo);
+	ignore.objs( aNames);
+	ignore.objs( aCredits);
+
+	position( aSubTitle1, 33, 167);
+	position( aSubTitle2, 46, 163);
+
+
+	random( 5, 145, x);
+	random( 15, 135, y);
+	position.f( aBullet1, x, y);
+
+	random( 5, 145, x);
+	random( 15, 135, y);
+	position.f( aBullet2, x, y);
+
+	random( 5, 145, x);
+	random( 15, 135, y);
+	position.f( aBullet3, x, y);
+
+	random( 5, 145, x);
+	random( 15, 135, y);
+	position.f( aBullet4, x, y);
+
+	random( 5, 145, x);
+	random( 15, 135, y);
+	position.f( aBullet5, x, y);
+
+	random( 5, 145, x);
+	random( 15, 135, y);
+	position.f( aBullet6, x, y);
+
+	random( 5, 145, x);
+	random( 15, 135, y);
+	position.f( aBullet7, x, y);
+
+
+	position( aLogo, 71, 85);
+
+	set.priority( aSubTitle1, 15);
+	set.priority( aSubTitle2, 15);
+	set.priority( aLogo, 4);
+	set.priority( aNames, 5);
+	set.priority( aCredits, 5);
+
+	stop.cycling( aLogo);
+	stop.cycling( aNames);
+	stop.cycling( aCredits);
+
+	set.loop( aSubTitle1, 0);
+	set.loop( aSubTitle2, 1);
+	set.loop( aLogo, lLogo);
+
+	fix.loop( aSubTitle1);
+	fix.loop( aSubTitle2);
+
+	cycle.time( aSubTitle1, two);
+	cycle.time( aSubTitle2, two);
+
+	step.time( aSubTitle1, two);
+
+	set.cel( aSubTitle1, 0);
+	set.cel( aSubTitle2, 0);
+	set.cel( aBullet1, 0);
+	set.cel( aBullet2, 0);
+	set.cel( aBullet3, 0);
+	set.cel( aBullet4, 0);
+	set.cel( aBullet5, 0);
+	set.cel( aBullet6, 0);
+	set.cel( aBullet7, 0);
+	set.cel( aLogo, cLogo);
+
+	if (!hercules)
+		{
+		clear.lines( 22, 24, BG_COLOR);
+		}
+
+	scriptCycles = 5;				[	Delay music just a little.
+
+	show.pic( );
+	return( );
+	}
+
+
+
+[ Logics 
+
+if (bulletDone)					[	Bullet has hit end.of.loop...
+	{
+	reset( bulletDone);
+	random( 3, 15, scriptCycles);		[	...so pick a random delay.
+	}
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+	if (script == 1)
+		{
+		sound( mFanfare1, scriptDone);
+		}
+
+	if (script > 1 && script < 9)
+		{
+		sound( s.bullets, done);
+		}
+
+	if (script == 2)
+		{
+		draw( aBullet1);
+		end.of.loop( aBullet1, bulletDone);
+		}
+
+	if (script == 3)
+		{
+		draw( aBullet2);
+		end.of.loop( aBullet2, bulletDone);
+		}
+	
+	if (script == 4)
+		{
+		draw( aBullet3);
+		end.of.loop( aBullet3, bulletDone);
+		}
+	
+	if (script == 5)
+		{
+		draw( aBullet4);
+		end.of.loop( aBullet4, bulletDone);
+		}
+	
+	if (script == 6)
+		{
+		draw( aBullet5);
+		end.of.loop( aBullet5, bulletDone);
+		}
+	
+	if (script == 7)
+		{
+		draw( aBullet6);
+		end.of.loop( aBullet6, bulletDone);
+		}
+	
+	if (script == 8)
+		{
+		draw( aBullet7);
+		end.of.loop( aBullet7, bulletDone);
+		}
+
+	if (script == 9)
+		{
+		draw( aSubTitle1);
+		end.of.loop( aSubTitle1, scriptDone);
+		sound( mFanfare2, done);
+		}
+
+	if (script == 10)
+		{
+		stop.cycling( aSubTitle1);
+		move.obj( aSubTitle1, 33, 147, 0, scriptDone);
+		}
+
+	if (script == 11)
+		{
+		stop.update( aSubTitle1);
+		draw( aSubTitle2);
+		end.of.loop( aSubTitle2, scriptDone);
+		}
+
+	if (script == 12)
+		{
+		scriptTimer = 3;
+		}
+
+	if (script == 13)
+		{
+		if (hercules)
+			{
+			script = 14;
+			}
+		else
+			{
+			display( 23, 3, 1);
+			display( 24, 4, 2);
+			scriptTimer = 3;
+			}
+		}
+
+	if (script == 14)
+		{
+		draw.pic( picture);			[ THE BADGE 
+
+		erase( aBullet1);
+		erase( aBullet2);
+		erase( aBullet3);
+		erase( aBullet4);
+		erase( aBullet5);
+		erase( aBullet6);
+		erase( aBullet7);
+		erase( aSubTitle1);
+		erase( aSubTitle2);
+
+		add.to.pic( v.title1, lLytton, cLytton, 55,  43, 8, 8);
+		add.to.pic( v.title1, lPolice, cPolice, 61, 122, 8, 8);
+
+		draw( aLogo);
+		stop.update( aLogo);
+
+		if (!hercules)
+			{
+			clear.lines( 22, 24, 0);
+			}
+		show.pic( );
+
+		scriptTimer = 3;
+		sound( mCredits, snd.done);
+		}
+
+
+	if (script == 15)				[	JIM
+		{
+		set.loop( aNames, lJim);
+		set.loop( aCredits, lStory);
+
+		fix.loop( aNames);
+		fix.loop( aCredits);
+		
+		set.cel( aNames, cJim);
+		set.cel( aCredits, cStory);
+
+		position( aNames, xJim, y1Names);
+		position( aCredits, xStory, y1Credits);
+
+		draw( aNames);
+		draw( aCredits);
+
+		move.obj( aNames, xJim, y2Names, 1, done);
+		move.obj( aCredits, xStory, y2Credits, 1, scriptDone);
+		}
+
+	if (script == 16)
+		{
+		scriptTimer = nameDelay;
+		}
+
+	if (script == 17)
+		{
+		move.obj( aNames, xJim, y3Names, 1, done);
+		move.obj( aCredits, xStory, y3Credits, 1, scriptDone);
+		}
+
+
+	if (script == 18)				[	GREG 
+		{
+		set.loop( aNames, lGreg);
+		set.loop( aCredits, lProgramming);
+
+		set.cel( aNames, cGreg);
+		set.cel( aCredits, cProgramming);
+
+		reposition.to( aNames, xGreg, y1Names);
+		reposition.to( aCredits, xProgramming, y1Credits);
+
+		move.obj( aNames, xGreg, y2Names, 1, done);
+		move.obj( aCredits, xProgramming, y2Credits, 1, scriptDone);
+		}
+
+	if (script == 19)
+		{
+		scriptTimer = nameDelay;
+		}
+
+	if (script == 20)
+		{
+		move.obj( aNames, xGreg, y3Names, 1, done);
+		move.obj( aCredits, xProgramming, y3Credits, 1, scriptDone);
+		}
+
+
+	if (script == 21)				[	AL
+		{
+		set.loop( aNames, lAl);
+		set.loop( aCredits, lProgramming);
+
+		set.cel( aNames, cAl);
+		set.cel( aCredits, cProgramming);
+
+		reposition.to( aNames, xAl, y1Names);
+		reposition.to( aCredits, xProgramming, y1Credits);
+
+		move.obj( aNames, xAl, y2Names, 1, done);
+		move.obj( aCredits, xProgramming, y2Credits, 1, scriptDone);
+		}
+
+	if (script == 22)
+		{
+		scriptTimer = nameDelay;
+		}
+
+	if (script == 23)
+		{
+		move.obj( aNames, xAl, y3Names, 1, done);
+		move.obj( aCredits, xProgramming, y3Credits, 1, scriptDone);
+		}
+
+
+	if (script == 24)				[	SCOTT
+		{
+		set.loop( aNames, lScott);
+		set.loop( aCredits, lProgramming);
+
+		set.cel( aNames, cScott);
+		set.cel( aCredits, cProgramming);
+
+		reposition.to( aNames, xScott, y1Names);
+		reposition.to( aCredits, xProgramming, y1Credits);
+
+		move.obj( aNames, xScott, y2Names, 1, done);
+		move.obj( aCredits, xProgramming, y2Credits, 1, scriptDone);
+		}
+
+	if (script == 25)
+		{
+		scriptTimer = nameDelay;
+		}
+
+	if (script == 26)
+		{
+		move.obj( aNames, xScott, y3Names, 1, done);
+		move.obj( aCredits, xProgramming, y3Credits, 1, scriptDone);
+		}
+
+
+	if (script == 27)				[	KEN 
+		{
+		set.loop( aNames, lKen);
+		set.loop( aCredits, lProgramming);
+
+		set.cel( aNames, cKen);
+		set.cel( aCredits, cProgramming);
+
+		reposition.to( aNames, xKen, y1Names);
+		reposition.to( aCredits, xProgramming, y1Credits);
+
+		move.obj( aNames, xKen, y2Names, 1, done);
+		move.obj( aCredits, xProgramming, y2Credits, 1, scriptDone);
+		}
+
+	if (script == 28)
+		{
+		scriptTimer = nameDelay;
+		}
+
+	if (script == 29)
+		{
+		move.obj( aNames, xKen, y3Names, 1, done);
+		move.obj( aCredits, xProgramming, y3Credits, 1, scriptDone);
+		}
+
+
+	if (script == 30)				[	MARK 
+		{
+		set.loop( aNames, lMark);
+		set.loop( aCredits, lGraphics);
+
+		set.cel( aNames, cMark);
+		set.cel( aCredits, cGraphics);
+
+		reposition.to( aNames, xMark, y1Names);
+		reposition.to( aCredits, xGraphics, y1Credits);
+
+		move.obj( aNames, xMark, y2Names, 1, done);
+		move.obj( aCredits, xGraphics, y2Credits, 1, scriptDone);
+		}
+
+	if (script == 31)
+		{
+		scriptTimer = nameDelay;
+		}
+
+	if (script == 32)
+		{
+		move.obj( aNames, xMark, y3Names, 1, done);
+		move.obj( aCredits, xGraphics, y3Credits, 1, scriptDone);
+		}
+
+	
+	if (script == 33)				[	Jerry 
+		{
+		set.loop( aNames, lJerry);
+		set.loop( aCredits, lGraphics);
+
+		set.cel( aNames, cJerry);
+		set.cel( aCredits, cGraphics);
+
+		reposition.to( aNames, xJerry, y1Names);
+		reposition.to( aCredits, xGraphics, y1Credits);
+
+		move.obj( aNames, xJerry, y2Names, 1, done);
+		move.obj( aCredits, xGraphics, y2Credits, 1, scriptDone);
+		}
+
+	if (script == 34)
+		{
+		scriptTimer = nameDelay;
+		}
+
+	if (script == 35)
+		{
+		move.obj( aNames, xJerry, y3Names, 1, done);
+		move.obj( aCredits, xGraphics, y3Credits, 1, scriptDone);
+		}
+
+	
+	if (script == 36)				[	MARG 
+		{
+		set.loop( aNames, lMarg);
+		set.loop( aCredits, lMusic);
+
+		set.cel( aNames, cMarg);
+		set.cel( aCredits, cMusic);
+
+		reposition.to( aNames, xMarg, y1Names);
+		reposition.to( aCredits, xMusic, y1Credits);
+
+		move.obj( aNames, xMarg, y2Names, 1, done);
+		move.obj( aCredits, xMusic, y2Credits, 1, scriptDone);
+		}
+
+	if (script == 37)
+		{
+		scriptTimer = nameDelay;
+		}
+
+	if (script == 38)
+		{
+		move.obj( aNames, xMarg, y3Names, 1, done);
+		move.obj( aCredits, xMusic, y3Credits, 1, scriptDone);
+		}
+
+	
+	if (script == 39)				[	
+		{
+		script = 42;
+		}
+
+	if (script == 40)
+		{
+		}
+
+	if (script == 41)
+		{
+		}
+
+
+	if (script == 42)				[	JEFF 
+		{
+		set.view( aNames, v.title2);
+		set.view( aCredits, v.title2);
+
+		set.loop( aNames, lJeff);
+		set.loop( aCredits, lDevelopment);
+
+		set.cel( aNames, cJeff);
+		set.cel( aCredits, cDevelopment);
+
+		reposition.to( aNames, xJeff, y1Names);
+		reposition.to( aCredits, xDevelopment, y1Credits);
+
+		move.obj( aNames, xJeff, y2Names, 1, done);
+		move.obj( aCredits, xDevelopment, y2Credits, 1, scriptDone);
+		}
+
+	if (script == 43)
+		{
+		scriptTimer = nameDelay;
+		}
+
+	if (script == 44)
+		{
+		move.obj( aNames, xJeff, y3Names, 1, done);
+		move.obj( aCredits, xDevelopment, y3Credits, 1, scriptDone);
+		}
+
+
+	if (script == 45)				[	CHRIS 
+		{
+		set.loop( aNames, lChris);
+		set.loop( aCredits, lDevelopment);
+
+		set.cel( aNames, cChris);
+		set.cel( aCredits, cDevelopment);
+
+		reposition.to( aNames, xChris, y1Names);
+		reposition.to( aCredits, xDevelopment, y1Credits);
+
+		move.obj( aNames, xChris, y2Names, 1, done);
+		move.obj( aCredits, xDevelopment, y2Credits, 1, scriptDone);
+		}
+
+	if (script == 46)
+		{
+		scriptTimer = nameDelay;
+		}
+
+	if (script == 47)
+		{
+		move.obj( aNames, xChris, y3Names, 1, done);
+		move.obj( aCredits, xDevelopment, y3Credits, 1, scriptDone);
+		}
+
+
+	if (script == 48)				[	BOB 
+		{
+		set.loop( aNames, lBobbit);
+		set.loop( aCredits, lDevelopment);
+
+		set.cel( aNames, cBobbit);
+		set.cel( aCredits, cDevelopment);
+
+		reposition.to( aNames, xBobbit, y1Names);
+		reposition.to( aCredits, xDevelopment, y1Credits);
+
+		move.obj( aNames, xBobbit, y2Names, 1, done);
+		move.obj( aCredits, xDevelopment, y2Credits, 1, scriptDone);
+		}
+
+	if (script == 49)
+		{
+		scriptTimer = nameDelay;
+		}
+
+	if (script == 50)
+		{
+		move.obj( aNames, xBobbit, y3Names, 1, done);
+		move.obj( aCredits, xDevelopment, y3Credits, 1, scriptDone);
+		}
+
+
+	if (script == 51)				[	WE'RE DONE!
+		{
+		stop.sound();
+		new.room( 1);				[	Loop back around to do all again
+		}
+	}
+
+
+if (snd.done)
+	{
+	sound( mCredits, snd.done);
+	}
+
+
+if (have.key())
+	{
+	if (!hercules)
+		{
+		clear.lines( 22, 24, BG_COLOR);
+		}
+	stop.sound( );
+	new.room( 6);					[rm.hqhall1
+	}
+

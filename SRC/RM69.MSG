@@ -1,0 +1,76 @@
+[ POLICE QUEST
+[ rm69.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update August 21, 1987al
+
+[ Messages for room 69 - store room in hotel
+
+
+%message 1
+"You look down and see a gray-tiled floor."
+
+%message 2
+"It is already open."
+
+%message 3
+"Woody raps a staccato rhythm on the door."
+
+%message 4
+"A panel in the door slides open.
+ Woody whispers through the opening, \"I've got a new player for you.\""
+
+%message 5
+"\"Go away!\" yells a voice from inside the door."
+
+%message 6
+"The door is securely locked."
+
+%message 7
+"\"If you'll just step aside, I'll get back to my bar.\""
+
+%message 8
+"The panel opens once again.
+ Woody explains to the mysterious person behind the door,
+ \"I've brought a player for the big game in the back room.\""
+
+%message 9
+"This time Woody says he'll escort you to the card room."
+
+%message 10
+"\"Come over here,\" says Woody.
+ \"I have to frisk you before you can get in.
+ We don't want no trouble around here.\""
+
+%message 11
+"\"Come over here, please, Whitey,\" says Woody.
+ \"I have to frisk you again.
+ It's just a formality, you understand, sir.\""
+
+%message 12
+"Woody tells you, \"Ok, Whitey. Have a good time!\""
+
+%message 13
+"This room is lit by a shaded lamp hanging from the ceiling."
+
+%message 14
+"You don't need it."
+
+%message  15
+"You surmise by the stacked boxes that this is a storage room."
+
+%message 16
+"They appear to be boxes for shipping booze."
+
+%message 17
+"The door appears to have a sliding window."
+
+%message 18
+"Sure enough, the boxes are full of booze."
+
+%message 19
+"You're on a wild goose chase.
+ Further investigation here is a waste of time!"
+
+%message 20 
+"You try, but the window is locked from the inside."

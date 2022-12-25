@@ -1,0 +1,26 @@
+[ POLICE QUEST
+[ rm80.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. September 17, 1987
+[ Last Update September 17, 1987GR
+
+
+[ lgcResidential
+
+
+
+
+%message 1
+"Don't bother. You'd just be spinning your wheels!"
+
+%message 2
+"There is no answer."
+
+%message 3
+"The door is locked."
+
+%message 4
+"Someday you'd like to own a home in a neighboorhood like this."
+
+%message 5
+"This is private property. You have no business here."

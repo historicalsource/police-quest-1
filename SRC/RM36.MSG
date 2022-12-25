@@ -1,0 +1,328 @@
+[ POLICE QUEST
+[ rm36.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 2/13/87
+[ Last Update September 25, 1987GR
+
+[rm.caffeine.inside
+
+
+%message	1
+"Carol says,
+ \"Hello, Sonny! Have a seat. I'll bring your daily coffee fix right over.\""
+
+%message	2
+"Can't you see someone is already sitting here?"
+
+%message	3
+"Come on now, you don't want to sit on the floor."
+
+%message	4
+"Where?!"
+
+%message	5
+"Carol yells at you from across the room.
+ \"Officer Bonds, there's a Detective Hamilton on the phone for you.\""
+
+%message	6
+"You take the phone and hear,
+ \"Bonds, this is Detective Hamilton.
+ We identified the 187 victim in the car as Lonny West,
+ a local, small-time drug dealer.
+ Believe it or not,
+ he's the second small-timer to get his ticket punched in the last two weeks.\""
+
+%message	7
+"\"I just wanted you to know about West since you worked the scene.
+ Gotta run, got another call waiting.
+ Don't spend the whole day drinking coffee!\""
+
+%message	8
+"Steve says,
+ \"Well, guess it's time to get back to the business of crime fighting!\""
+
+%message	9
+"Carol has rigged this old pay phone so local calls are free."
+
+%message	10
+"This is your favorite coffee shop.
+ Carol, the busy, but friendly, waitress, makes the strongest coffee in town.
+ There is a menu on the left wall and a telephone on the far wall.
+ The restroom is down the hall from the phone."
+
+%message	11
+"Carol sets your coffee down and says,
+ \"Here you go, Big Boy. One caffeine I.V.\""
+
+%message	12
+"There's lots of ketchup, pickles, onion, and fries on the side --
+ but there's not a lot of meat!"
+
+%message	13
+"Carol is a very busy woman."
+
+%message	14
+"You are now in the restroom."
+
+%message	15
+"Steve says,
+ \"You'd better not keep Detective Hamilton waiting on the phone, boy.\""
+
+%message	16
+"\"Hey, Sonny! It's good to see you.\""
+
+%message	17
+"\"Boy, this weather's been great!\""
+
+%message	18
+"You can't reach the phone from here."
+
+%message	19
+"The empty paper towel dispenser hangs over the sink."
+
+%message	20
+"The white porcelain sink is clean enough for who it's for!"
+
+%message	21
+"Don't bother to get up. Carol answers her own telephone."
+
+%message	22
+"\"Hi, Sonny,\" says Carol.
+ \"No time to talk today, this joint's really jumpin'!\""
+
+%message	23
+"You can't reach the counter from here!"
+
+%message	24
+"\"This is a coffee break, not your dinner hour.\""
+
+%message	25
+"Carol likes officers to frequent her establishment.
+ Many items are \"on the house.\""
+
+%message	26
+"Steve says \"Don't run off, Sonny. You just got here.\""
+
+%message	27
+"You look over Carol's \"Blue Plate Specials du Jour.\""
+
+%message	28
+"\"Filet of Hummingbird Breast\""
+
+%message	29
+"Panic fills your heart as you watch the nasty fluid nearly breach the rim,
+ before it slowly subsides."
+
+%message	30
+"You quietly relieve yourself."
+
+%message	31
+"You whistle a happy tune as you clear your mind."
+
+%message	32
+"There is a toilet, a sink, a paper towel dispenser,
+ and an overflowing wastebasket."
+
+%message	33
+"You soap up, rinse off, and dry your hands."
+
+%message	34
+"\"Is that all you guys do: 'take coffee breaks?'\""
+
+%message	35
+"\"Please, Officer! I don't want to be bothered.\""
+
+%message	36
+"\"Make your quota for the day yet?\""
+
+%message	37
+"\"Hello, Officer. Nice day, isn't it?\""
+
+%message	38
+"\"I'd like you to know that my family and I really appreciate
+ the job you police officers do.\""
+
+%message	39
+"\"Hey, you're that guy I read about in the Tribune!
+ Weren't you nominated for Officer of the Week or something?
+ Good luck!\""
+
+%message	40
+"\"Don't order the Hummingbird. Carol must have made it last week!\""
+
+%message	41
+"\"Boy, if the local police have to come here to eat,
+ they MUST need a raise.\""
+
+%message	42
+"\"I sure don't envy the job you men have to do.\""
+
+%message	43
+"\"I wish someone would patrol my neighborhood more often!
+ The teenagers are going crazy!\""
+
+%message	44
+"\"Why don't you guys quit writing so many speeding tickets and take
+ care of a few of those slow-moving Sunday drivers that keep traffic
+ so screwed up!\""
+
+%message	45
+"\"Something should be done about those jaywalking pedestrians!
+ I almost ran over two of them yesterday and they had the nerve to
+ act like it was my fault!\""
+
+%message	46
+"\"Well, well, well. If it isn't the city's finest!\""
+
+%message	47
+"\"Officer Bonds, I know you're a good man,
+ but the officer who gave me that ticket yesterday is a real rat!\""
+
+%message	48
+"\"Most cops I don't like, but you're one of the good ones!
+ And, I mean that sincerely.\""
+
+%message	49
+"You're not in the bathroom!"
+
+%message	50
+"You're here on a complaint, not for a snack."
+
+%message	51
+"There is a time and a place for everything,
+ but this is not the time for a coffee break!"
+
+%message	52
+"Carol is obviously upset as she blurts in a loud tone of voice..."
+
+%message	53
+"\"Oh, Sonny!
+ Those drunken bikers in the bar next door are taking up all the
+ parking places in front of my cafe!
+ They just have no consideration for others!
+ Where are my customers going to park?
+ Would you ask them to move their motorcycles, please?\""
+
+%message	54
+"\"Thanks, Sonny!\""
+
+%message	55
+"\"Come on now, it's your job!\""
+
+%message	56
+"Carol sounds relieved as she says,
+ \"Thanks for getin' those bikes removed, Sonny.\""
+
+%message	57
+"Steve says, \"Boy!
+ It sounded over the air like you had a real mess on your hands at
+ that 187 scene!\""
+
+%message	58
+"Steve says, \"This coffee'll blow your socks off!\""
+
+%message	59
+"Steve tells you, \"Man,
+ that murder makes a guy wonder what's going on around this town!\""
+
+%message	60
+"Steve says,
+ \"Boy, you earned your coffee after that mess!\""
+
+%message	61
+"You wonder why some people don't learn to flush!"
+
+%message	62
+"You push the handle down and flush the toilet."
+
+%message	63
+"\"Did we do something wrong?\""
+
+%message	64
+"\"We're too busy to talk!\""
+
+%message	65
+"\"Get lost!\""
+
+%message	66
+"\"Pig Sty Stew\""
+
+%message	67
+"\"Fried Pork Rind\""
+
+%message	68
+"Yum?"
+
+%message	69
+"You see people outside admiring your car."
+
+%message	70
+"There isn't one!"
+
+%message	71
+"Great. Another chapter in your life of big-time crime stopping --
+ parking space hogging!"
+
+%message	72
+"Whoosssshhhh!"
+
+%message	73
+"You've discovered where all the paper towels went!"
+
+%message	74
+"It looks like each person has his own greasy spoon."
+
+%message	75
+"She can't hear you from here; that grill must be loud!"
+
+%message	76
+"\"What are you doin' back here again, Sonny?\" Carol asks."
+
+%message	77
+"This formerly public telephone formerly belonged to LT&T."
+
+%message	78
+"You don't have any coffee."
+
+%message	79
+"You slam back the entire mug of Jamaican Java.
+ Your eyeballs roll back in your head."
+
+%message	80
+"Steve looks like he's on a caffeine high."
+
+%message	81
+"Bye...\n\n
+Click!"
+
+%message	82
+"\"I've talked to my informants,\" says Steve,
+ \"have you seen Sweet Cheeks Marie yet?\""
+
+%message	83
+"\"No, but I'm keeping both eyes peeled for her,\" you respond."
+
+%message	84
+"They look choked up from too much hummingbird."
+
+%message	85
+"You find a lot of dirty towels."
+
+%message	86
+"You key your radio,\"%s3"
+
+%message	87
+" 83-32,%s4%m91"
+
+%message	88
+" 83-Nora-10,%s4%m91"
+
+%message 89
+" 10-97 "
+
+%message 90
+" 10-7 "
+
+%message	91
+"at Carol's.\""
+

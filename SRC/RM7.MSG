@@ -1,0 +1,117 @@
+[ POLICE QUEST
+[ rm7.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 10/13/86
+[ Last Update October 4, 1987GR
+
+[rm.yard
+
+
+%message	1
+"The car door is open."
+
+%message	2
+"The car door is closed."
+
+%message	3
+"Since you're not assigned to this vehicle,
+ there's no need to safety check it."
+
+%message	4
+"The back seat is reserved for prisoners and you have none!"
+
+%message	5
+"Trying to crawl through the window? %m2"
+
+%message	6
+"Hmmm! This side looks ok!"
+
+%message	7
+"You don't have the keys to this car."
+
+%message	8
+"There's no need to safety check your personal car."
+
+%message	9
+"There is no reason to open the passengers' doors."
+
+%message	10
+"The parking lot is surrounded by brick and chain link."
+
+%message	11
+"It looks like Laura is waiting for you. You wonder what's up."
+
+%message	12
+"\"Hold on, Sonny. We've got work to do.\""
+
+%message	13
+"\"Sonny, one of my informants just told me a drug deal is going down soon
+ in Lytton City Park\" says Laura, getting into your car.
+ \"Lieutenant Morgan wants us to stake it out and see what we can do.\""
+
+%message	14
+"\"Well, Cowboy, let's roll!\""
+
+%message	15
+"There's no need to safety check the patrol car unless you're going to use it."
+
+%message	16
+["First, close your door!"
+""
+
+%message	17
+"The PR-24 must remain in the vehicle."
+
+%message	18
+""
+
+%message	19
+""
+
+%message	20
+""
+
+%message	21
+""
+
+%message	22
+""
+
+%message	23
+"Having performed the prescribed, walk-around safety check of your vehicle,
+ you're now ready to hit the streets."
+
+%message	24
+"You don't need to double check the car!"
+
+%message	25
+"The parking lot holds three patrol cars, an unmarked car and a shiny,
+ clean Corvette."
+
+%message	26
+"Your marked patrol car features a powerful \"V-8\" engine choked down
+ with the very latest in smog devices, and purchased from the lowest bidder!
+ It is capable of attaining speeds of up to 87 (or more) miles per hour."
+
+%message	27
+"This is an unmarked vehicle used in undercover operations.
+ It was confiscated in an earlier arrest."
+
+%message	28
+"This is your sports car!
+ You can't really afford one, but it's your one real luxury in life!
+ Besides, you have few other financial obligations."
+
+%message	29
+"Laura says, \"Sonny, I'll go write up this arrest.\""
+
+%message	30
+"\"I'll bet Jack is over at the Blue Room,\" says Laura.
+ \"Why don't you go tell him we nailed the rat who
+ was dealing dope at Jefferson High!\""
+
+%message	31
+"It seems you have missed one briefing too many.
+ Sgt. Dooley places you on administrative leave, without pay, for five days.
+ Next time, attend briefings!"
+

@@ -1,0 +1,339 @@
+[ POLICE QUEST
+[ rm97.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. September 20, 1987
+[ Last Update October 3, 1987GR
+
+[ moroff.room.script.messages
+
+
+%message	1
+""
+
+%message	2
+"%m85 says,
+ \"Sonny, I am extremely busy right now;
+ besides, uniformed cops don't belong in Narcotics Division.
+ Would you please hit the road and write some tickets?\""
+
+%message	3
+"%m85 welcomes you to the Narcotics Division and explains
+ the necessity of your new image."
+
+%message	4
+"\"Sonny, I've decided to put you on the Hoffman case due to
+ your involvement in the arrest.
+ Your partner will be Detective Laura Watts.\""
+
+%message	5
+"\"You can join Laura in her office now.
+ Good luck on the case.
+ And, welcome aboard, Sonny!\""
+
+%message	6
+"\"Hello, Sonny. Please step over here to my desk.\""
+
+%message	7
+""
+
+%message	8
+""
+
+%message	9
+""
+
+%message	10
+""
+
+%message	11
+""
+
+%message	12
+""
+
+%message	13
+"\"Sonny, step on over to my desk.\""
+
+%message	14
+"\"I have devised a plan to infiltrate the gambling scene
+ at the Hotel Delphoria,\"
+ %m85 begins."
+
+%message	15
+"\"Sonny, I want you to check into the Hotel under the name of
+ Jimmy Lee Banksten,\" he continues.
+ \"Meet Sweet Cheeks in the hotel cocktail lounge.\""
+
+%message	16
+"\"Signal Sweet Cheeks that you're ready to begin the operation
+ by ordering a drink.
+ She'll pretend to recognize you as 'Whitey,'
+ an old friend recently released from prison.
+ She'll introduce you to bartender Woody Roberts,
+ whom we believe is the contact man for the back room hustle.\""
+
+%message	17
+"\"You'll be carrying a large sum of money (in marked bills, of course),
+ and will pretend to be eager for action.\""
+
+%message	18
+"%m85 concludes, \"Since Laura developed your disguise,
+ I'll let her fill you in on its details.\""
+
+%message	19
+"\"Sonny, I've picked out a white suit for you,\" Laura says,
+ \"and, by the way, we've decided your hair must be bleached!\""
+
+%message	20
+"\"You'll walk with the aid of this special cane.
+ Its handle is really a detachable, .22-caliber magnum Derringer.
+ When the need arises, you will carry a voice transmitter disguised
+ as a plain-looking ballpoint pen.\""
+
+%message	21
+"\"That's all I have,\" concludes Laura.
+ \"Sweet Cheeks, do you have anything to add?\""
+
+%message	22
+"In an excited voice, Sweet Cheeks says,
+ \"Oh, Sonny, I'm so happy I get to work with you!
+ Why, it almost brings a tear to my eye!
+ I'm looking forward to spending tonight working with you
+ at the Hotel Delphoria, my Precious!\" She winks at you."
+
+%message	23
+""
+
+%message	24
+""
+
+%message	25
+""
+
+%message	26
+"Sergeant Dooley, his voice cracking, interrupts the meeting."
+
+%message	27
+"\"It is my regretful duty to inform you that I've
+ just received a phone call from Jack Cobb.
+ His daughter, Kathy, just died without ever regaining conciousness.\""
+
+%message	28
+"\"Effective immediately, Jack is on extended family leave.
+ Jack's taking this really hard.
+ His brother is staying with him and he requests no visitors.
+ I'm sure our sympathy goes out to Jack in his time of need.\""
+
+%message	29
+"Hatred wells up inside you.
+ You vow revenge for Kathy's senseless death
+ by tracking down the dope world animals responsible!"
+
+%message	30
+"%m85 speaks softly,
+ \"Sonny, the sooner you get into the scene at the Hotel Delphoria,
+ the sooner we can neutralize those blood suckers.\""
+
+%message	31
+"Laura adds, \"I picked up these supplies at the beauty shop.
+ Take this bottle of bleach creme activator
+ into the shower and bleach your hair.\""
+
+%message	32
+""
+
+%message	33
+"%m85 instructs you,
+ \"Sonny, after you bleach your hair and change clothes, report back to me.
+ I have more instructions for you.\""
+
+%message	34
+"\"It's good to see you, Sonny. Come over to my desk.\""
+
+%message	35
+"\"I know you worked hard trying to keep that punk Hoffman in jail.
+ What a shame that it was all for naught!\""
+
+%message	36
+"\"It's frustrating when a man does the best job he can do,
+ and some dummy screws it up!
+ I wouldn't trust that tower guard to guard our water fountain!\""
+
+%message	37
+"\"After reviewing the Hoffman file,
+ I think we should take a close look at the black book
+ that was impounded along with his Cadillac.
+ Get it from Russ in the evidence lockup.\""
+
+%message	38
+"\"Check it out, then get back to me.
+ I have some other leads to investigate.
+ When we next meet, I may have some new ideas.\""
+
+%message	39
+"\"\""
+
+%message	40
+""
+
+%message	41
+""
+
+%message	42
+"\"Come over to my desk. I have some things to discuss with you.\""
+
+%message	43
+""
+
+%message	44
+"\"After you infiltrate the illegal gambling activities at the hotel,
+ contact me.
+ I'll send over a team of detectives to serve as your backups.\""
+
+%message	45
+"\"This envelope contains a thousand dollars in marked, hundred-dollar
+ bills.\""
+
+%message	46
+"\"Use your head, Sonny, and don't forget: we want Mr. Big!\""
+
+%message	47
+"Just then the office intercom squelches,
+ \"%m85. Homicide detective Oscar Hamilton on line three.\""
+
+%message	48
+"You patiently wait while %m83 grumbles on the phone."
+
+%message	49
+"When the conversation ends, %m83 relates Hamilton's comments
+ on the floater found this morning at Cotton Cove."
+
+%message	50
+"\"Sonny, it seems that Hoffman/Taselli was shot execution-style
+ before he decided to take his little swim.\""
+
+%message	51
+"\"It looks like you're walking right into the dragon's lair
+ at the Hotel Delphoria. Be careful, boy!\""
+
+%message	52
+"\"Well, that's it here,\" %m83 says.
+ \"Now, go meet Sweet Cheeks and get this campaign rolling.\""
+
+%message	53
+""
+
+%message	54
+""
+
+%message	55
+""
+
+%message	56
+""
+
+%message	57
+""
+
+%message	58
+""
+
+%message	59
+""
+
+%message	60
+""
+
+%message	61
+""
+
+%message	62
+"\"Sonny, change into a more suitable garb,
+ and Code-3 yourself back in here!\""
+
+%message	63
+""
+
+%message	64
+""
+
+%message	65
+""
+
+%message	66
+""
+
+%message	67
+""
+
+%message	68
+""
+
+%message	69
+""
+
+%message	70
+""
+
+%message	71
+""
+
+%message	72
+""
+
+%message	73
+""
+
+%message	74
+""
+
+%message	75
+"\"Hello, Sonny. I hear your 'little' Sweetheart is in the can!\""
+
+%message	76
+"\"Sonny, I think your friend, Sweet Cheeks, may be able to help us out.\""
+
+%message	77
+"\"It seems our drug problem is emanating from the Hotel Delphoria.\""
+
+%message	78
+"\"In lieu of her current state of affairs, I'd bet
+ Sweet Cheeks would be willing to help you establish your cover at the Hotel.\""
+
+%message	79
+"\"Go over to the jail, and see if she'll help you with the hotel
+ operation.\""
+
+%message	80
+"\"When you get back, I'll hold a briefing on the operation.\""
+
+%message	81
+"\"I'll call the jail and arrange everything for you.\""
+
+%message	82
+"\"I can't believe Judge Palmer fell for that bunk about a stolen ID.\""
+
+%message	83
+"Morgan"
+
+%message	84
+"Lt. %m83"
+
+%message	85
+"Lieutenant %m83"
+
+%message	86
+""
+
+%message	87
+"\"By the way, we learned from the fingerprint search that Hoffman
+ is really one 'Jason Taselli' recently of Chicago.\""
+
+%message	88
+"\"Sweet Cheeks,\" says %m85,
+ \"why don't you head on over to the hotel.
+ Sonny will follow shortly.\""
+
+%message	89
+"\"Thanks for your help, Laura,\" %m83 says, \"that's all for now.\""
+

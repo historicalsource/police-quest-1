@@ -1,0 +1,966 @@
+[ POLICE QUEST
+[ rm36.cg
+[ By:  Greg Rowland, Ed Anderson, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 2/13/87
+[ Last Update October 15, 1987GR
+
+[	rm.caffine.interior
+
+
+%include "gamedefs"
+%include "rm36.msg"
+
+
+
+[%var	coffee.scene		93
+%define	ringPhone			1
+%define	answerPhone		2
+%define	phoneCallDone		3
+
+
+%define	inBathroom		lf0
+%define	nearCounter		lf1
+%define	nearTable			lf2
+%define	nearEgo'sSeat		lf3
+%define	nearSteve'sSeat	lf4
+%define	seenBathroomMessage	lf5
+%define	egoSitting		lf6
+%define	moved0			lf7
+%define	moved1			lf8
+%define	nearSteve			lf9
+%define	hasDrink			lf10
+%define	nearCarol			lf11
+
+%define	moving1			lcl1
+%define 	steveTimer		lcl2
+%define	carol			lcl3
+
+%object	aCarol			1
+%object	a.smoke.1			2
+%object	a.smoke.2			3
+%object	a.cups			4
+%object	a.plates			5
+
+
+
+
+if (init.log)
+	{
+[	if (forceAtest)
+[		{
+[		current.suspect = 4;
+[		biker.scene = 1;
+[		}
+
+	load.pic( current.room);
+	draw.pic( current.room);
+	discard.pic( current.room);
+
+	load.view( v.ego.sit);
+	load.view( vCarol);
+	load.view( v.smoke);
+	load.view( v.phone.door);
+	load.sound( mTension);
+
+	load.logics( 109);				[ lgc.phone
+	call( 109);
+
+
+	animate.obj( aCarol);
+	set.view( aCarol, vCarol);
+	position( aCarol, 107, 128);
+	set.loop( aCarol, 3);
+	stop.cycling( aCarol);
+	ignore.blocks( aCarol);
+	draw( aCarol);
+
+	animate.obj( a.smoke.1);
+	set.view( a.smoke.1, v.smoke);
+	position( a.smoke.1, 110, 114);
+	draw( a.smoke.1);
+	cycle.time( a.smoke.1, two);
+
+	animate.obj( a.smoke.2);
+	set.view( a.smoke.2, v.smoke);
+	position( a.smoke.2, 99, 114);
+	draw( a.smoke.2);
+	cycle.time( a.smoke.2, three);
+
+
+	add.to.pic( v.phone.door, 0, 0, 43, 109, 4, 0);
+
+	add.to.pic( v.ego.sit, 1, 0, 59, 137, 12, 0);		[bar stool1
+	add.to.pic( v.ego.sit, 1, 1, 76, 137, 12, 0);		[bar stool2
+	add.to.pic( v.ego.sit, 1, 2, 92, 137, 12, 0);		[bar stool3
+	add.to.pic( v.ego.sit, 1, 3, 110, 137, 12, 0);		[bar stool4
+
+	add.to.pic( v.ego.sit, 0, 2, 101, 157, 14, 0);		[table1
+	add.to.pic( v.ego.sit, 0, 3, 114, 160, 14, 0);		[table2
+
+	add.to.pic( v.phone.door, 0, 2, 47, 157, 15, 4);		[Place settings
+	add.to.pic( v.phone.door, 0, 5, 44, 159, 15, 4);		[steves spoon
+	add.to.pic( v.phone.door, 0, 5, 50, 157, 15, 4);		[sonnys spoon
+
+	add.to.pic( v.phone.door, 0, 1, 111, 155, 15, 4);		[@ right table
+	add.to.pic( v.phone.door, 0, 4, 112, 160, 15, 4);		[hers
+	add.to.pic( v.phone.door, 0, 5, 114, 161, 15, 4);
+	add.to.pic( v.phone.door, 0, 2, 106, 153, 15, 4);		[his
+	add.to.pic( v.phone.door, 0, 3, 107, 158, 15, 4);
+	add.to.pic( v.phone.door, 0, 5, 107, 159, 15, 4);
+
+	if (current.suspect == 1) {						[steve
+		add.to.pic( v.ego.sit, 0, 1, 40, 158, 15, 0);	[steve
+		}
+	else {
+		add.to.pic( v.ego.sit, 0, 4, 40, 158, 15, 0);	[extras
+		add.to.pic( v.ego.sit, 0, 5, 56, 158, 15, 0);	[extras
+		}
+
+
+	if (priorX) {
+		set.loop.f( ego, loop);
+		position.f( ego, priorX, priorY);
+		priorX = 0;
+		}
+	else {
+		position( ego, 78, 167);
+		}
+	draw( ego);
+
+	timer.2 = 11;
+
+	show.pic( );
+	return( );
+	}							[	End Init.log
+
+
+
+
+if (edge.ego.hit == bottom) {
+	new.room( 35);
+	}
+
+reset( nearCarol);
+distance( ego, aCarol, carol);
+if ( carol < dist) {
+	set( nearCarol);
+	}
+
+reset( nearCounter);
+if (posn( ego, 41, 120, 153, 145)) {
+	set( nearCounter);
+	}
+
+reset( nearPhone);
+if (posn( ego, 41, 124, 48, 130)) {
+	set( nearPhone);
+	}
+
+reset( nearTable);
+if (posn( ego, 95, 153, 120, 155)) {
+	set( nearTable);
+	}
+
+reset( nearEgo'sSeat);
+if (posn( ego, 50, 152, 60, 155)) {
+	set( nearEgo'sSeat);
+	}
+
+reset( nearSteve'sSeat);
+if (posn( ego, 40, 152, 49, 155)) {
+	set( nearSteve'sSeat);
+	}
+
+reset( nearSteve);
+if (posn( ego, 21, 152, 67, 167)) {
+	set( nearSteve);
+	}
+
+
+if ((posn( ego,  27, 152,  67, 167) ||	[ Near Patrons
+	posn( ego,  49, 136,  66, 145) ||
+	posn( ego,  68, 136,  83, 145) ||
+	posn( ego,  85, 136, 100, 145) ||
+	posn( ego,  88, 151, 131, 167) ||
+	posn( ego, 103, 136, 121, 145)))
+	{
+	set( nearPerson);
+	}
+
+
+reset(inBathroom);
+if (posn( ego, 20, 125, 35, 130)) {
+	set( inBathroom);
+	if (!seenBathroomMessage)
+		{
+		print( 14);
+		set( seenBathroomMessage);
+		}
+	}
+
+
+if (moved1) {
+	reset( moved1);
+	++moving1;
+	}
+
+
+[ General timers
+
+if (aSecondPassed) {
+	--timer.1;
+	--timer.2;
+
+	--steveTimer;
+	if (steveTimer == 1)
+		{
+		print.f( message);
+		}
+	}
+
+
+if (scriptDone)
+	{
+	reset( scriptDone);
+	++script;
+
+	if (script < 3) {
+		stop.cycling( aCarol);
+		sound( sPhoneRing, done);
+		scriptTimer = 4;
+		}
+
+	if (script == 3) {
+		sound( sPhoneRing, done);
+		start.cycling( aCarol);
+		move.obj( aCarol, 41, 126, 1, moved1);
+		moving1 = 100;
+		}
+	}
+
+
+[ Carol @ counter
+
+if (timer.2 == 1 && moving1 == 0) {
+	start.cycling( aCarol);
+	move.obj( aCarol, 107, 131, 1, moved1);
+	--timer.2;
+	}
+
+if (moving1 == 1) {
+	y = 131;
+	random( 1, 3, work);
+	if (work == 1)	{x = 94;}
+	if (work == 2)	{x = 77;}
+	if (work == 3)	{x = 60;}
+	move.obj.f( aCarol, x, y, one, moved1);
+	set( moved1);
+	}
+
+if (moving1 == 3) {
+	set.loop( aCarol, 2);
+	stop.cycling( aCarol);
+	set( moved1);
+	random( 2, 6, timer.2);
+	}
+
+if (timer.2 == 1 && moving1 == 4) {
+	start.cycling( aCarol);
+	move.obj( aCarol, 60, 131, 1, moved1);
+	--timer.2;
+	}
+
+if (moving1 == 5) {
+	y = 127;
+	random( 1, 2, work);
+	if (work == 1) 	{x = 60;}
+	if (work == 2) 	{x = 78;}
+	move.obj.f( aCarol, x, y, one, moved1);
+	set( moved1);
+	}
+
+if (moving1 == 7) {
+	set.loop( aCarol, 3);
+	stop.cycling( aCarol);
+	random( 5, 10, timer.2);
+	set( moved1);
+	}
+
+if (timer.2 == 1 && moving1 == 8) {
+	start.cycling( aCarol);
+	y = 127;
+	random( 1, 2, work);
+	if (work == 1) 	{x = 107;}
+	if (work == 2) 	{x = 97;}
+	move.obj.f( aCarol, x, y, one, moved1);
+	set( moved1);
+	--timer.2;
+	}
+
+if (moving1 == 10) {
+	set.loop( aCarol, 3);
+	stop.cycling( aCarol);
+	random( 3, 6, timer.2);
+	moving1 = 0;
+	}
+
+
+
+[ Carol to table
+
+if (coffee.scene < ringPhone) {
+	if (egoSitting &&
+		secondsInRoom > 50 &&
+		moving1 < 100) {
+		moving1 = 100;
+		}
+
+	if (moving1 == 100) {
+		start.cycling( aCarol);
+		move.obj( aCarol, 41, 127, 1, moved1);
+		}
+
+	if (moving1 == 101) {
+		move.obj( aCarol, 41, 135, 1, moved1);
+		}
+
+	if (moving1 == 102) {
+		move.obj( aCarol, 50, 155, 1, moved1);
+		}
+
+	if (moving1 == 103) {
+		add.to.pic( v.phone.door, 0, 1, 52, 156, 15, 0);
+		print( 11);				[ caffine IV
+		stop.cycling( aCarol);
+		++moving1;
+		timer.2 = 5;
+		set( hasDrink);
+		}
+
+
+	[ Carol back to counter
+
+	if (moving1 == 104 && timer.2 == 1) {
+		start.cycling( aCarol);
+		move.obj( aCarol, 41, 135, 1, moved1);
+		--timer.2;
+		}
+
+	if (moving1 == 105) {
+		move.obj( aCarol, 41, 127, 1, moved1);
+		}
+
+	if (moving1 == 106) {
+		coffee.scene = ringPhone;
+		scriptTimer = 4;			[ Phone here
+		moving1 = 5;				[ moving behind counter
+		}
+	}
+
+
+
+[ Carol to phone
+
+if (coffee.scene == ringPhone) {
+	if (moving1 == 101) {
+		stop.cycling( aCarol)
+		set.loop( aCarol, 3);
+		set( moved1);
+		timer.1 = 5;
+		}
+
+	if (moving1 == 102 && timer.1 == 1) {
+		set.loop( aCarol, 2);
+		set( moved1);
+		--timer.1;
+		}
+
+	if (moving1 == 103) {
+		print( 5);
+		start.cycling( aCarol);
+		coffee.scene = answerPhone;
+		timer.1 = 15;
+		moving1 = 1;
+		}
+	}
+
+
+if (!nearPhone &&					[ Steve says you better answer phone
+	coffee.scene == answerPhone &&
+	timer.1 == 1) {
+	print( 15);
+	timer.1 = 20;
+	}
+
+
+if ((said( sit) ||
+	said( park) ||
+	said( sit, down) ||
+	said( sit, chair) ||
+	said( use, chair) ||
+	said( get, chair) ||
+	said( rise) ||
+	said( rise, up) ||
+	said( use, chair) ||
+	said( get, out, chair) ||
+	said( get, up))) {
+   	set( func4);
+	}
+
+[ sit sonny
+
+if (func4)
+	{
+	reset( func4);
+
+	if (current.suspect != 1)
+		{
+		if ((nearCounter ||
+			nearEgo'sSeat ||
+			nearSteve'sSeat ||
+			nearTable))
+			{
+			print( 2);			[some sitt'n here
+			}
+		else {
+			print( 3);
+			}
+		}
+	else
+		{
+		if (egoSitting &&
+			coffee.scene < answerPhone)
+			{
+			if (coffee.scene == ringPhone)
+				{
+				print( 21);		[Carol will get it
+				}
+			else {
+				print( 26);		[ don't run off
+				}
+			}
+		else {
+			if (!egoSitting && nearEgo'sSeat)
+				{
+				set( egoSitting);
+				stop.motion( ego);
+				set( game.control);
+				set.priority( ego, 15);
+				reposition.to( ego, 56, 158);
+				set.view( ego, v.ego.sit);
+				set.loop( ego, 0);
+				set.cel( ego, 0);
+				}
+			else {
+				if (egoSitting)
+					{
+					reset( egoSitting);
+					reset( game.control);
+					release.priority( ego);
+					reposition.to( ego, 56, 155);
+					set.view.f( ego, current.sonny);
+					release.loop( ego);
+					set.loop( ego, 1);
+					}
+				else {
+					if ((nearCounter ||
+						nearSteve'sSeat ||
+						nearTable))
+						{
+						print( 2);[some sitt'n here
+						}
+					else {
+						print( 3);[ sit floor
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+[ Text
+
+if (!have.input) {
+	goto exit;
+	}
+
+if ( has( i.extnd) && said( call)) {
+	if ( !current.sonny) {
+		set.string( 3, 87);
+		}
+	else {
+		set.string( 3, 88);
+		}
+
+	if ( biker.scene &&
+		biker.scene < 255 &&
+		current.suspect == 4) {
+		set.string( 4, 89);
+		}
+	else {
+		set.string( 4, 90);
+		}
+	print( 86);
+	}
+
+
+
+if (said( look, people)) {
+	print( 84);
+	}
+
+
+if (current.suspect == 1 &&			[ Steve
+	nearSteve)
+	{
+	if (said( look))
+		{
+		print( 80);
+		}
+	}
+
+if (!nearPhone)
+	{
+	if (current.suspect == 1 && nearSteve) {	[	Steve's here.
+	    if ((said( talk) ||
+			said( talk, partner) ||
+			said( talk, man)))
+			{
+			random( 16, 17, work);
+			print.f( work);
+			}
+	    if ((said( ask, car, rol) ||
+			said( question, rol) ||
+			said( talk, drugs, rol) ||
+			said( room, rol)))
+			{
+			print( 82);
+			print( 83);
+			}
+		}
+
+	if ((said( talk, man) ||
+		said( talk, people) ||
+		said( talk) ||
+		said( talk, girl)))
+		{
+		if (!nearPerson)
+			{
+			set( notCloseEnough);
+			}
+		else
+			{
+			if (current.suspect == 4) {
+				random( 63, 65, work);
+				}
+			else {
+				random( 34, 48, work);
+				}
+			print.f( work);
+			}
+		}
+	}
+
+if ((said( look, room) ||
+	said( look) ||
+	said( look, caffeine, cafe) ||
+	said( look, carols, caffeine) ||	[	"castle" is an ignored word.
+	said( look, carols, caffeine, cafe) ||
+	said( look, carols, cafe)))
+	{
+	if (inBathroom) {
+		print( 32);
+		}
+	else {
+		print( 10);
+		}
+	}
+
+if (said( look, restroom))
+	{
+	if (inBathroom) {
+		print( 32);
+		}
+	else {
+		print( 49);
+		}
+	}
+
+if (said( look, sink)) {
+	if (inBathroom) {
+		print( 20);
+		}
+	else {
+		print( 4);
+		}
+	}
+
+if ((said( look, towel) ||
+	said( look, paper, towel, dispenser) ||
+	said( look, towel, dispenser))) {
+	if (inBathroom) {
+		print( 19);
+		}
+	else {
+		print( 4);
+		}
+	}
+if ((said(  use, towel,rol) ||
+	said(throw, towel, away, rol))) {
+	if (inBathroom) {
+		set( OK);
+		}
+	else {
+		print( 4);
+		}
+	}
+
+if (said( look, window))
+	{
+	if (!inBathroom)
+		{
+		print( 69);
+		}
+	else
+		{
+		print( 70);
+		}
+	}
+
+if (said( look, toilet)) {
+		if (inBathroom) {
+		print( 61);
+		}
+	else {
+		print( 4);
+		}
+	}
+
+if (said( look, wastebasket)) {
+	if (inBathroom) {
+		print( 73);
+		}
+	else {
+		print( 4);
+		}
+	}
+if (said( search, wastebasket)) {
+	if (inBathroom) {
+		print( 85);
+		}
+	else {
+		print( 4);
+		}
+	}
+
+
+if (said( look, sink))
+	{
+	if (inBathroom)
+		{
+		print( 20);
+		}
+	else
+		{
+		print( 4);
+		}
+	}
+
+if (said( look, phone)) {
+	print( 9);
+	}
+
+if (said( look, food)) {
+	print( 12);
+	}
+
+if (said( look, carol)) {
+	print( 13);
+	}
+
+if ((said( look, menu) ||
+	said( read, wall) ||
+	said( look, wall))) {
+	print( 27);
+	print( 28);
+	print( 66);
+	print( 67);
+	print( 68);
+	}
+
+if (said( drink, coffee))
+	{
+	if (!hasDrink)
+		{
+		print( 78);
+		}
+	else
+		{
+		reset( hasDrink);
+		print( 79);
+		}
+	}
+
+if (egoSitting &&
+	said( order, coffee))
+	{
+	print( 80);
+	}
+
+if ((said( look, people) ||
+	said( look, man) ||
+	said( look, woman)))
+	{
+	print( 74);
+	}
+
+if ((said( buy, coke) ||
+	said( give, me, coke) ||
+	said( order, anyword, coke))) {
+	print( 25);					[ Carol likes cops
+	}
+
+if (said( buy, anyword)) {
+	if (!nearCounter) {
+		print( 23);				[ from here
+		}
+	else {
+		if (current.suspect == 1) {	[ Steve
+			print( 24);			[ break ! dinner
+			}
+		else {
+			if (current.suspect == 4) {[bikers
+				print( 50);		[ your here for complaint
+				}
+			else {
+				print( 51); 		[ not time for break
+				}
+			}
+		}
+	}
+
+if (said( pay, anyword)) {
+	if (!nearCounter) {
+		print( 23);				[ from here
+		}
+	else {
+		if (current.suspect == 1) {	[ steve
+			print( 25);			[ Carol likes cops
+			}
+		else {
+			if (current.suspect == 4) {[bikers
+				print( 50);		[ your here for complaint
+				}
+			else {
+				print( 51); 		[ not time for break
+				}
+			}
+		}
+	}
+
+
+if ((said( use, sink) ||
+	said( turn, on, water) ||
+	said( turn, water)))
+	{
+	if (inBathroom) {
+		print( 33);
+		}
+	else {
+		print( 4);
+		}
+	}
+
+if ((said( turn, off, water) ||
+	said( turn, water, off)))
+	{
+	if (inBathroom) {
+		print( 54);
+		}
+	else {
+		print( 4);
+		}
+	}
+
+if ((said( dry, hands) ||
+	said( wash, hands))) {
+	if (inBathroom) {
+		print( 33);
+		}
+	else {
+		print( 49);
+		}
+	}
+
+if ((said( take, piss) ||
+	said( piss, rol) ||
+	said( take, shit) ||
+	said( shit, rol) ||
+	said( go, bathroom) ||
+	said( use, toilet) ||
+	said( take, crap) ||
+	said( take, piss) ||
+	said( go, toilet)))
+	{
+	if (inBathroom) {
+		sound( mTension, done);
+		random( 29, 31, work);
+		print.f( work);
+		stop.sound();
+		}
+	else {
+		print( 49);
+		}
+	}
+
+if (said( flush, toilet))
+	{
+	if (inBathroom)
+		{
+		print( 72);
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+if (coffee.scene == answerPhone &&
+    (said( hello) ||
+	said( talk, on, phone) ||
+	said( answer, rol) ||
+	said( use, phone) ||			[	get number 
+	said( make, phone, call) ||
+	said( dial, phone) ||
+	said( answer, phone)))
+	{
+	if (!nearPhone) {
+		print( 18);				[from here
+		}
+	else {
+		coffee.scene = phoneCallDone;
+		score += 2;
+		print( 6);				[ hamilton
+		print( 7);
+		sound( sDialTone, done);
+		print( 81);
+		stop.sound();
+		}
+	}
+
+
+if ((said( trouble, rol) ||
+	said( hello, carol, rol) ||
+	said( ask, carol, rol) ||
+	said( question, carol, rol) ||
+	said( question, girl, rol) ||
+	said( ask, girl, rol) ||
+	said( talk, girl, rol) ||
+	said( talk, carol, rol) ||
+	said( anyword, trouble, rol) ||
+	said( anyword, anyword, trouble, rol)))
+	{
+	if (!nearCounter && !nearCarol)
+		{
+		print( 75);
+		}
+	else
+		{
+		if (!biker.scene)
+			{
+			if (current.suspect == 1)
+				{
+				print( 1);
+				}
+			else
+		 		{
+				print( 22);
+				}
+			}
+		else
+			{
+			if (biker.scene == 255)
+				{
+				print( 76);
+				}
+			else
+				{
+				if (biker.scene > 3) {	[	Sonny cleared out the bikers 
+				 	print( 56);		[ Thanx Sonny
+					}
+				else {
+				 	print( 52);		[ she's pissed
+				 	print( 53);		[ get those bikers to move
+					if (!SxComplaint)
+						{
+						set( SxComplaint);
+						score += 3;
+						}
+					print( 71);
+					}
+				}
+			}
+		}
+	}
+
+if (current.suspect == 4 &&
+	biker.scene < 4)
+	{
+	if ((said( ok, rol) ||
+		said( anyword, ok, rol))) {
+	 	print( 54);				[ get those bikers to move
+		}
+
+	if ((said( no, rol) ||
+		said( anyword, no, rol))) {
+	 	print( 55);				[ wimp it's your job
+		}
+	}
+
+if (!have.match &&
+	have.input &&
+	egoSitting)					[	with steve
+	{
+ 	steveTimer = 4;
+	if (coffee.scene < phoneCallDone)
+		{
+		random( 57, 60, message);	[ good coffee, bad reck
+		}
+	else {
+	 	message = 8;				[ work time
+		}
+	}
+
+if (said( look, phone))
+	{
+	if (!nearPhone)
+		{
+		print( 9);				[ Yes there is a phone
+		}
+	else
+		{
+		print( 77);				[ BAsic Public Phone
+		}
+	}
+
+
+
+
+[
+:exit
+[
+
+if (coffee.scene != answerPhone)
+	{
+	call( 109);
+	}
+
+[ temp
+[	%message 100
+[	"m0 %v220|3, m1 %v221|3, w1 %v166|3, w2, %v167|3"
+[
+[	if (QA) {
+[		display( 22, 0, 100);
+[		}
+

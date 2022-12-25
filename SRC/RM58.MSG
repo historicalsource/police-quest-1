@@ -1,0 +1,99 @@
+[ POLICE QUEST
+[ rm58.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 3/10/87
+[ Last Update October 21, 1987GR
+
+[ lgc.drunk.jail
+
+
+%message	1						[meet with laura
+"Laura enters the jail and says,
+ \"Hey, Sonny! I need to speak with you for a moment.\""
+
+%message	2
+"\"A position has opened in the Narcotics Division,
+ and according to Lieutenant Morgan,
+ it will be filled by a veteran street cop.\""
+
+%message	3						[after talk with laura
+"\"If you're interested,
+ submit a memo to Lieutenant Morgan as soon as possible.
+ It would be a great chance for you to get out of that uniform for awhile.\""
+
+%message	4						[jailer
+"The jailer yells, \"Hey, Hot Pencil! Come over here.\""
+
+%message	5
+"\"I just hung up from talking to Dooley, and is he hot!\""
+
+%message	6
+"The jailer continues, \"He wants you back at the office on the double!\""
+
+%message	7
+"The jailer says, \"What can I do for you, Hot Pencil?\""
+
+%message	8
+"\"What are you charging him with?\" the jailer asks."
+
+%message	9
+"You remove and inventory the prisoner's personal property,
+ then hand it to the jailer with the booking slip."
+
+%message	10
+"The jailer takes the prisoner's property, then says,
+ \"Ok, Monty, remove this gentleman's 'cuffs and place him
+ behind 'door number one.'\""
+
+%message	11
+"\"If he throws up on the floor,\" the jailer laughs,
+ \"you're gonna clean it up, Bonds!\""
+
+%message	12
+"\"Gee, thankssh a lot, Ociffer,\" says the drunk.
+ \"I'm so happy, I could just s^%$!\""
+
+%message	13
+"Just as Laura leaves, the jailer yells at you..."
+
+%message	14
+"You remove the 'cuffs and place them in your handcuff case."
+
+%message	15
+"\"Whew! Boy, that feels good,\" says the drunk.
+ \"Those 'cuffs were so tight I thought my hands had fallen off.\""
+
+%message	16
+"\"Well, are you going to remove his 'cuffs or not?\" asks the jailer."
+
+%message	17
+"\"Are you deaf?\" prompts the jailer.
+ \"I said, 'what can I do for you?'\""
+
+%message	18
+"\"Are you going to book this dude or not?\""
+
+%message	19
+"\"Listen, bud, I need to talk to you before you leave.
+ Just drag 'em on over here.\""
+
+%message	20
+"The jailer has difficulty hearing you at this distance."
+
+%message	22
+"\"Ok, ok!\" says the jailer, \"I heard you.\""
+
+%message	23
+"\"Any time now, you can remove the 'cuffs.\""
+
+%message	24
+"Thinking about grabbing your gun,
+ the drunk delivers a blow to the top of your head.
+ You fall to the floor, unconscious."
+
+%message	25
+"Suddenly he realizes what a bad decision he's made,
+ but by then it's too late for you.
+ You're a pile on the floor.
+ Next time, lock up your gun before you enter a jail!"
+

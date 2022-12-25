@@ -1,0 +1,335 @@
+[ POLICE QUEST
+[ rm77.cg
+[ By:  Greg Rowland,  Scott Murphy and Jim Walls
+[ For: Sierra On-Line Inc. 6/9/86
+[ Last Update September 3, 1987al
+
+[logics for room 77 --middle stair room in hotel
+
+
+%include "gamedefs"
+%include "rm77.msg"
+
+
+
+%define	doorDone			lf0
+%define	ignore			lf1
+%define	bDone			lf2
+
+
+%define	doorDelay			lcl0
+%define	doorStatus		lcl1
+	%define	opening	1
+	%define	closing	2
+
+%define	stairs			lcl2
+	%define	upper	1
+	%define	middle	2
+	%define	lower	3
+	%define	lowest	4
+
+%define	bainsDistance		lcl3
+%define	bMove			lcl4
+
+
+%object	door				1
+%object	bains			3
+
+
+
+[ Room Setup 
+
+if (init.log)
+	{
+	set( NOcase);
+	set.horizon( 31);
+
+	load.view( v.door77);
+	load.view( v.stairNums);
+	
+	load.logics( 74);
+
+	if (bainsEgoTogether)
+		{
+		load.view( v.bains);
+		load.sound( mTension);
+		}
+
+	load.pic( current.room);
+	draw.pic( current.room);
+
+	animate.obj( door);
+	set.view( door, v.door77);
+	set.priority( door, 4);
+	ignore.blocks( door);
+	work = DOOR_CYCLE_TIME;
+	cycle.time( door, work);
+	position( door, 129, 93);
+	set.priority( ego, 13);
+	draw( door);
+	
+	if (previous.room == 66)
+		{
+		set.cel( door, 2);
+		stop.cycling( door);
+		doorDelay = 18;
+		position( ego, 123, 91);
+		stairs = middle;
+		doorStatus = closing;
+		}
+	else
+		{
+		set.cel( door, 0);
+		stop.update( door);
+		}
+
+	if (bainsEgoTogether)
+		{
+		animate.obj( bains);
+		set.view( bains, v.bains);
+		set.loop( bains, 1);
+		ignore.blocks( bains);
+		ignore.objs( bains);
+		position( bains, 48, 146);
+		set.priority( bains, 12);
+		draw( bains);
+		move.obj( bains, 106, 88, 0, bDone);
+		bMove = 0;
+		sound( mTension, snd.done);
+		}
+
+	if (previous.room == 76)
+		{
+		position( ego, 47, 33);
+		stairs = top;
+		set.priority( ego, 4);
+		}
+	
+	if (previous.room == 78)
+		{
+		position( ego, 58, 165);
+		stairs = lowest;
+		set.priority( ego, 14);
+		}
+
+	draw( ego);
+
+	add.to.pic( v.stairNums, 0, 1, 105, 73, 4, 4);
+
+	show.pic( );
+	return( );					[***		End Inits		***
+	}
+
+
+
+distance( ego, bains, bainsDistance);
+if (bainsDistance < dist)
+	{
+	set( nearPerson);
+	}
+
+
+
+if (bDone)
+	{
+	reset( bDone);
+	++bMove;
+	
+	if (bMove == 1)			{move.obj( bains, 111, 88, 0, bDone);}
+	if (bMove == 2)			{move.obj( bains, 111, 95, 0, bDone);}
+	if (bMove == 3)			{move.obj( bains, 106, 95, 0, bDone);}
+	if (bMove == 4) {
+		set.priority( bains, 13); move.obj( bains,  47, 36, 0, bDone);}
+	if (bMove == 5)			{move.obj( bains,  39, 36, 0, bDone);}
+	if (bMove == 6)			{move.obj( bains,  39, 33, 0, bDone);}
+	if (bMove == 7) {
+		set.priority( bains, 12); move.obj( bains,  47, 33, 0, bDone);}
+	if (bMove == 8)			{move.obj( bains,  48, 32, 0, bDone);}	
+	if (bMove == 9)			{erase( bains);}
+	}
+
+
+
+
+if (on.water) 						[***		Stair Stuff		***
+	{
+	if ((ego.dir == ego.up ||
+		ego.dir == ego.up.left ||
+		ego.dir == ego.up.right))
+		{
+		if (stairs == lowest)
+			{
+			stairs = lower;
+			set.priority( ego, 12);
+			}
+		else
+			{
+			if (stairs == lower)
+				{
+				stairs = middle;
+				set.priority( ego, 13);
+				}
+			else
+				{
+				if (stairs == middle)
+					{
+					stairs = lower;
+					set.priority( ego, 12);
+					}
+				}
+			}
+		}
+	
+	if ((ego.dir == ego.down ||
+		ego.dir == ego.down.left ||
+		ego.dir == ego.down.right))
+		{
+		if (stairs == upper)
+			{
+			stairs = middle;
+			set.priority( ego, 13);
+			}
+		else
+			{
+			if (stairs == middle)
+				{
+				stairs = lower;
+				set.priority( ego, 12);
+				}
+			else
+				{
+				if (stairs == lower)
+					{
+					stairs = middle;
+					set.priority( ego, 13);
+					}
+				}
+			}
+		}
+	}
+
+if (stairs == lower)
+	{
+	if (!ignore)
+		{
+		set( ignore);
+		ignore.blocks( ego);
+		}
+	}
+else
+	{
+	observe.blocks( ego);
+	reset( ignore);
+	}
+
+if (ignore)
+	{
+	if (ego.x > 118)
+		{
+		observe.blocks( ego);
+		}
+	else
+		{
+		ignore.blocks( ego);
+		}
+	}
+
+if (stairs == lower
+	&& hit.special)
+		{
+	ego.dir = 0;
+	start.motion( ego);
+	reposition.to.f( ego, old.ego.x, old.ego.y);
+	}							[***		End Stair Stuff	***
+
+
+
+--doorDelay;
+if (doorDelay == 1)
+	{
+	start.update( door);
+	reverse.loop( door, doorDone);
+	}
+
+if (doorDone)
+	{
+	reset( doorDone);
+	if (doorStatus == closing)
+		{
+		stop.update( door);
+		doorStatus = 0;
+		}
+	else
+		{
+		toFloor = 3;
+		if (bainsEgoTogether)
+			{
+			reset( bainsEgoTogether);
+			print( 2);			[	You lost him!
+			set( certainDeath);
+			}
+		else
+			{
+			new.room( 66);
+			}
+		}
+	}
+
+
+
+[*****
+[ SAID
+[*****
+
+if (!have.input)
+	{
+	goto exit;
+	}
+
+if (said( open, door))
+	{
+	if (obj.in.box( ego, 116, 88, 136, 95))
+		{
+		set( game.control);
+		end.of.loop( door, doorDone);
+		doorStatus = opening;
+		}
+	else
+		{
+		set( notCloseEnough);
+		}
+	}
+
+call( 74);
+
+
+
+[*****
+:exit;
+[*****
+
+if (ego.y < 33 && ego.x > 47)
+	{
+	toFloor = 4;
+	new.room( 76);
+	}
+
+if ((edge.ego.hit == bottom ||
+	ego.y == 167))
+	{
+	toFloor = 2;
+	if (bainsEgoTogether)
+		{
+		reset( bainsEgoTogether);
+		print( 2);				[	You lost him!
+		}
+	new.room( 78);
+	}
+
+
+if (snd.done)
+	{
+	sound( mTension, snd.done);
+	}
+
+

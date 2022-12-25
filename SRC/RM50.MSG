@@ -1,0 +1,174 @@
+[ POLICE QUEST
+[ rm50.msg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 9/10/86
+[ Last Update September 25, 1987al
+
+[	narc office FBI wanted list clipboard
+
+
+[	Unusual spacing is so messages will appear below same
+[format as on game screens.  This file aligns vertically with the .cg file.
+
+
+
+[			"12345678901234567890"   [	Maximum line length.
+%message	63	"10851vc"				[	PAGE ONE
+%message	18	"GRAND THEFT, AUTO"
+
+
+%message	19	"1983 Cadillac Coupe"
+%message	20	"deVille, black"
+%message	22	"CA License  LOP1238"
+%message	23	"VIN C03456218"
+%message	21	"Stolen in Lytton, CA"
+
+
+%message	24	"1985 Yamamama 750cc"
+%message	25	"motorcycle, cherry"
+%message	26	"red, w/saddlebags."
+%message	27	"CA License  M65789"
+%message	28	"VIN  M09876543"
+[%message	21	"Stolen in Lytton, CA"
+
+
+
+
+
+%message	29	"459pc BURGLARY"		[	PAGE TWO
+
+
+%message	31	"Ramington rifle,"
+%message	55	".22-caliber, lever-"
+%message	30	"action, oak stock,"
+%message	32	"gold-plated trigger."
+%message	33	"SERIAL #R12345678"
+
+
+%message	34	"Ladies silk panties,"
+%message	35	"57 pair, size 46-50,"
+%message	37	"blue, with zippered"
+%message	38	"crotch. Stolen from"
+%message	36	"\"Fancy Pants"
+%message	62	"Lingerie Emporium.\""
+
+
+
+
+
+
+[%message	29	"459pc BURGLARY"		[    PAGE THREE
+
+%message	39	"Hog and dog food,"
+%message	40	"2400 lbs. Taken from"
+%message	41	"Fat Fred's \"Fat and"
+%message	57	"Feed\" Farm, Lytton"
+
+%message	42	"9 large-mouthed,"
+%message	43	"belly-bustin' stink"
+%message	56	"baits. Stolen from"
+%message	44	"\"Chink's Cast 'N'"
+%message	45	"Catchit\" Bait Store"
+
+%message	49	"Wedding rings, 8,"
+%message	59	"24-carat, w/diamond"
+%message	50	"stones. Taken from"
+%message	51	"\"Jessie the Jeweler\""
+
+
+
+
+
+%message	46	"BE ON THE LOOKOUT:"	[	PAGE FOUR
+
+
+%message	47	"Dog, 3', 145 lbs,"
+%message	58	"black & white spots"
+%message	48	"Name: \"Buffie\""
+%message	61	"AKA \"The Consumer\""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%message	2	"FBI MOST-WANTED LIST" 	[	PAGE FIVE
+
+%message	3	"WANTED FOR MURDER"
+%message	4	"187pc, Federal"
+%message	5	"Warrant #219293-1985"
+
+
+
+[Mug shot of Taselli goes here.
+
+
+
+%message	6	"Jason Taselli"
+%message	7	"ALIAS: known to use"
+%message	8	"the last names"
+%message	9	"Harris and Hoffman."
+
+
+
+
+
+
+%message	 1	"PHYSICAL DESCRIPTION" 	[	PAGE SIX
+%message	10	"5'11, 195 lbs, black"
+%message	11	"hair, brown eyes."
+%message	12	"Has tattoo of a"
+%message	13	"flower above left"
+%message	14	"nipple."
+
+
+%message	15	"Wanted for the"
+%message	16	"murder of a Columbia"
+%message	17	"national, suspected"
+%message	60	"narcotics runner."
+
+
+
+
+
+
+
+
+
+
+%message	52
+"Ah, ha!! \"Tattoo of flower above left nipple...\"
+ You take the FBI Wanted Poster,
+ knowing Judge Palmer will find it very interesting!"
+
+%message	53
+"Do you see a poster here?"
+
+%message	54
+"You've already taken the FBI Wanted Poster."
+
+%message	64	
+"The clipboard must remain here in the office."
+
+%message	65	
+"Ok."
+
+%message	66
+"You may also use the cursor keys to turn the pages."
+
+
+
+[spares:
+%message	67	""
+%message	68	""
+%message	69	""
+

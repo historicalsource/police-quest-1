@@ -1,0 +1,423 @@
+[ POLICE QUEST
+[ rm61.cg
+[ By:  Greg Rowland, Jim Walls and Al Lowe
+[ For: Sierra On-Line Inc. 3/10/87
+[ Last Update October 12, 1987GR
+
+[ lgc.colbysimms.jail
+
+
+%include "gamedefs"
+%include "rm61.msg"
+%include "rm40.h"
+
+
+
+if (init.log)
+	{
+	load.view( v.colby);		
+	load.view( v.simms);
+	load.view( v.colby.cuffed);
+	load.view( v.simms.cuffed);
+	load.view( v.laura);
+
+	animate.obj( a.simms);		
+	animate.obj( a.laura);
+
+	set.view( a.suspect, v.colby.cuffed);		
+	set.view( a.simms, v.simms.cuffed);		
+	set.view( a.laura, v.laura);
+
+	set.loop( a.suspect, 1);		
+	set.loop( a.simms, 3);
+	set.loop( a.laura, 3);
+
+	position( a.laura, 127, 119);
+	
+	suspect.x = 108;
+	suspect.y = 120;
+	position.f( a.suspect, suspect.x, suspect.y);
+
+	simms.x = 100;
+	simms.y = 120;
+	position.f( a.simms, simms.x, simms.y);
+
+	ignore.blocks( ego);
+	ignore.blocks( a.laura);
+	ignore.blocks( a.suspect);
+	ignore.blocks( a.simms);
+
+	stop.cycling( a.laura);
+	stop.cycling( a.simms);
+	stop.cycling( a.suspect);
+
+	draw( a.suspect);
+	draw( a.simms);
+	draw( a.laura);
+
+	return( );
+	}
+
+
+
+get.posn( a.suspect, x, y);
+if ((suspect.x != x || suspect.y != y))
+	{
+	suspect.x = x;
+	suspect.y = y;
+	start.cycling( a.suspect);
+	}
+else
+	{
+	if (keepCyclingSuspect)
+		{
+		start.cycling( a.suspect);
+		}
+	else
+		{
+		stop.cycling( a.suspect);
+		}
+	}
+
+get.posn( a.simms, x, y);
+if ((simms.x != x || simms.y != y))
+	{
+	simms.x = x;
+	simms.y = y;
+	start.cycling( a.simms);
+	}
+else
+	{
+	stop.cycling( a.simms);
+	}
+
+
+[ Booking Colby & Simms
+	
+if (!moving0)
+	{
+	++moving0;
+	set( game.control);			
+	stop.update( a.suspect);
+	stop.update( a.simms);
+	move.obj( ego, 116, 115, 1, moved0);
+	}
+
+if (moving0 == 2) {
+	start.cycling( a.laura);
+	move.obj( a.laura, 129, 112, 1, moved0);
+	++moving0;
+	}
+
+if (moving0 == 4) {
+	set.loop( a.laura, facing.left);
+	set( moved0);
+	}
+
+if (moving0 == 5) {
+	++moving0;
+	stop.update( a.laura);
+	start.update( a.suspect);
+	start.update( a.simms);
+
+	move.obj( a.suspect, 108, 108, 1, moved0);
+	move.obj( a.simms, 100, 108, 1, done);
+	print( 12);					[	I'll wait here, sonny
+	}
+
+if (moving0 == 7) {
+	move.obj( ego, 116, 110, 1, moved0);
+	}
+
+if (moving0 == 8) {
+	++moving0;
+	print( 1);					[	What can I do for you Sonny?
+	stop.update( a.suspect);
+	stop.update( a.simms);
+	wait.1 = 25;
+	}
+
+
+[ To the Cell
+
+if (moving0 == 20)
+	{
+	prevent.input( );
+	print( 9);					[	I'll sue for cuffs too tight
+	
+	start.update( a.simms);
+	start.update( a.suspect);
+
+	move.obj( a.simms, 100, 122, 1, done);
+	move.obj( a.suspect, 108, 123, 1, done);
+
+	move.obj( ego, 118, 124, 1, moved0);
+	moving0 = 23;
+	}
+
+if (moving0 == 24) {
+	++moving0;
+	move.obj( a.simms, 83, 122, 1, done);
+	move.obj( a.suspect, 87, 123, 1, done);
+	move.obj( ego, 97, 124, 1, moved0);
+	}
+
+if (moving0 == 26) {
+	++moving0;
+	move.obj( a.simms, 55, 120, 1, done);
+	move.obj( a.suspect, 56, 123, 1, done);
+	move.obj( ego, 60, 124, 1, moved0);
+	}
+
+if (moving0 == 28) {
+	++moving0;
+	set.loop( a.simms, 3);
+	set.loop( a.suspect, 3);
+
+	start.update( a.cell.door);
+	move.obj( a.cell.door, 67, 104, 1, moved0);
+	}
+
+if (moving0 == 30) {
+	++moving0;
+	stop.update( a.cell.door);
+	set.priority( a.simms, 4);
+
+	print( 5);					[ think you boys know where to go
+	move.obj( a.simms, 55, 100, 1, moved0);
+	move.obj( a.suspect, 56, 101, 1, done);
+	}
+
+if (moving0 == 32) {
+	++moving0;
+	move.obj( ego, 57, 110, 1, moved0);
+	}
+
+if (moving0 == 34) {
+	++moving0;
+	set.loop( a.suspect, 2);
+	set.priority( a.suspect, 5);
+	start.update( a.cell.door);
+	move.obj( a.cell.door, 53, 104, 1, moved0);
+	}
+
+if (moving0 == 36) {
+	++moving0;
+	stop.update( a.cell.door);
+	move.obj( a.simms, 68, 100, 1, moved0);
+	}
+
+if (moving0 == 38) {
+	set.loop( a.simms, 2);
+	print( 6);					[ Up yours DICK TRACY
+	reset( game.control);
+	reset( has.suspect);
+	park.bust = 221;
+	accept.input( );
+	moving0 = 50;
+	}
+
+
+[ Laura
+
+if (moving0 == 50) {
+	++moving0;
+	stop.update( a.simms);
+	stop.update( a.suspect);
+	start.update( a.laura);
+	move.obj( a.laura, 127, 119, 1, moved0);
+	}
+
+if (moving0 == 52) {
+	++moving0;
+	print( 13);					[ Hey Bonds, I'll wait in car
+	set.priority( a.laura, 9);
+	set( actor.using.door);
+	set( door.work);
+	move.obj( a.laura, 140, 119, 1, moved0);
+	}
+
+if (moving0 == 54) {
+	moving0 = 200;
+	erase( a.laura);
+	set( door.work);
+	reset( actor.using.door);
+
+	reset( b.car.door);		[ don't steel car from under laura
+	reset( f.car.door);
+	set( LauraCar);
+	}
+
+
+[ Dead Dude
+
+if (moving0 == 100) {
+	moving0 = 102;
+	stop.cycling( a.laura);
+
+	start.update( a.laura);
+	start.update( a.suspect);
+	start.update( a.simms);
+
+	sound( mBadGuy, done);
+	set.loop( a.simms, 0);
+	fix.loop( a.simms);
+	move.obj( a.simms, 95, 107, 1, done);
+	
+	set.loop( ego, 1);
+	fix.loop( ego);
+	
+	set.loop( a.suspect, 0);
+	fix.loop( a.suspect);
+
+	set.view.f( a.suspect, current.suspect.draw);
+
+	move.obj( a.suspect, 100, 109, 1, moved0);
+	}
+
+if (moving0 == 103) {
+	++moving0;
+	stop.cycling( a.simms);
+	stop.cycling( a.suspect);
+	set( makeSuspectShoot);
+	scriptTimer = 4;
+	}
+
+if (!certainDeath && ego.shot.dead && scriptDone) {
+	print( 18);					[ suspect takes your gun
+	set( certainDeath);
+	}
+
+
+[ Timed Messages
+
+if (moving0 < 12 && wait.1 == 1) {
+	print( 11);					[ waiting peanut brain
+	wait.1 = 15;
+	}
+
+if (moving0 == 12) {
+	if (wait.1 == 1) {
+		print( 10);				[ remove their cuffs
+		wait.1 = 20;
+		}
+	
+	if (wait.1 == 65) {
+		print( 2);				[ invertory personal prop
+		--wait.1
+		}
+	
+	if (wait.1 == 62) {
+		print( 7);				[ ok remove cuffs
+		wait.1 = 15;
+		}
+	}
+	
+
+
+[ Text
+
+if (!have.input) {
+	goto exit;
+	}
+
+if ((said( book, rol) ||
+	said( lock, up, rol) ||
+	said( put, jail) ||
+	said( put, anyword, jail))) {
+	if (moving0 < 9) {
+		print( 14);				[ Let's get to the counter
+		}
+	else {
+		if (moving0 < 11) {
+			print( 8);			[ What you're charging dudes with
+			moving0 = 11;
+			wait.1 = 20;
+			}
+		else {
+			print( 15);			[ I heard you the first time
+			}
+		}
+	}
+
+if ((said( drugs) ||
+	said( pushing, drugs) ||
+	said( drug, dealing) ||
+	said( deal, drugs)))
+	{
+	if (moving0 < 9) {
+		print( 14);				[ Let's get to the counter
+		}
+	else {
+		if (moving0 < 12) {
+			print( 4);			[ Ok %w1 it'll be
+			moving0 = 12;
+			wait.1 = 70;
+			}
+		else {
+			print( 15);			[ I heard you the first time
+			}
+		}
+	}
+
+if ((said( remove, cuffs) ||
+	said( remove, cuffs, from, suspect) ||
+	said( remove, cuffs, from, men) ||
+	said( uncuff, suspect, rol) ||
+	said( uncuff, men, rol) ||
+	said( take, off, cuffs) ||
+	said( take, cuffs, rol))) {
+	if (moving0 < 12) {
+		print( 16);				[ Let's get to the counter
+		}
+	else {
+		if (moving0 < 20) {
+			get( i.cuffs);
+
+			if (!SxDopers)
+				{
+				set( SxDopers);
+				score += 2;
+				}
+
+			if (!check.gun && has( i.loaded.gun))
+				{
+				drop( i.loaded.gun);
+				[reset( has.suspect);
+				moving0 = 100;
+				wait.1 = 0;
+				}
+			else {
+				set.loop( ego, 1);
+				set.view( a.suspect, v.colby);	
+				set.view( a.simms, v.simms);
+				print( 3);		[ removed the cuffs
+				moving0 = 20;
+				wait.1 = 0;
+				}
+			}
+		else {
+			print( 17);			[ the cuffs are removed
+			}
+		}
+	}
+
+if (nearSuspect)
+	{
+	if (said( talk, colby))
+		{
+		print( 6);
+		}
+	
+	if ((said( talk, man, rol) ||
+		said( talk, suspect, rol) ||
+		said( talk, simms)))
+		{
+		print( 19);
+		}
+	}
+
+
+[
+:exit
+[

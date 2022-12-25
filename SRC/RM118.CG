@@ -1,0 +1,288 @@
+[ POLICE QUEST 
+[ rm118.cg 
+[ By:  Greg Rowland and Jim Walls
+[ For: Sierra On-Line Inc. 10/30/86
+[ Last Update September 7, 1987al
+
+[ lgc.suspect.gun
+
+%include "gamedefs"
+
+
+
+[	Call this room every pass.
+
+[	set( in.motion); to make suspect "draw down" and "track" ego.  
+
+[	set( makeSuspectShoot); for an instant shot.  If suspect wasn't
+["drawn down," he will be now!  If he misses, he'll keep shooting.
+[To force suspect to immediately kill ego, also set shot.first = blowEgoAway.
+
+[	This room determines who dies when, depending on who "shot.first" and
+[Y alignment.
+
+[	If suspect ever fires all 6 shots, the 6th one is a guaranteed killer.
+
+[	set( murder); if you want the suspect to die immediately.
+
+
+
+if (init.log)
+	{
+	timer.1 = 0;
+	shot.first = 0;
+	suspect.shots = 6;
+
+	reset( suspect.moving);
+	reset( suspect.following);
+	reset( makeSuspectShoot);
+	reset( suspect.shot.done);
+	reset( suspect.shooting);
+	reset( in.motion);
+	reset( keepCyclingSuspect);
+
+	load.sound( s.gun.fire);
+	load.view( v.gunFire);
+	load.view.f( current.suspect);
+	load.view.f( current.suspect.draw);
+	if (current.room != 40)			[	rm.jail; ego is unarmed!
+		{
+		load.view.f( current.dead.suspect);
+		}
+
+	animate.obj( a.suspect);
+	animate.obj( a.suspect.fire);
+
+	set.view.f( a.suspect, current.suspect);
+	set.view( a.suspect.fire, v.gunFire);
+
+	ignore.horizon( a.suspect.fire);
+	}
+
+
+get.posn( a.suspect, suspect.x, suspect.y);
+get.priority( a.suspect, priority);
+current.view( a.suspect, view);
+current.loop( a.suspect, loop);
+
+
+if (aSecondPassed)
+	{
+	--timer.1;
+	if (timer.1 == 1)
+		{
+		set( makeSuspectShoot);		[	Shoot AGAIN!  Can't originate.
+		}
+	}
+
+if (makeSuspectShoot &&
+    !suspect.shooting &&				[	Kill ego for sure, if Y's close.
+    !suspect.dying &&
+    !suspect.shot.done &&
+	progress < ego.dying)			[Don't keep shooting; I'm dead already
+	{
+	if (view != current.suspect.draw)
+		{
+		set( in.motion);
+		}
+	else
+		{
+		reset( makeSuspectShoot);
+
+		if (!shot.first)
+			{
+			shot.first = suspect.shot.first;
+			}
+
+		--suspect.shots;			[	We don't know what to do with
+		if (!suspect.shots)			[	an unarmed suspect!!
+			{
+			shot.first = blowEgoAway;
+			}
+
+		range.high = ego.y;			[	Was ego lined up within 3 pixels?
+		++range.high;
+		range.low = ego.y;
+		--range.low;
+		
+		if (!suspect.y > range.high &&  [	Can suspect's shot kill ego?
+		    !suspect.y < range.low)
+			{
+			shot.first = blowEgoAway;
+			}
+
+		set( suspect.shooting);
+
+		set.loop.f( a.suspect.fire, loop);
+		set.cel( a.suspect.fire, 0);
+
+		y  = suspect.y;
+		y -= GUN_Y;
+		x  = suspect.x;
+		if (loop == facing.left)
+			{
+			x -= GUN_LEFT_X;
+			}
+		else
+			{
+			x += GUN_RIGHT_X;
+			}
+		position.f( a.suspect.fire, x, y);
+		set.priority.f( a.suspect.fire, priority);
+
+		draw( a.suspect.fire);
+		end.of.loop( a.suspect.fire, suspect.shot.done);
+		sound( s.gun.fire, snd.done);
+		}
+	}
+
+if (suspect.shot.done)
+	{
+	reset( suspect.shot.done);
+	reset( suspect.shooting);
+	if (shot.first == suspect.shot.first)
+		{
+		shot.first = 0;
+		}
+	erase( a.suspect.fire);
+	random( 2, 4, timer.1);			[	Fire again, soon.
+	}
+
+
+
+if (in.motion)						[	Start him chasing ego.
+	{
+	reset( in.motion);
+	set( suspect.moving);
+	if (loop == facing.left && suspect.x > 5)
+		{
+		suspect.x -= 4;
+ 		}
+	reposition.to.f( a.suspect, suspect.x, suspect.y);
+	view = current.suspect.draw;
+	set.view.f( a.suspect, view);
+
+	if (!makeSuspectShoot)			[	Else, shoot next frame.
+		{
+		random( 3, 6, timer.1);		[	Fire first shot soon.
+		}
+	}
+
+
+
+if (!suspect.dying &&				[	Chase ego until he drops.
+    !suspect.dead &&
+	view == current.suspect.draw)
+	{
+	if (suspect.moving)
+		{
+		reset( suspect.moving);
+		follow.ego( a.suspect, 30, suspect.following);
+		}
+
+	if (suspect.following &&
+		suspect.y != ego.y)
+		{
+		if (suspect.x > ego.x)
+			{
+			set.loop( a.suspect, facing.left);
+			}
+		if (suspect.x < ego.x)
+			{
+			set.loop( a.suspect, facing.right);
+			}
+		y = ego.y;
+		move.obj.f( a.suspect, suspect.x, y, one, suspect.moving);
+		}
+	}
+
+
+
+if (murder)						[	Suspect will die now!
+	{
+	reset( murder);
+	set( keepCyclingSuspect);
+	set( suspect.dying);
+
+	stop.motion( a.suspect);
+	view = current.dead.suspect;
+	set.view.f( a.suspect, view);
+
+	if (loop > 1)					[	Dying guys only have 2 loops.
+		{
+		loop = facing.right;		[	The default.
+		}
+	set.loop.f( a.suspect, loop);
+	set.cel( a.suspect, 0);
+	if (suspect.x > 14 && loop == facing.right)
+		{
+		suspect.x -= 13;
+		}
+	reposition.to.f( a.suspect, suspect.x, suspect.y);
+
+	work = DEATH_CYCLE_TIME;
+	cycle.time( a.suspect, work);
+	end.of.loop( a.suspect, suspect.dead);
+
+	erase( a.suspect.fire);
+	}
+
+if (suspect.dead)
+	{
+	reset( keepCyclingSuspect);
+	stop.cycling( a.suspect);
+	}
+
+
+
+if (shot.first == blowEgoAway &&		[	Now, kill ego.
+	progress < ego.dying)
+	{
+	progress = ego.dying;
+	set( game.control);
+	stop.motion( ego);
+	set.view.f( ego, current.dead);
+
+	if (suspect.x > ego.x)
+		{
+		work = facing.right;
+		if (ego.x > 14)
+			{
+			ego.x -=13;
+			}
+		}
+	else {
+		work = facing.left;
+		if (current.ego == ego.draw.gun)
+			{
+			ego.x += 7;
+			}
+		}
+	set.loop.f( ego, work);
+	set.cel( ego, 0);
+	reposition.to.f( ego, ego.x, ego.y);
+	work = DEATH_CYCLE_TIME;
+	cycle.time( ego, work);
+
+	erase( a.fire);				[	Just in case ego was shooting.
+	end.of.loop( ego, ego.shot.dead);
+	set( keep.cycling);
+	}
+
+
+[
+:exit
+[
+
+if (certainDeath)
+	{
+	erase( a.suspect.fire);
+	erase( a.fire);
+	}
+
+[	if (QA)
+[		{
+[		%message	99 "TempX/Y %v107/%v108   X/Y %v144/%v145"
+[			display( 24, 0, 99);
+[		}
+[	

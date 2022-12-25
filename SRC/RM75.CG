@@ -1,0 +1,423 @@
+[ POKER QUEST 
+[ rm75.cg
+[ By:  Ken Williams, Greg Rowland, and Al Lowe
+[ For: Sierra On-Line Inc. 11/17/86
+[ Last Update September 29, 1987KW
+
+[ rm.poker.game
+
+
+%include	"rm75.h"
+%include	"rm75.msg"
+
+
+											
+
+[%var	progress			31
+[%define	playingPoker1		160	[ set after intros;
+[%define	lostPoker1		165	[ set in rm75
+[%define	wonPoker1			170	[ set in rm70
+[%define	playingPoker2		180	[ set in rm71 after intros
+[%define	lostPoker2		185	[ set in rm75
+[%define	wonPoker2			200	[ set in rm75
+
+
+%define	MAX_HANDS			30
+
+
+
+if (init.log)
+	{
+	prevent.input( );
+
+	load.pic( current.room);
+	load.view( v.deck.of.cards);
+	load.sound( s.beep);
+ 	load.sound( sWrong);
+
+	work = 81;
+	:mr.looper;
+	load.logics.f( work);
+	if (work < 91)					[	91 loaded; 92 not.
+		{
+		++work;
+		goto mr.looper;
+		}
+
+	draw.pic( current.room);
+	clear.lines( 0, 1, 0);
+	if (!hercules)
+		{
+		clear.lines( 23, 23, 0);
+		}
+	show.pic( );
+	reset( enable.menu);
+	status.line.off( );
+
+	return.point = 8;
+	}
+
+
+
+if ((init.log ||
+	func4  ||
+	func6  ||
+	func8  ||
+	func10 ||
+	said( ante) ||
+	said( ante, up) ||
+	said( deal)))
+	{
+	reset( func4);
+	reset( func6);
+	reset( func8);
+	reset( func10);
+	if (return.point != 8)
+		{
+		print( 8);
+		}
+	else
+		{
+		set( preventSaveGame);
+		set( no.script);
+
+		if (!init.log)
+			{
+			draw.pic( current.room);
+			clear.lines( 0, 1, 0);
+			if (!hercules)
+				{
+				clear.lines( 23, 23, 0);
+				}
+			show.pic( );
+			}
+
+		++hands.played;
+		display(  4, 32, 1);
+		display(  8, 32, 2);
+		display( 12, 32, 3);
+		display( 16, 32, 4);
+
+
+		work = 239;				[	Init all vars from 176 - 239.
+		:clearVars;
+		if (work != 203)			[leave alone the last.dealer var *** 9-24
+			{
+			work @= 0;
+			}
+		if (work > 175)			[	175 is NOT used.
+			{
+			--work;
+			goto clearVars;
+			}
+
+		work = 255;				[	Init flags and remaining vars.
+		:clearFlags;
+		work @= 0;
+		reset.v( work);
+		if (work > 240)
+			{
+			--work;
+			goto clearFlags;
+			}
+
+		p1.bet = 0;
+		p2.bet = 0;
+		p3.bet = 0;
+		p4.bet = 0;
+		number.discarded.cards = 0;
+		pot = 1;
+		three.folded = 0;
+		marked.cash -= 1;
+		display( 1, 0, 5);				[	You have; pot is
+
+		++last.dealer;					[	rotate the deal
+		if (last.dealer > 3)
+			{
+			last.dealer = 0;
+			}
+
+		card.to.deal = first.card;
+
+		:deal.loop
+		random( 1, 52, work);
+		if (card.to.deal != first.card)
+			{
+			function = test.already.dealt;
+			call( poker.subs);
+			if (already.dealt)
+				{
+		 		goto deal.loop;
+		 		}
+			}
+		card.to.deal @= work;
+
+		if (card.to.deal != last.card)
+			{
+			++card.to.deal;
+			goto deal.loop;
+			}
+
+		if (last.dealer == 1)   			{display(  5, 32, 23);}
+		if (last.dealer == 2)   			{display(  9, 32, 23);}
+		if (last.dealer == 3)   			{display( 13, 32, 23);}
+		if (last.dealer == 0)   			{display( 17, 32, 23);}
+
+		function = delay.loop;
+		call( poker.subs);
+
+		if (last.dealer == 1)   			{display(  5, 32, 24);}
+		if (last.dealer == 2)   			{display(  9, 32, 24);}
+		if (last.dealer == 3)   			{display( 13, 32, 24);}
+		if (last.dealer == 0)   			{display( 17, 32, 24);}
+
+		return.point = 1;
+		}
+	}
+
+
+
+if (return.point == 1)				[	shuffling done
+	{
+	prevent.input( );
+
+	clear.lines( 0, 0, 0);
+	display( 0, 0, 7);				[	All antes are in.
+	pot = 4;
+	display( 1, 0, 5);				[	You have; pot is
+
+	function = delay.loop;
+	call( poker.subs);
+	
+	set( hide.computer.cards);		[************
+	call( display.cards);
+	set( dont.show.hands);
+	call( evaluate.cards);
+
+	if (last.dealer == 1)   			{display(5, 32, 25);} [erase "deals"
+	if (last.dealer == 2)   			{display(9, 32, 25);}
+	if (last.dealer == 3)   			{display(13, 32, 25);}
+	if (last.dealer == 0)   			{display(17, 32, 25);}
+
+	function = delay.loop;
+	call( poker.subs);
+	active.player = last.dealer
+	bet.status = no.bet;			[	no bet yet
+	return.point = 2;
+	}
+
+
+
+if (return.point == 2)
+	{
+	work3 = bet.first.var.number;
+	work3 += active.player;
+
+	bet.so.far =@ work3;
+[	if (bet.so.far == 255)			[has this player folded?
+[		{
+[		++active.player;
+[		if (active.player > 3)
+[			{
+[			active.player = 0;
+[			}
+[		goto exit;
+[		}
+
+	call( betting.round);
+
+	if (all.bets.in)
+	    	{
+		active.player = last.dealer;
+		return.point = 3;
+		}
+	else
+		{
+		function = delay.loop;
+		call( poker.subs);
+		}
+
+	goto exit;
+	}
+
+
+
+if (return.point == 3)
+	{
+	if (three.folded == 3)			[if 3 have folded, games over
+		{
+		function = delay.loop;
+		call( poker.subs);
+		return.point = 6;
+		goto exit;
+		}
+
+	work3 = bet.first.var.number;
+	work3 += active.player;
+
+	bet.so.far =@ work3;
+
+	if (bet.so.far != 255)			[has this player folded?
+		{
+		call( draw.cards);
+		function = delay.loop;
+		call( poker.subs);
+		}
+
+	++active.player;
+	if (active.player == 4)
+		{
+		active.player = 0;
+		}
+
+	if (active.player == last.dealer)
+		{
+		call( redeal);
+		function = delay.loop;
+		call( poker.subs);
+		return.point = 4;
+		goto exit;
+		}
+	}
+
+
+
+if (return.point == 4)
+	{
+	call( display.cards);
+	set( dont.show.hands);
+	call( evaluate.cards);
+	set( second.round);
+	reset(all.bets.in);
+	active.player = last.dealer
+	bet.status = no.bet;			[no bet yet
+	function = delay.loop;
+	call( poker.subs);
+	return.point = 5;
+	}
+
+
+if (return.point == 5)
+	{
+	work3 = bet.first.var.number;
+	work3 += active.player;
+
+	bet.so.far =@ work3;
+[	if (bet.so.far == 255)			[has this player folded?
+[		{
+[		++active.player;
+[		if (active.player > 3)
+[			{
+[			active.player = 0;
+[			}
+[		goto exit;
+[		}
+
+	call( betting.round);
+
+	if (all.bets.in)
+	    	{
+		active.player = last.dealer;
+		return.point = 6;
+		}
+	else
+		{
+		function = delay.loop;
+		call( poker.subs);
+		}
+
+	goto exit;
+	}
+
+
+
+if (return.point == 6)
+	{
+	reset( hide.computer.cards);
+	call( display.cards);
+	reset( dont.show.hands);
+	call( evaluate.cards);
+	function = declare.winner;
+	call( poker.subs);
+	return.point = 7;
+	}
+
+
+
+if (return.point == 7)				[	Hand over.  Play another?
+	{
+	return.point = 8;
+
+	reset( preventSaveGame);
+	reset( no.script);
+
+	if (marked.cash < pokerGameMin)
+		{
+		progress += 5;
+		return.point = 255;
+		}
+	else
+		{
+		if (marked.cash > pokerGameMax)
+			{
+			progress += 10;		[	Whether poker1 or 2,
+			return.point = 255;		[	leave game NOW!
+			}
+		else
+			{
+			if (hands.played > MAX_HANDS)
+				{
+				progress += 10;
+				return.point = 255;
+				}
+			}
+		}
+	}
+
+
+
+[*****
+:exit
+[*****
+
+if ((controller( c.quit) ||
+	return.point == 255 ||
+	said( quit) ||
+	said( look, room) ||
+	said( stop, playing, cards) ||
+	said( stop, playing, poker) ||
+	said( stop, playing) ||
+	said( drop, out)))
+	{
+	new.room.f( previous.room);
+	}
+
+if (refresh)
+	{
+	reset( refresh);
+	clear.lines( 0, 1, 0);			[	Clear top line.
+
+	display( 1, 0, 5);				[	You have; pot is
+
+	display(  4, 32, 1);			[	Redisplay names.
+	display(  8, 32, 2);
+	display( 12, 32, 3);
+	display( 16, 32, 4);
+
+	display(  5, 32, 25);			[	Erase below names.
+	display(  9, 32, 25);
+	display( 13, 32, 25);
+	display( 17, 32, 25);
+
+	display(  5,  0, 25);			[	Erase left tag lines.
+	display(  9,  0, 25);
+	display( 13,  0, 25);
+	display( 17,  0, 25);
+
+	display(  4,  0, 25);			[	Erase left hand descriptors.
+	display(  8,  0, 25);
+	display( 12,  0, 25);
+	display( 16,  0, 25);
+	}
+
+
